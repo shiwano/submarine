@@ -131,7 +131,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   SceneSettings:
     Submarine:
-      Prefab: {fileID: 180472, guid: 886f29b13ecca477fae78f38c4996b3a, type: 2}
+      Prefab: {fileID: 180472, guid: 67a4f677edeb045c59c2f75d6c89499d, type: 2}
       StartPosition: {x: 96.0999985, y: 23.7999992, z: 129.899994}
       StartRotation: {x: 0, y: 42.8400002, z: 0}
     UI:

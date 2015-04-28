@@ -181,52 +181,6 @@ Light:
   m_ShadowRadius: 0
   m_ShadowAngle: 0
   m_AreaSize: {x: 1, y: 1}
---- !u!1001 &569341571
-Prefab:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    m_TransformParent: {fileID: 918348793}
-    m_Modifications:
-    - target: {fileID: 474394, guid: 3335ef032206741598f2904255790f97, type: 2}
-      propertyPath: m_LocalPosition.x
-      value: 29.3999996
-      objectReference: {fileID: 0}
-    - target: {fileID: 474394, guid: 3335ef032206741598f2904255790f97, type: 2}
-      propertyPath: m_LocalPosition.y
-      value: -135.899994
-      objectReference: {fileID: 0}
-    - target: {fileID: 474394, guid: 3335ef032206741598f2904255790f97, type: 2}
-      propertyPath: m_LocalPosition.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 474394, guid: 3335ef032206741598f2904255790f97, type: 2}
-      propertyPath: m_LocalRotation.x
-      value: -3.77489506e-08
-      objectReference: {fileID: 0}
-    - target: {fileID: 474394, guid: 3335ef032206741598f2904255790f97, type: 2}
-      propertyPath: m_LocalRotation.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 474394, guid: 3335ef032206741598f2904255790f97, type: 2}
-      propertyPath: m_LocalRotation.z
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 474394, guid: 3335ef032206741598f2904255790f97, type: 2}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 474394, guid: 3335ef032206741598f2904255790f97, type: 2}
-      propertyPath: m_RootOrder
-      value: 3
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-  m_ParentPrefab: {fileID: 100100000, guid: 3335ef032206741598f2904255790f97, type: 2}
-  m_IsPrefabParent: 0
---- !u!4 &569341572 stripped
-Transform:
-  m_PrefabParentObject: {fileID: 474394, guid: 3335ef032206741598f2904255790f97, type: 2}
-  m_PrefabInternal: {fileID: 569341571}
 --- !u!1 &580938700
 GameObject:
   m_ObjectHideFlags: 0
@@ -377,7 +331,6 @@ Transform:
   - {fileID: 1473723661}
   - {fileID: 1766022513}
   - {fileID: 93028061}
-  - {fileID: 569341572}
   m_Father: {fileID: 1262540244}
   m_RootOrder: 0
 --- !u!1 &931142161
