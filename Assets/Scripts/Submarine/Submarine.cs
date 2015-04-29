@@ -1,6 +1,4 @@
 ﻿using UnityEngine;
-using System.Collections;
-using Zenject;
 using DG.Tweening;
 
 namespace Submarine
