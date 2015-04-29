@@ -10,22 +10,7 @@ namespace Submarine
         [Serializable]
         public class Settings
         {
-            public SubmarineSettings Submarine;
-            public UISettings UI;
-
-            [Serializable]
-            public class SubmarineSettings
-            {
-                public GameObject Prefab;
-                public Vector3 StartPosition;
-                public Vector3 StartRotation;
-            }
-
-            [Serializable]
-            public class UISettings
-            {
-                public Button StartButton;
-            }
+            public Button StartButton;
         }
 
         public Settings SceneSettings;
@@ -36,8 +21,6 @@ namespace Submarine
 
             Container.Bind<IInitializable>().ToSingle<TitleController>();
             Container.Bind<TitleController>().ToSingle();
-
-            Container.Bind<Transform>("Submarine").ToSinglePrefab(SceneSettings.Submarine.Prefab);
         }
     }
 }
