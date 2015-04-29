@@ -1,5 +1,4 @@
-﻿using UnityEngine;
-using System;
+﻿using System;
 using Zenject;
 using UnityEngine.UI;
 
@@ -20,6 +19,7 @@ namespace Submarine
             Container.Bind<Settings>().ToSingleInstance(SceneSettings);
 
             Container.Bind<IInitializable>().ToSingle<TitleController>();
+            Container.Bind<IDisposable>().ToSingle<TitleController>();
             Container.Bind<TitleController>().ToSingle();
         }
     }

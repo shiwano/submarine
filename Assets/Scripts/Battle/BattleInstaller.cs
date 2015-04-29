@@ -10,11 +10,6 @@ namespace Submarine
         [Serializable]
         public class Settings
         {
-            [Serializable]
-            public class UISettings
-            {
-                public Button RestartButton;
-            }
         }
 
         public Settings SceneSettings;

@@ -132,6 +132,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   SceneSettings:
     StartButton: {fileID: 1179573966}
+    MatchingServicePrefab: {fileID: 0}
 --- !u!1 &474432927
 GameObject:
   m_ObjectHideFlags: 0
