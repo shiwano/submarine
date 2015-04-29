@@ -10,13 +10,16 @@ namespace Submarine
         [Serializable]
         public class Settings
         {
+            public GameObject BattleServicePrefab;
         }
 
-        public Settings SceneSettings;
+        public Settings InstallerSettings;
 
         public override void InstallBindings()
         {
-            Container.Bind<Settings>().ToSingleInstance(SceneSettings);
+            Container.Bind<Settings>().ToSingleInstance(InstallerSettings);
+
+            Container.Bind<BattleService>().ToSinglePrefab(InstallerSettings.BattleServicePrefab);
 
             Container.Bind<IInitializable>().ToSingle<TitleController>();
             Container.Bind<BattleController>().ToSingle();

@@ -20,7 +20,10 @@ namespace Submarine
 
         public void Dispose()
         {
-            connection.Disconnect();
+            if (connection.Connected)
+            {
+                connection.Disconnect();
+            }
 
             Debug.Log("Game Quit");
         }

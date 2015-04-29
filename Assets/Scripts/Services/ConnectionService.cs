@@ -6,6 +6,7 @@ namespace Submarine
     {
         public bool InRoom { get { return PhotonNetwork.inRoom; } }
         public bool InLobby { get { return PhotonNetwork.insideLobby; } }
+        public bool Connected { get { return PhotonNetwork.connectedAndReady; } }
 
         public bool IsMessageQueueRunning
         {
