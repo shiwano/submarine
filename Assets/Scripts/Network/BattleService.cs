@@ -1,19 +1,26 @@
 ﻿using UnityEngine;
-using System.Collections;
-using System;
 using Zenject;
 
 namespace Submarine
 {
-    public class BattleService : Photon.MonoBehaviour
+    public class BattleService : MonoBehaviour
     {
+        private ConnectionService connection;
+
         [PostInject]
-        public void Initialize(MatchingService matchingService)
+        public void Initialize(ConnectionService connection)
         {
-            if (!PhotonNetwork.inRoom)
+            this.connection = connection;
+        }
+
+        public void StartBattle()
+        {
+            if (!connection.InRoom)
             {
                 Debug.LogError("Not in room");
             }
+
+            connection.IsMessageQueueRunning = true;
         }
     }
 }

@@ -20,19 +20,19 @@ namespace Submarine
         {
             Debug.Log("Title");
             sceneSettings.StartButton.onClick.AddListener(OnStartButtonClick);
-            matchingService.OnJoinRoom += OnMatchingServiceJoinRoom;
+            matchingService.onJoinRoom += OnMatchingServiceJoinRoom;
         }
 
         public void Dispose()
         {
-            matchingService.OnJoinRoom -= OnMatchingServiceJoinRoom;
+            matchingService.onJoinRoom -= OnMatchingServiceJoinRoom;
         }
 
         private void OnStartButtonClick()
         {
             Debug.Log("Click StartButton");
             sceneSettings.StartButton.onClick.RemoveListener(OnStartButtonClick);
-            matchingService.Connect();
+            matchingService.JoinRoom();
         }
 
         private void OnMatchingServiceJoinRoom()

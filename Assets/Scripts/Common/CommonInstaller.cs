@@ -10,6 +10,7 @@ namespace Submarine
         [Serializable]
         public class Settings
         {
+            public GameObject ConnectionServicePrefab;
             public GameObject MatchingServicePrefab;
         }
 
@@ -21,6 +22,7 @@ namespace Submarine
             Container.Bind<IDisposable>().ToSingle<CommonController>();
             Container.Bind<CommonController>().ToSingle();
 
+            Container.Bind<ConnectionService>().ToSinglePrefab(InstallerSettings.ConnectionServicePrefab);
             Container.Bind<MatchingService>().ToSinglePrefab(InstallerSettings.MatchingServicePrefab);
         }
     }

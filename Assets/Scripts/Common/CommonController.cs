@@ -6,11 +6,11 @@ namespace Submarine
 {
     public class CommonController : IInitializable, IDisposable
     {
-        private readonly MatchingService matchingService;
+        private readonly ConnectionService connection;
 
-        public CommonController(MatchingService matchingService)
+        public CommonController(ConnectionService connection)
         {
-            this.matchingService = matchingService;
+            this.connection = connection;
         }
 
         public void Initialize()
@@ -20,7 +20,7 @@ namespace Submarine
 
         public void Dispose()
         {
-            matchingService.Disconnect();
+            connection.Disconnect();
 
             Debug.Log("Game Quit");
         }
