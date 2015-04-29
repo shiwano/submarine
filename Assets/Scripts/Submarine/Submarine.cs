@@ -5,22 +5,22 @@ namespace Submarine
 {
     public class Submarine
     {
-        private readonly SubmarineView view;
+        private readonly SubmarineHooks hooks;
 
-        public Submarine(SubmarineView view)
+        public Submarine(SubmarineHooks hooks)
         {
-            this.view = view;
+            this.hooks = hooks;
         }
 
         public void SetPositionAndRotation(Vector3 position, Vector3 eulerAngles)
         {
-            view.transform.localPosition = position;
-            view.transform.Rotate(eulerAngles);
+            hooks.transform.localPosition = position;
+            hooks.transform.Rotate(eulerAngles);
         }
 
         public void MoveToVertically(float to, float duration, Ease easingType = Ease.Linear)
         {
-            view.transform.DOMoveY(to, duration).SetEase(easingType);
+            hooks.transform.DOMoveY(to, duration).SetEase(easingType);
         }
     }
 }

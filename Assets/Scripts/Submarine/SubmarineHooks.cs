@@ -3,7 +3,7 @@ using System.Collections;
 
 namespace Submarine
 {
-    public class SubmarineView : Photon.MonoBehaviour
+    public class SubmarineHooks : Photon.MonoBehaviour
     {
         private Vector3 receivedPosition = Vector3.zero;
         private Quaternion receivedRotation = Quaternion.identity;
