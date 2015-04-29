@@ -12,9 +12,8 @@ GameObject:
   - 23: {fileID: 2362672}
   - 114: {fileID: 11446834}
   - 114: {fileID: 11417832}
-  - 114: {fileID: 11407304}
   m_Layer: 0
-  m_Name: EnemySubmarine
+  m_Name: Enemy
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -63,17 +62,6 @@ MeshFilter:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 105894}
   m_Mesh: {fileID: 4300000, guid: 3dc6a60c45c653b41a51ae69532e3dd8, type: 3}
---- !u!114 &11407304
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 105894}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6c59ba0703a79d54c93a0e9991174504, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &11417832
 MonoBehaviour:
   m_ObjectHideFlags: 1
