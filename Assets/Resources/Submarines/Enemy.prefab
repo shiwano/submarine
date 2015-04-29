@@ -11,7 +11,6 @@ GameObject:
   - 33: {fileID: 3340744}
   - 23: {fileID: 2362672}
   - 114: {fileID: 11446834}
-  - 114: {fileID: 11417832}
   m_Layer: 0
   m_Name: Enemy
   m_TagString: Untagged
@@ -62,31 +61,6 @@ MeshFilter:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 105894}
   m_Mesh: {fileID: 4300000, guid: 3dc6a60c45c653b41a51ae69532e3dd8, type: 3}
---- !u!114 &11417832
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 105894}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: aa584fbee541324448dd18d8409c7a41, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ownerId: 0
-  group: 0
-  prefixBackup: -1
-  observed: {fileID: 0}
-  synchronization: 3
-  onSerializeTransformOption: 3
-  onSerializeRigidBodyOption: 2
-  ownershipTransfer: 0
-  ObservedComponents:
-  - {fileID: 474394}
-  ObservedComponentsFoldoutOpen: 1
-  viewIdField: 0
-  instantiationId: -1
-  isRuntimeInstantiated: 0
 --- !u!114 &11446834
 MonoBehaviour:
   m_ObjectHideFlags: 1
