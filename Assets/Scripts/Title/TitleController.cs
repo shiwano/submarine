@@ -6,9 +6,13 @@ namespace Submarine
     public class TitleController : IInitializable
     {
         private readonly TitleInstaller.Settings sceneSettings;
-        private readonly Submarine submarine;
+        private readonly Transform submarine;
 
-        public TitleController(TitleInstaller.Settings sceneSettings, Submarine submarine)
+        public TitleController(
+            TitleInstaller.Settings sceneSettings,
+            [Inject("Submarine")]
+            Transform submarine
+        )
         {
             this.sceneSettings = sceneSettings;
             this.submarine = submarine;
@@ -20,10 +24,8 @@ namespace Submarine
 
             sceneSettings.UI.StartButton.onClick.AddListener(OnStartButtonClick);
 
-            submarine.SetPositionAndRotation(
-                sceneSettings.Submarine.StartPosition,
-                sceneSettings.Submarine.StartRotation
-            );
+            submarine.localPosition = sceneSettings.Submarine.StartPosition;
+            submarine.Rotate(sceneSettings.Submarine.StartRotation);
         }
 
         private void OnStartButtonClick()

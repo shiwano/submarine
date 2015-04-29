@@ -2,7 +2,6 @@
 using System;
 using Zenject;
 using UnityEngine.UI;
-using DG.Tweening;
 
 namespace Submarine
 {
@@ -38,8 +37,7 @@ namespace Submarine
             Container.Bind<IInitializable>().ToSingle<TitleController>();
             Container.Bind<TitleController>().ToSingle();
 
-            Container.Bind<SubmarineView>().ToTransientPrefab<SubmarineView>(SceneSettings.Submarine.Prefab).WhenInjectedInto<Submarine>();
-            Container.Bind<Submarine>().ToSingle();
+            Container.Bind<Transform>("Submarine").ToSinglePrefab(SceneSettings.Submarine.Prefab);
         }
     }
 }
