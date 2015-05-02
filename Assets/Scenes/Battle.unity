@@ -126,82 +126,8 @@ Prefab:
       propertyPath: m_RootOrder
       value: 1
       objectReference: {fileID: 0}
-    - target: {fileID: 15436108, guid: f058e443cd4d74f3d9f1d3984a2c049d, type: 2}
-      propertyPath: m_EnableTreeColliders
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 21808010, guid: f058e443cd4d74f3d9f1d3984a2c049d, type: 2}
-      propertyPath: m_TreeDistance
-      value: 2000
-      objectReference: {fileID: 0}
-    - target: {fileID: 199676, guid: f058e443cd4d74f3d9f1d3984a2c049d, type: 2}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 21808010, guid: f058e443cd4d74f3d9f1d3984a2c049d, type: 2}
-      propertyPath: m_BakeLightProbesForTrees
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 466718, guid: f058e443cd4d74f3d9f1d3984a2c049d, type: 2}
-      propertyPath: m_LocalPosition.x
-      value: 1000
-      objectReference: {fileID: 0}
-    - target: {fileID: 466718, guid: f058e443cd4d74f3d9f1d3984a2c049d, type: 2}
-      propertyPath: m_LocalPosition.z
-      value: 1000
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: f058e443cd4d74f3d9f1d3984a2c049d, type: 2}
-  m_IsPrefabParent: 0
---- !u!1001 &537767420
-Prefab:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    m_TransformParent: {fileID: 0}
-    m_Modifications:
-    - target: {fileID: 424904, guid: 886f29b13ecca477fae78f38c4996b3a, type: 2}
-      propertyPath: m_LocalPosition.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 424904, guid: 886f29b13ecca477fae78f38c4996b3a, type: 2}
-      propertyPath: m_LocalPosition.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 424904, guid: 886f29b13ecca477fae78f38c4996b3a, type: 2}
-      propertyPath: m_LocalPosition.z
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 424904, guid: 886f29b13ecca477fae78f38c4996b3a, type: 2}
-      propertyPath: m_LocalRotation.x
-      value: -3.77489506e-08
-      objectReference: {fileID: 0}
-    - target: {fileID: 424904, guid: 886f29b13ecca477fae78f38c4996b3a, type: 2}
-      propertyPath: m_LocalRotation.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 424904, guid: 886f29b13ecca477fae78f38c4996b3a, type: 2}
-      propertyPath: m_LocalRotation.z
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 424904, guid: 886f29b13ecca477fae78f38c4996b3a, type: 2}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 424904, guid: 886f29b13ecca477fae78f38c4996b3a, type: 2}
-      propertyPath: m_RootOrder
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 11406070, guid: 886f29b13ecca477fae78f38c4996b3a, type: 2}
-      propertyPath: viewIdField
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 11406070, guid: 886f29b13ecca477fae78f38c4996b3a, type: 2}
-      propertyPath: instantiationId
-      value: 1
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-  m_ParentPrefab: {fileID: 100100000, guid: 886f29b13ecca477fae78f38c4996b3a, type: 2}
   m_IsPrefabParent: 0
 --- !u!1001 &606471101
 Prefab:
@@ -333,8 +259,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   InstallerSettings:
+    MainCamera: {fileID: 1473723662}
     BattleServicePrefab: {fileID: 107186, guid: 8909ef24d821340bb9ccf77ed39914a6,
       type: 2}
+    Submarine:
+      StartPositions:
+      - {x: 0, y: 60, z: 0}
+      - {x: 0, y: 60, z: 0}
+      - {x: 0, y: 60, z: 0}
+      - {x: 0, y: 60, z: 0}
 --- !u!1 &1262540243
 GameObject:
   m_ObjectHideFlags: 0
@@ -428,6 +361,11 @@ Prefab:
 --- !u!4 &1473723661 stripped
 Transform:
   m_PrefabParentObject: {fileID: 404722, guid: 182ffbfda75554d4d82af1d4b86654a8, type: 2}
+  m_PrefabInternal: {fileID: 1473723660}
+--- !u!20 &1473723662 stripped
+Camera:
+  m_PrefabParentObject: {fileID: 2099654, guid: 182ffbfda75554d4d82af1d4b86654a8,
+    type: 2}
   m_PrefabInternal: {fileID: 1473723660}
 --- !u!4 &1657535137 stripped
 Transform:
