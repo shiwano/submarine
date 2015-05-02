@@ -3,32 +3,32 @@ using System.Collections;
 
 namespace Submarine
 {
-    [RequireComponent(
-        typeof(PhotonView),
-        typeof(Rigidbody))]
+    [RequireComponent(typeof(PhotonView), typeof(Rigidbody))]
     public class SubmarineHooks : Photon.MonoBehaviour
     {
         private Vector3 receivedPosition = Vector3.zero;
         private Quaternion receivedRotation = Quaternion.identity;
-        private Rigidbody rigidbody;
+
+        private Rigidbody cachedRigidbody;
+        private const float velocityLimit = 100f;
 
         public bool IsMine { get { return photonView.isMine; } }
 
         public void AddForce(Vector3 force)
         {
-            rigidbody.AddForce(force, ForceMode.Force);
+            cachedRigidbody.AddForce(force, ForceMode.Force);
         }
 
         private void Awake()
         {
-            rigidbody = GetComponent<Rigidbody>();
+            cachedRigidbody = GetComponent<Rigidbody>();
         }
 
         private void Update()
         {
             if (IsMine)
             {
-                rigidbody.velocity = Vector3.ClampMagnitude(rigidbody.velocity, 100f);
+                cachedRigidbody.velocity = Vector3.ClampMagnitude(cachedRigidbody.velocity, velocityLimit);
             }
             else
             {
