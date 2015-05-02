@@ -18,9 +18,23 @@ namespace Submarine
             if (!connection.InRoom)
             {
                 Debug.LogError("Not in room");
+                return;
             }
 
             connection.IsMessageQueueRunning = true;
+        }
+
+        public void FinishBattle()
+        {
+            if (connection.InRoom)
+            {
+                PhotonNetwork.LeaveRoom();
+            }
+        }
+
+        public GameObject InstantiatePhotonView(string prefabName, Vector3 position)
+        {
+            return PhotonNetwork.Instantiate(prefabName, position, Quaternion.identity, 0);
         }
     }
 }

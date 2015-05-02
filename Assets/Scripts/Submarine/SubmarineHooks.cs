@@ -3,6 +3,7 @@ using System.Collections;
 
 namespace Submarine
 {
+    [RequireComponent(typeof(PhotonView))]
     public class SubmarineHooks : Photon.MonoBehaviour
     {
         private Vector3 receivedPosition = Vector3.zero;

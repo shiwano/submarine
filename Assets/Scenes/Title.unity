@@ -130,8 +130,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0af6c8ddce75c45199f93b36ce048558, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  SceneSettings:
+  InstallerSettings:
     StartButton: {fileID: 1179573966}
+    MatchingServicePrefab: {fileID: 167458, guid: ae684f93bb45d42ed8ea0c97b361754b,
+      type: 2}
 --- !u!1 &474432927
 GameObject:
   m_ObjectHideFlags: 0

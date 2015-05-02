@@ -9,8 +9,7 @@ namespace Submarine
         private readonly TitleInstaller.Settings sceneSettings;
         private readonly MatchingService matchingService;
 
-        public TitleController(TitleInstaller.Settings sceneSettings,
-            MatchingService matchingService)
+        public TitleController(TitleInstaller.Settings sceneSettings, MatchingService matchingService)
         {
             this.sceneSettings = sceneSettings;
             this.matchingService = matchingService;

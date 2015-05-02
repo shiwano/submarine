@@ -11,7 +11,6 @@ namespace Submarine
         public class Settings
         {
             public GameObject ConnectionServicePrefab;
-            public GameObject MatchingServicePrefab;
         }
 
         public Settings InstallerSettings;
@@ -23,7 +22,6 @@ namespace Submarine
             Container.Bind<CommonController>().ToSingle();
 
             Container.Bind<ConnectionService>().ToSinglePrefab(InstallerSettings.ConnectionServicePrefab);
-            Container.Bind<MatchingService>().ToSinglePrefab(InstallerSettings.MatchingServicePrefab);
         }
     }
 }
