@@ -1,16 +1,18 @@
 ﻿using UnityEngine;
 using System;
-using System.Collections;
+using System.Collections.Generic;
 using Zenject;
 
 namespace Submarine
 {
-    public class BattleController : IInitializable, IDisposable
+    public class BattleController : IInitializable, IDisposable, ITickable
     {
         private readonly BattleInstaller.Settings settings;
         private readonly BattleService battleService;
         private readonly SubmarineFactory submarineFactory;
         private readonly ThirdPersonCamera thirdPersonCamera;
+
+        private readonly List<Submarine> submarines = new List<Submarine>();
 
         public BattleController(
             BattleInstaller.Settings settings,
@@ -29,12 +31,23 @@ namespace Submarine
             battleService.StartBattle();
 
             var playerSubmarine = submarineFactory.Create(settings.Submarine.StartPositions[0]);
+            playerSubmarine.Initialize();
+            submarines.Add(playerSubmarine);
+
             thirdPersonCamera.SetTarget(playerSubmarine.Transform);
         }
 
         public void Dispose()
         {
             battleService.FinishBattle();
+        }
+
+        public void Tick()
+        {
+            foreach (var submarine in submarines)
+            {
+                submarine.Tick();
+            }
         }
     }
 }

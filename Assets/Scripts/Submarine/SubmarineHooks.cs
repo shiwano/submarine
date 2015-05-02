@@ -9,9 +9,11 @@ namespace Submarine
         private Vector3 receivedPosition = Vector3.zero;
         private Quaternion receivedRotation = Quaternion.identity;
 
+        public bool IsMine { get { return photonView.isMine; } }
+
         private void Update()
         {
-            if (!photonView.isMine)
+            if (!IsMine)
             {
                 transform.position = Vector3.Lerp(transform.position, receivedPosition, Time.deltaTime * 5);
                 transform.rotation = Quaternion.Lerp(transform.rotation, receivedRotation, Time.deltaTime * 5);

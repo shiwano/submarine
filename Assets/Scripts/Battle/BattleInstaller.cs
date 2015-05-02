@@ -30,10 +30,13 @@ namespace Submarine
             Container.Bind<Camera>("MainCamera").ToSingleInstance(InstallerSettings.MainCamera);
 
             Container.Bind<BattleService>().ToSinglePrefab(InstallerSettings.BattleServicePrefab);
+
+            Container.Bind<IInitializable>().ToSingle<BattleInput>();
             Container.Bind<BattleInput>().ToSingle();
 
             Container.Bind<IInitializable>().ToSingle<BattleController>();
             Container.Bind<IDisposable>().ToSingle<BattleController>();
+            Container.Bind<ITickable>().ToSingle<BattleController>();
             Container.Bind<BattleController>().ToSingle();
 
             Container.Bind<IInitializable>().ToSingle<ThirdPersonCamera>();

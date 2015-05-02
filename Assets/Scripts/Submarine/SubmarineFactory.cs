@@ -19,7 +19,6 @@ namespace Submarine
         {
             using (BindScope scope = container.CreateScope())
             {
-                scope.BindValue<Vector3>().To(position).WhenInjectedInto<Submarine>();
                 scope.Bind<SubmarineHooks>().ToMethod(c => GetOrCreateSubmarineHooks(c, position));
                 return container.Instantiate<Submarine>();
             }
