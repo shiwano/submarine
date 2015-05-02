@@ -3,17 +3,34 @@ using System.Collections;
 
 namespace Submarine
 {
-    [RequireComponent(typeof(PhotonView))]
+    [RequireComponent(
+        typeof(PhotonView),
+        typeof(Rigidbody))]
     public class SubmarineHooks : Photon.MonoBehaviour
     {
         private Vector3 receivedPosition = Vector3.zero;
         private Quaternion receivedRotation = Quaternion.identity;
+        private Rigidbody rigidbody;
 
         public bool IsMine { get { return photonView.isMine; } }
 
+        public void AddForce(Vector3 force)
+        {
+            rigidbody.AddForce(force, ForceMode.Force);
+        }
+
+        private void Awake()
+        {
+            rigidbody = GetComponent<Rigidbody>();
+        }
+
         private void Update()
         {
-            if (!IsMine)
+            if (IsMine)
+            {
+                rigidbody.velocity = Vector3.ClampMagnitude(rigidbody.velocity, 100f);
+            }
+            else
             {
                 transform.position = Vector3.Lerp(transform.position, receivedPosition, Time.deltaTime * 5);
                 transform.rotation = Quaternion.Lerp(transform.rotation, receivedRotation, Time.deltaTime * 5);

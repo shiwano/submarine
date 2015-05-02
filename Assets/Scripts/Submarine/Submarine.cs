@@ -9,7 +9,10 @@ namespace Submarine
         private readonly SubmarineHooks hooks;
         private readonly BattleInput input;
 
+        private const float straightMovingForce = 30f;
+
         public Transform Transform { get { return hooks.transform; } }
+        public bool IsMine { get { return hooks.IsMine; } }
 
         public Submarine(SubmarineHooks hooks, BattleInput input)
         {
@@ -19,12 +22,19 @@ namespace Submarine
 
         public void Initialize()
         {
-            input.IsClicked.Where(b => b).Subscribe(_ => Debug.Log("Clicked"));
         }
 
         public void Tick()
         {
-            Debug.Log("Tick");
+            if (!IsMine)
+            {
+                return;
+            }
+
+            if (input.IsMouseButtonPressed.Value)
+            {
+                hooks.AddForce(Vector3.forward * straightMovingForce);
+            }
         }
     }
 }

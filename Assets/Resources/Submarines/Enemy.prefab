@@ -12,6 +12,7 @@ GameObject:
   - 23: {fileID: 2362672}
   - 114: {fileID: 11446834}
   - 114: {fileID: 11423192}
+  - 54: {fileID: 5440686}
   m_Layer: 0
   m_Name: Enemy
   m_TagString: Untagged
@@ -62,6 +63,21 @@ MeshFilter:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 105894}
   m_Mesh: {fileID: 4300000, guid: 3dc6a60c45c653b41a51ae69532e3dd8, type: 3}
+--- !u!54 &5440686
+Rigidbody:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 105894}
+  serializedVersion: 2
+  m_Mass: 1
+  m_Drag: .5
+  m_AngularDrag: .5
+  m_UseGravity: 0
+  m_IsKinematic: 0
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
 --- !u!114 &11423192
 MonoBehaviour:
   m_ObjectHideFlags: 1
