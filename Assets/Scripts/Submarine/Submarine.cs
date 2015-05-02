@@ -33,8 +33,9 @@ namespace Submarine
 
             if (input.IsMouseButtonPressed.Value)
             {
-                hooks.AddForce(Vector3.forward * straightMovingForce);
-                Debug.Log(input.MousePosition + " ========= " + input.MousePositionOnButtonDown);
+                var force = Vector3.forward * straightMovingForce;
+                var draggingForce = Vector3.right * (input.MousePosition.x - input.MousePositionOnButtonDown.x);
+                hooks.AddForce(force + draggingForce);
             }
         }
     }

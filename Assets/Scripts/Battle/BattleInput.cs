@@ -6,8 +6,11 @@ namespace Submarine
 {
     public class BattleInput : IInitializable
     {
+        private const float mouseDraggingThreshold = 50f;
+
         public Vector3 MousePosition { get { return Input.mousePosition; } }
         public Vector3 MousePositionOnButtonDown { get; private set; }
+
         public ReactiveProperty<bool> IsMouseButtonPressed { get; private set; }
 
         public void Initialize()
