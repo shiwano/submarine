@@ -15,7 +15,11 @@ namespace Submarine
 
         public float MousePressingTime
         {
-            get { return IsMouseButtonPressed.Value ? (float)(DateTime.Now - mouseButtonDownTime).TotalSeconds : 0f; }
+            get
+            {
+                return IsMouseButtonPressed.Value ?
+                    (float)(DateTime.Now - mouseButtonDownTime).TotalSeconds : 0f;
+            }
         }
 
         public ReactiveProperty<bool> IsMouseButtonPressed { get; private set; }

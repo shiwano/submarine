@@ -10,7 +10,7 @@ namespace Submarine
 
         private Rigidbody cachedRigidbody;
 
-        private const float velocityLimit = 300f;
+        private const float velocityLimit = 350f;
         private const float dragOnAccelerate = 0.5f;
         private const float dragOnBrake = 1.5f;
 
