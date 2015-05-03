@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using System;
 using UniRx;
 using Zenject;
 
@@ -7,9 +8,15 @@ namespace Submarine
     public class BattleInput : IInitializable
     {
         private const float mouseDraggingThreshold = 50f;
+        private DateTime mouseButtonDownTime = DateTime.Now;
 
         public Vector3 MousePosition { get { return Input.mousePosition; } }
         public Vector3 MousePositionOnButtonDown { get; private set; }
+
+        public float MousePressingTime
+        {
+            get { return IsMouseButtonPressed.Value ? (float)(DateTime.Now - mouseButtonDownTime).TotalSeconds : 0f; }
+        }
 
         public ReactiveProperty<bool> IsMouseButtonPressed { get; private set; }
 
@@ -21,7 +28,11 @@ namespace Submarine
 
             IsMouseButtonPressed
                 .Where(b => b)
-                .Subscribe(_ => MousePositionOnButtonDown = MousePosition);
+                .Subscribe(_ =>
+                {
+                    mouseButtonDownTime = DateTime.Now;
+                    MousePositionOnButtonDown = MousePosition;
+                });
         }
     }
 }

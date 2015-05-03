@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using System.Collections;
 
 namespace Submarine
 {
@@ -10,13 +9,27 @@ namespace Submarine
         private Quaternion receivedRotation = Quaternion.identity;
 
         private Rigidbody cachedRigidbody;
-        private const float velocityLimit = 100f;
+
+        private const float velocityLimit = 300f;
+        private const float dragOnAccelerate = 0.5f;
+        private const float dragOnBrake = 1.5f;
 
         public bool IsMine { get { return photonView.isMine; } }
 
-        public void AddForce(Vector3 force)
+        public void Accelerate(Vector3 force)
         {
+            cachedRigidbody.drag = dragOnAccelerate;
             cachedRigidbody.AddForce(force, ForceMode.Force);
+        }
+
+        public void Turn(Vector3 eulerAngles)
+        {
+            transform.Rotate(eulerAngles);
+        }
+
+        public void Brake()
+        {
+            cachedRigidbody.drag = dragOnBrake;
         }
 
         private void Awake()
@@ -39,6 +52,8 @@ namespace Submarine
      
         private void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
         {
+            Debug.Log("aaa");
+
             if (stream.isWriting)
             {
                 stream.SendNext(transform.position);
@@ -46,8 +61,8 @@ namespace Submarine
             }
             else
             {
-                this.receivedPosition = (Vector3)stream.ReceiveNext();
-                this.receivedRotation = (Quaternion)stream.ReceiveNext();
+                receivedPosition = (Vector3)stream.ReceiveNext();
+                receivedRotation = (Quaternion)stream.ReceiveNext();
             }
         }
     }

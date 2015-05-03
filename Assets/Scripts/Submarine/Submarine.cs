@@ -11,12 +11,12 @@ namespace Submarine
         public Transform Transform { get { return hooks.transform; } }
         public bool IsMine { get { return hooks.IsMine; } }
 
-        public Vector3 MovingForce
+        public Vector3 Speed
         {
-            get { return hooks.transform.forward * 30f; }
+            get { return hooks.transform.forward * Mathf.Lerp(0f, 50f, Mathf.Clamp01(input.MousePressingTime / 2f)); }
         }
 
-        public Vector3 DraggedEulerAngles
+        public Vector3 TurningEulerAngles
         {
             get { return hooks.transform.up * (input.MousePosition.x - input.MousePositionOnButtonDown.x) * 0.01f; }
         }
@@ -40,9 +40,12 @@ namespace Submarine
 
             if (input.IsMouseButtonPressed.Value)
             {
-                Debug.Log(hooks.transform.forward + "    " + MovingForce);
-                hooks.AddForce(MovingForce);
-                hooks.transform.Rotate(DraggedEulerAngles);
+                hooks.Accelerate(Speed);
+                hooks.Turn(TurningEulerAngles);
+            }
+            else
+            {
+                hooks.Brake();
             }
         }
     }
