@@ -40,6 +40,7 @@ namespace Submarine
 
             if (input.IsMouseButtonPressed.Value)
             {
+                Debug.Log(hooks.transform.forward + "    " + MovingForce);
                 hooks.AddForce(MovingForce);
                 hooks.transform.Rotate(DraggedEulerAngles);
             }

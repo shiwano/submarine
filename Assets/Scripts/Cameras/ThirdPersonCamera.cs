@@ -6,18 +6,20 @@ namespace Submarine
     public class ThirdPersonCamera : ITickable, IInitializable
     {
         private readonly Transform camera;
+        private readonly Quaternion cameraStartRotation;
+
         private Vector3 offset;
         private Transform target;
 
-        public ThirdPersonCamera(
-            [Inject("MainCamera")] Camera camera)
+        public ThirdPersonCamera([Inject("MainCamera")] Camera camera)
         {
             this.camera = camera.transform;
+            cameraStartRotation = camera.transform.rotation;
         }
 
         public void Initialize()
         {
-            UpdateCameraPosition(Vector3.zero);
+            UpdateCameraTransform(Vector3.zero, Quaternion.identity);
             RaycastHit hit;
 
             if (Physics.Raycast(camera.position, Vector3.forward, out hit))
@@ -38,13 +40,14 @@ namespace Submarine
                 return;
             }
 
-            UpdateCameraPosition(target.position);
+            UpdateCameraTransform(target.position, target.rotation);
         }
 
-        void UpdateCameraPosition(Vector3 position)
+        void UpdateCameraTransform(Vector3 position, Quaternion rotation)
         {
             var dest = position + offset;
             camera.position = new Vector3(dest.x, camera.position.y, dest.z);
+            camera.rotation = rotation * cameraStartRotation;
         }
     }
 }

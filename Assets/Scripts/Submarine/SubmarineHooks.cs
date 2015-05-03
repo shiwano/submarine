@@ -16,7 +16,7 @@ namespace Submarine
 
         public void AddForce(Vector3 force)
         {
-            cachedRigidbody.AddRelativeForce(force, ForceMode.Force);
+            cachedRigidbody.AddForce(force, ForceMode.Force);
         }
 
         private void Awake()
