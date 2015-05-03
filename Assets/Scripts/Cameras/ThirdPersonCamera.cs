@@ -3,29 +3,19 @@ using Zenject;
 
 namespace Submarine
 {
-    public class ThirdPersonCamera : ITickable, IInitializable
+    public class ThirdPersonCamera : ITickable
     {
         private readonly Transform camera;
+        private readonly Vector3 cameraStartPosition;
         private readonly Quaternion cameraStartRotation;
 
-        private Vector3 offset;
         private Transform target;
 
         public ThirdPersonCamera([Inject("MainCamera")] Camera camera)
         {
             this.camera = camera.transform;
+            cameraStartPosition = camera.transform.position;
             cameraStartRotation = camera.transform.rotation;
-        }
-
-        public void Initialize()
-        {
-            UpdateCameraTransform(Vector3.zero, Quaternion.identity);
-            RaycastHit hit;
-
-            if (Physics.Raycast(camera.position, Vector3.forward, out hit))
-            {
-                offset = hit.transform.position;
-            }
         }
 
         public void SetTarget(Transform target)
@@ -40,14 +30,13 @@ namespace Submarine
                 return;
             }
 
-            UpdateCameraTransform(target.position, target.rotation);
-        }
-
-        void UpdateCameraTransform(Vector3 position, Quaternion rotation)
-        {
-            var dest = position + offset;
-            camera.position = new Vector3(dest.x, camera.position.y, dest.z);
-            camera.rotation = rotation * cameraStartRotation;
+            var dest = -target.forward * cameraStartPosition.magnitude;
+            camera.position = new Vector3(
+                target.position.x + dest.x,
+                cameraStartPosition.y,
+                target.position.z + dest.z
+            );
+            camera.rotation = target.rotation * cameraStartRotation;
         }
     }
 }

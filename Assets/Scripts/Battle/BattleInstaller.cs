@@ -39,7 +39,6 @@ namespace Submarine
             Container.Bind<ITickable>().ToSingle<BattleController>();
             Container.Bind<BattleController>().ToSingle();
 
-            Container.Bind<IInitializable>().ToSingle<ThirdPersonCamera>();
             Container.Bind<ITickable>().ToSingle<ThirdPersonCamera>();
             Container.Bind<ThirdPersonCamera>().ToSingle<ThirdPersonCamera>();
 
