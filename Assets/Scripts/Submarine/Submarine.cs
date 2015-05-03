@@ -1,6 +1,5 @@
 ﻿using UnityEngine;
 using Zenject;
-using UniRx;
 
 namespace Submarine
 {
@@ -9,10 +8,18 @@ namespace Submarine
         private readonly SubmarineHooks hooks;
         private readonly BattleInput input;
 
-        private const float straightMovingForce = 30f;
-
         public Transform Transform { get { return hooks.transform; } }
         public bool IsMine { get { return hooks.IsMine; } }
+
+        public Vector3 MovingForce
+        {
+            get { return hooks.transform.forward * 30f; }
+        }
+
+        public Vector3 DraggedEulerAngles
+        {
+            get { return hooks.transform.up * (input.MousePosition.x - input.MousePositionOnButtonDown.x) * 0.01f; }
+        }
 
         public Submarine(SubmarineHooks hooks, BattleInput input)
         {
@@ -33,11 +40,8 @@ namespace Submarine
 
             if (input.IsMouseButtonPressed.Value)
             {
-                var force = hooks.transform.forward * straightMovingForce;
-                var draggingForce = hooks.transform.up * (input.MousePosition.x - input.MousePositionOnButtonDown.x) * 0.01f;
-                hooks.AddForce(force);
-                hooks.transform.Rotate(draggingForce);
-                Debug.Log(draggingForce);
+                hooks.AddForce(MovingForce);
+                hooks.transform.Rotate(DraggedEulerAngles);
             }
         }
     }
