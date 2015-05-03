@@ -2,15 +2,23 @@
 
 namespace Submarine
 {
-    [RequireComponent(typeof(PhotonView), typeof(Rigidbody))]
+    [RequireComponent(
+        typeof(PhotonView),
+        typeof(BoxCollider),
+        typeof(Rigidbody)
+    )]
     public class SubmarineHooks : Photon.MonoBehaviour
     {
+        [SerializeField]
+        private GameObject model;
+
         private Vector3 receivedPosition = Vector3.zero;
         private Quaternion receivedRotation = Quaternion.identity;
+        private Quaternion receivedModelRotation = Quaternion.identity;
 
         private Rigidbody cachedRigidbody;
 
-        private const float velocityLimit = 350f;
+        private const float velocityLimit = 200f;
         private const float dragOnAccelerate = 0.5f;
         private const float dragOnBrake = 1.5f;
 
@@ -25,11 +33,13 @@ namespace Submarine
         public void Turn(Vector3 eulerAngles)
         {
             transform.Rotate(eulerAngles);
+            model.transform.localRotation = Quaternion.Euler(new Vector3(0f, 0f, -eulerAngles.y * 20f));
         }
 
         public void Brake()
         {
             cachedRigidbody.drag = dragOnBrake;
+            model.transform.localRotation = Quaternion.identity;
         }
 
         private void Awake()
@@ -47,22 +57,23 @@ namespace Submarine
             {
                 transform.position = Vector3.Lerp(transform.position, receivedPosition, Time.deltaTime * 5);
                 transform.rotation = Quaternion.Lerp(transform.rotation, receivedRotation, Time.deltaTime * 5);
+                model.transform.rotation = Quaternion.Lerp(model.transform.rotation, receivedModelRotation, Time.deltaTime * 5);
             }
         }
      
         private void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
         {
-            Debug.Log("aaa");
-
             if (stream.isWriting)
             {
                 stream.SendNext(transform.position);
                 stream.SendNext(transform.rotation);
+                stream.SendNext(model.transform.rotation);
             }
             else
             {
                 receivedPosition = (Vector3)stream.ReceiveNext();
                 receivedRotation = (Quaternion)stream.ReceiveNext();
+                receivedModelRotation = (Quaternion)stream.ReceiveNext();
             }
         }
     }

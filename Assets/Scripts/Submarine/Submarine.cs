@@ -13,7 +13,7 @@ namespace Submarine
 
         public Vector3 Speed
         {
-            get { return hooks.transform.forward * Mathf.Lerp(0f, 60f, Mathf.Clamp01(input.MousePressingTime)); }
+            get { return hooks.transform.forward * Mathf.Lerp(0f, 50f, Mathf.Clamp01(input.MousePressingTime)); }
         }
 
         public Vector3 TurningEulerAngles

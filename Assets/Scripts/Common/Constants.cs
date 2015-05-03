@@ -7,7 +7,6 @@ namespace Submarine
     {
         public const string Version = "0.1";
 
-        public const string PlayerSubmarinePrefab = "Submarines/Player";
-        public const string EnemySubmarinePrefab = "Submarines/Enemy";
+        public const string SubmarinePrefab = "Submarines/Submarine";
     }
 }
