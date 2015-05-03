@@ -1,4 +1,6 @@
 ﻿using UnityEngine;
+using System;
+using DG.Tweening;
 
 namespace Submarine
 {
@@ -45,6 +47,11 @@ namespace Submarine
         private void Awake()
         {
             cachedRigidbody = GetComponent<Rigidbody>();
+        }
+
+        private void Start()
+        {
+            model.transform.DOLocalMoveY(-1.5f, 3f).SetEase(Ease.InOutQuad).SetLoops(-1, LoopType.Yoyo);
         }
 
         private void Update()
