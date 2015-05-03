@@ -131,6 +131,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   model: {fileID: 161480}
+  enemySubmarineMaterial: {fileID: 2100000, guid: 35deefdae04ca224e8fc07cdad703ee3,
+    type: 2}
 --- !u!114 &11427390
 MonoBehaviour:
   m_ObjectHideFlags: 1
