@@ -15,16 +15,25 @@ namespace Submarine
             this.battleService = battleService;
         }
 
-        public Submarine Create(Vector3 position)
+        public ISubmarine Create(Vector3 position)
         {
             using (BindScope scope = container.CreateScope())
             {
-                scope.Bind<SubmarineHooks>().ToMethod(c => GetOrCreateSubmarineHooks(c, position));
-                return container.Instantiate<Submarine>();
+                scope.Bind<SubmarineHooks>().ToMethod(c => CreateSubmarineHooks(c, position));
+                return container.Instantiate<PlayerSubmarine>();
             }
         }
 
-        public SubmarineHooks GetOrCreateSubmarineHooks(InjectContext context, Vector3 position)
+        public ISubmarine Create(SubmarineHooks hooks)
+        {
+            using (BindScope scope = container.CreateScope())
+            {
+                scope.Bind<SubmarineHooks>().ToInstance(hooks);
+                return container.Instantiate<PlayerSubmarine>();
+            }
+        }
+
+        public SubmarineHooks CreateSubmarineHooks(InjectContext context, Vector3 position)
         {
             var go = battleService.InstantiatePhotonView(Constants.SubmarinePrefab, position);
             return go.GetComponent<SubmarineHooks>();

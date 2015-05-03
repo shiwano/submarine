@@ -13,6 +13,8 @@ namespace Submarine
     {
         [SerializeField]
         private GameObject model;
+        [SerializeField]
+        private Material enemySubmarineMaterial;
 
         private Vector3 receivedPosition = Vector3.zero;
         private Quaternion receivedRotation = Quaternion.identity;
@@ -47,11 +49,22 @@ namespace Submarine
         private void Awake()
         {
             cachedRigidbody = GetComponent<Rigidbody>();
+            BattleEvent.OnPhotonBehaviourCreate(this);
+
+            if (!IsMine)
+            {
+                model.GetComponent<MeshRenderer>().material = enemySubmarineMaterial;
+            }
+        }
+
+        private void OnDestroy()
+        {
+            BattleEvent.OnPhotonBehaviourDestroy(this);
         }
 
         private void Start()
         {
-            model.transform.DOLocalMoveY(-1.5f, 3f).SetEase(Ease.InOutQuad).SetLoops(-1, LoopType.Yoyo);
+            model.transform.DOLocalMoveY(-2.5f, 3f).SetEase(Ease.InOutQuad).SetLoops(-1, LoopType.Yoyo);
         }
 
         private void Update()

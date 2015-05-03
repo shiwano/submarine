@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Zenject;
 
 namespace Submarine
@@ -12,7 +13,7 @@ namespace Submarine
         private readonly SubmarineFactory submarineFactory;
         private readonly ThirdPersonCamera thirdPersonCamera;
 
-        private readonly List<Submarine> submarines = new List<Submarine>();
+        private readonly List<ISubmarine> submarines = new List<ISubmarine>();
 
         public BattleController(
             BattleInstaller.Settings settings,
@@ -28,10 +29,11 @@ namespace Submarine
 
         public void Initialize()
         {
+            BattleEvent.OnPhotonBehaviourCreate += OnPhotonBehaviourCreate;
+            BattleEvent.OnPhotonBehaviourDestroy += OnPhotonBehaviourDestroy;
             battleService.StartBattle();
 
             var playerSubmarine = submarineFactory.Create(settings.Submarine.StartPositions[0]);
-            playerSubmarine.Initialize();
             submarines.Add(playerSubmarine);
 
             thirdPersonCamera.SetTarget(playerSubmarine.Transform);
@@ -40,6 +42,8 @@ namespace Submarine
         public void Dispose()
         {
             battleService.FinishBattle();
+            BattleEvent.OnPhotonBehaviourCreate -= OnPhotonBehaviourCreate;
+            BattleEvent.OnPhotonBehaviourDestroy -= OnPhotonBehaviourDestroy;
         }
 
         public void Tick()
@@ -47,6 +51,31 @@ namespace Submarine
             foreach (var submarine in submarines)
             {
                 submarine.Tick();
+            }
+        }
+
+        private void OnPhotonBehaviourCreate(Photon.MonoBehaviour photonMonoBehaviour)
+        {
+            if (photonMonoBehaviour.photonView.isMine)
+            {
+                return;
+            }
+
+            var submarineHooks = photonMonoBehaviour as SubmarineHooks;
+            if (submarineHooks != null)
+            {
+                var submarine = submarineFactory.Create(submarineHooks);
+                submarines.Add(submarine);
+            }
+        }
+
+        private void OnPhotonBehaviourDestroy(Photon.MonoBehaviour photonMonoBehaviour)
+        {
+            var submarineHooks = photonMonoBehaviour as SubmarineHooks;
+            if (submarineHooks != null)
+            {
+                var destroyedIndex = submarines.FindIndex(s => s.Transform == submarineHooks.transform);
+                submarines.RemoveAt(destroyedIndex);
             }
         }
     }
