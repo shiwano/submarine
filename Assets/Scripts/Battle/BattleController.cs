@@ -36,7 +36,7 @@ namespace Submarine
             var playerSubmarine = submarineFactory.Create(settings.Submarine.StartPositions[0]);
             submarines.Add(playerSubmarine);
 
-            thirdPersonCamera.SetTarget(playerSubmarine.Transform);
+            thirdPersonCamera.SetTarget(playerSubmarine.Hooks.transform);
         }
 
         public void Dispose()
@@ -74,7 +74,7 @@ namespace Submarine
             var submarineHooks = photonMonoBehaviour as SubmarineHooks;
             if (submarineHooks != null)
             {
-                var destroyedIndex = submarines.FindIndex(s => s.Transform == submarineHooks.transform);
+                var destroyedIndex = submarines.FindIndex(s => s.Hooks == submarineHooks);
                 submarines.RemoveAt(destroyedIndex);
             }
         }

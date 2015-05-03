@@ -5,61 +5,57 @@ namespace Submarine
 {
     public interface ISubmarine : ITickable
     {
-        Transform Transform { get; }
+        SubmarineHooks Hooks { get; }
     }
 
     public class PlayerSubmarine : ISubmarine
     {
-        private readonly SubmarineHooks hooks;
         private readonly BattleInput input;
 
-        public Transform Transform { get { return hooks.transform; } }
-        public bool IsMine { get { return hooks.IsMine; } }
+        public SubmarineHooks Hooks { get; private set; }
 
         public Vector3 Speed
         {
-            get { return hooks.transform.forward * Mathf.Lerp(0f, 50f, Mathf.Clamp01(input.MousePressingTime)); }
+            get { return Hooks.transform.forward * Mathf.Lerp(0f, 50f, Mathf.Clamp01(input.MousePressingTime)); }
         }
 
         public Vector3 TurningEulerAngles
         {
-            get { return hooks.transform.up * (input.MousePosition.x - input.MousePositionOnButtonDown.x) * 0.01f; }
+            get { return Hooks.transform.up * (input.MousePosition.x - input.MousePositionOnButtonDown.x) * 0.01f; }
         }
 
         public PlayerSubmarine(SubmarineHooks hooks, BattleInput input)
         {
-            this.hooks = hooks;
+            Hooks = hooks;
             this.input = input;
         }
        
         public void Tick()
         {
-            if (!IsMine)
+            if (!Hooks.IsMine)
             {
                 return;
             }
 
             if (input.IsMouseButtonPressed.Value)
             {
-                hooks.Accelerate(Speed);
-                hooks.Turn(TurningEulerAngles);
+                Hooks.Accelerate(Speed);
+                Hooks.Turn(TurningEulerAngles);
             }
             else
             {
-                hooks.Brake();
+                Hooks.Brake();
             }
         }
     }
 
     public class EnemySubmarine : ISubmarine
     {
-        private readonly SubmarineHooks hooks;
-
-        public Transform Transform { get { return hooks.transform; } }
+        public SubmarineHooks Hooks { get; private set; }
 
         public EnemySubmarine(SubmarineHooks hooks)
         {
-            this.hooks = hooks;
+            Hooks = hooks;
         }
 
         public void Tick() {}
