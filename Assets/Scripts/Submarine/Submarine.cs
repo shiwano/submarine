@@ -12,6 +12,7 @@ namespace Submarine
     public class PlayerSubmarine : ISubmarine
     {
         private readonly BattleInput input;
+        private readonly BattleObjectSpawner spawner;
 
         public SubmarineHooks Hooks { get; private set; }
 
@@ -25,10 +26,11 @@ namespace Submarine
             get { return Hooks.transform.up * (input.MousePosition.x - input.MousePositionOnButtonDown.x) * 0.01f; }
         }
 
-        public PlayerSubmarine(SubmarineHooks hooks, BattleInput input)
+        public PlayerSubmarine(SubmarineHooks hooks, BattleInput input, BattleObjectSpawner spawner)
         {
             Hooks = hooks;
             this.input = input;
+            this.spawner = spawner;
         }
 
         public void Initialize()
@@ -40,7 +42,7 @@ namespace Submarine
             input.IsMouseButtonClicked
                 .Skip(1)
                 .Where(b => b)
-                .Subscribe(_ => Debug.Log("Clicked"));
+                .Subscribe(_ => SpawnTorpedo());
         }
        
         public void Tick()
@@ -50,6 +52,11 @@ namespace Submarine
                 Hooks.Accelerate(Speed);
                 Hooks.Turn(TurningEulerAngles);
             }
+        }
+
+        private void SpawnTorpedo()
+        {
+            spawner.SpawnTorpedo(Hooks.transform.position, Hooks.transform.rotation);
         }
     }
 

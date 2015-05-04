@@ -13,6 +13,11 @@ namespace Submarine
     {
         public TorpedoHooks Hooks { get; private set; }
 
+        public Vector3 Speed
+        {
+            get { return Hooks.transform.forward * 50f; }
+        }
+
         public PlayerTorpedo(TorpedoHooks hooks)
         {
             Hooks = hooks;
@@ -20,6 +25,7 @@ namespace Submarine
 
         public void Tick()
         {
+            Hooks.Accelerate(Speed);
         }
     }
 

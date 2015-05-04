@@ -17,6 +17,11 @@ namespace Submarine
 
         public bool IsMine { get { return photonView.isMine; } }
 
+        public void Accelerate(Vector3 force)
+        {
+            cachedRigidbody.AddForce(force, ForceMode.Force);
+        }
+
         private void Awake()
         {
             cachedRigidbody = GetComponent<Rigidbody>();
