@@ -29,7 +29,7 @@ namespace Submarine
             using (BindScope scope = container.CreateScope())
             {
                 scope.Bind<SubmarineHooks>().ToInstance(hooks);
-                return container.Instantiate<PlayerSubmarine>();
+                return container.Instantiate<EnemySubmarine>();
             }
         }
 
