@@ -8,11 +8,6 @@ namespace Submarine
     {
         private ConnectionService connection;
 
-        public int PlayerNumber
-        {
-            get { return Array.FindIndex(PhotonNetwork.playerList, p => p == PhotonNetwork.player); }
-        }
-
         [PostInject]
         public void Initialize(ConnectionService connection)
         {
@@ -28,7 +23,6 @@ namespace Submarine
             }
 
             connection.IsMessageQueueRunning = true;
-            Debug.Log(PlayerNumber);
         }
 
         public void FinishBattle()
