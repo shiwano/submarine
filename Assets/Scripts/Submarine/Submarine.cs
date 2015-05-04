@@ -36,6 +36,11 @@ namespace Submarine
             input.IsMouseButtonPressed
                 .Where(b => !b)
                 .Subscribe(_ => Hooks.Brake());
+            input.IsMouseButtonPressed
+                .Where(b => !b)
+                .Subscribe(_ => Debug.Log("Pressed"));
+
+            input.IsMouseButtonClicked.Where(b => b).Subscribe(_ => Debug.Log("Clicked"));
         }
        
         public void Tick()
