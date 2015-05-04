@@ -1,9 +1,10 @@
 ﻿using UnityEngine;
+using UniRx;
 using Zenject;
 
 namespace Submarine
 {
-    public interface ISubmarine : ITickable
+    public interface ISubmarine : ITickable, IInitializable
     {
         SubmarineHooks Hooks { get; }
     }
@@ -29,6 +30,13 @@ namespace Submarine
             Hooks = hooks;
             this.input = input;
         }
+
+        public void Initialize()
+        {
+            input.IsMouseButtonPressed
+                .Where(b => !b)
+                .Subscribe(_ => Hooks.Brake());
+        }
        
         public void Tick()
         {
@@ -41,10 +49,6 @@ namespace Submarine
             {
                 Hooks.Accelerate(Speed);
                 Hooks.Turn(TurningEulerAngles);
-            }
-            else
-            {
-                Hooks.Brake();
             }
         }
     }
@@ -59,5 +63,6 @@ namespace Submarine
         }
 
         public void Tick() {}
+        public void Initialize() {}
     }
 }
