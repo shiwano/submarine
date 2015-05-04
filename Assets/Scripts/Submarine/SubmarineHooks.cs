@@ -14,6 +14,8 @@ namespace Submarine
         [SerializeField]
         private GameObject model;
         [SerializeField]
+        private Transform launchSite;
+        [SerializeField]
         private Material enemySubmarineMaterial;
 
         private Vector3 receivedPosition = Vector3.zero;
@@ -27,6 +29,7 @@ namespace Submarine
         private const float dragOnBrake = 2f;
 
         public bool IsMine { get { return photonView.isMine; } }
+        public Vector3 LaunchSitePosition { get { return launchSite.position; } }
 
         public void Accelerate(Vector3 force)
         {

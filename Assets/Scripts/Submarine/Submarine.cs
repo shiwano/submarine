@@ -56,7 +56,7 @@ namespace Submarine
 
         private void SpawnTorpedo()
         {
-            spawner.SpawnTorpedo(Hooks.transform.position, Hooks.transform.rotation);
+            spawner.SpawnTorpedo(Hooks.LaunchSitePosition, Hooks.transform.rotation);
         }
     }
 
