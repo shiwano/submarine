@@ -28,13 +28,11 @@ namespace Submarine
 
         public void Tick()
         {
-            if (target == null)
+            if (target != null)
             {
-                return;
+                camera.position = target.position + CameraDistance;
+                camera.rotation = target.rotation * cameraStartRotation;
             }
-
-            camera.position = target.position + CameraDistance;
-            camera.rotation = target.rotation * cameraStartRotation;
         }
     }
 }

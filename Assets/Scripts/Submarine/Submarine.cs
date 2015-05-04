@@ -40,11 +40,6 @@ namespace Submarine
        
         public void Tick()
         {
-            if (!Hooks.IsMine)
-            {
-                return;
-            }
-
             if (input.IsMouseButtonPressed.Value)
             {
                 Hooks.Accelerate(Speed);
@@ -62,7 +57,7 @@ namespace Submarine
             Hooks = hooks;
         }
 
-        public void Tick() {}
         public void Initialize() {}
+        public void Tick() {}
     }
 }
