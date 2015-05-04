@@ -7,8 +7,11 @@ namespace Submarine
 {
     public class BattleInput : IInitializable
     {
-        private const float mouseDraggingThreshold = 50f;
+        private const float mouseClickThresholdTime = 1f;
         private DateTime mouseButtonDownTime = DateTime.Now;
+
+        public ReactiveProperty<bool> IsMouseButtonPressed { get; private set; }
+        public ReactiveProperty<bool> IsMouseButtonClicked { get; private set; }
 
         public Vector3 MousePosition { get { return Input.mousePosition; } }
         public Vector3 MousePositionOnButtonDown { get; private set; }
@@ -22,9 +25,6 @@ namespace Submarine
         {
             get { return (float)(DateTime.Now - mouseButtonDownTime).TotalSeconds; }
         }
-
-        public ReactiveProperty<bool> IsMouseButtonPressed { get; private set; }
-        public ReactiveProperty<bool> IsMouseButtonClicked { get; private set; }
 
         public void Initialize()
         {
@@ -41,7 +41,7 @@ namespace Submarine
                 });
 
             IsMouseButtonClicked = IsMouseButtonPressed
-                .Select(b => !b && MousePressingTimeInternal < 1f)
+                .Select(b => !b && MousePressingTimeInternal < mouseClickThresholdTime)
                 .ToReactiveProperty();
         }
     }
