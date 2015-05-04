@@ -39,6 +39,11 @@ namespace Submarine
             {
                 submarine.Tick();
             }
+
+            foreach (var torpedo in torpedos)
+            {
+                torpedo.Tick();
+            }
         }
 
         public ISubmarine SpawnSubmarine(Vector3 position)
@@ -47,6 +52,13 @@ namespace Submarine
             submarine.Initialize();
             submarines.Add(submarine);
             return submarine;
+        }
+
+        public ITorpedo SpawnTorpedo(Vector3 position, Quaternion rotation)
+        {
+            var torpedo = torpedoFactory.Create(position, rotation);
+            torpedos.Add(torpedo);
+            return torpedo;
         }
 
         private void OnPhotonBehaviourCreate(Photon.MonoBehaviour photonMonoBehaviour)
@@ -63,6 +75,13 @@ namespace Submarine
                 submarine.Initialize();
                 submarines.Add(submarine);
             }
+
+            var torpedoHooks = photonMonoBehaviour as TorpedoHooks;
+            if (torpedoHooks != null)
+            {
+                var torpedo = torpedoFactory.Create(torpedoHooks);
+                torpedos.Add(torpedo);
+            }
         }
 
         private void OnPhotonBehaviourDestroy(Photon.MonoBehaviour photonMonoBehaviour)
@@ -72,6 +91,13 @@ namespace Submarine
             {
                 var destroyedIndex = submarines.FindIndex(s => s.Hooks == submarineHooks);
                 submarines.RemoveAt(destroyedIndex);
+            }
+
+            var torpedoHooks = photonMonoBehaviour as TorpedoHooks;
+            if (torpedoHooks != null)
+            {
+                var destroyedIndex = torpedos.FindIndex(s => s.Hooks == torpedoHooks);
+                torpedos.RemoveAt(destroyedIndex);
             }
         }
     }

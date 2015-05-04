@@ -14,11 +14,11 @@ namespace Submarine
             this.battleService = battleService;
         }
 
-        public ITorpedo Create(Vector3 position)
+        public ITorpedo Create(Vector3 position, Quaternion rotation)
         {
             using (BindScope scope = container.CreateScope())
             {
-                scope.Bind<TorpedoHooks>().ToMethod(c => CreateTorpedoHooks(c, position));
+                scope.Bind<TorpedoHooks>().ToMethod(c => CreateTorpedoHooks(c, position, rotation));
                 return container.Instantiate<PlayerTorpedo>();
             }
         }
@@ -32,9 +32,9 @@ namespace Submarine
             }
         }
 
-        public TorpedoHooks CreateTorpedoHooks(InjectContext context, Vector3 position)
+        private TorpedoHooks CreateTorpedoHooks(InjectContext context, Vector3 position, Quaternion rotation)
         {
-            var go = battleService.InstantiatePhotonView(Constants.TorpedoPrefab, position);
+            var go = battleService.InstantiatePhotonView(Constants.TorpedoPrefab, position, rotation);
             return go.GetComponent<TorpedoHooks>();
         }
     }

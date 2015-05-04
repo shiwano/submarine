@@ -33,9 +33,9 @@ namespace Submarine
             }
         }
 
-        public GameObject InstantiatePhotonView(string prefabName, Vector3 position)
+        public GameObject InstantiatePhotonView(string prefabName, Vector3 position, Quaternion rotation)
         {
-            return PhotonNetwork.Instantiate(prefabName, position, Quaternion.identity, 0);
+            return PhotonNetwork.Instantiate(prefabName, position, rotation, 0);
         }
     }
 }
