@@ -36,13 +36,18 @@ namespace Submarine
 
             Container.Bind<IInitializable>().ToSingle<BattleController>();
             Container.Bind<IDisposable>().ToSingle<BattleController>();
-            Container.Bind<ITickable>().ToSingle<BattleController>();
             Container.Bind<BattleController>().ToSingle();
+
+            Container.Bind<IInitializable>().ToSingle<BattleObjectSpawner>();
+            Container.Bind<IDisposable>().ToSingle<BattleObjectSpawner>();
+            Container.Bind<ITickable>().ToSingle<BattleObjectSpawner>();
+            Container.Bind<BattleObjectSpawner>().ToSingle();
 
             Container.Bind<ITickable>().ToSingle<ThirdPersonCamera>();
             Container.Bind<ThirdPersonCamera>().ToSingle<ThirdPersonCamera>();
 
             Container.Bind<SubmarineFactory>().ToSingle();
+            Container.Bind<TorpedoFactory>().ToSingle();
         }
     }
 }

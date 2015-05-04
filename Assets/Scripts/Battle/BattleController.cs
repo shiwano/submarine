@@ -6,79 +6,36 @@ using Zenject;
 
 namespace Submarine
 {
-    public class BattleController : IInitializable, IDisposable, ITickable
+    public class BattleController : IInitializable, IDisposable
     {
         private readonly BattleInstaller.Settings settings;
         private readonly BattleService battleService;
-        private readonly SubmarineFactory submarineFactory;
+        private readonly BattleObjectSpawner spawner;
         private readonly ThirdPersonCamera thirdPersonCamera;
-
-        private readonly List<ISubmarine> submarines = new List<ISubmarine>();
 
         public BattleController(
             BattleInstaller.Settings settings,
             BattleService battleService,
-            SubmarineFactory submarineFactory,
+            BattleObjectSpawner spawner,
             ThirdPersonCamera thirdPersonCamera)
         {
             this.settings = settings;
             this.battleService = battleService;
-            this.submarineFactory = submarineFactory;
+            this.spawner = spawner;
             this.thirdPersonCamera = thirdPersonCamera;
         }
 
         public void Initialize()
         {
-            BattleEvent.OnPhotonBehaviourCreate += OnPhotonBehaviourCreate;
-            BattleEvent.OnPhotonBehaviourDestroy += OnPhotonBehaviourDestroy;
             battleService.StartBattle();
 
-            var playerSubmarine = submarineFactory.Create(settings.Submarine.StartPositions[0]);
-            playerSubmarine.Initialize();
-            submarines.Add(playerSubmarine);
-
+            var playerSubmarine = spawner.SpawnSubmarine(settings.Submarine.StartPositions[0]);
             thirdPersonCamera.SetTarget(playerSubmarine.Hooks.transform);
         }
 
         public void Dispose()
         {
             battleService.FinishBattle();
-            BattleEvent.OnPhotonBehaviourCreate -= OnPhotonBehaviourCreate;
-            BattleEvent.OnPhotonBehaviourDestroy -= OnPhotonBehaviourDestroy;
-        }
-
-        public void Tick()
-        {
-            foreach (var submarine in submarines)
-            {
-                submarine.Tick();
-            }
-        }
-
-        private void OnPhotonBehaviourCreate(Photon.MonoBehaviour photonMonoBehaviour)
-        {
-            if (photonMonoBehaviour.photonView.isMine)
-            {
-                return;
-            }
-
-            var submarineHooks = photonMonoBehaviour as SubmarineHooks;
-            if (submarineHooks != null)
-            {
-                var submarine = submarineFactory.Create(submarineHooks);
-                submarine.Initialize();
-                submarines.Add(submarine);
-            }
-        }
-
-        private void OnPhotonBehaviourDestroy(Photon.MonoBehaviour photonMonoBehaviour)
-        {
-            var submarineHooks = photonMonoBehaviour as SubmarineHooks;
-            if (submarineHooks != null)
-            {
-                var destroyedIndex = submarines.FindIndex(s => s.Hooks == submarineHooks);
-                submarines.RemoveAt(destroyedIndex);
-            }
         }
     }
 }

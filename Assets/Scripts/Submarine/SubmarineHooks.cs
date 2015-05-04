@@ -24,7 +24,7 @@ namespace Submarine
 
         private const float velocityLimit = 200f;
         private const float dragOnAccelerate = 0.5f;
-        private const float dragOnBrake = 1.5f;
+        private const float dragOnBrake = 2f;
 
         public bool IsMine { get { return photonView.isMine; } }
 

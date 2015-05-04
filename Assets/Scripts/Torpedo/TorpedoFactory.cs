@@ -27,7 +27,7 @@ namespace Submarine
         {
             using (BindScope scope = container.CreateScope())
             {
-                scope.Bind<SubmarineHooks>().ToInstance(hooks);
+                scope.Bind<TorpedoHooks>().ToInstance(hooks);
                 return container.Instantiate<EnemyTorpedo>();
             }
         }
