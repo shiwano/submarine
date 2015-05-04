@@ -18,7 +18,6 @@ namespace Submarine
         public override void InstallBindings()
         {
             Container.Bind<IInitializable>().ToSingle<CommonController>();
-            Container.Bind<IDisposable>().ToSingle<CommonController>();
             Container.Bind<CommonController>().ToSingle();
 
             Container.Bind<ConnectionService>().ToSinglePrefab(InstallerSettings.ConnectionServicePrefab);

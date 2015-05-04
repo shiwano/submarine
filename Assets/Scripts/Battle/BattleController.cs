@@ -34,6 +34,7 @@ namespace Submarine
             battleService.StartBattle();
 
             var playerSubmarine = submarineFactory.Create(settings.Submarine.StartPositions[0]);
+            playerSubmarine.Initialize();
             submarines.Add(playerSubmarine);
 
             thirdPersonCamera.SetTarget(playerSubmarine.Hooks.transform);
@@ -65,6 +66,7 @@ namespace Submarine
             if (submarineHooks != null)
             {
                 var submarine = submarineFactory.Create(submarineHooks);
+                submarine.Initialize();
                 submarines.Add(submarine);
             }
         }

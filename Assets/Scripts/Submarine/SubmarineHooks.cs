@@ -37,7 +37,7 @@ namespace Submarine
         public void Turn(Vector3 eulerAngles)
         {
             transform.Rotate(eulerAngles);
-            model.transform.localRotation = Quaternion.Euler(new Vector3(0f, 0f, -eulerAngles.y * 20f));
+            model.transform.localRotation = Quaternion.Euler(new Vector3(0f, 0f, -eulerAngles.y * 15f));
         }
 
         public void Brake()

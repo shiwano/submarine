@@ -4,7 +4,7 @@ using Zenject;
 
 namespace Submarine
 {
-    public class CommonController : IInitializable, IDisposable
+    public class CommonController : IInitializable
     {
         private readonly ConnectionService connection;
 
@@ -18,7 +18,7 @@ namespace Submarine
             Debug.Log("Game Start");
         }
 
-        public void Dispose()
+        private void OnApplicationQuit()
         {
             if (connection.Connected)
             {
@@ -26,6 +26,20 @@ namespace Submarine
             }
 
             Debug.Log("Game Quit");
+        }
+
+        private void OnApplicationPause(bool paused)
+        {
+            connection.IsMessageQueueRunning = !paused;
+
+            if (paused)
+            {
+                Debug.Log("Game Pause");
+            }
+            else
+            {
+                Debug.Log("Game Resume");
+            }
         }
     }
 }
