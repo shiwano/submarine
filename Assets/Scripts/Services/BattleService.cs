@@ -1,5 +1,5 @@
 ﻿using UnityEngine;
-using System.Linq;
+using System;
 using Zenject;
 
 namespace Submarine
@@ -7,6 +7,11 @@ namespace Submarine
     public class BattleService : MonoBehaviour
     {
         private ConnectionService connection;
+
+        public int PlayerNumber
+        {
+            get { return Array.FindIndex(PhotonNetwork.playerList, p => p == PhotonNetwork.player); }
+        }
 
         [PostInject]
         public void Initialize(ConnectionService connection)
@@ -23,6 +28,7 @@ namespace Submarine
             }
 
             connection.IsMessageQueueRunning = true;
+            Debug.Log(PlayerNumber);
         }
 
         public void FinishBattle()
