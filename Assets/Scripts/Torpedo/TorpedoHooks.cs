@@ -21,7 +21,7 @@ namespace Submarine
         private Rigidbody cachedRigidbody;
         private const float velocityLimit = 600f;
 
-        public BattleObjectType Type { get { return BattleObjectType.Submarine; } }
+        public BattleObjectType Type { get { return BattleObjectType.Torpedo; } }
 
         public void Accelerate(Vector3 force)
         {
