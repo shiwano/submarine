@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using System;
 
 namespace Submarine
 {
@@ -9,6 +10,11 @@ namespace Submarine
     )]
     public class TorpedoHooks : Photon.MonoBehaviour
     {
+        [SerializeField]
+        private GameObject explosionEffectPrefab;
+
+        public event Action OnExplode = delegate {};
+
         private Vector3 receivedPosition = Vector3.zero;
         private Quaternion receivedRotation = Quaternion.identity;
 
@@ -31,6 +37,14 @@ namespace Submarine
         private void OnDestroy()
         {
             BattleEvent.OnPhotonBehaviourDestroy(this);
+        }
+
+        private void OnCollisionEnter(Collision collision)
+        {
+            if (IsMine)
+            {
+                photonView.RPC("Explode", PhotonTargets.All);
+            }
         }
 
         private void Update()
@@ -58,6 +72,16 @@ namespace Submarine
                 receivedPosition = (Vector3)stream.ReceiveNext();
                 receivedRotation = (Quaternion)stream.ReceiveNext();
             }
+        }
+
+        [RPC]
+        private void Explode()
+        {
+            var effect = Instantiate(explosionEffectPrefab);
+            effect.transform.position = transform.position;
+
+            OnExplode();
+            Destroy(gameObject);
         }
     }
 }

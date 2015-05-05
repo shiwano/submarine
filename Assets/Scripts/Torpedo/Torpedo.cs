@@ -21,11 +21,17 @@ namespace Submarine
         public PlayerTorpedo(TorpedoHooks hooks)
         {
             Hooks = hooks;
+            Hooks.OnExplode += OnExplode;
         }
 
         public void Tick()
         {
             Hooks.Accelerate(Speed);
+        }
+
+        private void OnExplode()
+        {
+            
         }
     }
 

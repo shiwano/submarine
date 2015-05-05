@@ -32,6 +32,7 @@ namespace Submarine
             Container.Bind<BattleService>().ToSinglePrefab(InstallerSettings.BattleServicePrefab);
 
             Container.Bind<IInitializable>().ToSingle<BattleInput>();
+            Container.Bind<IDisposable>().ToSingle<BattleInput>();
             Container.Bind<BattleInput>().ToSingle();
 
             Container.Bind<IInitializable>().ToSingle<BattleController>();
