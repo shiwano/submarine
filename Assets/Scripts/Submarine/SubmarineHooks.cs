@@ -16,6 +16,8 @@ namespace Submarine
         [SerializeField]
         private Transform launchSite;
         [SerializeField]
+        private GameObject streamEffect;
+        [SerializeField]
         private Material enemySubmarineMaterial;
 
         private Vector3 receivedPosition = Vector3.zero;
@@ -23,6 +25,7 @@ namespace Submarine
         private Quaternion receivedModelRotation = Quaternion.identity;
 
         private Rigidbody cachedRigidbody;
+        private Tweener floatingTweaner;
 
         private const float velocityLimit = 200f;
         private const float dragOnAccelerate = 0.5f;
@@ -49,6 +52,13 @@ namespace Submarine
             model.transform.localRotation = Quaternion.identity;
         }
 
+        public void Sink()
+        {
+            floatingTweaner.Pause();
+            cachedRigidbody.useGravity = true;
+            streamEffect.SetActive(true);
+        }
+
         private void Awake()
         {
             cachedRigidbody = GetComponent<Rigidbody>();
@@ -67,7 +77,7 @@ namespace Submarine
 
         private void Start()
         {
-            model.transform.DOLocalMoveY(-2.5f, 3f).SetEase(Ease.InOutQuad).SetLoops(-1, LoopType.Yoyo);
+            floatingTweaner = model.transform.DOLocalMoveY(-2.5f, 3f).SetEase(Ease.InOutQuad).SetLoops(-1, LoopType.Yoyo);
         }
 
         private void Update()

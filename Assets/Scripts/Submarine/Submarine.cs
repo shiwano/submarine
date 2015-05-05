@@ -7,6 +7,7 @@ namespace Submarine
     public interface ISubmarine : IBattleObject
     {
         SubmarineHooks Hooks { get; }
+        void Sink();
     }
 
     public abstract class SubmarineBase : ISubmarine
@@ -23,6 +24,11 @@ namespace Submarine
         public virtual void Initialize() {}
         public virtual void Dispose() {}
         public virtual void Tick() {}
+
+        public virtual void Sink()
+        {
+            Hooks.Sink();
+        }
     }
 
     public class PlayerSubmarine : SubmarineBase
@@ -30,6 +36,8 @@ namespace Submarine
         private readonly BattleInput input;
         private readonly BattleObjectSpawner spawner;
         private readonly CompositeDisposable eventResources = new CompositeDisposable();
+
+        private bool IsSinked = false;
 
         public Vector3 Speed
         {
@@ -69,11 +77,18 @@ namespace Submarine
        
         public override void Tick()
         {
-            if (input.IsMouseButtonPressed.Value)
+            if (!IsSinked && input.IsMouseButtonPressed.Value)
             {
                 Hooks.Accelerate(Speed);
                 Hooks.Turn(TurningEulerAngles);
             }
+        }
+
+        public override void Sink()
+        {
+            IsSinked = true;
+            eventResources.Dispose();
+            base.Sink();
         }
 
         private void SpawnTorpedo()

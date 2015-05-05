@@ -12,7 +12,7 @@ namespace Submarine
         public class Settings
         {
             public Camera MainCamera;
-            public GameObject BattleServicePrefab;
+            public BattleService BattleService;
             public SubmarineSettings Submarine;
 
             [Serializable]
@@ -29,7 +29,7 @@ namespace Submarine
             Container.Bind<Settings>().ToSingleInstance(InstallerSettings);
             Container.Bind<Camera>("MainCamera").ToSingleInstance(InstallerSettings.MainCamera);
 
-            Container.Bind<BattleService>().ToSinglePrefab(InstallerSettings.BattleServicePrefab);
+            Container.Bind<BattleService>().ToSingleInstance(InstallerSettings.BattleService);
 
             Container.Bind<IInitializable>().ToSingle<BattleInput>();
             Container.Bind<IDisposable>().ToSingle<BattleInput>();

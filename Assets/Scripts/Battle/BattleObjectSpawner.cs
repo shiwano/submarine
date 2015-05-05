@@ -60,7 +60,7 @@ namespace Submarine
             return torpedo;
         }
 
-        public void Destroy(IBattleObject battleObject)
+        public void Remove(IBattleObject battleObject)
         {
             var result = battleObjects.Remove(battleObject);
             if (result)
@@ -94,7 +94,7 @@ namespace Submarine
         private void OnPhotonBehaviourDestroy(IBattleObjectHooks battleObjectHooks)
         {
             var battleObject = battleObjects.Find(s => s.BattleObjectHooks == battleObjectHooks);
-            Destroy(battleObject);
+            Remove(battleObject);
         }
     }
 }

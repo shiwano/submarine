@@ -27,6 +27,8 @@ namespace Submarine
 
         public void Initialize()
         {
+            BattleEvent.OnSubmarineSink += OnSubmarinSink;
+
             battleService.StartBattle();
 
             var playerSubmarine = spawner.SpawnSubmarine(settings.Submarine.StartPositions[0]);
@@ -36,6 +38,11 @@ namespace Submarine
         public void Dispose()
         {
             battleService.FinishBattle();
+        }
+
+        private void OnSubmarinSink(ISubmarine sinked, ISubmarine attacker)
+        {
+            sinked.Sink();
         }
     }
 }

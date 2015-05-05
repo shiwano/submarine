@@ -27,13 +27,19 @@ namespace Submarine
 
     public class PlayerTorpedo : TorpedoBase
     {
+        private readonly BattleObjectSpawner spawner;
+        private readonly BattleService battleService;
+
         public Vector3 Speed
         {
             get { return Hooks.transform.forward * 50f; }
         }
 
-        public PlayerTorpedo(TorpedoHooks hooks) : base(hooks)
+        public PlayerTorpedo(TorpedoHooks hooks, BattleObjectSpawner spawner,
+            BattleService battleService) : base(hooks)
         {
+            this.spawner = spawner;
+            this.battleService = battleService;
             Hooks.OnHitEnemySubmarine += OnHitEnemySubmarine;
         }
 
@@ -44,7 +50,7 @@ namespace Submarine
 
         private void OnHitEnemySubmarine(int enemySubmarineViewId)
         {
-            Debug.Log(enemySubmarineViewId);
+            battleService.SendSubmarineSinkEvent(enemySubmarineViewId, Hooks.photonView.ownerId);
         }
     }
 
