@@ -10,11 +10,7 @@ namespace Submarine
         private readonly SubmarineFactory submarineFactory;
         private readonly TorpedoFactory torpedoFactory;
 
-        private readonly List<ISubmarine> submarines = new List<ISubmarine>();
-        private readonly List<ITorpedo> torpedos = new List<ITorpedo>();
-
-        public IEnumerable<ISubmarine> Submarines { get { return submarines; } }
-        public IEnumerable<ITorpedo> Torpedos { get { return torpedos; } }
+        private readonly List<IBattleObject> battleObjects = new List<IBattleObject>();
 
         public BattleObjectSpawner(
             SubmarineFactory submarineFactory,
@@ -38,14 +34,9 @@ namespace Submarine
 
         public void Tick()
         {
-            foreach (var submarine in submarines)
+            foreach (var battleObject in battleObjects)
             {
-                submarine.Tick();
-            }
-
-            foreach (var torpedo in torpedos)
-            {
-                torpedo.Tick();
+                battleObject.Tick();
             }
         }
 
@@ -53,15 +44,25 @@ namespace Submarine
         {
             var submarine = submarineFactory.Create(position);
             submarine.Initialize();
-            submarines.Add(submarine);
+            battleObjects.Add(submarine);
             return submarine;
         }
 
         public ITorpedo SpawnTorpedo(Vector3 position, Quaternion rotation)
         {
             var torpedo = torpedoFactory.Create(position, rotation);
-            torpedos.Add(torpedo);
+            torpedo.Initialize();
+            battleObjects.Add(torpedo);
             return torpedo;
+        }
+
+        public void Destroy(IBattleObject battleObject)
+        {
+            var result = battleObjects.Remove(battleObject);
+            if (result)
+            {
+                battleObject.Dispose();
+            }
         }
 
         private void OnPhotonBehaviourCreate(Photon.MonoBehaviour photonMonoBehaviour)
@@ -76,32 +77,21 @@ namespace Submarine
             {
                 var submarine = submarineFactory.Create(submarineHooks);
                 submarine.Initialize();
-                submarines.Add(submarine);
+                battleObjects.Add(submarine);
             }
 
             var torpedoHooks = photonMonoBehaviour as TorpedoHooks;
             if (torpedoHooks != null)
             {
                 var torpedo = torpedoFactory.Create(torpedoHooks);
-                torpedos.Add(torpedo);
+                battleObjects.Add(torpedo);
             }
         }
 
         private void OnPhotonBehaviourDestroy(Photon.MonoBehaviour photonMonoBehaviour)
         {
-            var submarineHooks = photonMonoBehaviour as SubmarineHooks;
-            if (submarineHooks != null)
-            {
-                var destroyedIndex = submarines.FindIndex(s => s.Hooks == submarineHooks);
-                submarines.RemoveAt(destroyedIndex);
-            }
-
-            var torpedoHooks = photonMonoBehaviour as TorpedoHooks;
-            if (torpedoHooks != null)
-            {
-                var destroyedIndex = torpedos.FindIndex(s => s.Hooks == torpedoHooks);
-                torpedos.RemoveAt(destroyedIndex);
-            }
+            var battleObject = battleObjects.Find(s => s.PhotonMonoBehaviour == photonMonoBehaviour);
+            Destroy(battleObject);
         }
     }
 }

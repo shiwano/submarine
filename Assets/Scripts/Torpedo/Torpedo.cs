@@ -4,27 +4,40 @@ using Zenject;
 
 namespace Submarine
 {
-    public interface ITorpedo : ITickable
+    public interface ITorpedo : IBattleObject
     {
         TorpedoHooks Hooks { get; }
     }
 
-    public class PlayerTorpedo : ITorpedo
+    public abstract class TorpedoBase : ITorpedo
     {
+        public BattleObjectType Type { get { return BattleObjectType.Torpedo; } }
         public TorpedoHooks Hooks { get; private set; }
+        public Photon.MonoBehaviour PhotonMonoBehaviour { get { return Hooks; } }
 
+        protected TorpedoBase(TorpedoHooks hooks)
+        {
+            Hooks = hooks;
+        }
+
+        public virtual void Initialize() {}
+        public virtual void Dispose() {}
+        public virtual void Tick() {}
+    }
+
+    public class PlayerTorpedo : TorpedoBase
+    {
         public Vector3 Speed
         {
             get { return Hooks.transform.forward * 50f; }
         }
 
-        public PlayerTorpedo(TorpedoHooks hooks)
+        public PlayerTorpedo(TorpedoHooks hooks) : base(hooks)
         {
-            Hooks = hooks;
             Hooks.OnHitEnemySubmarine += OnHitEnemySubmarine;
         }
 
-        public void Tick()
+        public override void Tick()
         {
             Hooks.Accelerate(Speed);
         }
@@ -35,15 +48,10 @@ namespace Submarine
         }
     }
 
-    public class EnemyTorpedo : ITorpedo
+    public class EnemyTorpedo : TorpedoBase
     {
-        public TorpedoHooks Hooks { get; private set; }
-
-        public EnemyTorpedo(TorpedoHooks hooks)
+        public EnemyTorpedo(TorpedoHooks hooks) : base(hooks)
         {
-            Hooks = hooks;
         }
-
-        public void Tick() {}
     }
 }

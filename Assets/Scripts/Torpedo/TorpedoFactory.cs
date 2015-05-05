@@ -34,7 +34,12 @@ namespace Submarine
 
         private TorpedoHooks CreateTorpedoHooks(InjectContext context, Vector3 position, Quaternion rotation)
         {
-            var go = battleService.InstantiatePhotonView(Constants.TorpedoPrefab, position, rotation);
+            var go = battleService.InstantiatePhotonView(
+                Constants.TorpedoPrefab,
+                position,
+                rotation,
+                BattleObjectType.Torpedo
+            );
             return go.GetComponent<TorpedoHooks>();
         }
     }

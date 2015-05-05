@@ -35,7 +35,12 @@ namespace Submarine
 
         private SubmarineHooks CreateSubmarineHooks(InjectContext context, Vector3 position)
         {
-            var go = battleService.InstantiatePhotonView(Constants.SubmarinePrefab, position, Quaternion.identity);
+            var go = battleService.InstantiatePhotonView(
+                Constants.SubmarinePrefab,
+                position,
+                Quaternion.identity,
+                BattleObjectType.Submarine
+            );
             return go.GetComponent<SubmarineHooks>();
         }
     }

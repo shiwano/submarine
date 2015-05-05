@@ -4,17 +4,31 @@ using Zenject;
 
 namespace Submarine
 {
-    public interface ISubmarine : ITickable, IInitializable
+    public interface ISubmarine : IBattleObject
     {
         SubmarineHooks Hooks { get; }
     }
 
-    public class PlayerSubmarine : ISubmarine
+    public abstract class SubmarineBase : ISubmarine
+    {
+        public BattleObjectType Type { get { return BattleObjectType.Submarine; } }
+        public SubmarineHooks Hooks { get; private set; }
+        public Photon.MonoBehaviour PhotonMonoBehaviour { get { return Hooks; } }
+
+        protected SubmarineBase(SubmarineHooks hooks)
+        {
+            Hooks = hooks;
+        }
+
+        public virtual void Initialize() {}
+        public virtual void Dispose() {}
+        public virtual void Tick() {}
+    }
+
+    public class PlayerSubmarine : SubmarineBase
     {
         private readonly BattleInput input;
         private readonly BattleObjectSpawner spawner;
-
-        public SubmarineHooks Hooks { get; private set; }
 
         public Vector3 Speed
         {
@@ -27,13 +41,13 @@ namespace Submarine
         }
 
         public PlayerSubmarine(SubmarineHooks hooks, BattleInput input, BattleObjectSpawner spawner)
+            : base(hooks)
         {
-            Hooks = hooks;
             this.input = input;
             this.spawner = spawner;
         }
 
-        public void Initialize()
+        public override void Initialize()
         {
             input.IsMouseButtonPressed
                 .Where(b => !b)
@@ -45,7 +59,7 @@ namespace Submarine
                 .Subscribe(_ => SpawnTorpedo());
         }
        
-        public void Tick()
+        public override void Tick()
         {
             if (input.IsMouseButtonPressed.Value)
             {
@@ -60,16 +74,10 @@ namespace Submarine
         }
     }
 
-    public class EnemySubmarine : ISubmarine
+    public class EnemySubmarine : SubmarineBase
     {
-        public SubmarineHooks Hooks { get; private set; }
-
-        public EnemySubmarine(SubmarineHooks hooks)
+        public EnemySubmarine(SubmarineHooks hooks) : base(hooks)
         {
-            Hooks = hooks;
         }
-
-        public void Initialize() {}
-        public void Tick() {}
     }
 }
