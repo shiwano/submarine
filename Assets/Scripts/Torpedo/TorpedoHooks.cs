@@ -13,15 +13,13 @@ namespace Submarine
         [SerializeField]
         private GameObject explosionEffectPrefab;
 
-        public event Action OnExplode = delegate {};
+        public event Action<int> OnHitEnemySubmarine = delegate {};
 
         private Vector3 receivedPosition = Vector3.zero;
         private Quaternion receivedRotation = Quaternion.identity;
 
         private Rigidbody cachedRigidbody;
         private const float velocityLimit = 600f;
-
-        public bool IsMine { get { return photonView.isMine; } }
 
         public void Accelerate(Vector3 force)
         {
@@ -41,15 +39,21 @@ namespace Submarine
 
         private void OnCollisionEnter(Collision collision)
         {
-            if (IsMine)
+            if (photonView.isMine)
             {
+                var submarineHooks = collision.gameObject.GetComponent<SubmarineHooks>();
+                if (submarineHooks != null && !submarineHooks.photonView.isMine)
+                {
+                    OnHitEnemySubmarine(submarineHooks.photonView.viewID);
+                }
+
                 photonView.RPC("Explode", PhotonTargets.All);
             }
         }
 
         private void Update()
         {
-            if (IsMine)
+            if (photonView.isMine)
             {
                 cachedRigidbody.velocity = Vector3.ClampMagnitude(cachedRigidbody.velocity, velocityLimit);
             }
@@ -80,7 +84,6 @@ namespace Submarine
             var effect = Instantiate(explosionEffectPrefab);
             effect.transform.position = transform.position;
 
-            OnExplode();
             Destroy(gameObject);
         }
     }

@@ -21,7 +21,7 @@ namespace Submarine
         public PlayerTorpedo(TorpedoHooks hooks)
         {
             Hooks = hooks;
-            Hooks.OnExplode += OnExplode;
+            Hooks.OnHitEnemySubmarine += OnHitEnemySubmarine;
         }
 
         public void Tick()
@@ -29,9 +29,9 @@ namespace Submarine
             Hooks.Accelerate(Speed);
         }
 
-        private void OnExplode()
+        private void OnHitEnemySubmarine(int enemySubmarineViewId)
         {
-            
+            Debug.Log(enemySubmarineViewId);
         }
     }
 

@@ -28,7 +28,6 @@ namespace Submarine
         private const float dragOnAccelerate = 0.5f;
         private const float dragOnBrake = 2f;
 
-        public bool IsMine { get { return photonView.isMine; } }
         public Vector3 LaunchSitePosition { get { return launchSite.position; } }
 
         public void Accelerate(Vector3 force)
@@ -54,7 +53,7 @@ namespace Submarine
             cachedRigidbody = GetComponent<Rigidbody>();
             BattleEvent.OnPhotonBehaviourCreate(this);
 
-            if (!IsMine)
+            if (!photonView.isMine)
             {
                 model.GetComponent<MeshRenderer>().material = enemySubmarineMaterial;
             }
@@ -72,7 +71,7 @@ namespace Submarine
 
         private void Update()
         {
-            if (IsMine)
+            if (photonView.isMine)
             {
                 cachedRigidbody.velocity = Vector3.ClampMagnitude(cachedRigidbody.velocity, velocityLimit);
             }

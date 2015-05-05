@@ -153,10 +153,10 @@ TrailRenderer:
       rgba: 16777215
     m_Color[1]:
       serializedVersion: 2
-      rgba: 3338665983
+      rgba: 4294967295
     m_Color[2]:
       serializedVersion: 2
-      rgba: 2264924159
+      rgba: 2952790015
     m_Color[3]:
       serializedVersion: 2
       rgba: 1409286143
