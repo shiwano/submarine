@@ -38,8 +38,7 @@ namespace Submarine
             var go = battleService.InstantiatePhotonView(
                 Constants.SubmarinePrefab,
                 position,
-                Quaternion.identity,
-                BattleObjectType.Submarine
+                Quaternion.identity
             );
             return go.GetComponent<SubmarineHooks>();
         }

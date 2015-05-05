@@ -12,6 +12,11 @@ namespace Submarine
     public interface IBattleObject : IInitializable, ITickable, IDisposable
     {
         BattleObjectType Type { get; }
-        Photon.MonoBehaviour PhotonMonoBehaviour { get; }
+        IBattleObjectHooks BattleObjectHooks { get; }
+    }
+
+    public interface IBattleObjectHooks
+    {
+        BattleObjectType Type { get; }
     }
 }

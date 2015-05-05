@@ -9,7 +9,7 @@ namespace Submarine
         typeof(BoxCollider),
         typeof(Rigidbody)
     )]
-    public class SubmarineHooks : Photon.MonoBehaviour
+    public class SubmarineHooks : Photon.MonoBehaviour, IBattleObjectHooks
     {
         [SerializeField]
         private GameObject model;
@@ -28,6 +28,7 @@ namespace Submarine
         private const float dragOnAccelerate = 0.5f;
         private const float dragOnBrake = 2f;
 
+        public BattleObjectType Type { get { return BattleObjectType.Submarine; } }
         public Vector3 LaunchSitePosition { get { return launchSite.position; } }
 
         public void Accelerate(Vector3 force)

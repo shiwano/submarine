@@ -8,7 +8,7 @@ namespace Submarine
         typeof(BoxCollider),
         typeof(Rigidbody)
     )]
-    public class TorpedoHooks : Photon.MonoBehaviour
+    public class TorpedoHooks : Photon.MonoBehaviour, IBattleObjectHooks
     {
         [SerializeField]
         private GameObject explosionEffectPrefab;
@@ -20,6 +20,8 @@ namespace Submarine
 
         private Rigidbody cachedRigidbody;
         private const float velocityLimit = 600f;
+
+        public BattleObjectType Type { get { return BattleObjectType.Submarine; } }
 
         public void Accelerate(Vector3 force)
         {

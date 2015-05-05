@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Zenject;
 
 namespace Submarine
@@ -65,32 +66,31 @@ namespace Submarine
             }
         }
 
-        private void OnPhotonBehaviourCreate(Photon.MonoBehaviour photonMonoBehaviour)
+        private void OnPhotonBehaviourCreate(IBattleObjectHooks battleObjectHooks)
         {
-            if (photonMonoBehaviour.photonView.isMine)
+            if (battleObjects.Any(b => b.BattleObjectHooks == battleObjectHooks))
             {
                 return;
             }
 
-            var submarineHooks = photonMonoBehaviour as SubmarineHooks;
-            if (submarineHooks != null)
+            switch (battleObjectHooks.Type)
             {
-                var submarine = submarineFactory.Create(submarineHooks);
-                submarine.Initialize();
-                battleObjects.Add(submarine);
-            }
-
-            var torpedoHooks = photonMonoBehaviour as TorpedoHooks;
-            if (torpedoHooks != null)
-            {
-                var torpedo = torpedoFactory.Create(torpedoHooks);
-                battleObjects.Add(torpedo);
+                case BattleObjectType.Submarine:
+                    var submarine = submarineFactory.Create(battleObjectHooks as SubmarineHooks);
+                    submarine.Initialize();
+                    battleObjects.Add(submarine);
+                    break;
+                case BattleObjectType.Torpedo:
+                    var torpedo = torpedoFactory.Create(battleObjectHooks as TorpedoHooks);
+                    torpedo.Initialize();
+                    battleObjects.Add(torpedo);
+                    break;
             }
         }
 
-        private void OnPhotonBehaviourDestroy(Photon.MonoBehaviour photonMonoBehaviour)
+        private void OnPhotonBehaviourDestroy(IBattleObjectHooks battleObjectHooks)
         {
-            var battleObject = battleObjects.Find(s => s.PhotonMonoBehaviour == photonMonoBehaviour);
+            var battleObject = battleObjects.Find(s => s.BattleObjectHooks == battleObjectHooks);
             Destroy(battleObject);
         }
     }

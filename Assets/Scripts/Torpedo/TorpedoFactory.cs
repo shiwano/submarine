@@ -37,8 +37,7 @@ namespace Submarine
             var go = battleService.InstantiatePhotonView(
                 Constants.TorpedoPrefab,
                 position,
-                rotation,
-                BattleObjectType.Torpedo
+                rotation
             );
             return go.GetComponent<TorpedoHooks>();
         }

@@ -13,7 +13,7 @@ namespace Submarine
     {
         public BattleObjectType Type { get { return BattleObjectType.Torpedo; } }
         public TorpedoHooks Hooks { get; private set; }
-        public Photon.MonoBehaviour PhotonMonoBehaviour { get { return Hooks; } }
+        public IBattleObjectHooks BattleObjectHooks { get { return Hooks; } }
 
         protected TorpedoBase(TorpedoHooks hooks)
         {
