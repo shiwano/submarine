@@ -18,5 +18,6 @@ namespace Submarine
     public interface IBattleObjectHooks
     {
         BattleObjectType Type { get; }
+        PhotonView photonView { get; }
     }
 }

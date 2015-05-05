@@ -68,7 +68,7 @@ namespace Submarine
 
         private void OnPhotonBehaviourCreate(IBattleObjectHooks battleObjectHooks)
         {
-            if (battleObjects.Any(b => b.BattleObjectHooks == battleObjectHooks))
+            if (battleObjectHooks.photonView.isMine)
             {
                 return;
             }
