@@ -29,6 +29,7 @@ namespace Submarine
     {
         private readonly BattleInput input;
         private readonly BattleObjectSpawner spawner;
+        private readonly CompositeDisposable eventResources = new CompositeDisposable();
 
         public Vector3 Speed
         {
@@ -51,12 +52,19 @@ namespace Submarine
         {
             input.IsMouseButtonPressed
                 .Where(b => !b)
-                .Subscribe(_ => Hooks.Brake());
+                .Subscribe(_ => Hooks.Brake())
+                .AddTo(eventResources);
 
             input.IsMouseButtonClicked
                 .Skip(1)
                 .Where(b => b)
-                .Subscribe(_ => SpawnTorpedo());
+                .Subscribe(_ => SpawnTorpedo())
+                .AddTo(eventResources);
+        }
+
+        public override void Dispose()
+        {
+            eventResources.Dispose();
         }
        
         public override void Tick()

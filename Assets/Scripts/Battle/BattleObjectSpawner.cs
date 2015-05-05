@@ -13,6 +13,9 @@ namespace Submarine
 
         private readonly List<IBattleObject> battleObjects = new List<IBattleObject>();
 
+        public IEnumerable<ISubmarine> Submarines { get { return battleObjects.OfType<ISubmarine>(); } }
+        public IEnumerable<ITorpedo> Torpedos { get { return battleObjects.OfType<ITorpedo>(); } }
+
         public BattleObjectSpawner(
             SubmarineFactory submarineFactory,
             TorpedoFactory torpedoFactory)

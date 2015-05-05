@@ -7,8 +7,8 @@ namespace Submarine
 {
     public class BattleInput : IInitializable, IDisposable
     {
-        private const float mouseClickThresholdTime = 1f;
-        private const float mouseClickThresholdDistanceSquared = 5f * 5f;
+        private const float mouseClickThresholdTime = 1.5f;
+        private const float mouseClickThresholdDistanceSquared = 10f * 10f;
         private DateTime mouseButtonDownTime = DateTime.Now;
 
         public ReactiveProperty<bool> IsMouseButtonPressed { get; private set; }
