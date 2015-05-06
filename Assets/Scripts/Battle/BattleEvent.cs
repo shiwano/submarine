@@ -8,6 +8,6 @@ namespace Submarine
         public static Action<IBattleObjectHooks> OnPhotonBehaviourCreate = delegate {};
         public static Action<IBattleObjectHooks> OnPhotonBehaviourDestroy = delegate {};
 
-        public static Action<ISubmarine, ISubmarine> OnSubmarineSink = delegate {};
+        public static Action<ISubmarine, ISubmarine, Vector3> OnSubmarineDamage = delegate {};
     }
 }

@@ -52,10 +52,13 @@ namespace Submarine
             model.transform.localRotation = Quaternion.identity;
         }
 
-        public void Sink()
+        public void Damage(Vector3 shockPower)
         {
             floatingTweaner.Pause();
             cachedRigidbody.useGravity = true;
+            cachedRigidbody.constraints = RigidbodyConstraints.None;
+            cachedRigidbody.AddForce(shockPower, ForceMode.Impulse);
+            cachedRigidbody.AddTorque(shockPower, ForceMode.Impulse);
             streamEffect.SetActive(true);
         }
 

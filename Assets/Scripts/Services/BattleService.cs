@@ -36,17 +36,17 @@ namespace Submarine
             }
         }
 
-        public void SendSubmarineSinkEvent(int sinkedViewId, int attackerOwnerId)
+        public void SendSubmarineDamageEvent(int damagedViewId, int attackerOwnerId, Vector3 shockPower)
         {
-            photonView.RPC("ReceiveSubmarineSinkEvent", PhotonTargets.All, sinkedViewId, attackerOwnerId);
+            photonView.RPC("ReceiveSubmarineSinkEvent", PhotonTargets.All, damagedViewId, attackerOwnerId, shockPower);
         }
 
         [RPC]
-        private void ReceiveSubmarineSinkEvent(int sinkedViewId, int attackerOwnerId)
+        private void ReceiveSubmarineDamageEvent(int damagedViewId, int attackerOwnerId, Vector3 shockPower)
         {
-            var sinked = spawner.Submarines.FirstOrDefault(s => s.Hooks.photonView.viewID == sinkedViewId);
+            var damaged = spawner.Submarines.FirstOrDefault(s => s.Hooks.photonView.viewID == damagedViewId);
             var attacker = spawner.Submarines.FirstOrDefault(s => s.Hooks.photonView.ownerId == attackerOwnerId);
-            BattleEvent.OnSubmarineSink(sinked, attacker);
+            BattleEvent.OnSubmarineDamage(damaged, attacker, shockPower);
         }
 
         public GameObject InstantiatePhotonView(string prefabName, Vector3 position, Quaternion rotation)

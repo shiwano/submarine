@@ -7,7 +7,7 @@ namespace Submarine
     public interface ISubmarine : IBattleObject
     {
         SubmarineHooks Hooks { get; }
-        void Sink();
+        void Damage(Vector3 shockPower);
     }
 
     public abstract class SubmarineBase : ISubmarine
@@ -25,9 +25,9 @@ namespace Submarine
         public virtual void Dispose() {}
         public virtual void Tick() {}
 
-        public virtual void Sink()
+        public virtual void Damage(Vector3 shockPower)
         {
-            Hooks.Sink();
+            Hooks.Damage(shockPower);
         }
     }
 
@@ -84,11 +84,11 @@ namespace Submarine
             }
         }
 
-        public override void Sink()
+        public override void Damage(Vector3 shockPower)
         {
             IsSinked = true;
             eventResources.Dispose();
-            base.Sink();
+            base.Damage(shockPower);
         }
 
         private void SpawnTorpedo()
