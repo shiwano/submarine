@@ -47,7 +47,7 @@ namespace Submarine
 
         private void OnCollisionEnter(Collision collision)
         {
-            if (!cachedRigidbody.useGravity && photonView.isMine)
+            if (photonView.isMine)
             {
                 var submarineHooks = collision.gameObject.GetComponent<SubmarineHooks>();
                 if (submarineHooks != null && !submarineHooks.photonView.isMine)
