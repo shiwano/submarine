@@ -39,7 +39,7 @@ namespace Submarine
 
         private bool IsSinked = false;
 
-        public Vector3 Speed
+        public Vector3 Acceleration
         {
             get { return Hooks.transform.forward * Mathf.Lerp(0f, 50f, Mathf.Clamp01(input.MousePressingTime)); }
         }
@@ -79,7 +79,7 @@ namespace Submarine
         {
             if (!IsSinked && input.IsMouseButtonPressed.Value)
             {
-                Hooks.Accelerate(Speed);
+                Hooks.Accelerate(Acceleration);
                 Hooks.Turn(TurningEulerAngles);
             }
         }

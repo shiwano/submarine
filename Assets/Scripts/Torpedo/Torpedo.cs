@@ -1,5 +1,7 @@
 ﻿using UnityEngine;
+using System;
 using System.Collections;
+using UniRx;
 using Zenject;
 
 namespace Submarine
@@ -29,12 +31,9 @@ namespace Submarine
     {
         private readonly BattleService battleService;
 
+        public float LifeTime { get { return 7f; } }
+        public Vector3 Acceleration { get { return Hooks.transform.forward * 50f; } }
         public Vector3 ShockPower { get { return Hooks.transform.forward * 300f; } }
-
-        public Vector3 Speed
-        {
-            get { return Hooks.transform.forward * 50f; }
-        }
 
         public PlayerTorpedo(TorpedoHooks hooks, BattleService battleService)
             : base(hooks)
@@ -43,9 +42,22 @@ namespace Submarine
             Hooks.OnHitEnemySubmarine += OnHitEnemySubmarine;
         }
 
+        public override void Initialize()
+        {
+            Observable.Interval(TimeSpan.FromSeconds(LifeTime))
+                .Take(1)
+                .Where(_ => Hooks != null)
+                .Subscribe(_ => Stop());
+        }
+
         public override void Tick()
         {
-            Hooks.Accelerate(Speed);
+            Hooks.Accelerate(Acceleration);
+        }
+
+        private void Stop()
+        {
+            Hooks.Stop();
         }
 
         private void OnHitEnemySubmarine(int enemySubmarineViewId)

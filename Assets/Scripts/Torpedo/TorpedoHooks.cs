@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System;
+using UniRx;
 
 namespace Submarine
 {
@@ -28,6 +29,11 @@ namespace Submarine
             cachedRigidbody.AddForce(force, ForceMode.Force);
         }
 
+        public void Stop()
+        {
+            Destroy(gameObject);
+        }
+
         private void Awake()
         {
             cachedRigidbody = GetComponent<Rigidbody>();
@@ -41,7 +47,7 @@ namespace Submarine
 
         private void OnCollisionEnter(Collision collision)
         {
-            if (photonView.isMine)
+            if (!cachedRigidbody.useGravity && photonView.isMine)
             {
                 var submarineHooks = collision.gameObject.GetComponent<SubmarineHooks>();
                 if (submarineHooks != null && !submarineHooks.photonView.isMine)
