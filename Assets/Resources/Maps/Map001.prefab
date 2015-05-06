@@ -9,12 +9,12 @@ GameObject:
   m_Component:
   - 4: {fileID: 403976}
   - 108: {fileID: 10842734}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Directional light
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 4294967295
   m_IsActive: 1
 --- !u!1 &127022
 GameObject:
@@ -25,12 +25,12 @@ GameObject:
   m_Component:
   - 4: {fileID: 485346}
   - 108: {fileID: 10885928}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Point light
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 4294967295
   m_IsActive: 1
 --- !u!1 &146148
 GameObject:
@@ -41,12 +41,12 @@ GameObject:
   m_Component:
   - 4: {fileID: 493910}
   - 108: {fileID: 10885532}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Point light
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 4294967295
   m_IsActive: 1
 --- !u!1 &151822
 GameObject:
@@ -57,12 +57,12 @@ GameObject:
   m_Component:
   - 4: {fileID: 468658}
   - 108: {fileID: 10808686}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Point light
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 4294967295
   m_IsActive: 1
 --- !u!1 &168492
 GameObject:
@@ -73,12 +73,12 @@ GameObject:
   m_Component:
   - 4: {fileID: 469974}
   - 108: {fileID: 10868492}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Point light
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 4294967295
   m_IsActive: 1
 --- !u!1 &172032
 GameObject:
@@ -89,12 +89,12 @@ GameObject:
   m_Component:
   - 4: {fileID: 452258}
   - 108: {fileID: 10828680}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Point light
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 4294967295
   m_IsActive: 1
 --- !u!1 &187708
 GameObject:
@@ -104,12 +104,12 @@ GameObject:
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 466718}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Lights
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 4294967295
   m_IsActive: 1
 --- !u!1 &199676
 GameObject:
@@ -121,7 +121,7 @@ GameObject:
   - 4: {fileID: 496268}
   - 218: {fileID: 21808010}
   - 154: {fileID: 15436108}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Map001
   m_TagString: Untagged
   m_Icon: {fileID: 0}

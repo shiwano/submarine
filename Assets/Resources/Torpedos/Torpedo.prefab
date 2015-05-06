@@ -9,7 +9,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 465036}
   - 96: {fileID: 9692464}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Trail
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -30,7 +30,7 @@ GameObject:
   - 114: {fileID: 11459496}
   - 65: {fileID: 6554100}
   - 54: {fileID: 5460984}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Torpedo
   m_TagString: Untagged
   m_Icon: {fileID: 0}
