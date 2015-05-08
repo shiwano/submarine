@@ -12,7 +12,7 @@ namespace Submarine
 
         public Vector3 CameraDistance
         {
-            get { return -target.forward * 92.5f + target.right * 9f + target.up * 40f; }
+            get { return -target.forward * 18.5f + target.right * 1.8f + target.up * 8f; }
         }
 
         public ThirdPersonCamera([Inject("MainCamera")] Camera camera)

@@ -2,6 +2,7 @@
 using System;
 using UniRx;
 using Zenject;
+using UnityEngine.EventSystems;
 
 namespace Submarine
 {
@@ -42,8 +43,8 @@ namespace Submarine
                 });
 
             IsMouseButtonClicked = IsMouseButtonPressed
-                .Select(
-                    b => !b &&
+                .Select(b => !b &&
+                    EventSystem.current.currentSelectedGameObject == null &&
                     MousePressingTimeInternal < mouseClickThresholdTime &&
                     (MousePosition - MousePositionOnButtonDown).sqrMagnitude < mouseClickThresholdDistanceSquared)
                 .ToReactiveProperty();

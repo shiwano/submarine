@@ -10,7 +10,7 @@ GameObject:
   - 4: {fileID: 462858}
   - 198: {fileID: 19894646}
   - 199: {fileID: 19956136}
-  - 114: {fileID: 11483552}
+  - 114: {fileID: 11471360}
   m_Layer: 0
   m_Name: Explosion
   m_TagString: Untagged
@@ -128,7 +128,7 @@ Transform:
   m_GameObject: {fileID: 124286}
   m_LocalRotation: {x: -.707106829, y: 0, z: 0, w: .707106829}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: .100000001, y: .100000001, z: .100000001}
   m_Children: []
   m_Father: {fileID: 462858}
   m_RootOrder: 1
@@ -175,8 +175,8 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 113422}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 10, y: 10, z: 10}
+  m_LocalPosition: {x: 0, y: 102, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 449960}
   - {fileID: 400908}
@@ -210,7 +210,7 @@ Transform:
   m_Children: []
   m_Father: {fileID: 462858}
   m_RootOrder: 3
---- !u!114 &11483552
+--- !u!114 &11471360
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
@@ -388,7 +388,7 @@ ParticleSystem:
         rgba: 4294967295
       minMaxState: 0
     startSize:
-      scalar: 12
+      scalar: 1.20000005
       maxCurve:
         serializedVersion: 2
         m_Curve:
@@ -1416,7 +1416,7 @@ ParticleSystem:
         rgba: 3365994495
       minMaxState: 2
     startSize:
-      scalar: 20
+      scalar: 2
       maxCurve:
         serializedVersion: 2
         m_Curve:
@@ -2312,7 +2312,7 @@ ParticleSystem:
         m_PostInfinity: 2
       minMaxState: 3
     startSpeed:
-      scalar: 15
+      scalar: 5
       maxCurve:
         serializedVersion: 2
         m_Curve:
@@ -2327,7 +2327,7 @@ ParticleSystem:
         serializedVersion: 2
         m_Curve:
         - time: 0
-          value: .333333343
+          value: .200000003
           inSlope: 0
           outSlope: 0
           tangentMode: 0
@@ -2429,7 +2429,7 @@ ParticleSystem:
         rgba: 4294967295
       minMaxState: 1
     startSize:
-      scalar: 20
+      scalar: 2
       maxCurve:
         serializedVersion: 2
         m_Curve:
@@ -3412,7 +3412,7 @@ ParticleSystem:
         rgba: 4287020799
       minMaxState: 0
     startSize:
-      scalar: 12
+      scalar: 1.20000005
       maxCurve:
         serializedVersion: 2
         m_Curve:
@@ -3427,7 +3427,7 @@ ParticleSystem:
         serializedVersion: 2
         m_Curve:
         - time: 0
-          value: .666666687
+          value: .666666627
           inSlope: 0
           outSlope: 0
           tangentMode: 0
@@ -4405,7 +4405,7 @@ ParticleSystem:
         rgba: 3361978623
       minMaxState: 2
     startSize:
-      scalar: 15
+      scalar: 1.5
       maxCurve:
         serializedVersion: 2
         m_Curve:
@@ -5438,7 +5438,7 @@ ParticleSystem:
         rgba: 4288012799
       minMaxState: 0
     startSize:
-      scalar: 10
+      scalar: 1
       maxCurve:
         serializedVersion: 2
         m_Curve:
@@ -6451,7 +6451,7 @@ ParticleSystem:
         rgba: 4283670271
       minMaxState: 0
     startSize:
-      scalar: 10
+      scalar: 1
       maxCurve:
         serializedVersion: 2
         m_Curve:
@@ -7347,7 +7347,7 @@ ParticleSystemRenderer:
   m_SortingLayerID: 0
   m_SortingOrder: 0
   m_RenderMode: 2
-  m_MaxParticleSize: 600
+  m_MaxParticleSize: 60
   m_CameraVelocityScale: 0
   m_VelocityScale: 0
   m_LengthScale: 2
@@ -7383,7 +7383,7 @@ ParticleSystemRenderer:
   m_SortingLayerID: 0
   m_SortingOrder: 0
   m_RenderMode: 4
-  m_MaxParticleSize: 500
+  m_MaxParticleSize: 50
   m_CameraVelocityScale: 0
   m_VelocityScale: .200000003
   m_LengthScale: 2
@@ -7419,7 +7419,7 @@ ParticleSystemRenderer:
   m_SortingLayerID: 0
   m_SortingOrder: 0
   m_RenderMode: 0
-  m_MaxParticleSize: 5
+  m_MaxParticleSize: .5
   m_CameraVelocityScale: 0
   m_VelocityScale: 0
   m_LengthScale: 2
@@ -7455,7 +7455,7 @@ ParticleSystemRenderer:
   m_SortingLayerID: 0
   m_SortingOrder: 0
   m_RenderMode: 4
-  m_MaxParticleSize: 5
+  m_MaxParticleSize: .5
   m_CameraVelocityScale: 0
   m_VelocityScale: 0
   m_LengthScale: 2
@@ -7491,7 +7491,7 @@ ParticleSystemRenderer:
   m_SortingLayerID: 0
   m_SortingOrder: 0
   m_RenderMode: 0
-  m_MaxParticleSize: 500
+  m_MaxParticleSize: 50
   m_CameraVelocityScale: 0
   m_VelocityScale: 0
   m_LengthScale: 2
@@ -7527,7 +7527,7 @@ ParticleSystemRenderer:
   m_SortingLayerID: 0
   m_SortingOrder: 0
   m_RenderMode: 1
-  m_MaxParticleSize: 100
+  m_MaxParticleSize: 10
   m_CameraVelocityScale: 0
   m_VelocityScale: 0
   m_LengthScale: 3
@@ -7563,7 +7563,7 @@ ParticleSystemRenderer:
   m_SortingLayerID: 0
   m_SortingOrder: 0
   m_RenderMode: 0
-  m_MaxParticleSize: 200
+  m_MaxParticleSize: 20
   m_CameraVelocityScale: 0
   m_VelocityScale: 0
   m_LengthScale: 2

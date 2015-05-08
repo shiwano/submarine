@@ -29,7 +29,7 @@ namespace Submarine
 
             battleService.StartBattle();
 
-            var playerSubmarine = objectContainer.SpawnSubmarine(settings.Submarine.StartPositions[0]);
+            var playerSubmarine = objectContainer.SpawnSubmarine(settings.Map.StartPositions[0]);
             thirdPersonCamera.SetTarget(playerSubmarine.Hooks.transform);
         }
 

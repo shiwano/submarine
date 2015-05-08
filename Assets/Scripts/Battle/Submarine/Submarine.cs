@@ -38,13 +38,13 @@ namespace Submarine
     {
         readonly BattleInput input;
         readonly BattleObjectContainer objectContainer;
-        readonly CompositeDisposable eventResources = new CompositeDisposable();
+        readonly CompositeDisposable disposables = new CompositeDisposable();
 
         bool IsSinked = false;
 
         public Vector3 Acceleration
         {
-            get { return Hooks.transform.forward * Mathf.Lerp(0f, 60f, Mathf.Clamp01(input.MousePressingTime)); }
+            get { return Hooks.transform.forward * Mathf.Lerp(0f, 6f, Mathf.Clamp01(input.MousePressingTime)); }
         }
 
         public Vector3 TurningEulerAngles
@@ -64,18 +64,18 @@ namespace Submarine
             input.IsMouseButtonPressed
                 .Where(b => !b)
                 .Subscribe(_ => Hooks.Brake())
-                .AddTo(eventResources);
+                .AddTo(disposables);
 
             input.IsMouseButtonClicked
                 .Skip(1)
                 .Where(b => b)
                 .Subscribe(_ => SpawnTorpedo())
-                .AddTo(eventResources);
+                .AddTo(disposables);
         }
 
         public override void Dispose()
         {
-            eventResources.Dispose();
+            disposables.Dispose();
         }
        
         public override void Tick()
@@ -90,7 +90,7 @@ namespace Submarine
         public override void Damage(Vector3 shockPower)
         {
             IsSinked = true;
-            eventResources.Dispose();
+            disposables.Dispose();
             base.Damage(shockPower);
         }
 

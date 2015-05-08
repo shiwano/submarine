@@ -24,7 +24,6 @@ namespace Submarine
 
         BattleObjectContainer objectContainer;
 
-        const float mapSizeX = 2000f;
         readonly Dictionary<IBattleObject, RectTransform> pins = new Dictionary<IBattleObject, RectTransform>();
 
         [PostInject]
@@ -53,7 +52,7 @@ namespace Submarine
         Vector3 GetRadarPosition(IBattleObject battleObject)
         {
             var worldPosition = battleObject.Position;
-            var scaleRate = radarSize.x / mapSizeX;
+            var scaleRate = radarSize.x / Constants.MapLength;
             return new Vector3(worldPosition.x * scaleRate, worldPosition.z * scaleRate, 0f);
         }
 

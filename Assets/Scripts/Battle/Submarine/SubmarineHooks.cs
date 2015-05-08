@@ -24,7 +24,7 @@ namespace Submarine
         Quaternion receivedRotation = Quaternion.identity;
         Quaternion receivedModelRotation = Quaternion.identity;
 
-        Rigidbody cachedRigidbody;
+        Rigidbody myRigidbody;
         Tweener floatingTweaner;
 
         const float velocityLimit = 200f;
@@ -36,8 +36,8 @@ namespace Submarine
 
         public void Accelerate(Vector3 force)
         {
-            cachedRigidbody.drag = dragOnAccelerate;
-            cachedRigidbody.AddForce(force, ForceMode.Force);
+            myRigidbody.drag = dragOnAccelerate;
+            myRigidbody.AddForce(force, ForceMode.Force);
         }
 
         public void Turn(Vector3 eulerAngles)
@@ -48,23 +48,23 @@ namespace Submarine
 
         public void Brake()
         {
-            cachedRigidbody.drag = dragOnBrake;
+            myRigidbody.drag = dragOnBrake;
             model.transform.localRotation = Quaternion.identity;
         }
 
         public void Damage(Vector3 shockPower)
         {
             floatingTweaner.Pause();
-            cachedRigidbody.useGravity = true;
-            cachedRigidbody.constraints = RigidbodyConstraints.None;
-            cachedRigidbody.AddForce(shockPower, ForceMode.Impulse);
-            cachedRigidbody.AddTorque(shockPower, ForceMode.Impulse);
+            myRigidbody.useGravity = true;
+            myRigidbody.constraints = RigidbodyConstraints.None;
+            myRigidbody.AddForce(shockPower, ForceMode.Impulse);
+            myRigidbody.AddTorque(shockPower, ForceMode.Impulse);
             streamEffect.SetActive(true);
         }
 
         void Awake()
         {
-            cachedRigidbody = GetComponent<Rigidbody>();
+            myRigidbody = GetComponent<Rigidbody>();
             BattleEvent.BattleObjectHooksCreated(this);
 
             if (!photonView.isMine)
@@ -80,14 +80,14 @@ namespace Submarine
 
         void Start()
         {
-            floatingTweaner = model.transform.DOLocalMoveY(-2.5f, 3f).SetEase(Ease.InOutQuad).SetLoops(-1, LoopType.Yoyo);
+            floatingTweaner = model.transform.DOLocalMoveY(-0.25f, 3f).SetEase(Ease.InOutQuad).SetLoops(-1, LoopType.Yoyo);
         }
 
         void Update()
         {
             if (photonView.isMine)
             {
-                cachedRigidbody.velocity = Vector3.ClampMagnitude(cachedRigidbody.velocity, velocityLimit);
+                myRigidbody.velocity = Vector3.ClampMagnitude(myRigidbody.velocity, velocityLimit);
             }
             else
             {
