@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Zenject;
+using UniRx;
 
 namespace Submarine
 {
@@ -16,6 +17,9 @@ namespace Submarine
         public IEnumerable<ISubmarine> Submarines { get { return battleObjects.OfType<ISubmarine>(); } }
         public IEnumerable<ITorpedo> Torpedos { get { return battleObjects.OfType<ITorpedo>(); } }
 
+        public event Action<IBattleObject> BattleObjectSpawned = delegate {};
+        public event Action<IBattleObject> BattleObjectRemoved = delegate {};
+
         public BattleObjectContainer(
             SubmarineFactory submarineFactory,
             TorpedoFactory torpedoFactory)
@@ -26,14 +30,14 @@ namespace Submarine
 
         public void Initialize()
         {
-            BattleEvent.OnBattleObjectHooksCreate += OnBattleObjectHooksCreate;
-            BattleEvent.OnBattleObjectHooksDestroy += OnBattleObjectHooksDestroy;
+            BattleEvent.BattleObjectHooksCreated += OnBattleObjectHooksCreated;
+            BattleEvent.BattleObjectHooksDestroyed += OnBattleObjectHooksDestroyed;
         }
 
         public void Dispose()
         {
-            BattleEvent.OnBattleObjectHooksCreate -= OnBattleObjectHooksCreate;
-            BattleEvent.OnBattleObjectHooksDestroy -= OnBattleObjectHooksDestroy;
+            BattleEvent.BattleObjectHooksCreated -= OnBattleObjectHooksCreated;
+            BattleEvent.BattleObjectHooksDestroyed -= OnBattleObjectHooksDestroyed;
         }
 
         public void Tick()
@@ -47,16 +51,14 @@ namespace Submarine
         public ISubmarine SpawnSubmarine(Vector3 position)
         {
             var submarine = submarineFactory.Create(position);
-            submarine.Initialize();
-            battleObjects.Add(submarine);
+            Add(submarine);
             return submarine;
         }
 
         public ITorpedo SpawnTorpedo(Vector3 position, Quaternion rotation)
         {
             var torpedo = torpedoFactory.Create(position, rotation);
-            torpedo.Initialize();
-            battleObjects.Add(torpedo);
+            Add(torpedo);
             return torpedo;
         }
 
@@ -65,11 +67,19 @@ namespace Submarine
             var result = battleObjects.Remove(battleObject);
             if (result)
             {
+                BattleObjectRemoved(battleObject);
                 battleObject.Dispose();
             }
         }
 
-        void OnBattleObjectHooksCreate(IBattleObjectHooks battleObjectHooks)
+        void Add(IBattleObject battleObject)
+        {
+            battleObjects.Add(battleObject);
+            battleObject.Initialize();
+            BattleObjectSpawned(battleObject);
+        }
+
+        void OnBattleObjectHooksCreated(IBattleObjectHooks battleObjectHooks)
         {
             if (battleObjectHooks.photonView.isMine)
             {
@@ -80,18 +90,16 @@ namespace Submarine
             {
                 case BattleObjectType.Submarine:
                     var submarine = submarineFactory.Create(battleObjectHooks as SubmarineHooks);
-                    submarine.Initialize();
-                    battleObjects.Add(submarine);
+                    Add(submarine);
                     break;
                 case BattleObjectType.Torpedo:
                     var torpedo = torpedoFactory.Create(battleObjectHooks as TorpedoHooks);
-                    torpedo.Initialize();
-                    battleObjects.Add(torpedo);
+                    Add(torpedo);
                     break;
             }
         }
 
-        void OnBattleObjectHooksDestroy(IBattleObjectHooks battleObjectHooks)
+        void OnBattleObjectHooksDestroyed(IBattleObjectHooks battleObjectHooks)
         {
             var battleObject = battleObjects.Find(s => s.BattleObjectHooks == battleObjectHooks);
             Remove(battleObject);

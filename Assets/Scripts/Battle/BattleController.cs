@@ -27,7 +27,7 @@ namespace Submarine
 
         public void Initialize()
         {
-            BattleEvent.OnSubmarineDamage += OnSubmarinDamage;
+            BattleEvent.SubmarineDamaged += OnSubmarineDamaged;
 
             battleService.StartBattle();
 
@@ -40,7 +40,7 @@ namespace Submarine
             battleService.FinishBattle();
         }
 
-        void OnSubmarinDamage(ISubmarine sinked, ISubmarine attacker, Vector3 shockPower)
+        void OnSubmarineDamaged(ISubmarine sinked, ISubmarine attacker, Vector3 shockPower)
         {
             sinked.Damage(shockPower);
         }

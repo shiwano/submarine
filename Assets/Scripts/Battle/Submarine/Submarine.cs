@@ -12,9 +12,12 @@ namespace Submarine
 
     public abstract class SubmarineBase : ISubmarine
     {
-        public BattleObjectType Type { get { return BattleObjectType.Submarine; } }
         public SubmarineHooks Hooks { get; private set; }
+
+        public BattleObjectType Type { get { return BattleObjectType.Submarine; } }
         public IBattleObjectHooks BattleObjectHooks { get { return Hooks; } }
+        public Vector3 Position { get { return Hooks.transform.position; } }
+        public Vector3 EulerAngles { get { return Hooks.transform.rotation.eulerAngles; } }
 
         protected SubmarineBase(SubmarineHooks hooks)
         {

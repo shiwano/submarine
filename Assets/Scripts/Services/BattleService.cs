@@ -46,7 +46,7 @@ namespace Submarine
         {
             var damaged = objectContainer.Submarines.FirstOrDefault(s => s.Hooks.photonView.viewID == damagedViewId);
             var attacker = objectContainer.Submarines.FirstOrDefault(s => s.Hooks.photonView.ownerId == attackerOwnerId);
-            BattleEvent.OnSubmarineDamage(damaged, attacker, shockPower);
+            BattleEvent.SubmarineDamaged(damaged, attacker, shockPower);
         }
 
         public GameObject InstantiatePhotonView(string prefabName, Vector3 position, Quaternion rotation)

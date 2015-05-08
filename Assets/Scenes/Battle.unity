@@ -8597,7 +8597,7 @@ MonoBehaviour:
   enemyPinPrefab: {fileID: 133330, guid: 9a2a287cb83e6400cbceb68db721ab02, type: 2}
   torpedoPinPrefab: {fileID: 133578, guid: 0fbf5f67193e94a5091b6171a2095b47, type: 2}
   lookoutPinPrefab: {fileID: 165492, guid: e0c258829ae7044bf88809fa6510f3e5, type: 2}
-  pinContainer: {fileID: 1240331661}
+  pinContainer: {fileID: 1240331662}
 --- !u!1 &1262540243
 GameObject:
   m_ObjectHideFlags: 0

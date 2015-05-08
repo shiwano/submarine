@@ -1,4 +1,5 @@
-﻿using System;
+﻿using UnityEngine;
+using System;
 using Zenject;
 
 namespace Submarine
@@ -13,6 +14,8 @@ namespace Submarine
     {
         BattleObjectType Type { get; }
         IBattleObjectHooks BattleObjectHooks { get; }
+        Vector3 Position { get; }
+        Vector3 EulerAngles { get; }
     }
 
     public interface IBattleObjectHooks

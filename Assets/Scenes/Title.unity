@@ -228,7 +228,7 @@ MonoBehaviour:
   m_Material: {fileID: 0}
   m_Color: {r: .686274529, g: .772549093, b: .768627524, a: 1}
   m_FontData:
-    m_Font: {fileID: 12800000, guid: 10292a9f946c747f699d461149dd76f8, type: 3}
+    m_Font: {fileID: 12800000, guid: dd872c2553e46407ba58255429f643f7, type: 3}
     m_FontSize: 38
     m_FontStyle: 0
     m_BestFit: 0

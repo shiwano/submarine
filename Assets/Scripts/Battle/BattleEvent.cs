@@ -5,9 +5,9 @@ namespace Submarine
 {
     public static class BattleEvent
     {
-        public static Action<IBattleObjectHooks> OnBattleObjectHooksCreate = delegate {};
-        public static Action<IBattleObjectHooks> OnBattleObjectHooksDestroy = delegate {};
+        public static Action<IBattleObjectHooks> BattleObjectHooksCreated = delegate {};
+        public static Action<IBattleObjectHooks> BattleObjectHooksDestroyed = delegate {};
 
-        public static Action<ISubmarine, ISubmarine, Vector3> OnSubmarineDamage = delegate {};
+        public static Action<ISubmarine, ISubmarine, Vector3> SubmarineDamaged = delegate {};
     }
 }

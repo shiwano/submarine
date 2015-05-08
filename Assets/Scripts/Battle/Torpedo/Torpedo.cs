@@ -13,9 +13,12 @@ namespace Submarine
 
     public abstract class TorpedoBase : ITorpedo
     {
-        public BattleObjectType Type { get { return BattleObjectType.Torpedo; } }
         public TorpedoHooks Hooks { get; private set; }
+
+        public BattleObjectType Type { get { return BattleObjectType.Torpedo; } }
         public IBattleObjectHooks BattleObjectHooks { get { return Hooks; } }
+        public Vector3 Position { get { return Hooks.transform.position; } }
+        public Vector3 EulerAngles { get { return Hooks.transform.rotation.eulerAngles; } }
 
         protected TorpedoBase(TorpedoHooks hooks)
         {
