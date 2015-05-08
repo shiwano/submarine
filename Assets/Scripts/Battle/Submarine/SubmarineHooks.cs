@@ -26,6 +26,7 @@ namespace Submarine
 
         Rigidbody myRigidbody;
         Tweener floatingTweaner;
+        Tweener turningBackRotationTweaner;
 
         const float velocityLimit = 200f;
         const float dragOnAccelerate = 0.5f;
@@ -42,14 +43,18 @@ namespace Submarine
 
         public void Turn(Vector3 eulerAngles)
         {
+            if (turningBackRotationTweaner != null && turningBackRotationTweaner.IsPlaying())
+            {
+                turningBackRotationTweaner.Kill();
+            }
             transform.Rotate(eulerAngles);
             model.transform.localRotation = Quaternion.Euler(new Vector3(0f, 0f, -eulerAngles.y * 15f));
         }
 
         public void Brake()
         {
+            turningBackRotationTweaner = model.transform.DOLocalRotate(Vector3.zero, 1f).SetEase(Ease.OutExpo);
             myRigidbody.drag = dragOnBrake;
-            model.transform.localRotation = Quaternion.identity;
         }
 
         public void Damage(Vector3 shockPower)
@@ -73,14 +78,14 @@ namespace Submarine
             }
         }
 
-        void OnDestroy()
-        {
-            BattleEvent.BattleObjectHooksDestroyed(this);
-        }
-
         void Start()
         {
             floatingTweaner = model.transform.DOLocalMoveY(-0.25f, 3f).SetEase(Ease.InOutQuad).SetLoops(-1, LoopType.Yoyo);
+        }
+
+        void OnDestroy()
+        {
+            BattleEvent.BattleObjectHooksDestroyed(this);
         }
 
         void Update()
