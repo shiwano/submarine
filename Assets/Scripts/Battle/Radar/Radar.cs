@@ -41,9 +41,10 @@ namespace Submarine
 
         void Update()
         {
-            foreach (var keyAndValue in pins)
+            foreach (var pair in pins)
             {
-                keyAndValue.Value.localPosition = GetRadarPosition(keyAndValue.Key);
+                pair.Value.localPosition = GetRadarPosition(pair.Key);
+                pair.Value.localRotation = GetRadarRotation(pair.Key);
             }
         }
 
@@ -52,6 +53,12 @@ namespace Submarine
             var worldPosition = battleObject.Position;
             var scaleRate = pinContainer.sizeDelta.x / mapSizeX;
             return new Vector3(worldPosition.x * scaleRate, worldPosition.z * scaleRate, 0f);
+        }
+
+        Quaternion GetRadarRotation(IBattleObject battleObject)
+        {
+            var eulerAngles = new Vector3(0f, 0f, - battleObject.EulerAngles.y);
+            return Quaternion.Euler(eulerAngles);
         }
 
         RectTransform CreatePin(IBattleObject battleObject)
@@ -77,6 +84,7 @@ namespace Submarine
         {
             var pin = CreatePin(battleObject);
             pin.SetParent(pinContainer);
+            pin.localScale = Vector3.one;
             pins.Add(battleObject, pin);
         }
 
