@@ -30,7 +30,6 @@ GameObject:
   - 114: {fileID: 11459496}
   - 65: {fileID: 6554100}
   - 54: {fileID: 5460984}
-  - 114: {fileID: 11489226}
   m_Layer: 9
   m_Name: Torpedo
   m_TagString: Untagged
@@ -204,21 +203,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   explosionEffectPrefab: {fileID: 113422, guid: 9c6a84bb778a64761bd86228f15a8083,
     type: 2}
---- !u!114 &11489226
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 160578}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3803073e90d5c4de6ad05a5b7299727c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  layerMask:
-    serializedVersion: 2
-    m_Bits: 256
-  skinWidth: .100000001
 --- !u!1001 &100100000
 Prefab:
   m_ObjectHideFlags: 1
