@@ -108,7 +108,7 @@ Rigidbody:
   m_IsKinematic: 0
   m_Interpolate: 0
   m_Constraints: 84
-  m_CollisionDetection: 0
+  m_CollisionDetection: 2
 --- !u!65 &6554100
 BoxCollider:
   m_ObjectHideFlags: 1
@@ -218,7 +218,7 @@ MonoBehaviour:
   layerMask:
     serializedVersion: 2
     m_Bits: 256
-  skinWidth: .5
+  skinWidth: .100000001
 --- !u!1001 &100100000
 Prefab:
   m_ObjectHideFlags: 1

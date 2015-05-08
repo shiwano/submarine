@@ -19,6 +19,8 @@ namespace Submarine
         GameObject lookoutPinPrefab;
         [SerializeField]
         RectTransform pinContainer;
+        [SerializeField]
+        Vector2 radarSize = new Vector2(250f, 250f);
 
         BattleObjectContainer objectContainer;
 
@@ -51,7 +53,7 @@ namespace Submarine
         Vector3 GetRadarPosition(IBattleObject battleObject)
         {
             var worldPosition = battleObject.Position;
-            var scaleRate = pinContainer.sizeDelta.x / mapSizeX;
+            var scaleRate = radarSize.x / mapSizeX;
             return new Vector3(worldPosition.x * scaleRate, worldPosition.z * scaleRate, 0f);
         }
 

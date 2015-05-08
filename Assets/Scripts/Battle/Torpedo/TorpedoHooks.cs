@@ -12,15 +12,16 @@ namespace Submarine
     public class TorpedoHooks : Photon.MonoBehaviour, IBattleObjectHooks
     {
         [SerializeField]
-        private GameObject explosionEffectPrefab;
+        GameObject explosionEffectPrefab;
 
         public event Action<int> OnHitEnemySubmarine = delegate {};
 
-        private Vector3 receivedPosition = Vector3.zero;
-        private Quaternion receivedRotation = Quaternion.identity;
+        Vector3 receivedPosition = Vector3.zero;
+        Quaternion receivedRotation = Quaternion.identity;
 
-        private Rigidbody cachedRigidbody;
-        private const float velocityLimit = 600f;
+        Rigidbody cachedRigidbody;
+        bool hasExploded = false;
+        const float velocityLimit = 400f;
 
         public BattleObjectType Type { get { return BattleObjectType.Torpedo; } }
 
@@ -34,32 +35,33 @@ namespace Submarine
             Destroy(gameObject);
         }
 
-        private void Awake()
+        void Awake()
         {
             cachedRigidbody = GetComponent<Rigidbody>();
             BattleEvent.BattleObjectHooksCreated(this);
         }
 
-        private void OnDestroy()
+        void OnDestroy()
         {
             BattleEvent.BattleObjectHooksDestroyed(this);
         }
 
-        private void OnCollisionEnter(Collision collision)
+        void OnCollisionEnter(Collision collision)
         {
-            if (photonView.isMine)
-            {
-                var submarineHooks = collision.gameObject.GetComponent<SubmarineHooks>();
-                if (submarineHooks != null && !submarineHooks.photonView.isMine)
-                {
-                    OnHitEnemySubmarine(submarineHooks.photonView.viewID);
-                }
-
-                photonView.RPC("Explode", PhotonTargets.All);
-            }
+            Collide(collision);
         }
 
-        private void Update()
+        void OnCollisionStay(Collision collision)
+        {
+            Collide(collision);
+        }
+
+        void OnCollisionExit(Collision collision)
+        {
+            Collide(collision);
+        }
+
+        void Update()
         {
             if (photonView.isMine)
             {
@@ -72,7 +74,7 @@ namespace Submarine
             }
         }
 
-        private void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
+        void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
         {
             if (stream.isWriting)
             {
@@ -86,8 +88,23 @@ namespace Submarine
             }
         }
 
+        void Collide(Collision collision)
+        {
+            if (photonView.isMine && !hasExploded)
+            {
+                var submarineHooks = collision.gameObject.GetComponent<SubmarineHooks>();
+                if (submarineHooks != null && !submarineHooks.photonView.isMine)
+                {
+                    OnHitEnemySubmarine(submarineHooks.photonView.viewID);
+                }
+
+                photonView.RPC("Explode", PhotonTargets.All);
+                hasExploded = true;
+            }
+        }
+
         [RPC]
-        private void Explode()
+        void Explode()
         {
             var effect = Instantiate(explosionEffectPrefab);
             effect.transform.position = transform.position;

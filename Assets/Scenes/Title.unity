@@ -229,7 +229,7 @@ MonoBehaviour:
   m_Color: {r: .686274529, g: .772549093, b: .768627524, a: 1}
   m_FontData:
     m_Font: {fileID: 12800000, guid: dd872c2553e46407ba58255429f643f7, type: 3}
-    m_FontSize: 38
+    m_FontSize: 36
     m_FontStyle: 0
     m_BestFit: 0
     m_MinSize: 10
@@ -285,6 +285,56 @@ MonoBehaviour:
   from: 0
   to: 1
   includeChilds: 0
+--- !u!1001 &840546969
+Prefab:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 494098, guid: cd1b9eb569f52416da7ef5adad3dfa8e, type: 2}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 494098, guid: cd1b9eb569f52416da7ef5adad3dfa8e, type: 2}
+      propertyPath: m_LocalPosition.y
+      value: 62.6599998
+      objectReference: {fileID: 0}
+    - target: {fileID: 494098, guid: cd1b9eb569f52416da7ef5adad3dfa8e, type: 2}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 494098, guid: cd1b9eb569f52416da7ef5adad3dfa8e, type: 2}
+      propertyPath: m_LocalRotation.x
+      value: -3.77489506e-08
+      objectReference: {fileID: 0}
+    - target: {fileID: 494098, guid: cd1b9eb569f52416da7ef5adad3dfa8e, type: 2}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 494098, guid: cd1b9eb569f52416da7ef5adad3dfa8e, type: 2}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 494098, guid: cd1b9eb569f52416da7ef5adad3dfa8e, type: 2}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 494098, guid: cd1b9eb569f52416da7ef5adad3dfa8e, type: 2}
+      propertyPath: m_RootOrder
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 11419434, guid: cd1b9eb569f52416da7ef5adad3dfa8e, type: 2}
+      propertyPath: viewIdField
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 11419434, guid: cd1b9eb569f52416da7ef5adad3dfa8e, type: 2}
+      propertyPath: instantiationId
+      value: 1
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_ParentPrefab: {fileID: 100100000, guid: cd1b9eb569f52416da7ef5adad3dfa8e, type: 2}
+  m_IsPrefabParent: 0
 --- !u!4 &984061201 stripped
 Transform:
   m_PrefabParentObject: {fileID: 469036, guid: 489c2a3d37b2b4c69b505eba001f4e85, type: 2}
@@ -587,8 +637,8 @@ MonoBehaviour:
   m_Material: {fileID: 0}
   m_Color: {r: .693447232, g: .779411793, b: .774887323, a: 1}
   m_FontData:
-    m_Font: {fileID: 12800000, guid: b24b3a9b30b3c491fa36318704064ec9, type: 3}
-    m_FontSize: 62
+    m_Font: {fileID: 12800000, guid: 38419e3d9d1414393be60f19e3b146dc, type: 3}
+    m_FontSize: 97
     m_FontStyle: 0
     m_BestFit: 0
     m_MinSize: 10
@@ -598,7 +648,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 1
     m_VerticalOverflow: 1
     m_LineSpacing: 1
-  m_Text: 'SUBMARINE: KK'
+  m_Text: SUBMARINE CLOUD
 --- !u!222 &1746790785
 CanvasRenderer:
   m_ObjectHideFlags: 0

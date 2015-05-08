@@ -35,7 +35,7 @@ namespace Submarine
         private readonly BattleService battleService;
 
         public float LifeTime { get { return 7f; } }
-        public Vector3 Acceleration { get { return Hooks.transform.forward * 50f; } }
+        public Vector3 Acceleration { get { return Hooks.transform.forward * 80f; } }
         public Vector3 ShockPower { get { return Hooks.transform.forward * 300f; } }
 
         public PlayerTorpedo(TorpedoHooks hooks, BattleService battleService)

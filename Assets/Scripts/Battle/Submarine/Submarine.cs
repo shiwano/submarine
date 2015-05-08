@@ -44,7 +44,7 @@ namespace Submarine
 
         public Vector3 Acceleration
         {
-            get { return Hooks.transform.forward * Mathf.Lerp(0f, 50f, Mathf.Clamp01(input.MousePressingTime)); }
+            get { return Hooks.transform.forward * Mathf.Lerp(0f, 40f, Mathf.Clamp01(input.MousePressingTime)); }
         }
 
         public Vector3 TurningEulerAngles

@@ -41,7 +41,8 @@ namespace Submarine
                 // check for obstructions we might have missed
                 if (Physics.Raycast(previousPosition, movementThisStep, out hitInfo, movementMagnitude, layerMask.value))
                 {
-                    myRigidbody.position = hitInfo.point - (movementThisStep/movementMagnitude) * partialExtent;
+                    myRigidbody.position = hitInfo.point - (movementThisStep / movementMagnitude) * partialExtent;
+                    Debug.LogError("aaa " + hitInfo.collider.isTrigger);
                 }
             }
 
