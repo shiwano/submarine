@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
-using System.Collections;
+using System;
+using System.Collections.Generic;
 using Zenject;
 
 namespace Submarine
@@ -20,6 +21,8 @@ namespace Submarine
         GameObject pinContainer;
 
         BattleObjectContainer objectContainer;
+
+        Dictionary<IBattleObject, GameObject> pins = new Dictionary<IBattleObject, GameObject>();
 
         [PostInject]
         void Initialize(BattleObjectContainer objectContainer)

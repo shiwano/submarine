@@ -65,7 +65,7 @@ namespace Submarine
         void Awake()
         {
             cachedRigidbody = GetComponent<Rigidbody>();
-            BattleEvent.OnPhotonBehaviourCreate(this);
+            BattleEvent.OnBattleObjectHooksCreate(this);
 
             if (!photonView.isMine)
             {
@@ -75,7 +75,7 @@ namespace Submarine
 
         void OnDestroy()
         {
-            BattleEvent.OnPhotonBehaviourDestroy(this);
+            BattleEvent.OnBattleObjectHooksDestroy(this);
         }
 
         void Start()

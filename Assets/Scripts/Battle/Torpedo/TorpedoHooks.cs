@@ -37,12 +37,12 @@ namespace Submarine
         private void Awake()
         {
             cachedRigidbody = GetComponent<Rigidbody>();
-            BattleEvent.OnPhotonBehaviourCreate(this);
+            BattleEvent.OnBattleObjectHooksCreate(this);
         }
 
         private void OnDestroy()
         {
-            BattleEvent.OnPhotonBehaviourDestroy(this);
+            BattleEvent.OnBattleObjectHooksDestroy(this);
         }
 
         private void OnCollisionEnter(Collision collision)

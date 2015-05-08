@@ -3,7 +3,7 @@ using System.Collections;
 
 namespace Submarine
 {
-    public class SubmarineResources : MonoBehaviour
+    public class SubmarineResources
     {
     }
 }

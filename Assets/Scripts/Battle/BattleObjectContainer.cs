@@ -26,14 +26,14 @@ namespace Submarine
 
         public void Initialize()
         {
-            BattleEvent.OnPhotonBehaviourCreate += OnPhotonBehaviourCreate;
-            BattleEvent.OnPhotonBehaviourDestroy += OnPhotonBehaviourDestroy;
+            BattleEvent.OnBattleObjectHooksCreate += OnBattleObjectHooksCreate;
+            BattleEvent.OnBattleObjectHooksDestroy += OnBattleObjectHooksDestroy;
         }
 
         public void Dispose()
         {
-            BattleEvent.OnPhotonBehaviourCreate -= OnPhotonBehaviourCreate;
-            BattleEvent.OnPhotonBehaviourDestroy -= OnPhotonBehaviourDestroy;
+            BattleEvent.OnBattleObjectHooksCreate -= OnBattleObjectHooksCreate;
+            BattleEvent.OnBattleObjectHooksDestroy -= OnBattleObjectHooksDestroy;
         }
 
         public void Tick()
@@ -69,7 +69,7 @@ namespace Submarine
             }
         }
 
-        void OnPhotonBehaviourCreate(IBattleObjectHooks battleObjectHooks)
+        void OnBattleObjectHooksCreate(IBattleObjectHooks battleObjectHooks)
         {
             if (battleObjectHooks.photonView.isMine)
             {
@@ -91,7 +91,7 @@ namespace Submarine
             }
         }
 
-        void OnPhotonBehaviourDestroy(IBattleObjectHooks battleObjectHooks)
+        void OnBattleObjectHooksDestroy(IBattleObjectHooks battleObjectHooks)
         {
             var battleObject = battleObjects.Find(s => s.BattleObjectHooks == battleObjectHooks);
             Remove(battleObject);
