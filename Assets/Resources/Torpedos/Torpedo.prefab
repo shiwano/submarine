@@ -218,7 +218,7 @@ MonoBehaviour:
   layerMask:
     serializedVersion: 2
     m_Bits: 256
-  skinWidth: .100000001
+  skinWidth: .5
 --- !u!1001 &100100000
 Prefab:
   m_ObjectHideFlags: 1
