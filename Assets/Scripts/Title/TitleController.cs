@@ -6,8 +6,8 @@ namespace Submarine
 {
     public class TitleController : IInitializable, IDisposable
     {
-        private readonly TitleInstaller.Settings sceneSettings;
-        private readonly MatchingService matchingService;
+        readonly TitleInstaller.Settings sceneSettings;
+        readonly MatchingService matchingService;
 
         public TitleController(TitleInstaller.Settings sceneSettings, MatchingService matchingService)
         {
@@ -27,14 +27,14 @@ namespace Submarine
             matchingService.onJoinRoom -= OnMatchingServiceJoinRoom;
         }
 
-        private void OnStartButtonClick()
+        void OnStartButtonClick()
         {
             Debug.Log("Click StartButton");
             sceneSettings.StartButton.onClick.RemoveListener(OnStartButtonClick);
             matchingService.JoinRoom();
         }
 
-        private void OnMatchingServiceJoinRoom()
+        void OnMatchingServiceJoinRoom()
         {
             ZenUtil.LoadScene("Battle");
         }

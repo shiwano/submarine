@@ -4,14 +4,14 @@ namespace Submarine
 {
     public class EffectSweeper : MonoBehaviour
     {
-        private ParticleSystem particle;
+        ParticleSystem particle;
 
-        private void Start()
+        void Start()
         {
             particle = GetComponent<ParticleSystem>();
         }
 
-        private void Update()
+        void Update()
         {
             if (particle.isStopped)
             {

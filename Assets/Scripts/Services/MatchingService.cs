@@ -9,7 +9,7 @@ namespace Submarine
     {
         public event Action onJoinRoom;
 
-        private ConnectionService connection;
+        ConnectionService connection;
 
         [PostInject]
         public void Initialize(ConnectionService connection)
@@ -22,13 +22,13 @@ namespace Submarine
             connection.Connect();
         }
 
-        private void OnJoinedLobby()
+        void OnJoinedLobby()
         {
             Debug.Log("Joined Lobby");
             PhotonNetwork.JoinOrCreateRoom("Test", new RoomOptions(), TypedLobby.Default);
         }
 
-        private void OnJoinedRoom()
+        void OnJoinedRoom()
         {
             Debug.Log("Joined Room");
             connection.IsMessageQueueRunning = false;

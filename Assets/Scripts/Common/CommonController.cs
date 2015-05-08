@@ -6,7 +6,7 @@ namespace Submarine
 {
     public class CommonController : IInitializable
     {
-        private readonly ConnectionService connection;
+        readonly ConnectionService connection;
 
         public CommonController(ConnectionService connection)
         {
@@ -18,7 +18,7 @@ namespace Submarine
             Debug.Log("Game Start");
         }
 
-        private void OnApplicationQuit()
+        void OnApplicationQuit()
         {
             if (connection.Connected)
             {
@@ -28,7 +28,7 @@ namespace Submarine
             Debug.Log("Game Quit");
         }
 
-        private void OnApplicationPause(bool paused)
+        void OnApplicationPause(bool paused)
         {
             connection.IsMessageQueueRunning = !paused;
 

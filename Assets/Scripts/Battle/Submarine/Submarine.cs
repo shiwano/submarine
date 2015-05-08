@@ -33,11 +33,11 @@ namespace Submarine
 
     public class PlayerSubmarine : SubmarineBase
     {
-        private readonly BattleInput input;
-        private readonly BattleObjectContainer objectContainer;
-        private readonly CompositeDisposable eventResources = new CompositeDisposable();
+        readonly BattleInput input;
+        readonly BattleObjectContainer objectContainer;
+        readonly CompositeDisposable eventResources = new CompositeDisposable();
 
-        private bool IsSinked = false;
+        bool IsSinked = false;
 
         public Vector3 Acceleration
         {

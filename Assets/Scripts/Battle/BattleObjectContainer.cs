@@ -8,10 +8,10 @@ namespace Submarine
 {
     public class BattleObjectContainer : IInitializable, IDisposable, ITickable
     {
-        private readonly SubmarineFactory submarineFactory;
-        private readonly TorpedoFactory torpedoFactory;
+        readonly SubmarineFactory submarineFactory;
+        readonly TorpedoFactory torpedoFactory;
 
-        private readonly List<IBattleObject> battleObjects = new List<IBattleObject>();
+        readonly List<IBattleObject> battleObjects = new List<IBattleObject>();
 
         public IEnumerable<ISubmarine> Submarines { get { return battleObjects.OfType<ISubmarine>(); } }
         public IEnumerable<ITorpedo> Torpedos { get { return battleObjects.OfType<ITorpedo>(); } }
@@ -69,7 +69,7 @@ namespace Submarine
             }
         }
 
-        private void OnPhotonBehaviourCreate(IBattleObjectHooks battleObjectHooks)
+        void OnPhotonBehaviourCreate(IBattleObjectHooks battleObjectHooks)
         {
             if (battleObjectHooks.photonView.isMine)
             {
@@ -91,7 +91,7 @@ namespace Submarine
             }
         }
 
-        private void OnPhotonBehaviourDestroy(IBattleObjectHooks battleObjectHooks)
+        void OnPhotonBehaviourDestroy(IBattleObjectHooks battleObjectHooks)
         {
             var battleObject = battleObjects.Find(s => s.BattleObjectHooks == battleObjectHooks);
             Remove(battleObject);

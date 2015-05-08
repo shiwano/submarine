@@ -18,5 +18,13 @@ namespace Submarine
         GameObject lookoutPinPrefab;
         [SerializeField]
         GameObject pinContainer;
+
+        BattleObjectContainer objectContainer;
+
+        [PostInject]
+        void Initialize(BattleObjectContainer objectContainer)
+        {
+            this.objectContainer = objectContainer;
+        }
     }
 }

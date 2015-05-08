@@ -5,10 +5,10 @@ namespace Submarine
 {
     public class ThirdPersonCamera : ITickable
     {
-        private readonly Transform camera;
-        private readonly Quaternion cameraStartRotation;
+        readonly Transform camera;
+        readonly Quaternion cameraStartRotation;
 
-        private Transform target;
+        Transform target;
 
         public Vector3 CameraDistance
         {

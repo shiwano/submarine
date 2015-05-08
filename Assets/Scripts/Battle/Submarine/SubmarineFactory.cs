@@ -6,8 +6,8 @@ namespace Submarine
 {
     public class SubmarineFactory
     {
-        private readonly DiContainer container;
-        private readonly BattleService battleService;
+        readonly DiContainer container;
+        readonly BattleService battleService;
 
         public SubmarineFactory(DiContainer container, BattleService battleService)
         {
@@ -33,7 +33,7 @@ namespace Submarine
             }
         }
 
-        private SubmarineHooks CreateSubmarineHooks(InjectContext context, Vector3 position)
+        SubmarineHooks CreateSubmarineHooks(InjectContext context, Vector3 position)
         {
             var go = battleService.InstantiatePhotonView(
                 Constants.SubmarinePrefab,

@@ -12,24 +12,24 @@ namespace Submarine
     public class SubmarineHooks : Photon.MonoBehaviour, IBattleObjectHooks
     {
         [SerializeField]
-        private GameObject model;
+        GameObject model;
         [SerializeField]
-        private Transform launchSite;
+        Transform launchSite;
         [SerializeField]
-        private GameObject streamEffect;
+        GameObject streamEffect;
         [SerializeField]
-        private Material enemySubmarineMaterial;
+        Material enemySubmarineMaterial;
 
-        private Vector3 receivedPosition = Vector3.zero;
-        private Quaternion receivedRotation = Quaternion.identity;
-        private Quaternion receivedModelRotation = Quaternion.identity;
+        Vector3 receivedPosition = Vector3.zero;
+        Quaternion receivedRotation = Quaternion.identity;
+        Quaternion receivedModelRotation = Quaternion.identity;
 
-        private Rigidbody cachedRigidbody;
-        private Tweener floatingTweaner;
+        Rigidbody cachedRigidbody;
+        Tweener floatingTweaner;
 
-        private const float velocityLimit = 200f;
-        private const float dragOnAccelerate = 0.5f;
-        private const float dragOnBrake = 2f;
+        const float velocityLimit = 200f;
+        const float dragOnAccelerate = 0.5f;
+        const float dragOnBrake = 2f;
 
         public BattleObjectType Type { get { return BattleObjectType.Submarine; } }
         public Vector3 LaunchSitePosition { get { return launchSite.position; } }
@@ -62,7 +62,7 @@ namespace Submarine
             streamEffect.SetActive(true);
         }
 
-        private void Awake()
+        void Awake()
         {
             cachedRigidbody = GetComponent<Rigidbody>();
             BattleEvent.OnPhotonBehaviourCreate(this);
@@ -73,17 +73,17 @@ namespace Submarine
             }
         }
 
-        private void OnDestroy()
+        void OnDestroy()
         {
             BattleEvent.OnPhotonBehaviourDestroy(this);
         }
 
-        private void Start()
+        void Start()
         {
             floatingTweaner = model.transform.DOLocalMoveY(-2.5f, 3f).SetEase(Ease.InOutQuad).SetLoops(-1, LoopType.Yoyo);
         }
 
-        private void Update()
+        void Update()
         {
             if (photonView.isMine)
             {
@@ -97,7 +97,7 @@ namespace Submarine
             }
         }
      
-        private void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
+        void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
         {
             if (stream.isWriting)
             {

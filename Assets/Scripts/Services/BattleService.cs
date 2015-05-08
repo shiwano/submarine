@@ -7,8 +7,8 @@ namespace Submarine
 {
     public class BattleService : Photon.MonoBehaviour
     {
-        private ConnectionService connection;
-        private BattleObjectContainer objectContainer;
+        ConnectionService connection;
+        BattleObjectContainer objectContainer;
 
         [PostInject]
         public void Initialize(ConnectionService connection, BattleObjectContainer objectContainer)
@@ -42,7 +42,7 @@ namespace Submarine
         }
 
         [RPC]
-        private void ReceiveSubmarineDamageEvent(int damagedViewId, int attackerOwnerId, Vector3 shockPower)
+        void ReceiveSubmarineDamageEvent(int damagedViewId, int attackerOwnerId, Vector3 shockPower)
         {
             var damaged = objectContainer.Submarines.FirstOrDefault(s => s.Hooks.photonView.viewID == damagedViewId);
             var attacker = objectContainer.Submarines.FirstOrDefault(s => s.Hooks.photonView.ownerId == attackerOwnerId);

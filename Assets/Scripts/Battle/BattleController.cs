@@ -8,10 +8,10 @@ namespace Submarine
 {
     public class BattleController : IInitializable, IDisposable
     {
-        private readonly BattleInstaller.Settings settings;
-        private readonly BattleService battleService;
-        private readonly BattleObjectContainer objectContainer;
-        private readonly ThirdPersonCamera thirdPersonCamera;
+        readonly BattleInstaller.Settings settings;
+        readonly BattleService battleService;
+        readonly BattleObjectContainer objectContainer;
+        readonly ThirdPersonCamera thirdPersonCamera;
 
         public BattleController(
             BattleInstaller.Settings settings,
@@ -40,7 +40,7 @@ namespace Submarine
             battleService.FinishBattle();
         }
 
-        private void OnSubmarinDamage(ISubmarine sinked, ISubmarine attacker, Vector3 shockPower)
+        void OnSubmarinDamage(ISubmarine sinked, ISubmarine attacker, Vector3 shockPower)
         {
             sinked.Damage(shockPower);
         }
