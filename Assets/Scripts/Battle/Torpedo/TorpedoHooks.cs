@@ -14,15 +14,14 @@ namespace Submarine
         [SerializeField]
         GameObject explosionEffectPrefab;
 
-        public event Action<int> OnHitEnemySubmarine = delegate {};
-
         Vector3 receivedPosition = Vector3.zero;
         Quaternion receivedRotation = Quaternion.identity;
 
         Rigidbody cachedRigidbody;
-        bool hasExploded = false;
 
         public BattleObjectType Type { get { return BattleObjectType.Torpedo; } }
+
+        public event Action<int> OnHitEnemySubmarine = delegate {};
 
         public void Accelerate(Vector3 force)
         {
@@ -47,17 +46,16 @@ namespace Submarine
 
         void OnCollisionEnter(Collision collision)
         {
-            Collide(collision);
-        }
+            if (photonView.isMine)
+            {
+                var submarineHooks = collision.gameObject.GetComponent<SubmarineHooks>();
+                if (submarineHooks != null && !submarineHooks.photonView.isMine)
+                {
+                    OnHitEnemySubmarine(submarineHooks.photonView.viewID);
+                }
 
-        void OnCollisionStay(Collision collision)
-        {
-            Collide(collision);
-        }
-
-        void OnCollisionExit(Collision collision)
-        {
-            Collide(collision);
+                photonView.RPC("Explode", PhotonTargets.All);
+            }
         }
 
         void Update()
@@ -80,21 +78,6 @@ namespace Submarine
             {
                 receivedPosition = (Vector3)stream.ReceiveNext();
                 receivedRotation = (Quaternion)stream.ReceiveNext();
-            }
-        }
-
-        void Collide(Collision collision)
-        {
-            if (photonView.isMine && !hasExploded)
-            {
-                var submarineHooks = collision.gameObject.GetComponent<SubmarineHooks>();
-                if (submarineHooks != null && !submarineHooks.photonView.isMine)
-                {
-                    OnHitEnemySubmarine(submarineHooks.photonView.viewID);
-                }
-
-                photonView.RPC("Explode", PhotonTargets.All);
-                hasExploded = true;
             }
         }
 
