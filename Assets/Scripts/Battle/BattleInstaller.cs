@@ -45,6 +45,7 @@ namespace Submarine
             Container.Bind<Camera>("MainCamera").ToSingleInstance(InstallerSettings.MainCamera);
 
             Container.Bind<BattleService>().ToSingleInstance(InstallerSettings.BattleService);
+            Container.Bind<Radar>().ToSingleInstance(InstallerSettings.Radar);
 
             Container.Bind<IInitializable>().ToSingle<BattleInput>();
             Container.Bind<IDisposable>().ToSingle<BattleInput>();
