@@ -94,7 +94,7 @@ namespace Submarine
             base.Damage(shockPower);
         }
 
-        private void SpawnTorpedo()
+        void SpawnTorpedo()
         {
             objectContainer.SpawnTorpedo(Hooks.LaunchSitePosition, Hooks.transform.rotation);
         }

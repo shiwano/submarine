@@ -6,11 +6,9 @@ namespace Submarine
 {
     public class EffectSweeper : MonoBehaviour
     {
-        ParticleSystem particle;
-
         void Start()
         {
-            particle = GetComponent<ParticleSystem>();
+            var particle = GetComponent<ParticleSystem>();
 
             Observable.Interval(TimeSpan.FromSeconds(particle.duration))
                 .Take(1)
