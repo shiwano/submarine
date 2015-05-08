@@ -38,7 +38,7 @@ namespace Submarine
 
         public void SendSubmarineDamageEvent(int damagedViewId, int attackerOwnerId, Vector3 shockPower)
         {
-            photonView.RPC("ReceiveSubmarineSinkEvent", PhotonTargets.All, damagedViewId, attackerOwnerId, shockPower);
+            photonView.RPC("ReceiveSubmarineDamageEvent", PhotonTargets.All, damagedViewId, attackerOwnerId, shockPower);
         }
 
         [RPC]
