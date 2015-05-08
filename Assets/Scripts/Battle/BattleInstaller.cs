@@ -13,12 +13,27 @@ namespace Submarine
         {
             public Camera MainCamera;
             public BattleService BattleService;
+            public Radar Radar;
             public SubmarineSettings Submarine;
+            public UISettings UI;
 
             [Serializable]
             public class SubmarineSettings
             {
                 public List<Vector3> StartPositions = new List<Vector3>();
+            }
+
+            [Serializable]
+            public class UISettings
+            {
+                public Text BattleLogText;
+                public Text TimerText;
+                public List<Image> TorpedoResourceImages;
+                public Image PingerAlertImage;
+                public Image DangerAlertImage;
+                public Button DecoyButton;
+                public Button PingerButton;
+                public Button LookoutButton;
             }
         }
 

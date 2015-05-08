@@ -5144,7 +5144,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &746941704
 RectTransform:
   m_ObjectHideFlags: 0
@@ -5740,7 +5740,7 @@ GameObject:
   - 222: {fileID: 816947650}
   - 114: {fileID: 816947649}
   m_Layer: 5
-  m_Name: TorpedoImage2
+  m_Name: TorpedoResourceImage2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -6270,12 +6270,24 @@ MonoBehaviour:
   InstallerSettings:
     MainCamera: {fileID: 1473723662}
     BattleService: {fileID: 1351216275}
+    Radar: {fileID: 1256337061}
     Submarine:
       StartPositions:
       - {x: 0, y: 180, z: 0}
       - {x: 0, y: 180, z: 0}
       - {x: 0, y: 180, z: 0}
       - {x: 0, y: 180, z: 0}
+    UI:
+      BattleLogText: {fileID: 1572298333}
+      TimerText: {fileID: 480431355}
+      TorpedoResourceImages:
+      - {fileID: 1158632068}
+      - {fileID: 816947649}
+      PingerAlertImage: {fileID: 62360095}
+      DangerAlertImage: {fileID: 1554210984}
+      DecoyButton: {fileID: 2104265937}
+      PingerButton: {fileID: 931344152}
+      LookoutButton: {fileID: 430998926}
 --- !u!1 &918947417
 GameObject:
   m_ObjectHideFlags: 0
@@ -7761,7 +7773,7 @@ GameObject:
   - 222: {fileID: 1158632069}
   - 114: {fileID: 1158632068}
   m_Layer: 5
-  m_Name: TorpedoImage
+  m_Name: TorpedoResourceImage
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

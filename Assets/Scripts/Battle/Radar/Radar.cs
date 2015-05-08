@@ -2,7 +2,7 @@
 using System.Collections;
 using Zenject;
 
-namespace Radar
+namespace Submarine
 {
     public class Radar : MonoBehaviour
     {
