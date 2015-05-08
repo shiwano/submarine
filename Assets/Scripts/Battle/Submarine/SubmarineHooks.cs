@@ -28,7 +28,6 @@ namespace Submarine
         Tweener floatingTweaner;
         Tweener turningBackRotationTweaner;
 
-        const float velocityLimit = 200f;
         const float dragOnAccelerate = 0.5f;
         const float dragOnBrake = 2f;
 
@@ -90,11 +89,7 @@ namespace Submarine
 
         void Update()
         {
-            if (photonView.isMine)
-            {
-                myRigidbody.velocity = Vector3.ClampMagnitude(myRigidbody.velocity, velocityLimit);
-            }
-            else
+            if (!photonView.isMine)
             {
                 transform.position = Vector3.Lerp(transform.position, receivedPosition, Time.deltaTime * 5);
                 transform.rotation = Quaternion.Lerp(transform.rotation, receivedRotation, Time.deltaTime * 5);

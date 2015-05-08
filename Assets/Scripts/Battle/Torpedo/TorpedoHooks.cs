@@ -21,7 +21,6 @@ namespace Submarine
 
         Rigidbody cachedRigidbody;
         bool hasExploded = false;
-        const float velocityLimit = 400f;
 
         public BattleObjectType Type { get { return BattleObjectType.Torpedo; } }
 
@@ -63,11 +62,7 @@ namespace Submarine
 
         void Update()
         {
-            if (photonView.isMine)
-            {
-                cachedRigidbody.velocity = Vector3.ClampMagnitude(cachedRigidbody.velocity, velocityLimit);
-            }
-            else
+            if (!photonView.isMine)
             {
                 transform.position = Vector3.Lerp(transform.position, receivedPosition, Time.deltaTime * 5);
                 transform.rotation = Quaternion.Lerp(transform.rotation, receivedRotation, Time.deltaTime * 5);
