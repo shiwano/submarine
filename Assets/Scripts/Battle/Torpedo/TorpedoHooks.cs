@@ -109,7 +109,7 @@ namespace Submarine
             var effect = Instantiate(explosionEffectPrefab);
             effect.transform.position = transform.position;
 
-            Destroy(gameObject);
+            PhotonNetwork.Destroy(gameObject);
         }
     }
 }
