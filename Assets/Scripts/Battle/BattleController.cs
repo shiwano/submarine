@@ -10,18 +10,18 @@ namespace Submarine
     {
         private readonly BattleInstaller.Settings settings;
         private readonly BattleService battleService;
-        private readonly BattleObjectSpawner spawner;
+        private readonly BattleObjectContainer objectContainer;
         private readonly ThirdPersonCamera thirdPersonCamera;
 
         public BattleController(
             BattleInstaller.Settings settings,
             BattleService battleService,
-            BattleObjectSpawner spawner,
+            BattleObjectContainer objectContainer,
             ThirdPersonCamera thirdPersonCamera)
         {
             this.settings = settings;
             this.battleService = battleService;
-            this.spawner = spawner;
+            this.objectContainer = objectContainer;
             this.thirdPersonCamera = thirdPersonCamera;
         }
 
@@ -31,7 +31,7 @@ namespace Submarine
 
             battleService.StartBattle();
 
-            var playerSubmarine = spawner.SpawnSubmarine(settings.Submarine.StartPositions[0]);
+            var playerSubmarine = objectContainer.SpawnSubmarine(settings.Submarine.StartPositions[0]);
             thirdPersonCamera.SetTarget(playerSubmarine.Hooks.transform);
         }
 

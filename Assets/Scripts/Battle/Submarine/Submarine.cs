@@ -34,7 +34,7 @@ namespace Submarine
     public class PlayerSubmarine : SubmarineBase
     {
         private readonly BattleInput input;
-        private readonly BattleObjectSpawner spawner;
+        private readonly BattleObjectContainer objectContainer;
         private readonly CompositeDisposable eventResources = new CompositeDisposable();
 
         private bool IsSinked = false;
@@ -49,11 +49,11 @@ namespace Submarine
             get { return Hooks.transform.up * (input.MousePosition.x - input.MousePositionOnButtonDown.x) * 0.01f; }
         }
 
-        public PlayerSubmarine(SubmarineHooks hooks, BattleInput input, BattleObjectSpawner spawner)
+        public PlayerSubmarine(SubmarineHooks hooks, BattleInput input, BattleObjectContainer objectContainer)
             : base(hooks)
         {
             this.input = input;
-            this.spawner = spawner;
+            this.objectContainer = objectContainer;
         }
 
         public override void Initialize()
@@ -93,7 +93,7 @@ namespace Submarine
 
         private void SpawnTorpedo()
         {
-            spawner.SpawnTorpedo(Hooks.LaunchSitePosition, Hooks.transform.rotation);
+            objectContainer.SpawnTorpedo(Hooks.LaunchSitePosition, Hooks.transform.rotation);
         }
     }
 

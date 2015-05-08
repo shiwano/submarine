@@ -6,7 +6,7 @@ using Zenject;
 
 namespace Submarine
 {
-    public class BattleObjectSpawner : IInitializable, IDisposable, ITickable
+    public class BattleObjectContainer : IInitializable, IDisposable, ITickable
     {
         private readonly SubmarineFactory submarineFactory;
         private readonly TorpedoFactory torpedoFactory;
@@ -16,7 +16,7 @@ namespace Submarine
         public IEnumerable<ISubmarine> Submarines { get { return battleObjects.OfType<ISubmarine>(); } }
         public IEnumerable<ITorpedo> Torpedos { get { return battleObjects.OfType<ITorpedo>(); } }
 
-        public BattleObjectSpawner(
+        public BattleObjectContainer(
             SubmarineFactory submarineFactory,
             TorpedoFactory torpedoFactory)
         {

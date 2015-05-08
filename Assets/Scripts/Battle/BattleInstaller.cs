@@ -55,10 +55,10 @@ namespace Submarine
             Container.Bind<IDisposable>().ToSingle<BattleController>();
             Container.Bind<BattleController>().ToSingle();
 
-            Container.Bind<IInitializable>().ToSingle<BattleObjectSpawner>();
-            Container.Bind<IDisposable>().ToSingle<BattleObjectSpawner>();
-            Container.Bind<ITickable>().ToSingle<BattleObjectSpawner>();
-            Container.Bind<BattleObjectSpawner>().ToSingle();
+            Container.Bind<IInitializable>().ToSingle<BattleObjectContainer>();
+            Container.Bind<IDisposable>().ToSingle<BattleObjectContainer>();
+            Container.Bind<ITickable>().ToSingle<BattleObjectContainer>();
+            Container.Bind<BattleObjectContainer>().ToSingle();
 
             Container.Bind<ITickable>().ToSingle<ThirdPersonCamera>();
             Container.Bind<ThirdPersonCamera>().ToSingle<ThirdPersonCamera>();
