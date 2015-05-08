@@ -1,4 +1,6 @@
 ﻿using UnityEngine;
+using System;
+using UniRx;
 
 namespace Submarine
 {
@@ -9,14 +11,11 @@ namespace Submarine
         void Start()
         {
             particle = GetComponent<ParticleSystem>();
-        }
 
-        void Update()
-        {
-            if (particle.isStopped)
-            {
-                Destroy(gameObject);
-            }
+            Observable.Interval(TimeSpan.FromSeconds(particle.duration))
+                .Take(1)
+                .Subscribe(_ => Destroy(gameObject))
+                .AddTo(this);
         }
     }
 }
