@@ -1,12 +1,10 @@
 ﻿using UnityEngine;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using Zenject;
 
 namespace Submarine
 {
-    public class BattleController : IInitializable, IDisposable
+    public class BattleController : IInitializable, IDisposable, ITickable
     {
         readonly BattleInstaller.Settings settings;
         readonly BattleService battleService;
@@ -38,6 +36,11 @@ namespace Submarine
         public void Dispose()
         {
             battleService.FinishBattle();
+        }
+
+        public void Tick()
+        {
+            settings.UI.BattleLogText.text = Constants.Fps.ToString("0.0") + " FPS";
         }
 
         void OnSubmarineDamaged(ISubmarine sinked, ISubmarine attacker, Vector3 shockPower)

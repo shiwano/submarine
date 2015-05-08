@@ -24,7 +24,7 @@ namespace Submarine
 
         BattleObjectContainer objectContainer;
 
-        const float mapSizeX = 4000f;
+        const float mapSizeX = 2000f;
         readonly Dictionary<IBattleObject, RectTransform> pins = new Dictionary<IBattleObject, RectTransform>();
 
         [PostInject]

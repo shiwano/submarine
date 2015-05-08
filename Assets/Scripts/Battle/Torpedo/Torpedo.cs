@@ -34,9 +34,9 @@ namespace Submarine
     {
         private readonly BattleService battleService;
 
-        public float LifeTime { get { return 7f; } }
-        public Vector3 Acceleration { get { return Hooks.transform.forward * 80f; } }
-        public Vector3 ShockPower { get { return Hooks.transform.forward * 300f; } }
+        public float LifeTime { get { return 5f; } }
+        public Vector3 Acceleration { get { return Hooks.transform.forward * 160f; } }
+        public Vector3 ShockPower { get { return Hooks.transform.forward * 400f; } }
 
         public PlayerTorpedo(TorpedoHooks hooks, BattleService battleService)
             : base(hooks)
@@ -55,7 +55,7 @@ namespace Submarine
 
         public override void Tick()
         {
-            Hooks.Accelerate(Acceleration);
+            Hooks.Accelerate(Acceleration * Constants.FpsRate);
         }
 
         private void Stop()

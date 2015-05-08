@@ -53,6 +53,7 @@ namespace Submarine
 
             Container.Bind<IInitializable>().ToSingle<BattleController>();
             Container.Bind<IDisposable>().ToSingle<BattleController>();
+            Container.Bind<ITickable>().ToSingle<BattleController>();
             Container.Bind<BattleController>().ToSingle();
 
             Container.Bind<IInitializable>().ToSingle<BattleObjectContainer>();

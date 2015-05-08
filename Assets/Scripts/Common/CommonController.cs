@@ -16,6 +16,7 @@ namespace Submarine
         public void Initialize()
         {
             Debug.Log("Game Start");
+            Application.targetFrameRate = Constants.FrameRate;
         }
 
         void OnApplicationQuit()

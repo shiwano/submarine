@@ -682,6 +682,18 @@ Prefab:
       propertyPath: m_RootOrder
       value: 2
       objectReference: {fileID: 0}
+    - target: {fileID: 496268, guid: f058e443cd4d74f3d9f1d3984a2c049d, type: 2}
+      propertyPath: m_LocalScale.x
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 496268, guid: f058e443cd4d74f3d9f1d3984a2c049d, type: 2}
+      propertyPath: m_LocalScale.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 496268, guid: f058e443cd4d74f3d9f1d3984a2c049d, type: 2}
+      propertyPath: m_LocalScale.z
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: f058e443cd4d74f3d9f1d3984a2c049d, type: 2}
   m_IsPrefabParent: 0
@@ -868,10 +880,10 @@ MonoBehaviour:
     Radar: {fileID: 1256337061}
     Submarine:
       StartPositions:
-      - {x: 0, y: 180, z: 0}
-      - {x: 0, y: 180, z: 0}
-      - {x: 0, y: 180, z: 0}
-      - {x: 0, y: 180, z: 0}
+      - {x: 0, y: 150, z: 0}
+      - {x: 0, y: 150, z: 0}
+      - {x: 0, y: 150, z: 0}
+      - {x: 0, y: 150, z: 0}
     UI:
       BattleLogText: {fileID: 1572298333}
       TimerText: {fileID: 480431355}
