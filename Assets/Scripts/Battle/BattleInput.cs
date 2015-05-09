@@ -8,33 +8,36 @@ namespace Submarine
 {
     public class BattleInput : IDisposable
     {
+        readonly BattleInstaller.Settings.UISettings uiSettings;
         readonly CompositeDisposable disposables = new CompositeDisposable();
 
         const float clickTimeThreshold = 1.5f;
         const float sqrClickDistanceThreshold = 10f * 10f;
-        DateTime pressStartTime = DateTime.Now;
+        DateTime touchStartTime = DateTime.Now;
 
-        public Vector3 Position { get { return Input.mousePosition; } }
-        public Vector3 PressStartPosition { get; private set; }
-        public float PressedTime { get { return IsPressed.Value ? PressedTimeInternal : 0f; } }
-        float PressedTimeInternal { get { return (float)(DateTime.Now - pressStartTime).TotalSeconds; } }
+        public Vector3 TouchPosition { get { return Input.mousePosition; } }
+        public Vector3 TouchStartPosition { get; private set; }
+        public float TouchTime { get { return IsTouched.Value ? TouchTimeInternal : 0f; } }
+        float TouchTimeInternal { get { return (float)(DateTime.Now - touchStartTime).TotalSeconds; } }
 
-        public ReactiveProperty<bool> IsPressed { get; private set; }
+        public ReactiveProperty<bool> IsTouched { get; private set; }
 
-        public BattleInput()
+        public BattleInput(BattleInstaller.Settings settings)
         {
-            IsPressed = Observable.EveryUpdate()
+            uiSettings = settings.UI;
+
+            IsTouched = Observable.EveryUpdate()
                 .Select(_ => Input.GetMouseButton(0))
                 .Where(_ => EventSystem.current.currentSelectedGameObject == null)
                 .ToReactiveProperty()
                 .AddTo(disposables);
 
-            IsPressed
+            IsTouched
                 .Where(b => b)
                 .Subscribe(_ =>
                 {
-                    pressStartTime = DateTime.Now;
-                    PressStartPosition = Position;
+                    touchStartTime = DateTime.Now;
+                    TouchStartPosition = TouchPosition;
                 })
                 .AddTo(disposables);
         }
@@ -46,11 +49,26 @@ namespace Submarine
 
         public IObservable<bool> ClickedAsObservable()
         {
-            return IsPressed
+            return IsTouched
                 .Where(b => !b &&
-                    PressedTimeInternal < clickTimeThreshold &&
-                    (Position - PressStartPosition).sqrMagnitude < sqrClickDistanceThreshold
+                    TouchTimeInternal < clickTimeThreshold &&
+                    (TouchPosition - TouchStartPosition).sqrMagnitude < sqrClickDistanceThreshold
                 );
+        }
+
+        public IObservable<Unit> DecoyButtonClickedAsObservable()
+        {
+            return uiSettings.DecoyButton.OnClickAsObservable();
+        }
+
+        public IObservable<Unit> PingerButtonClickedAsObservable()
+        {
+            return uiSettings.PingerButton.OnClickAsObservable();
+        }
+
+        public IObservable<Unit> LookoutButtonClickedAsObservable()
+        {
+            return uiSettings.LookoutButton.OnClickAsObservable();
         }
     }
 }

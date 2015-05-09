@@ -28,9 +28,15 @@ namespace Submarine
                 scope.Bind<SubmarineHooks>().ToSingleInstance(hooks);
                 container.Inject(hooks);
 
-                return hooks.IsMine ?
-                    container.Instantiate<PlayerSubmarine>() as ISubmarine :
-                    container.Instantiate<EnemySubmarine>();
+                if (hooks.IsMine)
+                {
+                    scope.Bind<SubmarineResources>().ToSingle();
+                    return container.Instantiate<PlayerSubmarine>();
+                }
+                else
+                {
+                    return container.Instantiate<EnemySubmarine>();
+                }
             }
         }
 

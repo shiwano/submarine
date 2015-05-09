@@ -52,35 +52,54 @@ namespace Submarine
     {
         readonly BattleInput input;
         readonly BattleObjectContainer objectContainer;
+        readonly SubmarineResources resources;
+
         readonly CompositeDisposable disposables = new CompositeDisposable();
 
         bool IsSinked = false;
 
         public Vector3 Acceleration
         {
-            get { return Hooks.transform.forward * Mathf.Lerp(0f, 6f, Mathf.Clamp01(input.PressedTime)); }
+            get { return Hooks.transform.forward * Mathf.Lerp(0f, 6f, Mathf.Clamp01(input.TouchTime)); }
         }
 
         public Vector3 TurningEulerAngles
         {
-            get { return Hooks.transform.up * (input.Position.x - input.PressStartPosition.x) * 0.01f; }
+            get { return Hooks.transform.up * (input.TouchPosition.x - input.TouchStartPosition.x) * 0.01f; }
         }
 
-        public PlayerSubmarine(SubmarineHooks hooks, BattleInput input, BattleObjectContainer objectContainer)
-            : base(hooks)
+        public PlayerSubmarine(
+            SubmarineHooks hooks,
+            BattleInput input,
+            BattleObjectContainer objectContainer,
+            SubmarineResources resources) : base(hooks)
         {
             this.input = input;
             this.objectContainer = objectContainer;
+            this.resources = resources;
         }
 
         public override void Initialize()
         {
-            input.IsPressed
+            input.IsTouched
                 .Where(b => !b)
                 .Subscribe(_ => Hooks.Brake())
                 .AddTo(disposables);
+
             input.ClickedAsObservable()
                 .Subscribe(_ => SpawnTorpedo())
+                .AddTo(disposables);
+
+            input.DecoyButtonClickedAsObservable()
+                .Subscribe(_ => Debug.Log("Decoy"))
+                .AddTo(disposables);
+
+            input.PingerButtonClickedAsObservable()
+                .Subscribe(_ => Debug.Log("Pinger"))
+                .AddTo(disposables);
+
+            input.LookoutButtonClickedAsObservable()
+                .Subscribe(_ => Debug.Log("Lookout"))
                 .AddTo(disposables);
         }
 
@@ -92,7 +111,7 @@ namespace Submarine
        
         public override void Tick()
         {
-            if (!IsSinked && input.IsPressed.Value)
+            if (!IsSinked && input.IsTouched.Value)
             {
                 Hooks.Accelerate(Acceleration * Constants.FpsRate);
                 Hooks.Turn(TurningEulerAngles);
