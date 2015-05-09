@@ -9,40 +9,18 @@ namespace Submarine
         typeof(BoxCollider),
         typeof(Rigidbody)
     )]
-    public class TorpedoHooks : Photon.MonoBehaviour, IBattleObjectHooks
+    public class TorpedoHooks : BattleObjectHooksBase
     {
         Vector3 receivedPosition = Vector3.zero;
         Quaternion receivedRotation = Quaternion.identity;
 
-        Rigidbody cachedRigidbody;
-
-        public BattleObjectType Type { get { return BattleObjectType.Torpedo; } }
-        public bool IsMine { get { return photonView.isMine; } }
+        public override BattleObjectType Type { get { return BattleObjectType.Torpedo; } }
 
         public event Action<int?> Striked = delegate {};
 
         public void Accelerate(Vector3 force)
         {
-            cachedRigidbody.AddForce(force, ForceMode.Force);
-        }
-
-        public void Dispose()
-        {
-            if (IsMine && gameObject != null)
-            {
-                PhotonNetwork.Destroy(gameObject);
-            }
-        }
-
-        void Awake()
-        {
-            cachedRigidbody = GetComponent<Rigidbody>();
-            BattleEvent.BattleObjectHooksCreated(this);
-        }
-
-        void OnDestroy()
-        {
-            BattleEvent.BattleObjectHooksDestroyed(this);
+            Rigidbody.AddForce(force, ForceMode.Force);
         }
 
         void OnCollisionEnter(Collision collision)

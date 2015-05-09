@@ -9,7 +9,7 @@ namespace Submarine
         typeof(BoxCollider),
         typeof(Rigidbody)
     )]
-    public class SubmarineHooks : Photon.MonoBehaviour, IBattleObjectHooks
+    public class SubmarineHooks : BattleObjectHooksBase
     {
         [SerializeField]
         GameObject model;
@@ -24,22 +24,20 @@ namespace Submarine
         Quaternion receivedRotation = Quaternion.identity;
         Quaternion receivedModelRotation = Quaternion.identity;
 
-        Rigidbody myRigidbody;
         Tweener floatingTweaner;
         Tweener turningBackRotationTweaner;
 
         const float dragOnAccelerate = 0.5f;
         const float dragOnBrake = 2f;
 
-        public BattleObjectType Type { get { return BattleObjectType.Submarine; } }
-        public bool IsMine { get { return photonView.isMine; } }
+        public override BattleObjectType Type { get { return BattleObjectType.Submarine; } }
 
         public Vector3 LaunchSitePosition { get { return launchSite.position; } }
 
         public void Accelerate(Vector3 force)
         {
-            myRigidbody.drag = dragOnAccelerate;
-            myRigidbody.AddForce(force, ForceMode.Force);
+            Rigidbody.drag = dragOnAccelerate;
+            Rigidbody.AddForce(force, ForceMode.Force);
         }
 
         public void Turn(Vector3 eulerAngles)
@@ -55,46 +53,27 @@ namespace Submarine
         public void Brake()
         {
             turningBackRotationTweaner = model.transform.DOLocalRotate(Vector3.zero, 1f).SetEase(Ease.OutExpo);
-            myRigidbody.drag = dragOnBrake;
+            Rigidbody.drag = dragOnBrake;
         }
 
         public void Damage(Vector3 shockPower)
         {
             floatingTweaner.Pause();
-            myRigidbody.useGravity = true;
-            myRigidbody.constraints = RigidbodyConstraints.None;
-            myRigidbody.AddForce(shockPower, ForceMode.Impulse);
-            myRigidbody.AddTorque(shockPower, ForceMode.Impulse);
+            Rigidbody.useGravity = true;
+            Rigidbody.constraints = RigidbodyConstraints.None;
+            Rigidbody.AddForce(shockPower, ForceMode.Impulse);
+            Rigidbody.AddTorque(shockPower, ForceMode.Impulse);
             streamEffect.SetActive(true);
-        }
-
-        public void Dispose()
-        {
-            if (IsMine && gameObject != null)
-            {
-                PhotonNetwork.Destroy(gameObject);
-            }
-        }
-
-        void Awake()
-        {
-            myRigidbody = GetComponent<Rigidbody>();
-            BattleEvent.BattleObjectHooksCreated(this);
-
-            if (!IsMine)
-            {
-                model.GetComponent<MeshRenderer>().material = enemySubmarineMaterial;
-            }
         }
 
         void Start()
         {
             floatingTweaner = model.transform.DOLocalMoveY(-0.25f, 3f).SetEase(Ease.InOutQuad).SetLoops(-1, LoopType.Yoyo);
-        }
 
-        void OnDestroy()
-        {
-            BattleEvent.BattleObjectHooksDestroyed(this);
+            if (!IsMine)
+            {
+                model.GetComponent<MeshRenderer>().material = enemySubmarineMaterial;
+            }
         }
 
         void Update()

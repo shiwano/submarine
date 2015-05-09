@@ -18,10 +18,4 @@ namespace Submarine
         Vector3 EulerAngles { get; }
         bool IsVisibleFromPlayer { get; }
     }
-
-    public interface IBattleObjectHooks : IDisposable
-    {
-        BattleObjectType Type { get; }
-        bool IsMine { get; }
-    }
 }
