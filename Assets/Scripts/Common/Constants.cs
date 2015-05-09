@@ -3,7 +3,6 @@ using System;
 
 namespace Submarine
 {
-    [Serializable]
     public static class Constants
     {
         public const string Version = "0.1";
