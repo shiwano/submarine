@@ -21,12 +21,6 @@ namespace Submarine
 
         public void StartBattle()
         {
-            if (!connection.InRoom)
-            {
-                Debug.LogError("Not in room");
-                return;
-            }
-
             StartDateTime = DateTime.Now;
             connection.IsMessageQueueRunning = true;
 
