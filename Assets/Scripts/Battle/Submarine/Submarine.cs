@@ -29,8 +29,12 @@ namespace Submarine
         }
 
         public virtual void Initialize() {}
-        public virtual void Dispose() {}
         public virtual void Tick() {}
+
+        public virtual void Dispose()
+        {
+            Hooks.Dispose();
+        }
 
         public virtual void Damage(Vector3 shockPower)
         {
@@ -75,7 +79,6 @@ namespace Submarine
                 .Where(b => !b)
                 .Subscribe(_ => Hooks.Brake())
                 .AddTo(disposables);
-
             input.IsMouseButtonClicked
                 .Skip(1)
                 .Where(b => b)
@@ -86,6 +89,7 @@ namespace Submarine
         public override void Dispose()
         {
             disposables.Dispose();
+            base.Dispose();
         }
        
         public override void Tick()

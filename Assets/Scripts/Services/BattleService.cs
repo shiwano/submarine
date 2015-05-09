@@ -35,6 +35,11 @@ namespace Submarine
             }
         }
 
+        public GameObject InstantiatePhotonView(string prefabName, Vector3 position, Quaternion rotation)
+        {
+            return PhotonNetwork.Instantiate(prefabName, position, rotation, 0);
+        }
+
         public void SendSubmarineDamageEvent(int damagedViewId, int attackerOwnerId, Vector3 shockPower)
         {
             photonView.RPC("ReceiveSubmarineDamageEvent", PhotonTargets.All, damagedViewId, attackerOwnerId, shockPower);
@@ -48,9 +53,17 @@ namespace Submarine
             BattleEvent.SubmarineDamaged(damaged, attacker, shockPower);
         }
 
-        public GameObject InstantiatePhotonView(string prefabName, Vector3 position, Quaternion rotation)
+        public void SendEffectPlayEvent(string resourceName, Vector3 position)
         {
-            return PhotonNetwork.Instantiate(prefabName, position, rotation, 0);
+            photonView.RPC("ReceiveEffectPlayEvent", PhotonTargets.All, resourceName, position);
+        }
+
+        [RPC]
+        public void ReceiveEffectPlayEvent(string resourcePath, Vector3 position)
+        {
+            var prefab = Resources.Load(resourcePath);
+            var effect = Instantiate(prefab) as GameObject;
+            effect.transform.position = position;
         }
     }
 }

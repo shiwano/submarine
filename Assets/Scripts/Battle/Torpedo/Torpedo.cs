@@ -27,23 +27,29 @@ namespace Submarine
         }
 
         public virtual void Initialize() {}
-        public virtual void Dispose() {}
         public virtual void Tick() {}
+
+        public virtual void Dispose()
+        {
+            Hooks.Dispose();
+        }
     }
 
     public class PlayerTorpedo : TorpedoBase
     {
         readonly BattleService battleService;
+        readonly BattleObjectContainer objectContainer;
 
         public float LifeTime { get { return 6f; } }
         public Vector3 Acceleration { get { return Hooks.transform.forward * 20f; } }
         public Vector3 ShockPower { get { return Hooks.transform.forward * 40f; } }
 
-        public PlayerTorpedo(TorpedoHooks hooks, BattleService battleService)
-            : base(hooks)
+        public PlayerTorpedo(TorpedoHooks hooks, BattleService battleService,
+            BattleObjectContainer objectContainer) : base(hooks)
         {
             this.battleService = battleService;
-            Hooks.StrikedEnemySubmarine += OnStrikedEnemySubmarine;
+            this.objectContainer = objectContainer;
+            Hooks.Striked += OnStriked;
         }
 
         public override void Initialize()
@@ -51,7 +57,7 @@ namespace Submarine
             Observable.Interval(TimeSpan.FromSeconds(LifeTime))
                 .Take(1)
                 .Where(_ => Hooks != null)
-                .Subscribe(_ => Stop());
+                .Subscribe(_ => objectContainer.Remove(this));
         }
 
         public override void Tick()
@@ -59,18 +65,21 @@ namespace Submarine
             Hooks.Accelerate(Acceleration * Constants.FpsRate);
         }
 
-        void Stop()
+        void OnStriked(int? enemySubmarineViewId)
         {
-            Hooks.Stop();
-        }
-
-        void OnStrikedEnemySubmarine(int enemySubmarineViewId)
-        {
-            battleService.SendSubmarineDamageEvent(
-                enemySubmarineViewId,
-                Hooks.photonView.ownerId,
-                ShockPower
+            if (enemySubmarineViewId.HasValue)
+            {
+                battleService.SendSubmarineDamageEvent(
+                    enemySubmarineViewId.Value,
+                    Hooks.photonView.ownerId,
+                    ShockPower
+                );
+            }
+            battleService.SendEffectPlayEvent(
+                Constants.ExplosionEffectPrefab,
+                Hooks.transform.position
             );
+            objectContainer.Remove(this);
         }
     }
 

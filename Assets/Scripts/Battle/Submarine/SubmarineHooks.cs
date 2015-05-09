@@ -68,6 +68,14 @@ namespace Submarine
             streamEffect.SetActive(true);
         }
 
+        public void Dispose()
+        {
+            if (IsMine && gameObject != null)
+            {
+                PhotonNetwork.Destroy(gameObject);
+            }
+        }
+
         void Awake()
         {
             myRigidbody = GetComponent<Rigidbody>();

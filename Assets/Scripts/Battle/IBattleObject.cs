@@ -19,7 +19,7 @@ namespace Submarine
         bool IsVisibleFromPlayer { get; }
     }
 
-    public interface IBattleObjectHooks
+    public interface IBattleObjectHooks : IDisposable
     {
         BattleObjectType Type { get; }
         bool IsMine { get; }

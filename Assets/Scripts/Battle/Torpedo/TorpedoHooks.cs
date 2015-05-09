@@ -11,9 +11,6 @@ namespace Submarine
     )]
     public class TorpedoHooks : Photon.MonoBehaviour, IBattleObjectHooks
     {
-        [SerializeField]
-        GameObject explosionEffectPrefab;
-
         Vector3 receivedPosition = Vector3.zero;
         Quaternion receivedRotation = Quaternion.identity;
 
@@ -22,16 +19,19 @@ namespace Submarine
         public BattleObjectType Type { get { return BattleObjectType.Torpedo; } }
         public bool IsMine { get { return photonView.isMine; } }
 
-        public event Action<int> StrikedEnemySubmarine = delegate {};
+        public event Action<int?> Striked = delegate {};
 
         public void Accelerate(Vector3 force)
         {
             cachedRigidbody.AddForce(force, ForceMode.Force);
         }
 
-        public void Stop()
+        public void Dispose()
         {
-            PhotonNetwork.Destroy(gameObject);
+            if (IsMine && gameObject != null)
+            {
+                PhotonNetwork.Destroy(gameObject);
+            }
         }
 
         void Awake()
@@ -43,9 +43,6 @@ namespace Submarine
         void OnDestroy()
         {
             BattleEvent.BattleObjectHooksDestroyed(this);
-
-            var effect = Instantiate(explosionEffectPrefab);
-            effect.transform.position = transform.position;
         }
 
         void OnCollisionEnter(Collision collision)
@@ -55,10 +52,12 @@ namespace Submarine
                 var submarineHooks = collision.gameObject.GetComponent<SubmarineHooks>();
                 if (submarineHooks != null && !submarineHooks.photonView.isMine)
                 {
-                    StrikedEnemySubmarine(submarineHooks.photonView.viewID);
+                    Striked(submarineHooks.photonView.viewID);
                 }
-
-                PhotonNetwork.Destroy(gameObject);
+                else
+                {
+                    Striked(null);
+                }
             }
         }
 

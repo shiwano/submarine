@@ -94,8 +94,11 @@ namespace Submarine
 
         void OnBattleObjectHooksDestroyed(IBattleObjectHooks battleObjectHooks)
         {
-            var battleObject = battleObjects.Find(s => s.BattleObjectHooks == battleObjectHooks);
-            Remove(battleObject);
+            if (!battleObjectHooks.IsMine)
+            {
+                var battleObject = battleObjects.Find(s => s.BattleObjectHooks == battleObjectHooks);
+                Remove(battleObject);
+            }
         }
     }
 }
