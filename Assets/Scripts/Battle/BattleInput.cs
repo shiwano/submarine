@@ -8,52 +8,48 @@ namespace Submarine
 {
     public class BattleInput : IDisposable
     {
-        const float mouseClickThresholdTime = 1.5f;
-        const float mouseClickThresholdDistanceSquared = 10f * 10f;
-        DateTime mouseButtonDownTime = DateTime.Now;
+        readonly CompositeDisposable disposables = new CompositeDisposable();
 
-        public ReactiveProperty<bool> IsMouseButtonPressed { get; private set; }
-        public ReactiveProperty<bool> IsMouseButtonClicked { get; private set; }
+        const float clickTimeThreshold = 1.5f;
+        const float sqrClickDistanceThreshold = 10f * 10f;
+        DateTime pressStartTime = DateTime.Now;
 
-        public Vector3 MousePosition { get { return Input.mousePosition; } }
-        public Vector3 MousePositionOnButtonDown { get; private set; }
+        public Vector3 Position { get { return Input.mousePosition; } }
+        public Vector3 PressStartPosition { get; private set; }
+        public float PressedTime { get { return IsPressed.Value ? PressedTimeInternal : 0f; } }
+        float PressedTimeInternal { get { return (float)(DateTime.Now - pressStartTime).TotalSeconds; } }
 
-        public float MousePressingTime
-        {
-            get { return IsMouseButtonPressed.Value ? MousePressingTimeInternal : 0f; }
-        }
-
-        float MousePressingTimeInternal
-        {
-            get { return (float)(DateTime.Now - mouseButtonDownTime).TotalSeconds; }
-        }
+        public ReactiveProperty<bool> IsPressed { get; private set; }
+        public ReactiveProperty<bool> IsClicked { get; private set; }
 
         public BattleInput()
         {
-            IsMouseButtonPressed = Observable.EveryUpdate()
+            IsPressed = Observable.EveryUpdate()
                 .Select(_ => Input.GetMouseButton(0))
-                .ToReactiveProperty();
+                .ToReactiveProperty()
+                .AddTo(disposables);
 
-            IsMouseButtonPressed
+            IsPressed
                 .Where(b => b)
                 .Subscribe(_ =>
                 {
-                    mouseButtonDownTime = DateTime.Now;
-                    MousePositionOnButtonDown = MousePosition;
-                });
+                    pressStartTime = DateTime.Now;
+                    PressStartPosition = Position;
+                })
+                .AddTo(disposables);
 
-            IsMouseButtonClicked = IsMouseButtonPressed
+            IsClicked = IsPressed
                 .Select(b => !b &&
                     EventSystem.current.currentSelectedGameObject == null &&
-                    MousePressingTimeInternal < mouseClickThresholdTime &&
-                    (MousePosition - MousePositionOnButtonDown).sqrMagnitude < mouseClickThresholdDistanceSquared)
-                .ToReactiveProperty();
+                    PressedTimeInternal < clickTimeThreshold &&
+                    (Position - PressStartPosition).sqrMagnitude < sqrClickDistanceThreshold)
+                .ToReactiveProperty()
+                .AddTo(disposables);
         }
 
         public void Dispose()
         {
-            IsMouseButtonPressed.Dispose();
-            IsMouseButtonClicked.Dispose();
+            disposables.Dispose();
         }
     }
 }

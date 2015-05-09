@@ -58,12 +58,12 @@ namespace Submarine
 
         public Vector3 Acceleration
         {
-            get { return Hooks.transform.forward * Mathf.Lerp(0f, 6f, Mathf.Clamp01(input.MousePressingTime)); }
+            get { return Hooks.transform.forward * Mathf.Lerp(0f, 6f, Mathf.Clamp01(input.PressedTime)); }
         }
 
         public Vector3 TurningEulerAngles
         {
-            get { return Hooks.transform.up * (input.MousePosition.x - input.MousePositionOnButtonDown.x) * 0.01f; }
+            get { return Hooks.transform.up * (input.Position.x - input.PressStartPosition.x) * 0.01f; }
         }
 
         public PlayerSubmarine(SubmarineHooks hooks, BattleInput input, BattleObjectContainer objectContainer)
@@ -75,11 +75,11 @@ namespace Submarine
 
         public override void Initialize()
         {
-            input.IsMouseButtonPressed
+            input.IsPressed
                 .Where(b => !b)
                 .Subscribe(_ => Hooks.Brake())
                 .AddTo(disposables);
-            input.IsMouseButtonClicked
+            input.IsClicked
                 .Skip(1)
                 .Where(b => b)
                 .Subscribe(_ => SpawnTorpedo())
@@ -94,7 +94,7 @@ namespace Submarine
        
         public override void Tick()
         {
-            if (!IsSinked && input.IsMouseButtonPressed.Value)
+            if (!IsSinked && input.IsPressed.Value)
             {
                 Hooks.Accelerate(Acceleration * Constants.FpsRate);
                 Hooks.Turn(TurningEulerAngles);
