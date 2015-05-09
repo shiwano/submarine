@@ -47,7 +47,6 @@ namespace Submarine
             Container.Bind<BattleService>().ToSingleInstance(InstallerSettings.BattleService);
             Container.Bind<Radar>().ToSingleInstance(InstallerSettings.Radar);
 
-            Container.Bind<IInitializable>().ToSingle<BattleInput>();
             Container.Bind<IDisposable>().ToSingle<BattleInput>();
             Container.Bind<BattleInput>().ToSingle();
 
@@ -56,7 +55,6 @@ namespace Submarine
             Container.Bind<ITickable>().ToSingle<BattleController>();
             Container.Bind<BattleController>().ToSingle();
 
-            Container.Bind<IInitializable>().ToSingle<BattleObjectContainer>();
             Container.Bind<IDisposable>().ToSingle<BattleObjectContainer>();
             Container.Bind<ITickable>().ToSingle<BattleObjectContainer>();
             Container.Bind<BattleObjectContainer>().ToSingle();

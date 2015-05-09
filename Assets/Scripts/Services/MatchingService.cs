@@ -7,7 +7,7 @@ namespace Submarine
 {
     public class MatchingService : MonoBehaviour
     {
-        public event Action onJoinRoom;
+        public event Action JoinedRoom;
 
         ConnectionService connection;
 
@@ -33,9 +33,9 @@ namespace Submarine
             Debug.Log("Joined Room");
             connection.IsMessageQueueRunning = false;
 
-            if (onJoinRoom != null)
+            if (JoinedRoom != null)
             {
-                onJoinRoom.Invoke();
+                JoinedRoom.Invoke();
             }
         }
     }

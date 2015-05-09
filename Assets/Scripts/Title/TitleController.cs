@@ -19,12 +19,12 @@ namespace Submarine
         {
             Debug.Log("Title");
             sceneSettings.StartButton.onClick.AddListener(OnStartButtonClick);
-            matchingService.onJoinRoom += OnMatchingServiceJoinRoom;
+            matchingService.JoinedRoom += OnMatchingServiceJoinedRoom;
         }
 
         public void Dispose()
         {
-            matchingService.onJoinRoom -= OnMatchingServiceJoinRoom;
+            matchingService.JoinedRoom -= OnMatchingServiceJoinedRoom;
         }
 
         void OnStartButtonClick()
@@ -34,7 +34,7 @@ namespace Submarine
             matchingService.JoinRoom();
         }
 
-        void OnMatchingServiceJoinRoom()
+        void OnMatchingServiceJoinedRoom()
         {
             ZenUtil.LoadScene("Battle");
         }

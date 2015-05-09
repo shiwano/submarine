@@ -6,7 +6,7 @@ using Zenject;
 
 namespace Submarine
 {
-    public class BattleObjectContainer : IInitializable, IDisposable, ITickable
+    public class BattleObjectContainer : IDisposable, ITickable
     {
         readonly SubmarineFactory submarineFactory;
         readonly TorpedoFactory torpedoFactory;
@@ -25,10 +25,6 @@ namespace Submarine
         {
             this.submarineFactory = submarineFactory;
             this.torpedoFactory = torpedoFactory;
-        }
-
-        public void Initialize()
-        {
             BattleEvent.BattleObjectHooksCreated += OnBattleObjectHooksCreated;
             BattleEvent.BattleObjectHooksDestroyed += OnBattleObjectHooksDestroyed;
         }

@@ -6,7 +6,7 @@ using UnityEngine.EventSystems;
 
 namespace Submarine
 {
-    public class BattleInput : IInitializable, IDisposable
+    public class BattleInput : IDisposable
     {
         const float mouseClickThresholdTime = 1.5f;
         const float mouseClickThresholdDistanceSquared = 10f * 10f;
@@ -28,7 +28,7 @@ namespace Submarine
             get { return (float)(DateTime.Now - mouseButtonDownTime).TotalSeconds; }
         }
 
-        public void Initialize()
+        public BattleInput()
         {
             IsMouseButtonPressed = Observable.EveryUpdate()
                 .Select(_ => Input.GetMouseButton(0))
