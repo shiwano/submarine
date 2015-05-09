@@ -5,8 +5,8 @@ namespace Submarine
 {
     public class TorpedoFactory
     {
-        private readonly DiContainer container;
-        private readonly BattleService battleService;
+        readonly DiContainer container;
+        readonly BattleService battleService;
 
         public TorpedoFactory(DiContainer container, BattleService battleService)
         {
@@ -16,23 +16,24 @@ namespace Submarine
 
         public ITorpedo Create(Vector3 position, Quaternion rotation)
         {
-            using (BindScope scope = container.CreateScope())
-            {
-                scope.Bind<TorpedoHooks>().ToMethod(c => CreateTorpedoHooks(c, position, rotation));
-                return container.Instantiate<PlayerTorpedo>();
-            }
+            var hooks = CreateTorpedoHooks(position, rotation);
+            return Create(hooks);
         }
 
         public ITorpedo Create(TorpedoHooks hooks)
         {
             using (BindScope scope = container.CreateScope())
             {
-                scope.Bind<TorpedoHooks>().ToInstance(hooks);
-                return container.Instantiate<EnemyTorpedo>();
+                scope.Bind<TorpedoHooks>().ToSingleInstance(hooks);
+                container.Inject(hooks);
+
+                return hooks.IsMine ?
+                    container.Instantiate<PlayerTorpedo>() as ITorpedo :
+                    container.Instantiate<EnemyTorpedo>();
             }
         }
 
-        private TorpedoHooks CreateTorpedoHooks(InjectContext context, Vector3 position, Quaternion rotation)
+        TorpedoHooks CreateTorpedoHooks(Vector3 position, Quaternion rotation)
         {
             var go = battleService.InstantiatePhotonView(
                 Constants.TorpedoPrefab,

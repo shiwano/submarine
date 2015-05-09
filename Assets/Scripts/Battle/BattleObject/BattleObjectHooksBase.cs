@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System;
+using Zenject;
 
 namespace Submarine
 {
@@ -11,16 +12,24 @@ namespace Submarine
 
     public abstract class BattleObjectHooksBase : Photon.MonoBehaviour, IBattleObjectHooks
     {
+        BattleService battleService;
+
         public abstract BattleObjectType Type { get; }
 
         public bool IsMine { get { return photonView.isMine; } }
         public Rigidbody Rigidbody { get; private set; }
 
+        [PostInject]
+        public void Initialize(BattleService battleService)
+        {
+            this.battleService = battleService;
+        }
+
         public virtual void Dispose()
         {
             if (IsMine && gameObject != null)
             {
-                PhotonNetwork.Destroy(gameObject);
+                battleService.DestroyPhotonView(gameObject);
             }
         }
 

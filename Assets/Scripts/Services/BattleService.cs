@@ -40,6 +40,11 @@ namespace Submarine
             return PhotonNetwork.Instantiate(prefabName, position, rotation, 0);
         }
 
+        public void DestroyPhotonView(GameObject targetView)
+        {
+            PhotonNetwork.Destroy(targetView);
+        }
+
         public void SendSubmarineDamageEvent(int damagedViewId, int attackerOwnerId, Vector3 shockPower)
         {
             photonView.RPC("ReceiveSubmarineDamageEvent", PhotonTargets.All, damagedViewId, attackerOwnerId, shockPower);
