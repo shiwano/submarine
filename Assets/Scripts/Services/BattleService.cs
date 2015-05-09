@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using System;
 using System.Linq;
 using Zenject;
 
@@ -8,6 +9,8 @@ namespace Submarine
     {
         ConnectionService connection;
         BattleObjectContainer objectContainer;
+
+        public DateTime StartDateTime { get; private set; }
 
         [PostInject]
         public void Initialize(ConnectionService connection, BattleObjectContainer objectContainer)
@@ -24,7 +27,13 @@ namespace Submarine
                 return;
             }
 
+            StartDateTime = DateTime.Now;
             connection.IsMessageQueueRunning = true;
+
+            if (connection.Player.isMasterClient)
+            {
+                SendSynchronizeStartTimeEvent();
+            }
         }
 
         public void FinishBattle()
@@ -69,6 +78,17 @@ namespace Submarine
             var prefab = Resources.Load(resourcePath);
             var effect = Instantiate(prefab) as GameObject;
             effect.transform.position = position;
+        }
+
+        public void SendSynchronizeStartTimeEvent()
+        {
+            photonView.RPC("ReceiveSynchronizeStartTimeEvent", PhotonTargets.All, UnixTime.Now);
+        }
+
+        [RPC]
+        void ReceiveSynchronizeStartTimeEvent(long unixTime)
+        {
+            StartDateTime = UnixTime.FromUnixTime(unixTime);
         }
     }
 }

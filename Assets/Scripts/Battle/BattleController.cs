@@ -40,12 +40,26 @@ namespace Submarine
 
         public void Tick()
         {
+            UpdateTimerText();
+            UpdateDebugText();
+        }
+
+        void UpdateTimerText()
+        {
+            var elapsedTimeSpan = DateTime.Now - battleService.StartDateTime;
+            settings.UI.TimerText.text =
+                elapsedTimeSpan.TotalMinutes.ToString("D2") + ":" +
+                elapsedTimeSpan.Seconds.ToString("D2");
+        }
+
+        void UpdateDebugText()
+        {
             settings.UI.BattleLogText.text = Constants.Fps.ToString("0.0") + " FPS";
         }
 
-        void OnSubmarineDamaged(ISubmarine sinked, ISubmarine attacker, Vector3 shockPower)
+        void OnSubmarineDamaged(ISubmarine damaged, ISubmarine attacker, Vector3 shockPower)
         {
-            sinked.Damage(shockPower);
+            damaged.Damage(shockPower);
         }
     }
 }

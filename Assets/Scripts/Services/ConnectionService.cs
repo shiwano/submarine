@@ -8,6 +8,8 @@ namespace Submarine
         public bool InLobby { get { return PhotonNetwork.insideLobby; } }
         public bool Connected { get { return PhotonNetwork.connectedAndReady; } }
 
+        public PhotonPlayer Player { get { return PhotonNetwork.player; } }
+
         public bool IsMessageQueueRunning
         {
             get { return PhotonNetwork.isMessageQueueRunning; }
