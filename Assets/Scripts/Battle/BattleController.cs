@@ -28,16 +28,17 @@ namespace Submarine
 
         public void Initialize()
         {
-            BattleEvent.SubmarineDamaged += OnSubmarineDamaged;
-            battleService.StartBattle();
+            if (connection.InRoom)
+            {
+                battleService.StartBattle();
 
-            var playerSubmarine = objectContainer.SpawnSubmarine(settings.Map.StartPositions[0]);
-            thirdPersonCamera.SetTarget(playerSubmarine.Hooks.transform);
+                var playerSubmarine = objectContainer.SpawnSubmarine(settings.Map.StartPositions[0]);
+                thirdPersonCamera.SetTarget(playerSubmarine.Hooks.transform);
+            }
         }
 
         public void Dispose()
         {
-            BattleEvent.SubmarineDamaged -= OnSubmarineDamaged;
             battleService.FinishBattle();
         }
 
@@ -75,11 +76,6 @@ namespace Submarine
                 Debug.Log("Not in room");
                 ZenUtil.LoadScene(Constants.SceneNames.Title);
             }
-        }
-
-        void OnSubmarineDamaged(ISubmarine damaged, ISubmarine attacker, Vector3 shockPower)
-        {
-            damaged.Damage(shockPower);
         }
     }
 }

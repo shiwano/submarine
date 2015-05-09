@@ -21,12 +21,15 @@ namespace Submarine
 
         public void StartBattle()
         {
-            StartDateTime = DateTime.Now;
-            connection.IsMessageQueueRunning = true;
-
-            if (connection.Player.isMasterClient)
+            if (connection.InRoom)
             {
-                SendSynchronizeStartTimeEvent();
+                StartDateTime = DateTime.Now;
+                connection.IsMessageQueueRunning = true;
+
+                if (connection.Player.isMasterClient)
+                {
+                    SendSynchronizeStartTimeEvent();
+                }
             }
         }
 
@@ -57,8 +60,7 @@ namespace Submarine
         void ReceiveSubmarineDamageEvent(int damagedViewId, int attackerOwnerId, Vector3 shockPower)
         {
             var damaged = objectContainer.Submarines.FirstOrDefault(s => s.Hooks.photonView.viewID == damagedViewId);
-            var attacker = objectContainer.Submarines.FirstOrDefault(s => s.Hooks.photonView.ownerId == attackerOwnerId);
-            BattleEvent.SubmarineDamaged(damaged, attacker, shockPower);
+            damaged.Damage(shockPower);
         }
 
         public void SendEffectPlayEvent(string resourceName, Vector3 position)

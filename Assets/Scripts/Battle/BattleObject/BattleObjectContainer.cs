@@ -26,14 +26,14 @@ namespace Submarine
             this.submarineFactory = submarineFactory;
             this.torpedoFactory = torpedoFactory;
 
-            BattleEvent.BattleObjectHooksCreatedViaNetwork += OnBattleObjectHooksCreatedViaNetwork;
-            BattleEvent.BattleObjectHooksDestroyedViaNetwork += OnBattleObjectHooksDestroyedViaNetwork;
+            BattleObjectHooksBase.CreatedViaNetwork += OnBattleObjectHooksCreatedViaNetwork;
+            BattleObjectHooksBase.DestroyedViaNetwork += OnBattleObjectHooksDestroyedViaNetwork;
         }
 
         public void Dispose()
         {
-            BattleEvent.BattleObjectHooksCreatedViaNetwork -= OnBattleObjectHooksCreatedViaNetwork;
-            BattleEvent.BattleObjectHooksDestroyedViaNetwork -= OnBattleObjectHooksDestroyedViaNetwork;
+            BattleObjectHooksBase.CreatedViaNetwork -= OnBattleObjectHooksCreatedViaNetwork;
+            BattleObjectHooksBase.DestroyedViaNetwork -= OnBattleObjectHooksDestroyedViaNetwork;
         }
 
         public void Tick()
