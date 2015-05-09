@@ -12,15 +12,21 @@ namespace Submarine
         readonly CompositeDisposable disposables = new CompositeDisposable();
 
         const float clickTimeThreshold = 1.5f;
-        const float sqrClickDistanceThreshold = 10f * 10f;
-        DateTime touchStartTime = DateTime.Now;
-
-        public Vector3 TouchPosition { get { return Input.mousePosition; } }
-        public Vector3 TouchStartPosition { get; private set; }
-        public float TouchTime { get { return IsTouched.Value ? TouchTimeInternal : 0f; } }
-        float TouchTimeInternal { get { return (float)(DateTime.Now - touchStartTime).TotalSeconds; } }
+        const float sqrClickDragLengthThreshold = 10f * 10f;
 
         public ReactiveProperty<bool> IsTouched { get; private set; }
+        public ReactiveProperty<Vector3> TouchStartPosition { get; private set; }
+        public ReactiveProperty<DateTime> TouchStartTime { get; private set; }
+
+        public Vector3 DragAmount
+        {
+            get { return Input.mousePosition - TouchStartPosition.Value; }
+        }
+
+        public float TouchTime
+        {
+            get { return (float)(DateTime.Now - TouchStartTime.Value).TotalSeconds; }
+        }
 
         public BattleInput(BattleInstaller.Settings settings)
         {
@@ -32,13 +38,16 @@ namespace Submarine
                 .ToReactiveProperty()
                 .AddTo(disposables);
 
-            IsTouched
+            TouchStartPosition = IsTouched
                 .Where(b => b)
-                .Subscribe(_ =>
-                {
-                    touchStartTime = DateTime.Now;
-                    TouchStartPosition = TouchPosition;
-                })
+                .Select(_ => Input.mousePosition)
+                .ToReactiveProperty()
+                .AddTo(disposables);
+
+            TouchStartTime = IsTouched
+                .Where(b => b)
+                .Select(_ => DateTime.Now)
+                .ToReactiveProperty()
                 .AddTo(disposables);
         }
 
@@ -51,9 +60,9 @@ namespace Submarine
         {
             return IsTouched
                 .Where(b => !b &&
-                    TouchTimeInternal < clickTimeThreshold &&
-                    (TouchPosition - TouchStartPosition).sqrMagnitude < sqrClickDistanceThreshold
-                );
+                    TouchTime < clickTimeThreshold &&
+                    DragAmount.sqrMagnitude < sqrClickDragLengthThreshold)
+                .Select(_ => true);
         }
 
         public IObservable<Unit> DecoyButtonClickedAsObservable()

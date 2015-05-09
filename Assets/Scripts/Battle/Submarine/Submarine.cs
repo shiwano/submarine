@@ -65,7 +65,7 @@ namespace Submarine
 
         public Vector3 TurningEulerAngles
         {
-            get { return Hooks.transform.up * (input.TouchPosition.x - input.TouchStartPosition.x) * 0.01f; }
+            get { return Hooks.transform.up * input.DragAmount.x * 0.01f; }
         }
 
         public PlayerSubmarine(
