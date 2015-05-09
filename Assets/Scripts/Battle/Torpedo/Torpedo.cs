@@ -32,7 +32,7 @@ namespace Submarine
 
     public class PlayerTorpedo : TorpedoBase
     {
-        private readonly BattleService battleService;
+        readonly BattleService battleService;
 
         public float LifeTime { get { return 6f; } }
         public Vector3 Acceleration { get { return Hooks.transform.forward * 20f; } }
@@ -42,7 +42,7 @@ namespace Submarine
             : base(hooks)
         {
             this.battleService = battleService;
-            Hooks.OnHitEnemySubmarine += OnHitEnemySubmarine;
+            Hooks.StrikedEnemySubmarine += OnStrikedEnemySubmarine;
         }
 
         public override void Initialize()
@@ -58,12 +58,12 @@ namespace Submarine
             Hooks.Accelerate(Acceleration * Constants.FpsRate);
         }
 
-        private void Stop()
+        void Stop()
         {
             Hooks.Stop();
         }
 
-        private void OnHitEnemySubmarine(int enemySubmarineViewId)
+        void OnStrikedEnemySubmarine(int enemySubmarineViewId)
         {
             battleService.SendSubmarineDamageEvent(
                 enemySubmarineViewId,

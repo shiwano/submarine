@@ -21,7 +21,7 @@ namespace Submarine
 
         public BattleObjectType Type { get { return BattleObjectType.Torpedo; } }
 
-        public event Action<int> OnHitEnemySubmarine = delegate {};
+        public event Action<int> StrikedEnemySubmarine = delegate {};
 
         public void Accelerate(Vector3 force)
         {
@@ -51,7 +51,7 @@ namespace Submarine
                 var submarineHooks = collision.gameObject.GetComponent<SubmarineHooks>();
                 if (submarineHooks != null && !submarineHooks.photonView.isMine)
                 {
-                    OnHitEnemySubmarine(submarineHooks.photonView.viewID);
+                    StrikedEnemySubmarine(submarineHooks.photonView.viewID);
                 }
 
                 photonView.RPC("Explode", PhotonTargets.All);
