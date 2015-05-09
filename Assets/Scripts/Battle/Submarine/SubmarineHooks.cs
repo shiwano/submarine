@@ -3,11 +3,6 @@ using DG.Tweening;
 
 namespace Submarine
 {
-    [RequireComponent(
-        typeof(PhotonView),
-        typeof(BoxCollider),
-        typeof(Rigidbody)
-    )]
     public class SubmarineHooks : BattleObjectHooksBase
     {
         [SerializeField]
@@ -85,7 +80,7 @@ namespace Submarine
             }
         }
      
-        void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
+        protected override void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
         {
             if (stream.isWriting)
             {

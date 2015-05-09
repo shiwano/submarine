@@ -1,14 +1,8 @@
 ﻿using UnityEngine;
 using System;
-using UniRx;
 
 namespace Submarine
 {
-    [RequireComponent(
-        typeof(PhotonView),
-        typeof(BoxCollider),
-        typeof(Rigidbody)
-    )]
     public class TorpedoHooks : BattleObjectHooksBase
     {
         Vector3 receivedPosition = Vector3.zero;
@@ -48,7 +42,7 @@ namespace Submarine
             }
         }
 
-        void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
+        protected override void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
         {
             if (stream.isWriting)
             {

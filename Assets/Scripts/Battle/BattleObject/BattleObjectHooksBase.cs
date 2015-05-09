@@ -10,6 +10,11 @@ namespace Submarine
         bool IsMine { get; }
     }
 
+    [RequireComponent(
+        typeof(PhotonView),
+        typeof(BoxCollider),
+        typeof(Rigidbody)
+    )]
     public abstract class BattleObjectHooksBase : Photon.MonoBehaviour, IBattleObjectHooks
     {
         BattleService battleService;
@@ -18,6 +23,8 @@ namespace Submarine
 
         public bool IsMine { get { return photonView.isMine; } }
         public Rigidbody Rigidbody { get; private set; }
+
+        protected abstract void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info);
 
         [PostInject]
         public void Initialize(BattleService battleService)
