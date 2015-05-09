@@ -20,12 +20,12 @@ namespace Submarine
         float PressedTimeInternal { get { return (float)(DateTime.Now - pressStartTime).TotalSeconds; } }
 
         public ReactiveProperty<bool> IsPressed { get; private set; }
-        public ReactiveProperty<bool> IsClicked { get; private set; }
 
         public BattleInput()
         {
             IsPressed = Observable.EveryUpdate()
                 .Select(_ => Input.GetMouseButton(0))
+                .Where(_ => EventSystem.current.currentSelectedGameObject == null)
                 .ToReactiveProperty()
                 .AddTo(disposables);
 
@@ -37,19 +37,20 @@ namespace Submarine
                     PressStartPosition = Position;
                 })
                 .AddTo(disposables);
-
-            IsClicked = IsPressed
-                .Select(b => !b &&
-                    EventSystem.current.currentSelectedGameObject == null &&
-                    PressedTimeInternal < clickTimeThreshold &&
-                    (Position - PressStartPosition).sqrMagnitude < sqrClickDistanceThreshold)
-                .ToReactiveProperty()
-                .AddTo(disposables);
         }
 
         public void Dispose()
         {
             disposables.Dispose();
+        }
+
+        public IObservable<bool> ClickedAsObservable()
+        {
+            return IsPressed
+                .Where(b => !b &&
+                    PressedTimeInternal < clickTimeThreshold &&
+                    (Position - PressStartPosition).sqrMagnitude < sqrClickDistanceThreshold
+                );
         }
     }
 }

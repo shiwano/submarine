@@ -79,9 +79,7 @@ namespace Submarine
                 .Where(b => !b)
                 .Subscribe(_ => Hooks.Brake())
                 .AddTo(disposables);
-            input.IsClicked
-                .Skip(1)
-                .Where(b => b)
+            input.ClickedAsObservable()
                 .Subscribe(_ => SpawnTorpedo())
                 .AddTo(disposables);
         }
