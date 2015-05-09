@@ -20,6 +20,7 @@ namespace Submarine
         Rigidbody cachedRigidbody;
 
         public BattleObjectType Type { get { return BattleObjectType.Torpedo; } }
+        public bool IsMine { get { return photonView.isMine; } }
 
         public event Action<int> StrikedEnemySubmarine = delegate {};
 
@@ -30,7 +31,7 @@ namespace Submarine
 
         public void Stop()
         {
-            Destroy(gameObject);
+            PhotonNetwork.Destroy(gameObject);
         }
 
         void Awake()
@@ -42,11 +43,14 @@ namespace Submarine
         void OnDestroy()
         {
             BattleEvent.BattleObjectHooksDestroyed(this);
+
+            var effect = Instantiate(explosionEffectPrefab);
+            effect.transform.position = transform.position;
         }
 
         void OnCollisionEnter(Collision collision)
         {
-            if (photonView.isMine)
+            if (IsMine)
             {
                 var submarineHooks = collision.gameObject.GetComponent<SubmarineHooks>();
                 if (submarineHooks != null && !submarineHooks.photonView.isMine)
@@ -54,13 +58,13 @@ namespace Submarine
                     StrikedEnemySubmarine(submarineHooks.photonView.viewID);
                 }
 
-                photonView.RPC("Explode", PhotonTargets.All);
+                PhotonNetwork.Destroy(gameObject);
             }
         }
 
         void Update()
         {
-            if (!photonView.isMine)
+            if (!IsMine)
             {
                 transform.position = Vector3.Lerp(transform.position, receivedPosition, Time.deltaTime * 5);
                 transform.rotation = Quaternion.Lerp(transform.rotation, receivedRotation, Time.deltaTime * 5);
@@ -78,18 +82,6 @@ namespace Submarine
             {
                 receivedPosition = (Vector3)stream.ReceiveNext();
                 receivedRotation = (Quaternion)stream.ReceiveNext();
-            }
-        }
-
-        [RPC]
-        void Explode()
-        {
-            var effect = Instantiate(explosionEffectPrefab);
-            effect.transform.position = transform.position;
-
-            if (photonView.isMine)
-            {
-                PhotonNetwork.Destroy(gameObject);
             }
         }
     }

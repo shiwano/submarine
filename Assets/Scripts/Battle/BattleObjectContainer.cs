@@ -76,7 +76,7 @@ namespace Submarine
 
         void OnBattleObjectHooksCreated(IBattleObjectHooks battleObjectHooks)
         {
-            if (!battleObjectHooks.photonView.isMine)
+            if (!battleObjectHooks.IsMine)
             {
                 switch (battleObjectHooks.Type)
                 {

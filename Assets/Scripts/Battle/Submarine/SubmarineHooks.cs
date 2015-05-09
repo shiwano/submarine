@@ -32,6 +32,8 @@ namespace Submarine
         const float dragOnBrake = 2f;
 
         public BattleObjectType Type { get { return BattleObjectType.Submarine; } }
+        public bool IsMine { get { return photonView.isMine; } }
+
         public Vector3 LaunchSitePosition { get { return launchSite.position; } }
 
         public void Accelerate(Vector3 force)
@@ -71,7 +73,7 @@ namespace Submarine
             myRigidbody = GetComponent<Rigidbody>();
             BattleEvent.BattleObjectHooksCreated(this);
 
-            if (!photonView.isMine)
+            if (!IsMine)
             {
                 model.GetComponent<MeshRenderer>().material = enemySubmarineMaterial;
             }
@@ -89,7 +91,7 @@ namespace Submarine
 
         void Update()
         {
-            if (!photonView.isMine)
+            if (!IsMine)
             {
                 transform.position = Vector3.Lerp(transform.position, receivedPosition, Time.deltaTime * 5);
                 transform.rotation = Quaternion.Lerp(transform.rotation, receivedRotation, Time.deltaTime * 5);
