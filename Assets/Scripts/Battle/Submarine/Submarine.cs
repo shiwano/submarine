@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using System.Linq;
 using UniRx;
 using Zenject;
 
@@ -12,12 +13,15 @@ namespace Submarine
 
     public abstract class SubmarineBase : ISubmarine
     {
+        public static readonly float sqrSearchRange = 70f * 70f;
+
         public SubmarineHooks Hooks { get; private set; }
 
         public BattleObjectType Type { get { return BattleObjectType.Submarine; } }
         public IBattleObjectHooks BattleObjectHooks { get { return Hooks; } }
         public Vector3 Position { get { return Hooks.transform.position; } }
         public Vector3 EulerAngles { get { return Hooks.transform.rotation.eulerAngles; } }
+        public virtual bool IsVisibleFromPlayer { get { return true; } }
 
         protected SubmarineBase(SubmarineHooks hooks)
         {
@@ -31,6 +35,12 @@ namespace Submarine
         public virtual void Damage(Vector3 shockPower)
         {
             Hooks.Damage(shockPower);
+        }
+
+        public bool IsInSearchRangeOf(IBattleObject battleObject)
+        {
+            var sqrLength = (battleObject.Position - Position).sqrMagnitude;
+            return sqrLength <= SubmarineBase.sqrSearchRange;
         }
     }
 
@@ -102,8 +112,27 @@ namespace Submarine
 
     public class EnemySubmarine : SubmarineBase
     {
-        public EnemySubmarine(SubmarineHooks hooks) : base(hooks)
+        readonly BattleObjectContainer objectContainer;
+
+        public EnemySubmarine(SubmarineHooks hooks, BattleObjectContainer objectContainer)
+            : base(hooks)
         {
+            this.objectContainer = objectContainer;
+        }
+
+        public override bool IsVisibleFromPlayer
+        {
+            get
+            {
+                foreach (var playerSubmarine in objectContainer.Submarines.OfType<PlayerSubmarine>())
+                {
+                    if (IsInSearchRangeOf(playerSubmarine))
+                    {
+                        return true;
+                    }
+                }
+                return false;
+            }
         }
     }
 }

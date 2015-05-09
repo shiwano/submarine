@@ -80,21 +80,19 @@ namespace Submarine
 
         void OnBattleObjectHooksCreated(IBattleObjectHooks battleObjectHooks)
         {
-            if (battleObjectHooks.photonView.isMine)
+            if (!battleObjectHooks.photonView.isMine)
             {
-                return;
-            }
-
-            switch (battleObjectHooks.Type)
-            {
-                case BattleObjectType.Submarine:
-                    var submarine = submarineFactory.Create(battleObjectHooks as SubmarineHooks);
-                    Add(submarine);
-                    break;
-                case BattleObjectType.Torpedo:
-                    var torpedo = torpedoFactory.Create(battleObjectHooks as TorpedoHooks);
-                    Add(torpedo);
-                    break;
+                switch (battleObjectHooks.Type)
+                {
+                    case BattleObjectType.Submarine:
+                        var submarine = submarineFactory.Create(battleObjectHooks as SubmarineHooks);
+                        Add(submarine);
+                        break;
+                    case BattleObjectType.Torpedo:
+                        var torpedo = torpedoFactory.Create(battleObjectHooks as TorpedoHooks);
+                        Add(torpedo);
+                        break;
+                }
             }
         }
 

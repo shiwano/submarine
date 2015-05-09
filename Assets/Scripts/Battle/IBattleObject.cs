@@ -16,6 +16,7 @@ namespace Submarine
         IBattleObjectHooks BattleObjectHooks { get; }
         Vector3 Position { get; }
         Vector3 EulerAngles { get; }
+        bool IsVisibleFromPlayer { get; }
     }
 
     public interface IBattleObjectHooks

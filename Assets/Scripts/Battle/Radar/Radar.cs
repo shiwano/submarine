@@ -44,6 +44,7 @@ namespace Submarine
         {
             foreach (var pair in pins)
             {
+                pair.Value.gameObject.SetActive(pair.Key.IsVisibleFromPlayer);
                 pair.Value.localPosition = GetRadarPosition(pair.Key);
                 pair.Value.localRotation = GetRadarRotation(pair.Key);
             }
@@ -85,7 +86,7 @@ namespace Submarine
         {
             var pin = CreatePin(battleObject);
             pin.SetParent(pinContainer);
-            pin.localScale = Vector3.one;
+            pin.localScale = Vector3.one; // FIXME
             pins.Add(battleObject, pin);
         }
 
