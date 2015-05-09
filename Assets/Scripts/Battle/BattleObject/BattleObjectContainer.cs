@@ -25,14 +25,15 @@ namespace Submarine
         {
             this.submarineFactory = submarineFactory;
             this.torpedoFactory = torpedoFactory;
-            BattleEvent.BattleObjectHooksCreated += OnBattleObjectHooksCreated;
-            BattleEvent.BattleObjectHooksDestroyed += OnBattleObjectHooksDestroyed;
+
+            BattleEvent.BattleObjectHooksCreatedViaNetwork += OnBattleObjectHooksCreatedViaNetwork;
+            BattleEvent.BattleObjectHooksDestroyedViaNetwork += OnBattleObjectHooksDestroyedViaNetwork;
         }
 
         public void Dispose()
         {
-            BattleEvent.BattleObjectHooksCreated -= OnBattleObjectHooksCreated;
-            BattleEvent.BattleObjectHooksDestroyed -= OnBattleObjectHooksDestroyed;
+            BattleEvent.BattleObjectHooksCreatedViaNetwork -= OnBattleObjectHooksCreatedViaNetwork;
+            BattleEvent.BattleObjectHooksDestroyedViaNetwork -= OnBattleObjectHooksDestroyedViaNetwork;
         }
 
         public void Tick()
@@ -74,31 +75,25 @@ namespace Submarine
             BattleObjectSpawned(battleObject);
         }
 
-        void OnBattleObjectHooksCreated(IBattleObjectHooks battleObjectHooks)
+        void OnBattleObjectHooksCreatedViaNetwork(IBattleObjectHooks battleObjectHooks)
         {
-            if (!battleObjectHooks.IsMine)
+            switch (battleObjectHooks.Type)
             {
-                switch (battleObjectHooks.Type)
-                {
-                    case BattleObjectType.Submarine:
-                        var submarine = submarineFactory.Create(battleObjectHooks as SubmarineHooks);
-                        Add(submarine);
-                        break;
-                    case BattleObjectType.Torpedo:
-                        var torpedo = torpedoFactory.Create(battleObjectHooks as TorpedoHooks);
-                        Add(torpedo);
-                        break;
-                }
+                case BattleObjectType.Submarine:
+                    var submarine = submarineFactory.Create(battleObjectHooks as SubmarineHooks);
+                    Add(submarine);
+                    break;
+                case BattleObjectType.Torpedo:
+                    var torpedo = torpedoFactory.Create(battleObjectHooks as TorpedoHooks);
+                    Add(torpedo);
+                    break;
             }
         }
 
-        void OnBattleObjectHooksDestroyed(IBattleObjectHooks battleObjectHooks)
+        void OnBattleObjectHooksDestroyedViaNetwork(IBattleObjectHooks battleObjectHooks)
         {
-            if (!battleObjectHooks.IsMine)
-            {
-                var battleObject = battleObjects.Find(s => s.BattleObjectHooks == battleObjectHooks);
-                Remove(battleObject);
-            }
+            var battleObject = battleObjects.Find(s => s.BattleObjectHooks == battleObjectHooks);
+            Remove(battleObject);
         }
     }
 }

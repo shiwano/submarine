@@ -36,12 +36,19 @@ namespace Submarine
         protected virtual void Awake()
         {
             Rigidbody = GetComponent<Rigidbody>();
-            BattleEvent.BattleObjectHooksCreated(this);
+
+            if (!IsMine)
+            {
+                BattleEvent.BattleObjectHooksCreatedViaNetwork(this);
+            }
         }
 
         protected virtual void OnDestroy()
         {
-            BattleEvent.BattleObjectHooksDestroyed(this);
+            if (!IsMine)
+            {
+                BattleEvent.BattleObjectHooksDestroyedViaNetwork(this);
+            }
         }
     }
 }
