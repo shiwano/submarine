@@ -8,6 +8,7 @@ namespace Submarine
     {
         Submarine = 0,
         Torpedo,
+        Decoy,
     }
 
     public interface IBattleObject : IInitializable, ITickable, IDisposable
