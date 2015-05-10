@@ -84,6 +84,7 @@ namespace Submarine
 
         public void Tick()
         {
+            return;
             MoveToTitleUnlessInRoom();
             UpdateAlert();
             UpdateTimerText();
