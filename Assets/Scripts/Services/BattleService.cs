@@ -2,7 +2,6 @@
 using System;
 using System.Linq;
 using Zenject;
-using UniRx;
 
 namespace Submarine
 {
@@ -12,15 +11,12 @@ namespace Submarine
         BattleObjectContainer objectContainer;
 
         public DateTime StartDateTime { get; private set; }
-        public ReactiveProperty<int> EnemyPingerCounter { get; private set; }
 
         [PostInject]
         public void Initialize(ConnectionService connection, BattleObjectContainer objectContainer)
         {
             this.connection = connection;
             this.objectContainer = objectContainer;
-
-            EnemyPingerCounter = new ReactiveProperty<int>(0);
         }
 
         public void StartBattle()
@@ -91,21 +87,21 @@ namespace Submarine
             StartDateTime = UnixTime.FromUnixTime(unixTime);
         }
 
-        public void SendPingerEvent(int submarineViewId, bool isStart)
+        public void SendPingerEvent(int submarineViewId, bool isUsingPinger)
         {
-            photonView.RPC("ReceivePingerEvent", PhotonTargets.All, submarineViewId, isStart);
+            photonView.RPC("ReceivePingerEvent", PhotonTargets.Others, submarineViewId, isUsingPinger);
         }
 
         [RPC]
-        void ReceivePingerEvent(int submarineViewId, bool isStart)
+        void ReceivePingerEvent(int submarineViewId, bool isUsingPinger)
         {
-            var submarine = objectContainer.Submarines
-                .OfType(EnemySubmarine)
+            var enemySubmarine = objectContainer.Submarines
+                .OfType<EnemySubmarine>()
                 .FirstOrDefault(s => s.BattleObjectHooks.ViewId == submarineViewId);
 
-            if (submarine != null)
+            if (enemySubmarine != null)
             {
-                EnemyPingerCounter.Value += isStart ? 1 : -1;
+                enemySubmarine.SetUsingPinger(isUsingPinger);
             }
         }
     }

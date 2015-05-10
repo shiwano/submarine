@@ -8,6 +8,7 @@ namespace Submarine
     public interface ISubmarine : IBattleObject
     {
         SubmarineHooks Hooks { get; }
+        bool IsUsingPinger { get; }
         void Damage(Vector3 shockPower);
     }
 
@@ -16,6 +17,7 @@ namespace Submarine
         public static readonly float sqrSearchRange = 70f * 70f;
 
         public SubmarineHooks Hooks { get; private set; }
+        public abstract bool IsUsingPinger { get; }
 
         public BattleObjectType Type { get { return BattleObjectType.Submarine; } }
         public IBattleObjectHooks BattleObjectHooks { get { return Hooks; } }
@@ -53,10 +55,12 @@ namespace Submarine
         readonly BattleInput input;
         readonly BattleObjectContainer objectContainer;
         readonly SubmarineResources resources;
+        readonly BattleService battleService;
 
         readonly CompositeDisposable disposables = new CompositeDisposable();
         bool IsSinked = false;
 
+        public override bool IsUsingPinger { get { return resources.IsUsingPinger.Value; } }
         public SubmarineResources Resources { get { return resources; } }
 
         public Vector3 Acceleration
@@ -73,11 +77,13 @@ namespace Submarine
             SubmarineHooks hooks,
             BattleInput input,
             BattleObjectContainer objectContainer,
-            SubmarineResources resources) : base(hooks)
+            SubmarineResources resources,
+            BattleService battleService) : base(hooks)
         {
             this.input = input;
             this.objectContainer = objectContainer;
             this.resources = resources;
+            this.battleService = battleService;
         }
 
         public override void Initialize()
@@ -101,6 +107,11 @@ namespace Submarine
 
             input.LookoutButtonClickedAsObservable
                 .Subscribe(_ => Debug.Log("Lookout"))
+                .AddTo(disposables);
+
+            resources.IsUsingPinger
+                .Skip(1)
+                .Subscribe(b => battleService.SendPingerEvent(Hooks.ViewId, b))
                 .AddTo(disposables);
         }
 
@@ -136,6 +147,7 @@ namespace Submarine
             if (resources.CanUsePinger.Value)
             {
                 resources.UsePinger();
+                battleService.SendPingerEvent(Hooks.ViewId, IsUsingPinger);
             }
         }
     }
@@ -144,10 +156,18 @@ namespace Submarine
     {
         readonly BattleObjectContainer objectContainer;
 
+        bool isUsingPinger;
+        public override bool IsUsingPinger { get { return isUsingPinger; } }
+
         public EnemySubmarine(SubmarineHooks hooks, BattleObjectContainer objectContainer)
             : base(hooks)
         {
             this.objectContainer = objectContainer;
+        }
+
+        public void SetUsingPinger(bool isUsingPinger)
+        {
+            this.isUsingPinger = isUsingPinger;
         }
 
         public override bool IsVisibleFromPlayer
