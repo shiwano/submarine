@@ -18,6 +18,8 @@ namespace Submarine
         [SerializeField]
         GameObject lookoutPinPrefab;
         [SerializeField]
+        GameObject decoyPinPrefab;
+        [SerializeField]
         RectTransform pinContainer;
         [SerializeField]
         Vector2 radarSize = new Vector2(250f, 250f);

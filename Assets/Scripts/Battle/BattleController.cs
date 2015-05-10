@@ -83,7 +83,7 @@ namespace Submarine
             var isActivePingerAlert = objectContainer.Submarines
                 .OfType<EnemySubmarine>()
                 .Any(s => s.IsUsingPinger);
-            settings.UI.PingerAlertImage.gameObject.SetActive(isActivePingerAlert);
+            settings.UI.PingerAlert.gameObject.SetActive(isActivePingerAlert);
         }
 
         void UpdateTimerText()

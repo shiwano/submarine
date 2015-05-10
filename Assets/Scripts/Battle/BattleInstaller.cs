@@ -29,11 +29,13 @@ namespace Submarine
                 public Text BattleLogText;
                 public Text TimerText;
                 public List<Image> TorpedoResourceImages;
-                public Image PingerAlertImage;
-                public Image DangerAlertImage;
+                public Image PingerAlert;
+                public Image DangerAlert;
                 public Button DecoyButton;
                 public Button PingerButton;
                 public Button LookoutButton;
+                public Button Victory;
+                public Button Defeat;
             }
         }
 
