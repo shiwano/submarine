@@ -27,9 +27,9 @@ GameObject:
   - 33: {fileID: 3378340}
   - 23: {fileID: 2323720}
   - 114: {fileID: 11409056}
-  - 114: {fileID: 11411616}
   - 65: {fileID: 6547956}
   - 54: {fileID: 5482960}
+  - 114: {fileID: 11475888}
   m_Layer: 9
   m_Name: Decoy
   m_TagString: Untagged
@@ -185,12 +185,12 @@ MonoBehaviour:
   onSerializeRigidBodyOption: 2
   ownershipTransfer: 0
   ObservedComponents:
-  - {fileID: 11411616}
+  - {fileID: 0}
   ObservedComponentsFoldoutOpen: 1
   viewIdField: 0
   instantiationId: -1
   isRuntimeInstantiated: 0
---- !u!114 &11411616
+--- !u!114 &11475888
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
@@ -198,7 +198,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 111856}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0cf23bb44060f491d81e7708863c5bdf, type: 3}
+  m_Script: {fileID: 11500000, guid: a34ada06a567747fc9cb4e4d4cbc715d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1001 &100100000

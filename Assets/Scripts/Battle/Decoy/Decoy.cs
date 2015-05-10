@@ -36,16 +36,13 @@ namespace Submarine
 
     public class PlayerDecoy : DecoyBase
     {
-        readonly BattleService battleService;
         readonly BattleObjectContainer objectContainer;
 
         public float LifeTime { get { return 4f; } }
         public Vector3 Acceleration { get { return Hooks.transform.forward * 10f; } }
 
-        public PlayerDecoy(DecoyHooks hooks, BattleService battleService,
-            BattleObjectContainer objectContainer) : base(hooks)
+        public PlayerDecoy(DecoyHooks hooks, BattleObjectContainer objectContainer) : base(hooks)
         {
-            this.battleService = battleService;
             this.objectContainer = objectContainer;
         }
 
