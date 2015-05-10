@@ -39,10 +39,10 @@ namespace Submarine
         readonly BattleService battleService;
         readonly BattleObjectContainer objectContainer;
 
-        const float sqrSearchRange = 35f * 35f;
+        const float searchRangeRadius = 35f;
 
         public float LifeTime { get { return 6f; } }
-        public Vector3 Acceleration { get { return Hooks.transform.forward * 20f; } }
+        public Vector3 Acceleration { get { return Hooks.transform.forward * 17f; } }
         public Vector3 ShockPower { get { return Hooks.transform.forward * 40f; } }
 
         public PlayerTorpedo(TorpedoHooks hooks, BattleService battleService,
@@ -63,20 +63,23 @@ namespace Submarine
 
         public override void Tick()
         {
-            var nearestEnemy = FindNearestTarget();
-            Hooks.Target = nearestEnemy != null ? nearestEnemy.BattleObjectHooks.transform : null;
+            Hooks.Target = FindNearestTarget();
             Hooks.Accelerate(Acceleration * Constants.FpsRate);
         }
 
-        IBattleObject FindNearestTarget()
+        Transform FindNearestTarget()
         {
-            var pair = objectContainer.Submarines
-                .OfType<EnemySubmarine>()
-                .Select(s => new { Source = s, SqrMagnitude = (Position - s.Position).sqrMagnitude })
-                .Where(s => s.SqrMagnitude <= sqrSearchRange)
-                .OrderBy(s => s.SqrMagnitude)
-                .FirstOrDefault();
-            return pair == null ? null : pair.Source;
+            var decoy = objectContainer.FindNearestObjectInRange<EnemyDecoy>(Position, searchRangeRadius);
+
+            if (decoy != null)
+            {
+                return decoy.BattleObjectHooks.transform;
+            }
+            else
+            {
+                var submarine = objectContainer.FindNearestObjectInRange<EnemySubmarine>(Position, searchRangeRadius);
+                return submarine != null ? submarine.BattleObjectHooks.transform : null;
+            }
         }
 
         void OnStriked(int? enemySubmarineViewId)

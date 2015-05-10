@@ -48,6 +48,18 @@ namespace Submarine
             }
         }
 
+        public T FindNearestObjectInRange<T>(Vector3 position, float rangeRadius) where T : IBattleObject
+        {
+            var sqrRangeRadius = rangeRadius * rangeRadius;
+            var pair = battleObjects
+                .OfType<T>()
+                .Select(s => new { Source = s, SqrMagnitude = (position - s.Position).sqrMagnitude })
+                .Where(s => s.SqrMagnitude <= sqrRangeRadius)
+                .OrderBy(s => s.SqrMagnitude)
+                .FirstOrDefault();
+            return pair != null ? (T)pair.Source : default(T);
+        }
+
         public PlayerSubmarine SpawnPlayerSubmarine(Vector3 position)
         {
             var submarine = submarineFactory.CreatePlayerSubmarine(position);
