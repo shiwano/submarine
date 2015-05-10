@@ -86,6 +86,9 @@ namespace Submarine
                 case BattleObjectType.Decoy:
                     pinPrefab = decoyPinPrefab;
                     break;
+                case BattleObjectType.Lookout:
+                    pinPrefab = lookoutPinPrefab;
+                    break;
                 default:
                     return null;
             }

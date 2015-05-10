@@ -11,6 +11,7 @@ namespace Submarine
         readonly SubmarineFactory submarineFactory;
         readonly TorpedoFactory torpedoFactory;
         readonly DecoyFactory decoyFactory;
+        readonly LookoutFactory lookoutFactory;
 
         readonly List<IBattleObject> battleObjects = new List<IBattleObject>();
 
@@ -24,11 +25,13 @@ namespace Submarine
         public BattleObjectContainer(
             SubmarineFactory submarineFactory,
             TorpedoFactory torpedoFactory,
-            DecoyFactory decoyFactory)
+            DecoyFactory decoyFactory,
+            LookoutFactory lookoutFactory)
         {
             this.submarineFactory = submarineFactory;
             this.torpedoFactory = torpedoFactory;
             this.decoyFactory = decoyFactory;
+            this.lookoutFactory = lookoutFactory;
 
             BattleObjectHooksBase.CreatedViaNetwork += OnBattleObjectHooksCreatedViaNetwork;
             BattleObjectHooksBase.DestroyedViaNetwork += OnBattleObjectHooksDestroyedViaNetwork;
@@ -81,6 +84,13 @@ namespace Submarine
             return decoy;
         }
 
+        public ILookout SpawnLookout(Vector3 position, Quaternion rotation)
+        {
+            var lookout = lookoutFactory.Create(position, rotation);
+            Add(lookout);
+            return lookout;
+        }
+
         public void Remove(IBattleObject battleObject)
         {
             var result = battleObjects.Remove(battleObject);
@@ -115,6 +125,10 @@ namespace Submarine
                 case BattleObjectType.Decoy:
                     var decoy = decoyFactory.Create(battleObjectHooks as DecoyHooks);
                     Add(decoy);
+                    break;
+                case BattleObjectType.Lookout:
+                    var lookout = lookoutFactory.Create(battleObjectHooks as LookoutHooks);
+                    Add(lookout);
                     break;
             }
         }

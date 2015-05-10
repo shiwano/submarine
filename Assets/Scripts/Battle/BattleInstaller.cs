@@ -67,6 +67,7 @@ namespace Submarine
             Container.Bind<SubmarineFactory>().ToSingle();
             Container.Bind<TorpedoFactory>().ToSingle();
             Container.Bind<DecoyFactory>().ToSingle();
+            Container.Bind<LookoutFactory>().ToSingle();
         }
     }
 }
