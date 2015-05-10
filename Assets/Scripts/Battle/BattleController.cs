@@ -38,6 +38,14 @@ namespace Submarine
         {
             if (!connection.InRoom) { return; }
 
+            battleService.ResultDecided += OnResultDecided;
+            settings.UI.Victory.OnClickAsObservable()
+                .Subscribe(_ => MoveToTitle())
+                .AddTo(disposables);
+            settings.UI.Defeat.OnClickAsObservable()
+                .Subscribe(_ => MoveToTitle())
+                .AddTo(disposables);
+
             battleService.StartBattle();
 
             playerSubmarine = objectContainer.SpawnPlayerSubmarine(settings.Map.StartPositions[0]);
@@ -66,6 +74,7 @@ namespace Submarine
 
         public void Dispose()
         {
+            battleService.ResultDecided -= OnResultDecided;
             disposables.Dispose();
             battleService.FinishBattle();
         }
@@ -111,7 +120,24 @@ namespace Submarine
             if (!connection.InRoom)
             {
                 Debug.Log("Not in room");
-                ZenUtil.LoadScene(Constants.SceneNames.Title);
+                MoveToTitle();
+            }
+        }
+
+        void MoveToTitle()
+        {
+            ZenUtil.LoadScene(Constants.SceneNames.Title);
+        }
+
+        void OnResultDecided(bool result)
+        {
+            if (result)
+            {
+                settings.UI.Victory.gameObject.SetActive(true);
+            }
+            else
+            {
+                settings.UI.Defeat.gameObject.SetActive(false);
             }
         }
     }

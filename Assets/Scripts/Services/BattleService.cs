@@ -12,6 +12,8 @@ namespace Submarine
 
         public DateTime StartDateTime { get; private set; }
 
+        public event Action<bool> ResultDecided = delegate {};
+
         [PostInject]
         public void Initialize(ConnectionService connection, BattleObjectContainer objectContainer)
         {
@@ -61,6 +63,12 @@ namespace Submarine
         {
             var damaged = objectContainer.Submarines.FirstOrDefault(s => s.BattleObjectHooks.ViewId == damagedViewId);
             damaged.Damage(shockPower);
+            var alivedSubmarines = objectContainer.AliveSubmarines.ToArray();
+
+            if (alivedSubmarines.Length == 1)
+            {
+                ResultDecided(alivedSubmarines.First() is PlayerSubmarine);
+            }
         }
 
         public void SendEffectPlayEvent(string resourceName, Vector3 position)

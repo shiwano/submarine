@@ -8,6 +8,7 @@ namespace Submarine
     public interface ISubmarine : IBattleObject
     {
         SubmarineHooks Hooks { get; }
+        bool IsSinked { get; }
         bool IsUsingPinger { get; }
         void Damage(Vector3 shockPower);
     }
@@ -17,6 +18,7 @@ namespace Submarine
         public static readonly float sqrSearchRange = 70f * 70f;
 
         public SubmarineHooks Hooks { get; private set; }
+        public bool IsSinked { get; protected set; }
         public abstract bool IsUsingPinger { get; }
 
         public BattleObjectType Type { get { return BattleObjectType.Submarine; } }
@@ -40,6 +42,7 @@ namespace Submarine
 
         public virtual void Damage(Vector3 shockPower)
         {
+            IsSinked = true;
             Hooks.Damage(shockPower);
         }
 
@@ -58,7 +61,6 @@ namespace Submarine
         readonly BattleService battleService;
 
         readonly CompositeDisposable disposables = new CompositeDisposable();
-        bool IsSinked = false;
 
         public override bool IsUsingPinger { get { return resources.Pinger.IsUsing.Value; } }
         public SubmarineResources Resources { get { return resources; } }
@@ -133,7 +135,6 @@ namespace Submarine
         public override void Damage(Vector3 shockPower)
         {
             IsSinked = true;
-            disposables.Dispose();
             base.Damage(shockPower);
         }
 

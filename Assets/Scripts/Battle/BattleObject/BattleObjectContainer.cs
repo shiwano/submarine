@@ -14,6 +14,7 @@ namespace Submarine
         readonly List<IBattleObject> battleObjects = new List<IBattleObject>();
 
         public IEnumerable<ISubmarine> Submarines { get { return battleObjects.OfType<ISubmarine>(); } }
+        public IEnumerable<ISubmarine> AliveSubmarines { get { return Submarines.Where(s => !s.IsSinked); } }
         public IEnumerable<ITorpedo> Torpedos { get { return battleObjects.OfType<ITorpedo>(); } }
 
         public event Action<IBattleObject> BattleObjectSpawned = delegate {};
