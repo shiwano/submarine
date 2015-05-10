@@ -56,7 +56,7 @@ namespace Submarine
             disposables.Dispose();
         }
 
-        public IObservable<bool> ClickedAsObservable()
+        public IObservable<bool> Clicked()
         {
             return IsTouched
                 .Where(b => !b &&
@@ -65,17 +65,17 @@ namespace Submarine
                 .Select(_ => true);
         }
 
-        public IObservable<Unit> DecoyButtonClickedAsObservable()
+        public IObservable<Unit> DecoyButtonClicked()
         {
             return uiSettings.DecoyButton.OnClickAsObservable();
         }
 
-        public IObservable<Unit> PingerButtonClickedAsObservable()
+        public IObservable<Unit> PingerButtonClicked()
         {
             return uiSettings.PingerButton.OnClickAsObservable();
         }
 
-        public IObservable<Unit> LookoutButtonClickedAsObservable()
+        public IObservable<Unit> LookoutButtonClicked()
         {
             return uiSettings.LookoutButton.OnClickAsObservable();
         }

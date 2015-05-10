@@ -15,10 +15,10 @@ namespace Submarine
             this.battleService = battleService;
         }
 
-        public ISubmarine Create(Vector3 position)
+        public PlayerSubmarine CreatePlayerSubmarine(Vector3 position)
         {
             var hooks = CreateSubmarineHooks(position);
-            return Create(hooks);
+            return Create(hooks) as PlayerSubmarine;
         }
 
         public ISubmarine Create(SubmarineHooks hooks)

@@ -55,8 +55,9 @@ namespace Submarine
         readonly SubmarineResources resources;
 
         readonly CompositeDisposable disposables = new CompositeDisposable();
-
         bool IsSinked = false;
+
+        public SubmarineResources Resources { get { return resources; } }
 
         public Vector3 Acceleration
         {
@@ -86,19 +87,19 @@ namespace Submarine
                 .Subscribe(_ => Hooks.Brake())
                 .AddTo(disposables);
 
-            input.ClickedAsObservable()
+            input.Clicked()
                 .Subscribe(_ => SpawnTorpedo())
                 .AddTo(disposables);
 
-            input.DecoyButtonClickedAsObservable()
+            input.DecoyButtonClicked()
                 .Subscribe(_ => Debug.Log("Decoy"))
                 .AddTo(disposables);
 
-            input.PingerButtonClickedAsObservable()
-                .Subscribe(_ => Debug.Log("Pinger"))
+            input.PingerButtonClicked()
+                .Subscribe(_ => UsePinger())
                 .AddTo(disposables);
 
-            input.LookoutButtonClickedAsObservable()
+            input.LookoutButtonClicked()
                 .Subscribe(_ => Debug.Log("Lookout"))
                 .AddTo(disposables);
         }
@@ -129,6 +130,14 @@ namespace Submarine
         {
             objectContainer.SpawnTorpedo(Hooks.LaunchSitePosition, Hooks.transform.rotation);
         }
+
+        void UsePinger()
+        {
+            if (resources.CanUsePinger.Value)
+            {
+                resources.UsePinger();
+            }
+        }
     }
 
     public class EnemySubmarine : SubmarineBase
@@ -147,7 +156,8 @@ namespace Submarine
             {
                 foreach (var playerSubmarine in objectContainer.Submarines.OfType<PlayerSubmarine>())
                 {
-                    if (IsInSearchRangeOf(playerSubmarine))
+                    if (playerSubmarine.Resources.IsUsingPinger.Value ||
+                        IsInSearchRangeOf(playerSubmarine))
                     {
                         return true;
                     }

@@ -44,9 +44,9 @@ namespace Submarine
             }
         }
 
-        public ISubmarine SpawnSubmarine(Vector3 position)
+        public PlayerSubmarine SpawnPlayerSubmarine(Vector3 position)
         {
-            var submarine = submarineFactory.Create(position);
+            var submarine = submarineFactory.CreatePlayerSubmarine(position);
             Add(submarine);
             return submarine;
         }

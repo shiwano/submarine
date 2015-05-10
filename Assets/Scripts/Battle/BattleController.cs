@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System;
+using UniRx;
 using Zenject;
 
 namespace Submarine
@@ -11,6 +12,8 @@ namespace Submarine
         readonly BattleService battleService;
         readonly BattleObjectContainer objectContainer;
         readonly ThirdPersonCamera thirdPersonCamera;
+
+        private PlayerSubmarine playerSubmarine;
 
         public BattleController(
             BattleInstaller.Settings settings,
@@ -28,13 +31,13 @@ namespace Submarine
 
         public void Initialize()
         {
-            if (connection.InRoom)
-            {
-                battleService.StartBattle();
+            if (!connection.InRoom) { return; }
 
-                var playerSubmarine = objectContainer.SpawnSubmarine(settings.Map.StartPositions[0]);
-                thirdPersonCamera.SetTarget(playerSubmarine.Hooks.transform);
-            }
+            battleService.StartBattle();
+
+            playerSubmarine = objectContainer.SpawnPlayerSubmarine(settings.Map.StartPositions[0]);
+            thirdPersonCamera.SetTarget(playerSubmarine.Hooks.transform);
+            playerSubmarine.Resources.CanUsePinger.SubscribeToInteractable(settings.UI.PingerButton);
         }
 
         public void Dispose()
