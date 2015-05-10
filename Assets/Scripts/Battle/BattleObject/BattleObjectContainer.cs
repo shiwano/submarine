@@ -77,6 +77,8 @@ namespace Submarine
 
         void OnBattleObjectHooksCreatedViaNetwork(IBattleObjectHooks battleObjectHooks)
         {
+            if (battleObjectHooks.IsMine) { return; }
+
             switch (battleObjectHooks.Type)
             {
                 case BattleObjectType.Submarine:
@@ -93,7 +95,11 @@ namespace Submarine
         void OnBattleObjectHooksDestroyedViaNetwork(IBattleObjectHooks battleObjectHooks)
         {
             var battleObject = battleObjects.Find(s => s.BattleObjectHooks == battleObjectHooks);
-            Remove(battleObject);
+
+            if (battleObject != null)
+            {
+                Remove(battleObject);
+            }
         }
     }
 }
