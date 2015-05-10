@@ -26,6 +26,11 @@ namespace Submarine
 
         readonly Dictionary<IBattleObject, RectTransform> pins = new Dictionary<IBattleObject, RectTransform>();
 
+        public void SetPinger(bool isUsingPinger)
+        {
+            pinger.SetActive(isUsingPinger);
+        }
+
         [PostInject]
         void Initialize(BattleObjectContainer objectContainer)
         {

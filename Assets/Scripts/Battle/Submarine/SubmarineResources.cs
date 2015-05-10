@@ -6,12 +6,13 @@ namespace Submarine
 {
     public class SubmarineResources
     {
+        const int pingerCoolDownTime = 60;
         const int pingerTime = 10;
-        const int pingerCoolDownTime = 10;
 
-        public IObservable<int> PingerCoolDownCounted { get; private set; }
-        public ReactiveProperty<bool> IsUsingPinger { get; private set; }
+        IConnectableObservable<int> pingerCoolDownCounted;
+        public IObservable<int> PingerCoolDownAsObservable { get { return pingerCoolDownCounted.AsObservable(); } }
         public ReactiveProperty<bool> CanUsePinger { get; private set; }
+        public ReactiveProperty<bool> IsUsingPinger { get; private set; }
 
         public SubmarineResources()
         {
@@ -23,11 +24,15 @@ namespace Submarine
         {
             if (CanUsePinger.Value)
             {
-                var observable = CreateCountdownAsObservable(pingerCoolDownTime).Publish();
-                PingerCoolDownCounted = observable.AsObservable();
-                PingerCoolDownCounted.Where(t => t == pingerTime).Subscribe(_ => IsUsingPinger.Value = false);
-                PingerCoolDownCounted.Subscribe(_ => {}, e => {}, () => CanUsePinger.Value = true);
-                observable.Connect();
+                pingerCoolDownCounted = CreateCountdownAsObservable(pingerCoolDownTime).Publish();
+
+                PingerCoolDownAsObservable
+                    .Subscribe(_ => {}, e => {}, () => CanUsePinger.Value = true);
+                PingerCoolDownAsObservable
+                    .Where(t => t == pingerCoolDownTime - pingerTime)
+                    .Subscribe(_ => IsUsingPinger.Value = false);
+
+                pingerCoolDownCounted.Connect();
                 IsUsingPinger.Value = true;
                 CanUsePinger.Value = false;
             }

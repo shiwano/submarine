@@ -12,6 +12,7 @@ namespace Submarine
         readonly BattleService battleService;
         readonly BattleObjectContainer objectContainer;
         readonly ThirdPersonCamera thirdPersonCamera;
+        readonly Radar radar;
 
         private PlayerSubmarine playerSubmarine;
 
@@ -20,13 +21,15 @@ namespace Submarine
             ConnectionService connection,
             BattleService battleService,
             BattleObjectContainer objectContainer,
-            ThirdPersonCamera thirdPersonCamera)
+            ThirdPersonCamera thirdPersonCamera,
+            Radar radar)
         {
             this.settings = settings;
             this.connection = connection;
             this.battleService = battleService;
             this.objectContainer = objectContainer;
             this.thirdPersonCamera = thirdPersonCamera;
+            this.radar = radar;
         }
 
         public void Initialize()
@@ -38,6 +41,7 @@ namespace Submarine
             playerSubmarine = objectContainer.SpawnPlayerSubmarine(settings.Map.StartPositions[0]);
             thirdPersonCamera.SetTarget(playerSubmarine.Hooks.transform);
             playerSubmarine.Resources.CanUsePinger.SubscribeToInteractable(settings.UI.PingerButton);
+            playerSubmarine.Resources.IsUsingPinger.Subscribe(radar.SetPinger);
         }
 
         public void Dispose()
