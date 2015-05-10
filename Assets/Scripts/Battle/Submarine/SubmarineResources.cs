@@ -53,11 +53,13 @@ namespace Submarine
             }
         }
 
+        public Resource Decoy { get; private set; }
         public Resource Pinger { get; private set; }
         public List<Resource> Torpedos { get; private set; }
 
         public SubmarineResources()
         {
+            Decoy = new Resource(150);
             Pinger = new Resource(60, 10);
             Torpedos = new List<Resource>()
             {

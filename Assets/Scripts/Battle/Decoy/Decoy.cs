@@ -39,7 +39,7 @@ namespace Submarine
         readonly BattleObjectContainer objectContainer;
 
         public float LifeTime { get { return 4f; } }
-        public Vector3 Acceleration { get { return Hooks.transform.forward * 10f; } }
+        public Vector3 Acceleration { get { return Hooks.transform.forward * 5f; } }
 
         public PlayerDecoy(DecoyHooks hooks, BattleObjectContainer objectContainer) : base(hooks)
         {

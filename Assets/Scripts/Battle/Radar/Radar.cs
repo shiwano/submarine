@@ -83,6 +83,9 @@ namespace Submarine
                 case BattleObjectType.Torpedo:
                     pinPrefab = torpedoPinPrefab;
                     break;
+                case BattleObjectType.Decoy:
+                    pinPrefab = decoyPinPrefab;
+                    break;
                 default:
                     return null;
             }

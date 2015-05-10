@@ -8,7 +8,9 @@ namespace Submarine
         [SerializeField]
         GameObject model;
         [SerializeField]
-        Transform launchSite;
+        Transform torpedoLaunchSite;
+        [SerializeField]
+        Transform decoyLaunchSite;
         [SerializeField]
         GameObject streamEffect;
         [SerializeField]
@@ -26,7 +28,9 @@ namespace Submarine
 
         public override BattleObjectType Type { get { return BattleObjectType.Submarine; } }
 
-        public Vector3 LaunchSitePosition { get { return launchSite.position; } }
+        public Vector3 TorpedoLaunchSitePosition { get { return torpedoLaunchSite.position; } }
+        public Vector3 DecoyLaunchSitePosition { get { return decoyLaunchSite.position; } }
+        public Quaternion DecoyLaunchSiteRotation { get { return decoyLaunchSite.rotation; } }
 
         public void Accelerate(Vector3 force)
         {

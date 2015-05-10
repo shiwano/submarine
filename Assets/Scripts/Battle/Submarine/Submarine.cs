@@ -100,7 +100,7 @@ namespace Submarine
                 .AddTo(disposables);
 
             input.DecoyButtonClickedAsObservable
-                .Subscribe(_ => Debug.Log("Decoy"))
+                .Subscribe(_ => UseDecoy())
                 .AddTo(disposables);
 
             input.PingerButtonClickedAsObservable
@@ -144,7 +144,22 @@ namespace Submarine
             if (usableTorpedo != null)
             {
                 usableTorpedo.Use();
-                objectContainer.SpawnTorpedo(Hooks.LaunchSitePosition, Hooks.transform.rotation);
+                objectContainer.SpawnTorpedo(
+                    Hooks.TorpedoLaunchSitePosition,
+                    Hooks.transform.rotation
+                );
+            }
+        }
+
+        void UseDecoy()
+        {
+            if (resources.Decoy.CanUse.Value)
+            {
+                resources.Decoy.Use();
+                objectContainer.SpawnDecoy(
+                    Hooks.DecoyLaunchSitePosition,
+                    Hooks.DecoyLaunchSiteRotation
+                );
             }
         }
 
