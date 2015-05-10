@@ -9,6 +9,7 @@ namespace Submarine
         BattleObjectType Type { get; }
         bool IsMine { get; }
         int ViewId { get; }
+        Transform transform { get; }
     }
 
     [RequireComponent(

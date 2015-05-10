@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System;
 using System.Collections;
+using System.Linq;
 using UniRx;
 using Zenject;
 
@@ -40,6 +41,8 @@ namespace Submarine
         readonly BattleService battleService;
         readonly BattleObjectContainer objectContainer;
 
+        const float sqrSearchRange = 35f * 35f;
+
         public float LifeTime { get { return 6f; } }
         public Vector3 Acceleration { get { return Hooks.transform.forward * 20f; } }
         public Vector3 ShockPower { get { return Hooks.transform.forward * 40f; } }
@@ -62,7 +65,20 @@ namespace Submarine
 
         public override void Tick()
         {
+            var nearestEnemy = FindNearestTarget();
+            Hooks.Target = nearestEnemy != null ? nearestEnemy.BattleObjectHooks.transform : null;
             Hooks.Accelerate(Acceleration * Constants.FpsRate);
+        }
+
+        IBattleObject FindNearestTarget()
+        {
+            var pair = objectContainer.Submarines
+                .OfType<EnemySubmarine>()
+                .Select(s => new { Source = s, SqrMagnitude = (Position - s.Position).sqrMagnitude })
+                .Where(s => s.SqrMagnitude <= sqrSearchRange)
+                .OrderBy(s => s.SqrMagnitude)
+                .FirstOrDefault();
+            return pair == null ? null : pair.Source;
         }
 
         void OnStriked(int? enemySubmarineViewId)
