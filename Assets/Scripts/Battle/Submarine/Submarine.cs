@@ -134,6 +134,7 @@ namespace Submarine
         public override void Damage(Vector3 shockPower)
         {
             IsSinked = true;
+            disposables.Dispose();
             base.Damage(shockPower);
         }
 

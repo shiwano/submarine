@@ -13,9 +13,9 @@ namespace Submarine
             readonly int usingTime;
 
             IConnectableObservable<int> coolDownAsConnectable;
-            public IObservable<int> CoolDownAsObservable { get { return coolDownAsConnectable.AsObservable(); } }
             public ReactiveProperty<bool> CanUse { get; private set; }
             public ReactiveProperty<bool> IsUsing { get; private set; }
+            public ReactiveProperty<int> CountDown { get; private set; }
 
             public Resource(int cooldownTime, int usingTime = 0)
             {
@@ -24,21 +24,26 @@ namespace Submarine
 
                 CanUse = new ReactiveProperty<bool>(true);
                 IsUsing = new ReactiveProperty<bool>(false);
+                CountDown = new ReactiveProperty<int>(0);
             }
 
             public void Use()
             {
                 if (CanUse.Value)
                 {
-                    coolDownAsConnectable = CreateCountdownAsObservable(cooldownTime).Publish();
+                    var observable = CreateCountdownAsObservable(cooldownTime).Publish();
 
-                    CoolDownAsObservable
-                        .Subscribe(_ => {}, e => {}, () => CanUse.Value = true);
-                    CoolDownAsObservable
+                    observable.AsObservable()
+                        .Subscribe(i => CountDown.Value = i, e => {}, () =>
+                        {
+                            CanUse.Value = true;
+                            CountDown.Value = 0;
+                        });
+                    observable.AsObservable()
                         .Where(t => t == cooldownTime - usingTime)
                         .Subscribe(_ => IsUsing.Value = false);
 
-                    coolDownAsConnectable.Connect();
+                    observable.Connect();
                     CanUse.Value = false;
                     IsUsing.Value = true;
                 }

@@ -54,14 +54,26 @@ namespace Submarine
             playerSubmarine.Resources.Decoy.CanUse
                 .SubscribeToInteractable(settings.UI.DecoyButton)
                 .AddTo(disposables);
+            playerSubmarine.Resources.Decoy.CountDown
+                .Select(i => i <= 0 ? "" : i.ToString())
+                .Subscribe(s => settings.UI.DecoyCoolDown.text = s)
+                .AddTo(disposables);
             playerSubmarine.Resources.Pinger.CanUse
                 .SubscribeToInteractable(settings.UI.PingerButton)
+                .AddTo(disposables);
+            playerSubmarine.Resources.Pinger.CountDown
+                .Select(i => i <= 0 ? "" : i.ToString())
+                .Subscribe(s => settings.UI.PingerCoolDown.text = s)
                 .AddTo(disposables);
             playerSubmarine.Resources.Pinger.IsUsing
                 .Subscribe(radar.SetPinger)
                 .AddTo(disposables);
             playerSubmarine.Resources.Lookout.CanUse
                 .SubscribeToInteractable(settings.UI.LookoutButton)
+                .AddTo(disposables);
+            playerSubmarine.Resources.Lookout.CountDown
+                .Select(i => i <= 0 ? "" : i.ToString())
+                .Subscribe(s => settings.UI.LookoutCoolDown.text = s)
                 .AddTo(disposables);
 
             playerSubmarine.Resources.Torpedos.ForEach((torpedo, i) =>
@@ -71,7 +83,7 @@ namespace Submarine
                     .Subscribe(b =>
                     {
                         var color = Color.white;
-                        color.a = b ? 1f : 0.5f;
+                        color.a = b ? 1f : 0.35f;
                         image.color = color;
                     })
                     .AddTo(disposables);
@@ -143,7 +155,7 @@ namespace Submarine
             }
             else
             {
-                settings.UI.Defeat.gameObject.SetActive(false);
+                settings.UI.Defeat.gameObject.SetActive(true);
             }
         }
     }
