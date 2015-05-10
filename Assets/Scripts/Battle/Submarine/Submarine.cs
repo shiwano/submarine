@@ -60,7 +60,7 @@ namespace Submarine
         readonly CompositeDisposable disposables = new CompositeDisposable();
         bool IsSinked = false;
 
-        public override bool IsUsingPinger { get { return resources.IsUsingPinger.Value; } }
+        public override bool IsUsingPinger { get { return resources.Pinger.IsUsing.Value; } }
         public SubmarineResources Resources { get { return resources; } }
 
         public Vector3 Acceleration
@@ -109,7 +109,7 @@ namespace Submarine
                 .Subscribe(_ => Debug.Log("Lookout"))
                 .AddTo(disposables);
 
-            resources.IsUsingPinger
+            resources.Pinger.IsUsing
                 .Skip(1)
                 .Subscribe(b => battleService.SendPingerEvent(Hooks.ViewId, b))
                 .AddTo(disposables);
@@ -144,9 +144,9 @@ namespace Submarine
 
         void UsePinger()
         {
-            if (resources.CanUsePinger.Value)
+            if (resources.Pinger.CanUse.Value)
             {
-                resources.UsePinger();
+                resources.Pinger.Use();
                 battleService.SendPingerEvent(Hooks.ViewId, IsUsingPinger);
             }
         }
@@ -176,7 +176,7 @@ namespace Submarine
             {
                 foreach (var playerSubmarine in objectContainer.Submarines.OfType<PlayerSubmarine>())
                 {
-                    if (playerSubmarine.Resources.IsUsingPinger.Value ||
+                    if (playerSubmarine.Resources.Pinger.IsUsing.Value ||
                         IsInSearchRangeOf(playerSubmarine))
                     {
                         return true;

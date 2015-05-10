@@ -42,10 +42,10 @@ namespace Submarine
             playerSubmarine = objectContainer.SpawnPlayerSubmarine(settings.Map.StartPositions[0]);
             thirdPersonCamera.SetTarget(playerSubmarine.Hooks.transform);
 
-            playerSubmarine.Resources.CanUsePinger
+            playerSubmarine.Resources.Pinger.CanUse
                 .SubscribeToInteractable(settings.UI.PingerButton)
                 .AddTo(disposables);
-            playerSubmarine.Resources.IsUsingPinger
+            playerSubmarine.Resources.Pinger.IsUsing
                 .Subscribe(radar.SetPinger)
                 .AddTo(disposables);
         }

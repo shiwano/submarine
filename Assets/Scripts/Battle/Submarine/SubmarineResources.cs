@@ -5,44 +5,57 @@ namespace Submarine
 {
     public class SubmarineResources
     {
-        const int pingerCoolDownTime = 60;
-        const int pingerTime = 10;
-
-        IConnectableObservable<int> pingerCoolDownCounted;
-        public IObservable<int> PingerCoolDownAsObservable { get { return pingerCoolDownCounted.AsObservable(); } }
-        public ReactiveProperty<bool> CanUsePinger { get; private set; }
-        public ReactiveProperty<bool> IsUsingPinger { get; private set; }
-
-        public SubmarineResources()
+        public class Resource
         {
-            IsUsingPinger = new ReactiveProperty<bool>(false);
-            CanUsePinger = new ReactiveProperty<bool>(true);
-        }
+            readonly int cooldownTime;
+            readonly int usingTime;
 
-        public void UsePinger()
-        {
-            if (CanUsePinger.Value)
+            IConnectableObservable<int> coolDownCounted;
+            public IObservable<int> CoolDownAsObservable { get { return coolDownCounted.AsObservable(); } }
+            public ReactiveProperty<bool> CanUse { get; private set; }
+            public ReactiveProperty<bool> IsUsing { get; private set; }
+
+            public Resource(int cooldownTime, int usingTime = 0)
             {
-                pingerCoolDownCounted = CreateCountdownAsObservable(pingerCoolDownTime).Publish();
+                this.cooldownTime = cooldownTime;
+                this.usingTime = usingTime;
 
-                PingerCoolDownAsObservable
-                    .Subscribe(_ => {}, e => {}, () => CanUsePinger.Value = true);
-                PingerCoolDownAsObservable
-                    .Where(t => t == pingerCoolDownTime - pingerTime)
-                    .Subscribe(_ => IsUsingPinger.Value = false);
+                CanUse = new ReactiveProperty<bool>(true);
+                IsUsing = new ReactiveProperty<bool>(false);
+            }
 
-                pingerCoolDownCounted.Connect();
-                IsUsingPinger.Value = true;
-                CanUsePinger.Value = false;
+            public void Use()
+            {
+                if (CanUse.Value)
+                {
+                    coolDownCounted = CreateCountdownAsObservable(cooldownTime).Publish();
+
+                    CoolDownAsObservable
+                        .Subscribe(_ => {}, e => {}, () => CanUse.Value = true);
+                    CoolDownAsObservable
+                        .Where(t => t == cooldownTime - usingTime)
+                        .Subscribe(_ => IsUsing.Value = false);
+
+                    coolDownCounted.Connect();
+                    CanUse.Value = false;
+                    IsUsing.Value = true;
+                }
+            }
+
+            IObservable<int> CreateCountdownAsObservable(int CountTime)
+            {
+                return Observable
+                    .Timer(TimeSpan.FromSeconds(0), TimeSpan.FromSeconds(1))
+                    .Select(x => (int)(CountTime - x))
+                    .TakeWhile(x => x > 0);
             }
         }
 
-        IObservable<int> CreateCountdownAsObservable(int CountTime)
+        public Resource Pinger { get; private set; }
+
+        public SubmarineResources()
         {
-            return Observable
-                .Timer(TimeSpan.FromSeconds(0), TimeSpan.FromSeconds(1))
-                .Select(x => (int)(CountTime - x))
-                .TakeWhile(x => x > 0);
+            Pinger = new Resource(60, 10);
         }
     }
 }
