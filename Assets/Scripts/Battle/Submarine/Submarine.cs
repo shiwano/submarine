@@ -195,15 +195,9 @@ namespace Submarine
         {
             get
             {
-                foreach (var playerSubmarine in objectContainer.Submarines.OfType<PlayerSubmarine>())
-                {
-                    if (playerSubmarine.Resources.Pinger.IsUsing.Value ||
-                        IsInSearchRangeOf(playerSubmarine))
-                    {
-                        return true;
-                    }
-                }
-                return false;
+                return objectContainer.Submarines
+                    .OfType<PlayerSubmarine>()
+                    .Any(s => s.Resources.Pinger.IsUsing.Value || IsInSearchRangeOf(s));
             }
         }
     }
