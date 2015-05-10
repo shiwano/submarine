@@ -11,6 +11,7 @@ namespace Submarine
         public override BattleObjectType Type { get { return BattleObjectType.Torpedo; } }
 
         public Transform Target { get; set; }
+        public float RotationMaxDegreesRate { get { return 0.5f * Constants.FpsRate; } }
 
         public event Action<int?> Striked = delegate {};
 
@@ -35,17 +36,23 @@ namespace Submarine
             }
         }
 
+        void UpdateRotation()
+        {
+            if (Target != null)
+            {
+                transform.rotation = Quaternion.RotateTowards(
+                    transform.rotation,
+                    Quaternion.LookRotation(Target.position - transform.position),
+                    RotationMaxDegreesRate
+                );
+            }
+        }
+
         void Update()
         {
             if (IsMine)
             {
-                if (Target != null)
-                {
-                    var targetRotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(Target.position - transform.position), 0.1f);
-                    var targetAngle = 360f + Mathf.Clamp(360f - targetRotation.eulerAngles.y, -12f, 12f);
-                    targetRotation.eulerAngles = new Vector3(0f, targetAngle, 0f);
-                    transform.rotation = targetRotation;
-                }
+                UpdateRotation();
             }
             else
             {
