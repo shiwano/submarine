@@ -13,12 +13,12 @@ namespace Submarine
 
         public static DateTime FromUnixTime(long unixTime)
         {
-            return UnixEpoch.AddSeconds(unixTime).ToLocalTime();
+            return UnixTime.UnixEpoch.AddSeconds(unixTime).ToLocalTime();
         }
 
         public static long FromDateTime(DateTime dateTime)
         {
-            double nowTicks = (dateTime.ToUniversalTime() - UnixEpoch).TotalSeconds;
+            double nowTicks = (dateTime.ToUniversalTime() - UnixTime.UnixEpoch).TotalSeconds;
             return (long)nowTicks;
         }
     }
