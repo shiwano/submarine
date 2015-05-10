@@ -18,6 +18,7 @@ namespace Submarine
         IBattleObjectHooks BattleObjectHooks { get; }
         Vector3 Position { get; }
         Vector3 EulerAngles { get; }
+        float SearchRange { get; }
         bool IsVisibleFromPlayer { get; }
     }
 }

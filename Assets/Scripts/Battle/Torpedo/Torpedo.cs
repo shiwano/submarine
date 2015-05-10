@@ -18,6 +18,7 @@ namespace Submarine
         public IBattleObjectHooks BattleObjectHooks { get { return Hooks; } }
         public Vector3 Position { get { return Hooks.transform.position; } }
         public Vector3 EulerAngles { get { return Hooks.transform.rotation.eulerAngles; } }
+        public float SearchRange { get { return 0f; } }
         public bool IsVisibleFromPlayer { get { return true; } }
 
         protected TorpedoBase(TorpedoHooks hooks)
@@ -39,7 +40,7 @@ namespace Submarine
         readonly BattleService battleService;
         readonly BattleObjectContainer objectContainer;
 
-        const float searchRangeRadius = 35f;
+        const float targetRangeRadius = 35f;
 
         public float LifeTime { get { return 6f; } }
         public Vector3 Acceleration { get { return Hooks.transform.forward * 17f; } }
@@ -69,7 +70,7 @@ namespace Submarine
 
         Transform FindNearestTarget()
         {
-            var decoy = objectContainer.FindNearestObjectInRange<EnemyDecoy>(Position, searchRangeRadius);
+            var decoy = objectContainer.FindNearestObjectInRange<EnemyDecoy>(Position, targetRangeRadius);
 
             if (decoy != null)
             {
@@ -77,7 +78,7 @@ namespace Submarine
             }
             else
             {
-                var submarine = objectContainer.FindNearestObjectInRange<EnemySubmarine>(Position, searchRangeRadius);
+                var submarine = objectContainer.FindNearestObjectInRange<EnemySubmarine>(Position, targetRangeRadius);
                 return submarine != null ? submarine.BattleObjectHooks.transform : null;
             }
         }

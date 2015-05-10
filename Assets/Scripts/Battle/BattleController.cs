@@ -60,6 +60,9 @@ namespace Submarine
             playerSubmarine.Resources.Pinger.IsUsing
                 .Subscribe(radar.SetPinger)
                 .AddTo(disposables);
+            playerSubmarine.Resources.Lookout.CanUse
+                .SubscribeToInteractable(settings.UI.LookoutButton)
+                .AddTo(disposables);
 
             playerSubmarine.Resources.Torpedos.ForEach((torpedo, i) =>
             {

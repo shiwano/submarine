@@ -17,7 +17,8 @@ namespace Submarine
         public IBattleObjectHooks BattleObjectHooks { get { return Hooks; } }
         public Vector3 Position { get { return Hooks.transform.position; } }
         public Vector3 EulerAngles { get { return Hooks.transform.rotation.eulerAngles; } }
-        public bool IsVisibleFromPlayer { get { return true; } }
+        public float SearchRange { get { return 70f; } }
+        public virtual bool IsVisibleFromPlayer { get { return true; } }
 
         protected LookoutBase(LookoutHooks hooks)
         {
@@ -55,6 +56,8 @@ namespace Submarine
 
     public class EnemyLookout : LookoutBase
     {
+        public override bool IsVisibleFromPlayer { get { return false; } }
+
         public EnemyLookout(LookoutHooks hooks) : base(hooks)
         {
         }

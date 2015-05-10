@@ -12,6 +12,8 @@ namespace Submarine
         [SerializeField]
         Transform decoyLaunchSite;
         [SerializeField]
+        Transform lookoutLaunchSite;
+        [SerializeField]
         GameObject streamEffect;
         [SerializeField]
         Material enemySubmarineMaterial;
@@ -31,6 +33,7 @@ namespace Submarine
         public Vector3 TorpedoLaunchSitePosition { get { return torpedoLaunchSite.position; } }
         public Vector3 DecoyLaunchSitePosition { get { return decoyLaunchSite.position; } }
         public Quaternion DecoyLaunchSiteRotation { get { return decoyLaunchSite.rotation; } }
+        public Vector3 LookoutLaunchSitePosition { get { return lookoutLaunchSite.position; } }
 
         public void Accelerate(Vector3 force)
         {

@@ -36,7 +36,7 @@ namespace Submarine
         LookoutHooks CreateLookoutHooks(Vector3 position, Quaternion rotation)
         {
             var go = battleService.InstantiatePhotonView(
-                Constants.DecoyPrefab,
+                Constants.LookoutPrefab,
                 position,
                 rotation
             );

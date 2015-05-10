@@ -55,12 +55,14 @@ namespace Submarine
 
         public Resource Decoy { get; private set; }
         public Resource Pinger { get; private set; }
+        public Resource Lookout { get; private set; }
         public List<Resource> Torpedos { get; private set; }
 
         public SubmarineResources()
         {
-            Decoy = new Resource(150);
+            Decoy = new Resource(180);
             Pinger = new Resource(60, 10);
+            Lookout = new Resource(10);
             Torpedos = new List<Resource>()
             {
                 new Resource(10),

@@ -18,6 +18,8 @@ namespace Submarine
         public IEnumerable<ISubmarine> Submarines { get { return battleObjects.OfType<ISubmarine>(); } }
         public IEnumerable<ISubmarine> AliveSubmarines { get { return Submarines.Where(s => !s.IsSinked); } }
         public IEnumerable<ITorpedo> Torpedos { get { return battleObjects.OfType<ITorpedo>(); } }
+        public IEnumerable<IDecoy> Decoys { get { return battleObjects.OfType<IDecoy>(); } }
+        public IEnumerable<ILookout> Lookouts { get { return battleObjects.OfType<ILookout>(); } }
 
         public event Action<IBattleObject> BattleObjectSpawned = delegate {};
         public event Action<IBattleObject> BattleObjectRemoved = delegate {};

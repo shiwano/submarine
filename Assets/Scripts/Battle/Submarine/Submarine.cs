@@ -15,8 +15,6 @@ namespace Submarine
 
     public abstract class SubmarineBase : ISubmarine
     {
-        public static readonly float sqrSearchRange = 70f * 70f;
-
         public SubmarineHooks Hooks { get; private set; }
         public bool IsSinked { get; protected set; }
         public abstract bool IsUsingPinger { get; }
@@ -25,6 +23,7 @@ namespace Submarine
         public IBattleObjectHooks BattleObjectHooks { get { return Hooks; } }
         public Vector3 Position { get { return Hooks.transform.position; } }
         public Vector3 EulerAngles { get { return Hooks.transform.rotation.eulerAngles; } }
+        public float SearchRange { get { return 70f; } }
         public virtual bool IsVisibleFromPlayer { get { return true; } }
 
         protected SubmarineBase(SubmarineHooks hooks)
@@ -49,7 +48,7 @@ namespace Submarine
         public bool IsInSearchRangeOf(IBattleObject battleObject)
         {
             var sqrLength = (battleObject.Position - Position).sqrMagnitude;
-            return sqrLength <= SubmarineBase.sqrSearchRange;
+            return sqrLength <= (battleObject.SearchRange * battleObject.SearchRange);
         }
     }
 
@@ -108,7 +107,7 @@ namespace Submarine
                 .AddTo(disposables);
 
             input.LookoutButtonClickedAsObservable
-                .Subscribe(_ => Debug.Log("Lookout"))
+                .Subscribe(_ => UseLookout())
                 .AddTo(disposables);
 
             resources.Pinger.IsUsing
@@ -171,6 +170,18 @@ namespace Submarine
                 battleService.SendPingerEvent(Hooks.ViewId, IsUsingPinger);
             }
         }
+
+        void UseLookout()
+        {
+            if (resources.Lookout.CanUse.Value)
+            {
+                resources.Lookout.Use();
+                objectContainer.SpawnLookout(
+                    Hooks.LookoutLaunchSitePosition,
+                    Hooks.transform.rotation
+                );
+            }
+        }
     }
 
     public class EnemySubmarine : SubmarineBase
@@ -195,9 +206,13 @@ namespace Submarine
         {
             get
             {
-                return objectContainer.Submarines
-                    .OfType<PlayerSubmarine>()
-                    .Any(s => s.Resources.Pinger.IsUsing.Value || IsInSearchRangeOf(s));
+                return
+                    objectContainer.Submarines
+                        .OfType<PlayerSubmarine>()
+                        .Any(s => s.Resources.Pinger.IsUsing.Value || IsInSearchRangeOf(s)) ||
+                    objectContainer.Lookouts
+                        .OfType<PlayerLookout>()
+                        .Any(IsInSearchRangeOf);
             }
         }
     }
