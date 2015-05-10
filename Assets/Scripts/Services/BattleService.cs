@@ -2,6 +2,7 @@
 using System;
 using System.Linq;
 using Zenject;
+using UniRx;
 
 namespace Submarine
 {
@@ -11,12 +12,15 @@ namespace Submarine
         BattleObjectContainer objectContainer;
 
         public DateTime StartDateTime { get; private set; }
+        public ReactiveProperty<int> EnemyPingerCounter { get; private set; }
 
         [PostInject]
         public void Initialize(ConnectionService connection, BattleObjectContainer objectContainer)
         {
             this.connection = connection;
             this.objectContainer = objectContainer;
+
+            EnemyPingerCounter = new ReactiveProperty<int>(0);
         }
 
         public void StartBattle()
@@ -59,7 +63,7 @@ namespace Submarine
         [RPC]
         void ReceiveSubmarineDamageEvent(int damagedViewId, int attackerOwnerId, Vector3 shockPower)
         {
-            var damaged = objectContainer.Submarines.FirstOrDefault(s => s.Hooks.photonView.viewID == damagedViewId);
+            var damaged = objectContainer.Submarines.FirstOrDefault(s => s.BattleObjectHooks.ViewId == damagedViewId);
             damaged.Damage(shockPower);
         }
 
@@ -85,6 +89,24 @@ namespace Submarine
         void ReceiveSynchronizeStartTimeEvent(long unixTime)
         {
             StartDateTime = UnixTime.FromUnixTime(unixTime);
+        }
+
+        public void SendPingerEvent(int submarineViewId, bool isStart)
+        {
+            photonView.RPC("ReceivePingerEvent", PhotonTargets.All, submarineViewId, isStart);
+        }
+
+        [RPC]
+        void ReceivePingerEvent(int submarineViewId, bool isStart)
+        {
+            var submarine = objectContainer.Submarines
+                .OfType(EnemySubmarine)
+                .FirstOrDefault(s => s.BattleObjectHooks.ViewId == submarineViewId);
+
+            if (submarine != null)
+            {
+                EnemyPingerCounter.Value += isStart ? 1 : -1;
+            }
         }
     }
 }

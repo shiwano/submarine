@@ -13,8 +13,9 @@ namespace Submarine
         readonly BattleObjectContainer objectContainer;
         readonly ThirdPersonCamera thirdPersonCamera;
         readonly Radar radar;
+        readonly CompositeDisposable disposables = new CompositeDisposable();
 
-        private PlayerSubmarine playerSubmarine;
+        PlayerSubmarine playerSubmarine;
 
         public BattleController(
             BattleInstaller.Settings settings,
@@ -40,12 +41,18 @@ namespace Submarine
 
             playerSubmarine = objectContainer.SpawnPlayerSubmarine(settings.Map.StartPositions[0]);
             thirdPersonCamera.SetTarget(playerSubmarine.Hooks.transform);
-            playerSubmarine.Resources.CanUsePinger.SubscribeToInteractable(settings.UI.PingerButton);
-            playerSubmarine.Resources.IsUsingPinger.Subscribe(radar.SetPinger);
+
+            playerSubmarine.Resources.CanUsePinger
+                .SubscribeToInteractable(settings.UI.PingerButton)
+                .AddTo(disposables);
+            playerSubmarine.Resources.IsUsingPinger
+                .Subscribe(radar.SetPinger)
+                .AddTo(disposables);
         }
 
         public void Dispose()
         {
+            disposables.Dispose();
             battleService.FinishBattle();
         }
 

@@ -18,6 +18,33 @@ namespace Submarine
         public ReactiveProperty<Vector3> TouchStartPosition { get; private set; }
         public ReactiveProperty<DateTime> TouchStartTime { get; private set; }
 
+        public IObservable<bool> ClickedAsObservable
+        {
+            get
+            {
+                return IsTouched
+                    .Where(b => !b &&
+                        TouchTime < clickTimeThreshold &&
+                        DragAmount.sqrMagnitude < sqrClickDragLengthThreshold)
+                    .Select(_ => true);
+            }
+        }
+
+        public IObservable<Unit> DecoyButtonClickedAsObservable
+        {
+            get { return uiSettings.DecoyButton.OnClickAsObservable(); }
+        }
+
+        public IObservable<Unit> PingerButtonClickedAsObservable
+        {
+            get { return uiSettings.PingerButton.OnClickAsObservable(); }
+        }
+
+        public IObservable<Unit> LookoutButtonClickedAsObservable
+        {
+            get { return uiSettings.LookoutButton.OnClickAsObservable(); }
+        }
+
         public Vector3 DragAmount
         {
             get { return Input.mousePosition - TouchStartPosition.Value; }
@@ -54,30 +81,6 @@ namespace Submarine
         public void Dispose()
         {
             disposables.Dispose();
-        }
-
-        public IObservable<bool> Clicked()
-        {
-            return IsTouched
-                .Where(b => !b &&
-                    TouchTime < clickTimeThreshold &&
-                    DragAmount.sqrMagnitude < sqrClickDragLengthThreshold)
-                .Select(_ => true);
-        }
-
-        public IObservable<Unit> DecoyButtonClicked()
-        {
-            return uiSettings.DecoyButton.OnClickAsObservable();
-        }
-
-        public IObservable<Unit> PingerButtonClicked()
-        {
-            return uiSettings.PingerButton.OnClickAsObservable();
-        }
-
-        public IObservable<Unit> LookoutButtonClicked()
-        {
-            return uiSettings.LookoutButton.OnClickAsObservable();
         }
     }
 }

@@ -87,19 +87,19 @@ namespace Submarine
                 .Subscribe(_ => Hooks.Brake())
                 .AddTo(disposables);
 
-            input.Clicked()
+            input.ClickedAsObservable
                 .Subscribe(_ => SpawnTorpedo())
                 .AddTo(disposables);
 
-            input.DecoyButtonClicked()
+            input.DecoyButtonClickedAsObservable
                 .Subscribe(_ => Debug.Log("Decoy"))
                 .AddTo(disposables);
 
-            input.PingerButtonClicked()
+            input.PingerButtonClickedAsObservable
                 .Subscribe(_ => UsePinger())
                 .AddTo(disposables);
 
-            input.LookoutButtonClicked()
+            input.LookoutButtonClickedAsObservable
                 .Subscribe(_ => Debug.Log("Lookout"))
                 .AddTo(disposables);
         }
