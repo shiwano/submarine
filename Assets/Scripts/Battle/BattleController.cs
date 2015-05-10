@@ -48,7 +48,7 @@ namespace Submarine
 
             battleService.StartBattle();
 
-            playerSubmarine = objectContainer.SpawnPlayerSubmarine(settings.Map.StartPositions[0]);
+            playerSubmarine = objectContainer.SpawnPlayerSubmarine(settings.Map.StartPositions[connection.Player.ID]);
             thirdPersonCamera.SetTarget(playerSubmarine.Hooks.transform);
 
             playerSubmarine.Resources.Decoy.CanUse

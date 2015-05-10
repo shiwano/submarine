@@ -1009,8 +1009,8 @@ MonoBehaviour:
     Radar: {fileID: 1256337061}
     Map:
       StartPositions:
-      - {x: 0, y: 17, z: 0}
-      - {x: 0, y: 17, z: 0}
+      - {x: -127, y: 17, z: 137}
+      - {x: 127, y: 17, z: -137}
       - {x: 0, y: 17, z: 0}
       - {x: 0, y: 17, z: 0}
     UI:

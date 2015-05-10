@@ -60,9 +60,9 @@ namespace Submarine
 
         public SubmarineResources()
         {
-            Decoy = new Resource(180);
-            Pinger = new Resource(60, 10);
-            Lookout = new Resource(10);
+            Decoy = new Resource(150);
+            Pinger = new Resource(50, 10);
+            Lookout = new Resource(100);
             Torpedos = new List<Resource>()
             {
                 new Resource(10),
