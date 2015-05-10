@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System;
+using System.Linq;
 using UniRx;
 using Zenject;
 
@@ -48,6 +49,19 @@ namespace Submarine
             playerSubmarine.Resources.Pinger.IsUsing
                 .Subscribe(radar.SetPinger)
                 .AddTo(disposables);
+
+            playerSubmarine.Resources.Torpedos.ForEach((torpedo, i) =>
+            {
+                var image = settings.UI.TorpedoResourceImages[i];
+                torpedo.CanUse
+                    .Subscribe(b =>
+                    {
+                        var color = Color.white;
+                        color.a = b ? 1f : 0.5f;
+                        image.color = color;
+                    })
+                    .AddTo(disposables);
+            });
         }
 
         public void Dispose()
@@ -59,8 +73,17 @@ namespace Submarine
         public void Tick()
         {
             MoveToTitleUnlessInRoom();
+            UpdateAlert();
             UpdateTimerText();
             UpdateDebugText();
+        }
+
+        void UpdateAlert()
+        {
+            var isActivePingerAlert = objectContainer.Submarines
+                .OfType<EnemySubmarine>()
+                .Any(s => s.IsUsingPinger);
+            settings.UI.PingerAlertImage.gameObject.SetActive(isActivePingerAlert);
         }
 
         void UpdateTimerText()

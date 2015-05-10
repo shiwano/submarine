@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using UniRx;
 
 namespace Submarine
@@ -10,8 +12,8 @@ namespace Submarine
             readonly int cooldownTime;
             readonly int usingTime;
 
-            IConnectableObservable<int> coolDownCounted;
-            public IObservable<int> CoolDownAsObservable { get { return coolDownCounted.AsObservable(); } }
+            IConnectableObservable<int> coolDownAsConnectable;
+            public IObservable<int> CoolDownAsObservable { get { return coolDownAsConnectable.AsObservable(); } }
             public ReactiveProperty<bool> CanUse { get; private set; }
             public ReactiveProperty<bool> IsUsing { get; private set; }
 
@@ -28,7 +30,7 @@ namespace Submarine
             {
                 if (CanUse.Value)
                 {
-                    coolDownCounted = CreateCountdownAsObservable(cooldownTime).Publish();
+                    coolDownAsConnectable = CreateCountdownAsObservable(cooldownTime).Publish();
 
                     CoolDownAsObservable
                         .Subscribe(_ => {}, e => {}, () => CanUse.Value = true);
@@ -36,7 +38,7 @@ namespace Submarine
                         .Where(t => t == cooldownTime - usingTime)
                         .Subscribe(_ => IsUsing.Value = false);
 
-                    coolDownCounted.Connect();
+                    coolDownAsConnectable.Connect();
                     CanUse.Value = false;
                     IsUsing.Value = true;
                 }
@@ -52,10 +54,16 @@ namespace Submarine
         }
 
         public Resource Pinger { get; private set; }
+        public List<Resource> Torpedos { get; private set; }
 
         public SubmarineResources()
         {
             Pinger = new Resource(60, 10);
+            Torpedos = new List<Resource>()
+            {
+                new Resource(10),
+                new Resource(10),
+            };
         }
     }
 }

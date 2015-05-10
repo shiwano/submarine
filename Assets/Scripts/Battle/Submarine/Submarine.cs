@@ -94,7 +94,7 @@ namespace Submarine
                 .AddTo(disposables);
 
             input.ClickedAsObservable
-                .Subscribe(_ => SpawnTorpedo())
+                .Subscribe(_ => UseTorpedo())
                 .AddTo(disposables);
 
             input.DecoyButtonClickedAsObservable
@@ -137,9 +137,14 @@ namespace Submarine
             base.Damage(shockPower);
         }
 
-        void SpawnTorpedo()
+        void UseTorpedo()
         {
-            objectContainer.SpawnTorpedo(Hooks.LaunchSitePosition, Hooks.transform.rotation);
+            var usableTorpedo = resources.Torpedos.FirstOrDefault(t => t.CanUse.Value);
+            if (usableTorpedo != null)
+            {
+                usableTorpedo.Use();
+                objectContainer.SpawnTorpedo(Hooks.LaunchSitePosition, Hooks.transform.rotation);
+            }
         }
 
         void UsePinger()
