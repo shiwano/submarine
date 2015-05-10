@@ -18,8 +18,7 @@ namespace Submarine
 
         public static long FromDateTime(DateTime dateTime)
         {
-            double nowTicks = (dateTime.ToUniversalTime() - UnixTime.UnixEpoch).TotalSeconds;
-            return (long)nowTicks;
+            return (long)(dateTime.ToUniversalTime() - UnixTime.UnixEpoch).TotalSeconds;
         }
     }
 }
