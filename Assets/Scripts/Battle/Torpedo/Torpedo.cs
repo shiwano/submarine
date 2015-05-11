@@ -64,23 +64,26 @@ namespace Submarine
 
         public override void Tick()
         {
-            Hooks.Target = FindNearestTarget();
-            Hooks.Accelerate(Acceleration * Constants.FpsRate);
-        }
+            var nearestObject = FindNearestObjectInTargetRange();
 
-        Transform FindNearestTarget()
-        {
-            var decoy = objectContainer.FindNearestObjectInRange<EnemyDecoy>(Position, targetRangeRadius);
-
-            if (decoy != null)
+            if (nearestObject != null && nearestObject.Type == BattleObjectType.Decoy)
             {
-                return decoy.BattleObjectHooks.transform;
+                Explode();
             }
             else
             {
-                var submarine = objectContainer.FindNearestObjectInRange<EnemySubmarine>(Position, targetRangeRadius);
-                return submarine != null ? submarine.BattleObjectHooks.transform : null;
+                Hooks.Target = nearestObject != null ?
+                    nearestObject.BattleObjectHooks.transform : null;
+                Hooks.Accelerate(Acceleration * Constants.FpsRate);
             }
+        }
+
+        IBattleObject FindNearestObjectInTargetRange()
+        {
+            var decoy = objectContainer.FindNearestObjectInRange<EnemyDecoy>(Position, targetRangeRadius);
+            return decoy != null ?
+                decoy as IBattleObject :
+                objectContainer.FindNearestObjectInRange<EnemySubmarine>(Position, targetRangeRadius);
         }
 
         void OnStriked(int? enemySubmarineViewId)
@@ -93,6 +96,11 @@ namespace Submarine
                     ShockPower
                 );
             }
+            Explode();
+        }
+
+        void Explode()
+        {
             battleService.SendEffectPlayEvent(
                 Constants.ExplosionEffectPrefab,
                 Hooks.transform.position

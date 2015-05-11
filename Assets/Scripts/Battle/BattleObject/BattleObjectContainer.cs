@@ -47,9 +47,12 @@ namespace Submarine
 
         public void Tick()
         {
-            foreach (var battleObject in battleObjects)
+            foreach (var battleObject in battleObjects.ToArray())
             {
-                battleObject.Tick();
+                if (battleObject.BattleObjectHooks != null)
+                {
+                    battleObject.Tick();
+                }
             }
         }
 
