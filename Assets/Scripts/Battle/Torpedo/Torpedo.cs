@@ -18,7 +18,7 @@ namespace Submarine
         public IBattleObjectHooks BattleObjectHooks { get { return Hooks; } }
         public Vector3 Position { get { return Hooks.transform.position; } }
         public Vector3 EulerAngles { get { return Hooks.transform.rotation.eulerAngles; } }
-        public float SearchRange { get { return 0f; } }
+        public float SearchRange { get { return 35f; } }
         public bool IsVisibleFromPlayer { get { return true; } }
 
         protected TorpedoBase(TorpedoHooks hooks)
@@ -39,8 +39,6 @@ namespace Submarine
     {
         readonly BattleService battleService;
         readonly BattleObjectContainer objectContainer;
-
-        const float targetRangeRadius = 35f;
 
         public float LifeTime { get { return 6f; } }
         public Vector3 Acceleration { get { return Hooks.transform.forward * 17f; } }
@@ -64,7 +62,7 @@ namespace Submarine
 
         public override void Tick()
         {
-            var nearestObject = FindNearestObjectInTargetRange();
+            var nearestObject = FindNearestObjectInSearchRange();
 
             if (nearestObject != null && nearestObject.Type == BattleObjectType.Decoy)
             {
@@ -78,12 +76,12 @@ namespace Submarine
             }
         }
 
-        IBattleObject FindNearestObjectInTargetRange()
+        IBattleObject FindNearestObjectInSearchRange()
         {
-            var decoy = objectContainer.FindNearestObjectInRange<EnemyDecoy>(Position, targetRangeRadius);
+            var decoy = objectContainer.FindNearestObjectInRange<EnemyDecoy>(Position, SearchRange);
             return decoy != null ?
                 decoy as IBattleObject :
-                objectContainer.FindNearestObjectInRange<EnemySubmarine>(Position, targetRangeRadius);
+                objectContainer.FindNearestObjectInRange<EnemySubmarine>(Position, SearchRange);
         }
 
         void OnStriked(int? enemySubmarineViewId)

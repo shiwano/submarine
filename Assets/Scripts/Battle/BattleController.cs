@@ -107,10 +107,15 @@ namespace Submarine
 
         void UpdateAlert()
         {
+            var isActiveDangerAlert = objectContainer.Torpedos
+                .OfType<EnemyTorpedo>()
+                .Any(playerSubmarine.IsInSearchRangeOf);
             var isActivePingerAlert = objectContainer.Submarines
                 .OfType<EnemySubmarine>()
                 .Any(s => s.IsUsingPinger);
-            settings.UI.PingerAlert.gameObject.SetActive(isActivePingerAlert);
+
+            settings.UI.DangerAlert.gameObject.SetActive(isActiveDangerAlert);
+            settings.UI.PingerAlert.gameObject.SetActive(!isActiveDangerAlert && isActivePingerAlert);
         }
 
         void UpdateTimerText()
