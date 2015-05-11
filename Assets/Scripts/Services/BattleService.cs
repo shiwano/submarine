@@ -39,7 +39,12 @@ namespace Submarine
         {
             if (connection.InRoom)
             {
-                PhotonNetwork.LeaveRoom();
+                if (connection.Player.isMasterClient)
+                {
+                    PhotonNetwork.DestroyAll();
+                }
+
+                PhotonNetwork.LeaveLobby();
             }
         }
 
