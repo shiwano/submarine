@@ -39,7 +39,7 @@ namespace Submarine
         readonly BattleObjectContainer objectContainer;
 
         public float LifeTime { get { return 5f; } }
-        public Vector3 Acceleration { get { return Hooks.transform.forward * 5f; } }
+        public Vector3 Acceleration { get { return Hooks.transform.forward * 60f; } }
 
         public PlayerDecoy(DecoyHooks hooks, BattleObjectContainer objectContainer) : base(hooks)
         {
@@ -52,10 +52,7 @@ namespace Submarine
                 .Take(1)
                 .Where(_ => Hooks != null)
                 .Subscribe(_ => objectContainer.Remove(this));
-        }
 
-        public override void Tick()
-        {
             Hooks.Accelerate(Acceleration * Constants.FpsRate);
         }
     }
