@@ -56,8 +56,8 @@ namespace Submarine
             }
             else
             {
-                transform.position = Vector3.Lerp(transform.position, receivedPosition, Time.deltaTime * 5);
-                transform.rotation = Quaternion.Lerp(transform.rotation, receivedRotation, Time.deltaTime * 5);
+                transform.position = Vector3.Lerp(transform.position, receivedPosition, Time.deltaTime * 15);
+                transform.rotation = Quaternion.Lerp(transform.rotation, receivedRotation, Time.deltaTime * 15);
             }
         }
 
