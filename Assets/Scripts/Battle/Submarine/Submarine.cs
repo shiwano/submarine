@@ -210,7 +210,7 @@ namespace Submarine
                 return
                     objectContainer.Submarines
                         .OfType<PlayerSubmarine>()
-                        .Any(s => s.Resources.Pinger.IsUsing.Value || IsInSearchRangeOf(s)) ||
+                        .Any(s => s.IsUsingPinger || IsInSearchRangeOf(s)) ||
                     objectContainer.Lookouts
                         .OfType<PlayerLookout>()
                         .Any(IsInSearchRangeOf);

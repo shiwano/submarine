@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using System.Collections.Generic;
 using DG.Tweening;
 
 namespace Submarine
@@ -54,7 +53,8 @@ namespace Submarine
 
         public void Brake()
         {
-            turningBackRotationTweaner = model.transform.DOLocalRotate(Vector3.zero, 1f).SetEase(Ease.OutExpo);
+            turningBackRotationTweaner = model.transform.DOLocalRotate(Vector3.zero, 1f)
+                .SetEase(Ease.OutExpo);
             Rigidbody.drag = dragOnBrake;
         }
 
@@ -70,7 +70,9 @@ namespace Submarine
 
         void Start()
         {
-            floatingTweaner = model.transform.DOLocalMoveY(-0.25f, 3f).SetEase(Ease.InOutQuad).SetLoops(-1, LoopType.Yoyo);
+            floatingTweaner = model.transform.DOLocalMoveY(-0.25f, 3f)
+                .SetEase(Ease.InOutQuad)
+                .SetLoops(-1, LoopType.Yoyo);
 
             if (!IsMine)
             {
