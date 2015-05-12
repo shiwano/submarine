@@ -12,7 +12,6 @@ namespace Submarine
             readonly int cooldownTime;
             readonly int usingTime;
 
-            IConnectableObservable<int> coolDownAsConnectable;
             public ReactiveProperty<bool> CanUse { get; private set; }
             public ReactiveProperty<bool> IsUsing { get; private set; }
             public ReactiveProperty<int> CountDown { get; private set; }
