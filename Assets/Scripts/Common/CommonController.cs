@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using Zenject;
+using UniRx;
 
 namespace Submarine
 {
@@ -16,6 +17,11 @@ namespace Submarine
         {
             Debug.Log("Game Start");
             Application.targetFrameRate = Constants.FrameRate;
+
+            Observable.OnceApplicationQuit()
+                .Subscribe(_ => OnApplicationQuit());
+            Observable.EveryApplicationPause()
+                .Subscribe(OnApplicationPause);
         }
 
         void OnApplicationQuit()
