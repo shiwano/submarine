@@ -18,12 +18,18 @@ namespace Submarine
 
         public void Connect()
         {
-            PhotonNetwork.ConnectUsingSettings(Constants.Version);
+            if (!Connected)
+            {
+                PhotonNetwork.ConnectUsingSettings(Constants.Version);
+            }
         }
 
         public void Disconnect()
         {
-            PhotonNetwork.Disconnect();
+            if (Connected)
+            {
+                PhotonNetwork.Disconnect();
+            }
         }
     }
 }
