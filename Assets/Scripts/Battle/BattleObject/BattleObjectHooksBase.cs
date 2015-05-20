@@ -19,8 +19,8 @@ namespace Submarine
     )]
     public abstract class BattleObjectHooksBase : Photon.MonoBehaviour, IBattleObjectHooks
     {
-        public static event Action<IBattleObjectHooks> CreatedViaNetwork = delegate {};
-        public static event Action<IBattleObjectHooks> DestroyedViaNetwork = delegate {};
+        public static event Action<IBattleObjectHooks> Created = delegate {};
+        public static event Action<IBattleObjectHooks> Destroyed = delegate {};
 
         BattleService battleService;
 
@@ -49,12 +49,12 @@ namespace Submarine
         protected virtual void Awake()
         {
             Rigidbody = GetComponent<Rigidbody>();
-            BattleObjectHooksBase.CreatedViaNetwork(this);
+            BattleObjectHooksBase.Created(this);
         }
 
         protected virtual void OnDestroy()
         {
-            BattleObjectHooksBase.DestroyedViaNetwork(this);
+            BattleObjectHooksBase.Destroyed(this);
         }
     }
 }

@@ -35,14 +35,14 @@ namespace Submarine
             this.decoyFactory = decoyFactory;
             this.lookoutFactory = lookoutFactory;
 
-            BattleObjectHooksBase.CreatedViaNetwork += OnBattleObjectHooksCreatedViaNetwork;
-            BattleObjectHooksBase.DestroyedViaNetwork += OnBattleObjectHooksDestroyedViaNetwork;
+            BattleObjectHooksBase.Created += OnBattleObjectHooksCreated;
+            BattleObjectHooksBase.Destroyed += OnBattleObjectHooksDestroyed;
         }
 
         public void Dispose()
         {
-            BattleObjectHooksBase.CreatedViaNetwork -= OnBattleObjectHooksCreatedViaNetwork;
-            BattleObjectHooksBase.DestroyedViaNetwork -= OnBattleObjectHooksDestroyedViaNetwork;
+            BattleObjectHooksBase.Created -= OnBattleObjectHooksCreated;
+            BattleObjectHooksBase.Destroyed -= OnBattleObjectHooksDestroyed;
         }
 
         public void Tick()
@@ -113,7 +113,7 @@ namespace Submarine
             BattleObjectSpawned(battleObject);
         }
 
-        void OnBattleObjectHooksCreatedViaNetwork(IBattleObjectHooks battleObjectHooks)
+        void OnBattleObjectHooksCreated(IBattleObjectHooks battleObjectHooks)
         {
             if (battleObjectHooks.IsMine) { return; }
 
@@ -138,7 +138,7 @@ namespace Submarine
             }
         }
 
-        void OnBattleObjectHooksDestroyedViaNetwork(IBattleObjectHooks battleObjectHooks)
+        void OnBattleObjectHooksDestroyed(IBattleObjectHooks battleObjectHooks)
         {
             var battleObject = battleObjects.Find(s => s.BattleObjectHooks == battleObjectHooks);
 
