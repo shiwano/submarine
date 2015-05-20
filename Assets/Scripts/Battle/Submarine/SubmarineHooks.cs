@@ -18,9 +18,13 @@ namespace Submarine
         [SerializeField]
         Material enemySubmarineMaterial;
 
+        #region PhotonValues
         Vector3 receivedPosition = Vector3.zero;
         Quaternion receivedRotation = Quaternion.identity;
         Quaternion receivedModelRotation = Quaternion.identity;
+
+        public bool IsUsingPinger { get; set; }
+        #endregion
 
         Tweener floatingTweaner;
         Tweener turningBackRotationTweaner;
@@ -97,12 +101,14 @@ namespace Submarine
                 stream.SendNext(transform.position);
                 stream.SendNext(transform.rotation);
                 stream.SendNext(model.transform.rotation);
+                stream.SendNext(IsUsingPinger);
             }
             else
             {
                 receivedPosition = (Vector3)stream.ReceiveNext();
                 receivedRotation = (Quaternion)stream.ReceiveNext();
                 receivedModelRotation = (Quaternion)stream.ReceiveNext();
+                IsUsingPinger = (bool)stream.ReceiveNext();
             }
         }
     }

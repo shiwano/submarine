@@ -99,23 +99,5 @@ namespace Submarine
         {
             StartDateTime = UnixTime.FromUnixTime(unixTime);
         }
-
-        public void SendPingerEvent(int submarineViewId, bool isUsingPinger)
-        {
-            photonView.RPC("ReceivePingerEvent", PhotonTargets.Others, submarineViewId, isUsingPinger);
-        }
-
-        [RPC]
-        void ReceivePingerEvent(int submarineViewId, bool isUsingPinger)
-        {
-            var enemySubmarine = objectContainer.Submarines
-                .OfType<EnemySubmarine>()
-                .FirstOrDefault(s => s.BattleObjectHooks.ViewId == submarineViewId);
-
-            if (enemySubmarine != null)
-            {
-                enemySubmarine.SetUsingPinger(isUsingPinger);
-            }
-        }
     }
 }
