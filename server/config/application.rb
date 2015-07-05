@@ -22,5 +22,24 @@ module SubmarineApi
 
     # Do not swallow errors in after_commit/after_rollback callbacks.
     config.active_record.raise_in_transactional_callbacks = true
+
+    config.paths["config/routes.rb"] << "#{Rails.root}/lib/typhen_api/typhen_api/routes.rb"
+    config.autoload_paths << "#{Rails.root}/lib/typhen_api"
+    config.assets.enabled = false
+
+    config.generators do |g|
+      g.assets false
+      g.helper false
+      g.template_engine false
+      g.factory_girl false
+      g.test_framework :rspec,
+        fixture: true,
+        fixture_replacement: :factory_girl,
+        view_specs: false,
+        routing_specs: false,
+        helper_specs: false,
+        integration_tool: false
+    end
+>>>>>>> 38217bb... a
   end
 end
