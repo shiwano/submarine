@@ -1,0 +1,9 @@
+class {{controllerName this}}Controller < ApplicationController
+  include TyphenApi::Controller::{{upperCamelCase fullName}}
+  include TyphenApiValidation
+
+  def service
+    # Implement here.
+    render_response({{#each callSignatures.0.returnType.properties}}{{name}}: nil{{#unless @last}}, {{/unless}}{{/each}})
+  end
+end

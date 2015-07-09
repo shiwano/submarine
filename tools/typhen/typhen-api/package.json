@@ -1,0 +1,16 @@
+{
+  "name": "typhen-api",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {},
+  "devDependencies": {},
+  "author": {
+    "name": "Shogo Iwano",
+    "email": "shiwano@gmail.com"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "rimraf-promise": "^1.0.0"
+  }
+}
