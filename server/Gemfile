@@ -50,7 +50,7 @@ group :development, :test do
   gem 'timecop'
   gem 'database_rewinder'
   gem "faker"
-  gem 'tapp'
+  gem 'tapp-awesome_print'
   gem 'annotate', '~> 2.6.6'
 end
 
