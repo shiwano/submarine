@@ -33,7 +33,7 @@ gem 'sdoc', '~> 0.4.0', group: :doc
 # gem 'capistrano-rails', group: :development
 
 gem 'virtus'
-gem 'annotate', '~> 2.6.6'
+gem 'sorcery'
 
 group :development, :test do
   gem 'spring'
@@ -50,5 +50,6 @@ group :development, :test do
   gem 'database_rewinder'
   gem "faker"
   gem 'tapp'
+  gem 'annotate', '~> 2.6.6'
 end
 
