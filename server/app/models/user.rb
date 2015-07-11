@@ -16,4 +16,14 @@
 
 class User < ActiveRecord::Base
   authenticates_with_sorcery!
+
+  validates :password, length: { minimum: 6 }
+
+  validates :name, presence: true
+  validates :name, uniqueness: true
+  validates :name, length: { minimum: 3 }
+
+  def to_api_type
+    TyphenApi::Model::Submarine::User.new(id: id, name: name)
+  end
 end
