@@ -3,7 +3,6 @@ class PingController < ApplicationController
   include TyphenApiValidation
 
   def service
-    # Implement here.
-    render_response(message: nil)
+    render_response(message: params.message + ' PONG')
   end
 end
