@@ -179,6 +179,7 @@ Rails.application.config.sorcery.configure do |config|
     #
     # user.username_attribute_names =
 
+    user.username_attribute_names = [:name]
 
     # change *virtual* password attribute, the one which is used until an encrypted one is generated.
     # Default: `:password`
