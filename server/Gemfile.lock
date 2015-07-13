@@ -163,6 +163,8 @@ GEM
       rails-deprecated_sanitizer (>= 1.0.1)
     rails-html-sanitizer (1.0.2)
       loofah (~> 2.0)
+    rails_config (0.4.2)
+      activesupport (>= 3.0)
     railties (4.2.1)
       actionpack (= 4.2.1)
       activesupport (= 4.2.1)
@@ -263,6 +265,7 @@ DEPENDENCIES
   mysql2
   pry-rails
   rails (= 4.2.1)
+  rails_config
   redis-session-store
   rspec-rails (~> 3.0)
   sass-rails (~> 5.0)
