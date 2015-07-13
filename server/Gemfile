@@ -49,7 +49,7 @@ group :development, :test do
   gem 'hirb-unicode'
 
   gem 'timecop'
-  gem 'database_rewinder'
+  gem 'database_cleaner'
   gem "faker"
   gem 'tapp-awesome_print'
   gem 'annotate', '~> 2.6.6'

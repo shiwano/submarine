@@ -1,12 +1,14 @@
+require 'database_cleaner'
+
 RSpec.configure do |config|
   config.include FactoryGirl::Syntax::Methods
 
-  config.before :suite do
+  config.before(:suite) do
     begin
-      DatabaseRewinder.start
+      DatabaseCleaner.start
       FactoryGirl.lint
     ensure
-      DatabaseRewinder.clean
+      DatabaseCleaner.clean
     end
   end
 end
