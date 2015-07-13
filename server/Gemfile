@@ -33,9 +33,11 @@ gem 'sdoc', '~> 0.4.0', group: :doc
 # gem 'capistrano-rails', group: :development
 
 gem 'virtus'
+
 gem 'sorcery'
 gem 'redis-session-store'
 gem "rails_config"
+gem "squeel"
 
 group :development, :test do
   gem 'spring'
