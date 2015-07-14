@@ -29,13 +29,13 @@ RSpec.describe 'Login', type: :request do
 
     context 'with an incorrect password' do
       it 'should raise login error' do
-        expect { post login_path, name: user.name, password: 'incorrect' }.to raise_error(ApplicationError::Login)
+        expect { post login_path, name: user.name, password: 'incorrect' }.to raise_error(ApplicationError::LoginFailed)
       end
     end
 
     context 'with an incorrect user name' do
       it 'should raise login error' do
-        expect { post login_path, name: 'unknown', password: 'secret' }.to raise_error(ApplicationError::Login)
+        expect { post login_path, name: 'unknown', password: 'secret' }.to raise_error(ApplicationError::LoginFailed)
       end
     end
 

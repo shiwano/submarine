@@ -3,7 +3,16 @@ class ApplicationController < ActionController::Base
   # For APIs, you may want to use :null_session instead.
   # protect_from_forgery with: :exception
 
+  before_action :require_login_for_api
   rescue_from StandardError, with: :render_500
+
+  def require_login_for_api
+    require_login unless no_authentication_required?
+  end
+
+  def not_authenticated
+    raise ApplicationError::NotAuthenticated.new('Not authenticated')
+  end
 
   def render_500(e)
     if Rails.env.test?

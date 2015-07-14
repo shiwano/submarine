@@ -4,7 +4,7 @@ class LoginController < ApplicationController
 
   def service
     if logged_in_user.blank?
-      raise ApplicationError::Login.new('The user name or password is incorrect')
+      raise ApplicationError::LoginFailed.new('The user name or password is incorrect')
     end
 
     render_response(user: logged_in_user.to_api_type)

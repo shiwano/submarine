@@ -1,14 +1,17 @@
 require 'rails_helper'
 
 RSpec.describe "FindUser", type: :request do
-
   describe "POST /find_user" do
+    before do
+      user = create :user, :with_stupid_password
+      login_user(user)
+
+      create :user, name: 'Shimakaze'
+      create :user, name: 'Yamato'
+    end
 
     context 'with a valid request' do
       before do
-        create :user, name: 'Shimakaze'
-        create :user, name: 'Yamato'
-        create :user, name: 'Naka'
         post find_user_path, name: 'Shimakaze'
       end
 
@@ -32,7 +35,5 @@ RSpec.describe "FindUser", type: :request do
         expect(response_json[:user]).to be_nil
       end
     end
-
   end
-
 end
