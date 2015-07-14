@@ -2,7 +2,7 @@
 
 module.exports = function(typhen) {
   var pluginForRails = typhen.loadPlugin(__dirname + '/typhen-api/index', {
-    templateName: 'server/rails',
+    templateName: 'rails',
     targetModule: 'Submarine'
   });
 

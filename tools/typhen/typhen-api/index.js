@@ -7,7 +7,7 @@ module.exports = function(typhen, options) {
   assert(options, 'options is empty');
   assert(typeof options.templateName === 'string', 'options.templateName is required');
 
-  var template = require(path.join(__dirname, 'lib', options.templateName))(typhen, options);
+  var template = require(path.join(__dirname, 'lib', options.templateName, 'index.js'))(typhen, options);
 
   if (template.requiredTargetModule) {
     assert(typeof options.targetModule === 'string', 'options.targetModule is required');

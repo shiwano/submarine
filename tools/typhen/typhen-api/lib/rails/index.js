@@ -51,42 +51,42 @@ module.exports = function(typhen) {
       var rmPath = path.join(generator.outputDirectory, 'lib/typhen_api');
 
       return rimrafPromise(rmPath).then(function() {
-        generator.generateUnlessExist('templates/server/rails/controller/validation.hbs', 'app/controllers/concerns/typhen_api_validation.rb');
-        generator.generate('templates/server/rails/typhen_api.hbs', 'lib/typhen_api/typhen_api.rb');
-        generator.generate('templates/server/rails/controller.hbs', 'lib/typhen_api/typhen_api/controller.rb');
-        generator.generate('templates/server/rails/model.hbs', 'lib/typhen_api/typhen_api/model.rb');
+        generator.generateUnlessExist('lib/rails/templates/controller/validation.hbs', 'app/controllers/concerns/typhen_api_validation.rb');
+        generator.generate('lib/rails/templates/typhen_api.hbs', 'lib/typhen_api/typhen_api.rb');
+        generator.generate('lib/rails/templates/controller.hbs', 'lib/typhen_api/typhen_api/controller.rb');
+        generator.generate('lib/rails/templates/model.hbs', 'lib/typhen_api/typhen_api/model.rb');
 
         var functions = modules.filter(function(m) { return m === targetModule || m.ancestorModules.indexOf(targetModule) > -1; })
           .map(function(module) { return module.functions; })
           .reduce(function(a, b) { return a.concat(b); });
 
-        generator.generate('templates/server/rails/routes.hbs', 'lib/typhen_api/typhen_api/routes.rb', functions);
+        generator.generate('lib/rails/templates/routes.hbs', 'lib/typhen_api/typhen_api/routes.rb', functions);
 
         functions.forEach(function(func) {
           var controllerPath = 'app/controllers/' + helpers.controllerPath(func) + '_controller.rb';
-          generator.generateUnlessExist('templates/server/rails/controller/app_controller.hbs', controllerPath, func);
-          generator.generate('templates/server/rails/controller/controller.hbs', 'underscore:lib/typhen_api/typhen_api/controller/**/*.rb', func);
-          generator.generateUnlessExist('templates/server/rails/controller/module.hbs', 'underscore:lib/typhen_api/typhen_api/controller/**/*.rb', func.parentModule);
+          generator.generateUnlessExist('lib/rails/templates/controller/app_controller.hbs', controllerPath, func);
+          generator.generate('lib/rails/templates/controller/controller.hbs', 'underscore:lib/typhen_api/typhen_api/controller/**/*.rb', func);
+          generator.generateUnlessExist('lib/rails/templates/controller/module.hbs', 'underscore:lib/typhen_api/typhen_api/controller/**/*.rb', func.parentModule);
 
           if (func.parentModule !== targetModule) {
             var modulePath = 'app/controllers/' + helpers.controllerPath(func.parentModule) + '.rb';
-            generator.generateUnlessExist('templates/server/rails/controller/app_module.hbs', modulePath, func.parentModule);
+            generator.generateUnlessExist('lib/rails/templates/controller/app_module.hbs', modulePath, func.parentModule);
           }
         });
 
         types.forEach(function(type) {
           switch (type.kind) {
             case typhen.SymbolKind.Enum:
-              generator.generate('templates/server/rails/model/enum.hbs', 'underscore:lib/typhen_api/typhen_api/model/**/*.rb', type);
+              generator.generate('lib/rails/templates/model/enum.hbs', 'underscore:lib/typhen_api/typhen_api/model/**/*.rb', type);
               break;
             case typhen.SymbolKind.Interface:
             case typhen.SymbolKind.ObjectType:
-              generator.generate('templates/server/rails/model/object.hbs', 'underscore:lib/typhen_api/typhen_api/model/**/*.rb', type);
+              generator.generate('lib/rails/templates/model/object.hbs', 'underscore:lib/typhen_api/typhen_api/model/**/*.rb', type);
               break;
             default:
               return;
           }
-          generator.generateUnlessExist('templates/server/rails/model/module.hbs', 'underscore:lib/typhen_api/typhen_api/model/**/*.rb', type.parentModule);
+          generator.generateUnlessExist('lib/rails/templates/model/module.hbs', 'underscore:lib/typhen_api/typhen_api/model/**/*.rb', type.parentModule);
         });
       });
     }
