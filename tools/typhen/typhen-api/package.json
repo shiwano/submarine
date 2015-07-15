@@ -11,6 +11,6 @@
   },
   "license": "MIT",
   "dependencies": {
-    "rimraf-promise": "^1.0.0"
+    "fs-extra": "^0.22.1"
   }
 }
