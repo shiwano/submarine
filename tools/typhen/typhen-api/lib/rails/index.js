@@ -21,7 +21,7 @@ module.exports = function(typhen) {
     },
     typeName: function(type) {
       var name = type.isPrimitiveType || type.isArray ? type.name : 'TyphenApi::Model::' + type.fullName;
-      return typhen.helpers.upperCamelCase(name);
+      return name === 'nil' ? name : typhen.helpers.upperCamelCase(name);
     },
     responsePropertyName: function(symbol) {
       var inflection = symbol.ancestorModules[0].tagTable.responsePropertyInflection;
@@ -76,6 +76,10 @@ module.exports = function(typhen) {
             generator.generate('lib/rails/templates/model/enum.hbs', 'underscore:lib/typhen_api/typhen_api/model/**/*.rb', type);
             break;
           case typhen.SymbolKind.Interface:
+            if (!type.isGenericType || type.typeArguments.length > 0) {
+              generator.generate('lib/rails/templates/model/object.hbs', 'underscore:lib/typhen_api/typhen_api/model/**/*.rb', type);
+            }
+            break;
           case typhen.SymbolKind.ObjectType:
             generator.generate('lib/rails/templates/model/object.hbs', 'underscore:lib/typhen_api/typhen_api/model/**/*.rb', type);
             break;
