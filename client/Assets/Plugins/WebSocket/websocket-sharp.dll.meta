@@ -1,10 +1,5 @@
 fileFormatVersion: 2
-guid: aadb37a20a33632429047acaef43658a
-labels:
-- ExitGames
-- PUN
-- Photon
-- Networking
+guid: 748eb70bc0d7515498ef73fed155520a
 PluginImporter:
   serializedVersion: 1
   iconMap: {}
@@ -12,7 +7,7 @@ PluginImporter:
   isPreloaded: 0
   platformData:
     Android:
-      enabled: 1
+      enabled: 0
       settings:
         CPU: AnyCPU
     Any:
@@ -25,48 +20,33 @@ PluginImporter:
         DefaultValueInitialized: true
         OS: AnyOS
     Linux:
-      enabled: 1
+      enabled: 0
       settings:
         CPU: x86
     Linux64:
-      enabled: 1
+      enabled: 0
       settings:
         CPU: x86_64
-    LinuxUniversal:
-      enabled: 1
-      settings: {}
     OSXIntel:
-      enabled: 1
+      enabled: 0
       settings:
         CPU: AnyCPU
     OSXIntel64:
-      enabled: 1
+      enabled: 0
       settings:
         CPU: AnyCPU
-    OSXUniversal:
-      enabled: 1
-      settings: {}
     WP8:
       enabled: 0
       settings:
         CPU: AnyCPU
         DontProcess: False
         PlaceholderPath: 
-    Web:
-      enabled: 1
-      settings: {}
-    WebGL:
-      enabled: 1
-      settings: {}
-    WebStreamed:
-      enabled: 1
-      settings: {}
     Win:
-      enabled: 1
+      enabled: 0
       settings:
         CPU: AnyCPU
     Win64:
-      enabled: 1
+      enabled: 0
       settings:
         CPU: AnyCPU
     WindowsStoreApps:
@@ -77,7 +57,7 @@ PluginImporter:
         PlaceholderPath: 
         SDK: AnySDK
     iOS:
-      enabled: 1
+      enabled: 0
       settings:
         CompileFlags: 
         FrameworkDependencies: 

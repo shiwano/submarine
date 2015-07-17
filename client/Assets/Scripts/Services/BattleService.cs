@@ -63,7 +63,7 @@ namespace Submarine
             photonView.RPC("ReceiveSubmarineDamageEvent", PhotonTargets.All, damagedViewId, attackerOwnerId, shockPower);
         }
 
-        [RPC]
+        [PunRPC]
         void ReceiveSubmarineDamageEvent(int damagedViewId, int attackerOwnerId, Vector3 shockPower)
         {
             var damaged = objectContainer.Submarines.FirstOrDefault(s => s.BattleObjectHooks.ViewId == damagedViewId);
@@ -81,7 +81,7 @@ namespace Submarine
             photonView.RPC("ReceiveEffectPlayEvent", PhotonTargets.All, resourceName, position);
         }
 
-        [RPC]
+        [PunRPC]
         public void ReceiveEffectPlayEvent(string resourcePath, Vector3 position)
         {
             var prefab = Resources.Load(resourcePath);
@@ -94,7 +94,7 @@ namespace Submarine
             photonView.RPC("ReceiveSynchronizeStartTimeEvent", PhotonTargets.All, UnixTime.Now);
         }
 
-        [RPC]
+        [PunRPC]
         void ReceiveSynchronizeStartTimeEvent(long unixTime)
         {
             StartDateTime = UnixTime.FromUnixTime(unixTime);
