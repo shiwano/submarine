@@ -4,6 +4,6 @@ class {{controllerName this}}Controller < ApplicationController
 
   def service
     # Implement here.
-    render_response({{#each callSignatures.0.returnType.properties}}{{responsePropertyName this}}: nil{{#unless @last}}, {{/unless}}{{/each}})
+    render_response({{#each callSignatures.0.returnType.properties}}{{serializablePropertyName this}}: nil{{#unless @last}}, {{/unless}}{{/each}})
   end
 end

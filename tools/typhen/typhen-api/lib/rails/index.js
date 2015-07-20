@@ -23,8 +23,8 @@ module.exports = function(typhen) {
       var name = type.isPrimitiveType || type.isArray ? type.name : 'TyphenApi::Model::' + type.fullName;
       return name === 'nil' ? name : typhen.helpers.upperCamelCase(name);
     },
-    responsePropertyName: function(symbol) {
-      var inflection = symbol.ancestorModules[0].tagTable.responsePropertyInflection;
+    serializablePropertyName: function(symbol) {
+      var inflection = symbol.ancestorModules[0].tagTable.serializablePropertyInflection;
       var helperName = inflection ? inflection.value : 'underscore';
       return typhen.helpers[helperName](symbol.name);
     }

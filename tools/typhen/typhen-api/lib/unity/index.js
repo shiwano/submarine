@@ -38,8 +38,8 @@ module.exports = function(typhen, options) {
     uriSuffix: function(symbol) {
       return symbol.ancestorModules[0].tagTable.uriSuffix;
     },
-    responsePropertyName: function(symbol) {
-      var inflection = symbol.ancestorModules[0].tagTable.responsePropertyInflection;
+    serializablePropertyName: function(symbol) {
+      var inflection = symbol.ancestorModules[0].tagTable.serializablePropertyInflection;
       var helperName = inflection ? inflection.value : 'underscore';
       return typhen.helpers[helperName](symbol.name);
     }

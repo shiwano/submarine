@@ -28,7 +28,7 @@ namespace TyphenApi.WebApi{{#if namespace}}.Parts.{{upperCamelCase namespace}}{{
             {{#if comment}}
             /// <summary>{{comment}}</summary>
             {{/if}}
-            [TyphenApi.SerializablePropertyAttribute("{{responsePropertyName this}}", {{isOptional}})]
+            [TyphenApi.SerializablePropertyAttribute("{{serializablePropertyName this}}", {{isOptional}})]
             public {{{typeName type}}}{{{nullableToken type isOptional}}} {{upperCamelCase name}} { get; set; }
             {{/each}}
         }
@@ -36,11 +36,11 @@ namespace TyphenApi.WebApi{{#if namespace}}.Parts.{{upperCamelCase namespace}}{{
         {{#if ../comment}}
         /// <summary>{{../comment}}</summary>
         {{/if}}
-        public TyphenApi.WebApiRequest<{{typeName callSignatures.0.returnType}}, {{errorTypeName this}}> {{upperCamelCase name}}({{#each callSignatures.0.parameters}}{{{typeName type}}}{{{nullableToken type isOptional}}} {{responsePropertyName this}}{{#if isOptional}} = null{{/if}}{{#unless @last}}, {{/unless}}{{/each}})
+        public TyphenApi.WebApiRequest<{{typeName callSignatures.0.returnType}}, {{errorTypeName this}}> {{upperCamelCase name}}({{#each callSignatures.0.parameters}}{{{typeName type}}}{{{nullableToken type isOptional}}} {{serializablePropertyName this}}{{#if isOptional}} = null{{/if}}{{#unless @last}}, {{/unless}}{{/each}})
         {
             var requestBody = new {{upperCamelCase name}}RequestParameters();
             {{#each callSignatures.0.parameters}}
-            requestBody.{{upperCamelCase name}} = {{responsePropertyName this}};
+            requestBody.{{upperCamelCase name}} = {{serializablePropertyName this}};
             {{/each}}
 
             var request = new TyphenApi.WebApiRequest<{{typeName callSignatures.0.returnType}}, {{errorTypeName this}}>(

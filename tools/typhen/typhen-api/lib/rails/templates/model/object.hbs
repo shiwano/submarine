@@ -5,7 +5,7 @@ module TyphenApi::Model{{#if namespace}}::{{namespace}}{{/if}}
     include Virtus.model(:strict => true)
 
     {{#each properties}}
-    attribute :{{responsePropertyName this}}, {{typeName type}}, :required => {{#if isOptional}}false{{else}}true{{/if}}
+    attribute :{{serializablePropertyName this}}, {{typeName type}}, :required => {{#if isOptional}}false{{else}}true{{/if}}
     {{/each}}
   end
 end

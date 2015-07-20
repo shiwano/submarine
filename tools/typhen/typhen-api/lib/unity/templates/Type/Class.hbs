@@ -15,7 +15,7 @@ namespace TyphenApi.Type{{#if namespace}}.{{upperCamelCase namespace}}{{/if}}
         {{#if comment}}
         /// <summary>{{comment}}</summary>
         {{/if}}
-        [TyphenApi.SerializablePropertyAttribute("{{responsePropertyName this}}", {{isOptional}})]
+        [TyphenApi.SerializablePropertyAttribute("{{serializablePropertyName this}}", {{isOptional}})]
         public {{{typeName type}}}{{{nullableToken type isOptional}}} {{upperCamelCase name}} { get; set; }
         {{/each}}
     }
