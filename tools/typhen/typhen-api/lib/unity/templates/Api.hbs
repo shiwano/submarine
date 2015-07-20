@@ -1,0 +1,21 @@
+using System;
+
+namespace TyphenApi
+{
+    public static class Api
+    {
+        {{#each modules}}
+        public static TyphenApi.WebApi.{{upperCamelCase name}} {{upperCamelCase name}}(string baseUri)
+        {
+            var uri = new Uri(baseUri);
+            var controller = new Controller.Submarine();
+            var sender = new WebApiRequestSenderWWW();
+            var serializer = new JSONSerializer();
+            return new TyphenApi.WebApi.{{upperCamelCase name}}(uri, controller, sender, serializer);
+        }
+        {{#unless @last}}
+
+        {{/unless}}
+        {{/each}}
+    }
+}
