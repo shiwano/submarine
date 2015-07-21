@@ -85,7 +85,7 @@ module.exports = function(typhen, options) {
       });
 
       var apiModules = modules.filter(function(module) { return !module.isGlobalModule && !module.parentModule; });
-      generator.generateUnlessExist('lib/unity/templates/Api.hbs', 'TyphenApi/Api.cs', { modules: apiModules });
+      generator.generateUnlessExist('lib/unity/templates/Api.hbs', 'TyphenApi/Generated/Api.cs', { modules: apiModules });
 
       types.forEach(function(type) {
         switch (type.kind) {

@@ -7,17 +7,15 @@ namespace TyphenApi.WebApi{{#if namespace}}.Parts.{{upperCamelCase namespace}}{{
     public class {{upperCamelCase name}} : TyphenApi.WebApiBase<{{errorTypeName this}}>
     {
         {{#each modules}}
-        public TyphenApi.WebApi.Parts.{{upperCamelCase fullName}} {{upperCamelCase name}} { get; private set; }
+        public TyphenApi.WebApi.Parts.{{upperCamelCase fullName}}<T> {{upperCamelCase name}} { get; private set; }
         {{#if @last}}
 
         {{/if}}
         {{/each}}
-        public {{upperCamelCase name}}(Uri baseUri, IWebApiController<{{errorTypeName this}}> controller,
-            IWebApiRequestSender requestSender, ISerializer serializer) :
-            base(baseUri, controller, requestSender, serializer)
+        public {{upperCamelCase name}}(Uri baseUri, IWebApiController<{{errorTypeName this}}> controller) : base(baseUri, controller)
         {
             {{#each modules}}
-            {{upperCamelCase name}} = new TyphenApi.WebApi.Parts.{{upperCamelCase fullName}}(baseUri, controller, requestSender, serializer);
+            {{upperCamelCase name}} = new TyphenApi.WebApi.Parts.{{upperCamelCase fullName}}<T>(baseUri, Controller);
             {{/each}}
         }
         {{#each functions}}
