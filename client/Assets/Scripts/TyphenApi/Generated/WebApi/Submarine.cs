@@ -6,9 +6,7 @@ namespace TyphenApi.WebApi
 {
     public class Submarine : TyphenApi.WebApiBase<TyphenApi.Type.Submarine.Error>
     {
-        public Submarine(Uri baseUri, IWebApiController<TyphenApi.Type.Submarine.Error> controller,
-            IWebApiRequestSender requestSender, ISerializer serializer) :
-            base(baseUri, controller, requestSender, serializer)
+        public Submarine(Uri baseUri, IWebApiController<TyphenApi.Type.Submarine.Error> controller) : base(baseUri, controller)
         {
         }
 
