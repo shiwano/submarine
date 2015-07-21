@@ -2,19 +2,12 @@
 
 var path = require('path');
 var fs = require('fs-extra');
+var _ = require('lodash');
 
-module.exports = function(typhen) {
-  var helpers = {
+module.exports = function(typhen, modules, helpers) {
+  helpers = _.assign(helpers, {
     controllerName: function(func) {
       return typhen.helpers.upperCamelCase(func.fullName).split('::').slice(1).join('::');
-    },
-    uriPath: function(func) {
-      var inflection = func.ancestorModules[0].tagTable.uriInflection;
-      var helperName = inflection ? inflection.value : 'underscore';
-      return typhen.helpers[helperName](func.fullName).split('::').slice(1).join('/');
-    },
-    uriSuffix: function(symbol) {
-      return symbol.ancestorModules[0].tagTable.uriSuffix;
     },
     controllerPath: function(symbol) {
       return typhen.helpers.underscore(symbol.fullName).split('::').slice(1).join('/');
@@ -22,13 +15,8 @@ module.exports = function(typhen) {
     typeName: function(type) {
       var name = type.isPrimitiveType || type.isArray ? type.name : 'TyphenApi::Model::' + type.fullName;
       return name === 'nil' ? name : typhen.helpers.upperCamelCase(name);
-    },
-    serializablePropertyName: function(symbol) {
-      var inflection = symbol.ancestorModules[0].tagTable.serializablePropertyInflection;
-      var helperName = inflection ? inflection.value : 'underscore';
-      return typhen.helpers[helperName](symbol.name);
     }
-  };
+  });
 
   return {
     requiredTargetModule: true,

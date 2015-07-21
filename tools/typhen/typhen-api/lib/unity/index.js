@@ -4,14 +4,15 @@ var path = require('path');
 var fs = require('fs-extra');
 var assert = require('assert');
 var glob = require('glob');
+var _ = require('lodash');
 
-module.exports = function(typhen, options) {
-  var helpers = {
+module.exports = function(typhen, options, helpers) {
+  helpers = _.assign(helpers, {
     errorTypeName: function(symbol) {
       if (symbol.parentModule) {
         return 'TyphenApi.Type.' + typhen.helpers.upperCamelCase(symbol.ancestorModules[0].fullName) + '.Error';
       } else {
-        assert(symbol.isModule, 'not module');
+        assert(symbol.isModule, 'should be a module');
         return 'TyphenApi.Type.' + typhen.helpers.upperCamelCase(symbol.name) + '.Error';
       }
     },
@@ -25,25 +26,8 @@ module.exports = function(typhen, options) {
       return (type.isPrimitiveType && type.name !== 'void') || type.isArray || type.isTypeParameter ?
         type.name :
         'TyphenApi.Type.' + typhen.helpers.upperCamelCase(type.fullName);
-    },
-    method: function(func) {
-      var name = func.tagTable.method ? func.tagTable.method : 'post';
-      return typhen.helpers.upperCamelCase(name);
-    },
-    uriPath: function(func) {
-      var inflection = func.ancestorModules[0].tagTable.uriInflection;
-      var helperName = inflection ? inflection.value : 'underscore';
-      return typhen.helpers[helperName](func.fullName).split('.').slice(1).join('/');
-    },
-    uriSuffix: function(symbol) {
-      return symbol.ancestorModules[0].tagTable.uriSuffix;
-    },
-    serializablePropertyName: function(symbol) {
-      var inflection = symbol.ancestorModules[0].tagTable.serializablePropertyInflection;
-      var helperName = inflection ? inflection.value : 'underscore';
-      return typhen.helpers[helperName](symbol.name);
     }
-  };
+  });
 
   return {
     requiredTargetModule: false,

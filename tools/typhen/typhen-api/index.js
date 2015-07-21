@@ -2,12 +2,40 @@
 
 var path = require('path');
 var assert = require('assert');
+var _ = require('lodash');
 
 module.exports = function(typhen, options) {
   assert(options, 'options is empty');
   assert(typeof options.templateName === 'string', 'options.templateName is required');
 
-  var template = require(path.join(__dirname, 'lib', options.templateName, 'index.js'))(typhen, options);
+  var helpers = {
+    method: function(symbol) {
+      assert(symbol.isSignature, 'should be a function call signature');
+      var method = symbol.tagTable.method ? symbol.tagTable.method.value : 'post';
+      assert(_.includes(['post', 'get', 'delete', 'put'], method), 'unsupported HTTP method: ' + method);
+      return method;
+    },
+    uriPath: function(symbol) {
+      assert(symbol.isFunction || symbol.isSignature, 'should be a function or signature');
+      var inflection = symbol.ancestorModules[0].tagTable.uriInflection;
+      var helperName = inflection ? inflection.value : 'underscore';
+      assert(_.includes(['underscore', 'upperCamelCase', 'lowerCamelCase'], helperName), 'unsupported inflection type: ' + helperName);
+      return typhen.helpers[helperName](symbol.fullName).split(template.namespaceSeparator).slice(1).join('/');
+    },
+    uriSuffix: function(symbol) {
+      assert(symbol.isFunction || symbol.isSignature, 'should be a function or signature');
+      return symbol.ancestorModules[0].tagTable.uriSuffix;
+    },
+    serializablePropertyName: function(symbol) {
+      assert(symbol.isProperty || symbol.isParameter, 'should be a property or function parameter');
+      var inflection = symbol.ancestorModules[0].tagTable.serializablePropertyInflection;
+      var helperName = inflection ? inflection.value : 'underscore';
+      assert(_.includes(['underscore', 'upperCamelCase', 'lowerCamelCase'], helperName), 'unsupported inflection type: ' + helperName);
+      return typhen.helpers[helperName](symbol.name);
+    }
+  };
+
+  var template = require(path.join(__dirname, 'lib', options.templateName, 'index.js'))(typhen, options, helpers);
 
   if (template.requiredTargetModule) {
     assert(typeof options.targetModule === 'string', 'options.targetModule is required');
