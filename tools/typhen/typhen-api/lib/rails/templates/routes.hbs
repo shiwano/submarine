@@ -4,7 +4,7 @@ Rails.application.routes.draw do
 
 {{#each this}}
 {{#each callSignatures}}
-  {{defaultValue tagTable.method 'post'}} '{{uriPath this}}{{uriSuffix this}}' => '{{controllerPath this}}#service'
+  {{method this}} '{{uriPath this}}{{uriSuffix this}}' => '{{controllerPath this}}#service'
 {{/each}}
 {{/each}}
 
