@@ -1,16 +1,20 @@
 using TyphenApi.Type.{{upperCamelCase name}};
 
-namespace TyphenApi.Controller
+namespace TyphenApi.Controller.WebApi
 {
     public class {{upperCamelCase name}} : IWebApiController<Error>
     {
         public IWebApiRequestSender RequestSender { get; private set; }
         public ISerializer Serializer { get; private set; }
+        public IDeserializer Deserializer { get; private set; }
 
         public {{upperCamelCase name}}()
         {
             RequestSender = new WebApiRequestSenderWWW();
-            Serializer = new JSONSerializer();
+
+            var jsonSerializer = new JSONSerializer();
+            Serializer = jsonSerializer;
+            Deserializer = jsonSerializer;
         }
 
         public void OnBeforeRequestSend(IWebApiRequest request)

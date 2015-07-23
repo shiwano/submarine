@@ -7,15 +7,24 @@ namespace TyphenApi.WebApi{{#if namespace}}.Parts.{{upperCamelCase namespace}}{{
     public class {{upperCamelCase name}} : TyphenApi.WebApiBase<{{errorTypeName this}}>
     {
         {{#each modules}}
-        public TyphenApi.WebApi.Parts.{{upperCamelCase fullName}}<T> {{upperCamelCase name}} { get; private set; }
+        public TyphenApi.WebApi.Parts.{{upperCamelCase fullName}} {{upperCamelCase name}} { get; private set; }
         {{#if @last}}
 
         {{/if}}
         {{/each}}
-        public {{upperCamelCase name}}(Uri baseUri, IWebApiController<{{errorTypeName this}}> controller) : base(baseUri, controller)
+        public {{upperCamelCase name}}(string baseUri) : base(baseUri)
         {
+            Controller = new TyphenApi.Controller.WebApi.{{upperCamelCase fullName}}();
             {{#each modules}}
-            {{upperCamelCase name}} = new TyphenApi.WebApi.Parts.{{upperCamelCase fullName}}<T>(baseUri, Controller);
+            {{upperCamelCase name}} = new TyphenApi.WebApi.Parts.{{upperCamelCase fullName}}(baseUri, Controller);
+            {{/each}}
+        }
+
+        public {{upperCamelCase name}}(string baseUri, IWebApiController<{{errorTypeName this}}> controller) : base(baseUri)
+        {
+            Controller = controller;
+            {{#each modules}}
+            {{upperCamelCase name}} = new TyphenApi.WebApi.Parts.{{upperCamelCase fullName}}(baseUri, Controller);
             {{/each}}
         }
         {{#each functions}}
@@ -41,8 +50,7 @@ namespace TyphenApi.WebApi{{#if namespace}}.Parts.{{upperCamelCase namespace}}{{
             requestBody.{{upperCamelCase name}} = {{serializablePropertyName this}};
             {{/each}}
 
-            var request = new TyphenApi.WebApiRequest<{{typeName callSignatures.0.returnType}}, {{errorTypeName this}}>(
-                Controller, RequestSender, Serializer);
+            var request = new TyphenApi.WebApiRequest<{{typeName callSignatures.0.returnType}}, {{errorTypeName this}}>(Controller);
             request.Uri = new Uri(BaseUri, "{{uriPath this}}{{uriSuffix this}}");
             request.Method = HttpMethod.{{upperCamelCase (method callSignatures.[0])}};
             request.Body = requestBody;

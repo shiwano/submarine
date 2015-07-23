@@ -63,13 +63,10 @@ module.exports = function(typhen, options, helpers) {
           generator.generate('lib/unity/templates/WebApi/WebApi.hbs', 'upperCamelCase:TyphenApi/Generated/WebApi/**/*.cs', module);
 
           if (!module.parentModule) {
-            generator.generateUnlessExist('lib/unity/templates/Controller/WebApiController.hbs', 'upperCamelCase:TyphenApi/Controller/*.cs', module);
+            generator.generateUnlessExist('lib/unity/templates/Controller/WebApiController.hbs', 'upperCamelCase:TyphenApi/Controller/WebApi/*.cs', module);
           }
         }
       });
-
-      var apiModules = modules.filter(function(module) { return !module.isGlobalModule && !module.parentModule; });
-      generator.generateUnlessExist('lib/unity/templates/Api.hbs', 'TyphenApi/Generated/Api.cs', { modules: apiModules });
 
       types.forEach(function(type) {
         switch (type.kind) {
