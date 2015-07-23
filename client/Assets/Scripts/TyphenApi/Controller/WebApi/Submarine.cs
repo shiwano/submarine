@@ -1,16 +1,20 @@
 using TyphenApi.Type.Submarine;
 
-namespace TyphenApi.Controller
+namespace TyphenApi.Controller.WebApi
 {
     public class Submarine : IWebApiController<Error>
     {
         public IWebApiRequestSender RequestSender { get; private set; }
         public ISerializer Serializer { get; private set; }
+        public IDeserializer Deserializer { get; private set; }
 
         public Submarine()
         {
             RequestSender = new WebApiRequestSenderWWW();
-            Serializer = new JSONSerializer();
+
+            var jsonSerializer = new JSONSerializer();
+            Serializer = jsonSerializer;
+            Deserializer = jsonSerializer;
         }
 
         public void OnBeforeRequestSend(IWebApiRequest request)
