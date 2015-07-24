@@ -5,8 +5,8 @@ namespace TyphenApi
     public interface IWebApiController<ErrorT> where ErrorT : TypeBase
     {
         IWebApiRequestSender RequestSender { get; }
-        ISerializer Serializer { get; }
-        IDeserializer Deserializer { get; }
+        ISerializer RequestSerializer { get; }
+        IDeserializer ResponseDeserializer { get; }
 
         void OnBeforeRequestSend(IWebApiRequest request);
         void OnRequestError(WebApiError<ErrorT> error);

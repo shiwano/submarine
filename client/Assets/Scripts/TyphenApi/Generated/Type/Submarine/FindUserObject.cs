@@ -6,7 +6,7 @@ namespace TyphenApi.Type.Submarine
 {
     public partial class FindUserObject : TyphenApi.TypeBase
     {
-        [TyphenApi.SerializablePropertyAttribute("user", true)]
+        protected static readonly SerializationInfo<FindUserObject, TyphenApi.Type.Submarine.User> user = new SerializationInfo<FindUserObject, TyphenApi.Type.Submarine.User>("user", true, (x) => x.User, (x, v) => x.User = v);
         public TyphenApi.Type.Submarine.User User { get; set; }
     }
 }

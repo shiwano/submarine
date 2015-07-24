@@ -3,7 +3,6 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Reflection;
 using System.Text;
 using MiniJSON;
 
@@ -42,42 +41,37 @@ namespace TyphenApi
         Dictionary<string, object> SerializeClassOrStruct(object obj)
         {
             var dict = new Dictionary<string, object>();
-            var objType = obj.GetType();
 
-            foreach (var property in objType.GetProperties())
+            foreach (var info in SerializationInfoUtility.FindAll(obj))
             {
-                var attributes = property.GetCustomAttributes(typeof(SerializablePropertyAttribute), true);
+                var value = info.GetValue(obj);
+                var valueType = info.ValueType;
 
-                foreach (var attribute in attributes)
+                if (value == null)
                 {
-                    var metaInfo = (SerializablePropertyAttribute)attribute;
-                    var value = property.GetValue(obj, null);
-
-                    if (metaInfo.IsOptional && value == null)
+                    if (info.IsOptional)
                     {
                         continue;
                     }
-
-                    var valueType = property.PropertyType;
-
-                    if (value == null && IsNullableType(valueType))
-                    {
-                        var message = string.Format("{0}.{1} is not allowed to be null.", objType.FullName, property.Name);
-                        throw new NoNullAllowedException(message);
-                    }
-                    else if (IsSerializableValue(value, valueType))
-                    {
-                        dict[metaInfo.PropertyName] = valueType.IsEnum ? (int)value : value;
-                    }
-                    else if (IsSerializableObject(valueType))
-                    {
-                        dict[metaInfo.PropertyName] = SerializeClassOrStruct(value);
-                    }
                     else
                     {
-                        var message = string.Format("Failed to serialize {0} ({1}) to {2}.{3}", value, valueType, objType.FullName, property.Name);
-                        throw new SerializeFailedError(message);
+                        var message = string.Format("{0}.{1} is not allowed to be null.", obj.GetType().FullName, info.PropertyName);
+                        throw new NoNullAllowedException(message);
                     }
+                }
+
+                if (IsSerializableValue(value, valueType))
+                {
+                    dict[info.PropertyName] = valueType.IsEnum ? (long)value : value;
+                }
+                else if (IsSerializableObject(valueType))
+                {
+                    dict[info.PropertyName] = SerializeClassOrStruct(value);
+                }
+                else
+                {
+                    var message = string.Format("Failed to serialize {0} ({1}) to {2}.{3}", value, valueType, obj.GetType().FullName, info.PropertyName);
+                    throw new SerializeFailedException(message);
                 }
             }
             return dict;
@@ -87,52 +81,40 @@ namespace TyphenApi
         {
             object obj = Activator.CreateInstance(objType);
 
-            foreach (var property in objType.GetProperties())
+            foreach (var info in SerializationInfoUtility.FindAll(objType))
             {
-                var attributes = property.GetCustomAttributes(typeof(SerializablePropertyAttribute), true);
+                var value = dict[info.PropertyName];
+                var valueType = info.ValueType;
 
-                foreach (var attribute in attributes)
+                if (value == null)
                 {
-                    var metaInfo = (SerializablePropertyAttribute)attribute;
-                    var value = dict[metaInfo.PropertyName];
-
-                    if (value == null)
+                    if (info.IsOptional)
                     {
-                        if (metaInfo.IsOptional)
-                        {
-                            continue;
-                        }
-                        else
-                        {
-                            var message = string.Format("{0}.{1} is not allowed to be null.", objType.FullName, property.Name);
-                            throw new NoNullAllowedException(message);
-                        }
-                    }
-
-                    var valueType = property.PropertyType;
-
-                    if (IsSerializableValue(value, valueType))
-                    {
-                        property.SetValue(obj, Convert.ChangeType(value, valueType), null);
-                    }
-                    else if (IsSerializableObject(valueType))
-                    {
-                        var parsed = DeserializeClassOrStruct(valueType, (Dictionary<string, object>)value);
-                        property.SetValue(obj, parsed, null);
+                        continue;
                     }
                     else
                     {
-                        var message = string.Format("Failed to deserialize {0} ({1}) to {2}.{3}", value, valueType, objType.FullName, property.Name);
-                        throw new DeserializeFailedError(message);
+                        var message = string.Format("{0}.{1} is not allowed to be null.", objType.FullName, info.PropertyName);
+                        throw new NoNullAllowedException(message);
                     }
+                }
+
+                if (IsSerializableValue(value, valueType))
+                {
+                    info.SetValue(obj, value);
+                }
+                else if (IsSerializableObject(valueType))
+                {
+                    var parsed = DeserializeClassOrStruct(valueType, (Dictionary<string, object>)value);
+                    info.SetValue(obj, parsed);
+                }
+                else
+                {
+                    var message = string.Format("Failed to deserialize {0} ({1}) to {2}.{3}", value, valueType, objType.FullName, info.PropertyName);
+                    throw new DeserializeFailedException(message);
                 }
             }
             return obj;
-        }
-
-        bool IsNullableType(System.Type type)
-        {
-            return type.IsClass || Nullable.GetUnderlyingType(type) != null;
         }
 
         bool IsIDictionaryImplementation(System.Type type)

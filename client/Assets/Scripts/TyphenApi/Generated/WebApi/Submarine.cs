@@ -18,7 +18,7 @@ namespace TyphenApi.WebApi
 
         class PingRequestParameters : TyphenApi.TypeBase
         {
-            [TyphenApi.SerializablePropertyAttribute("message", false)]
+            protected static readonly SerializationInfo<PingRequestParameters, string> message = new SerializationInfo<PingRequestParameters, string>("message", false, (x) => x.Message, (x, v) => x.Message = v);
             public string Message { get; set; }
         }
 
@@ -37,9 +37,9 @@ namespace TyphenApi.WebApi
 
         class SignUpRequestParameters : TyphenApi.TypeBase
         {
-            [TyphenApi.SerializablePropertyAttribute("name", false)]
+            protected static readonly SerializationInfo<SignUpRequestParameters, string> name = new SerializationInfo<SignUpRequestParameters, string>("name", false, (x) => x.Name, (x, v) => x.Name = v);
             public string Name { get; set; }
-            [TyphenApi.SerializablePropertyAttribute("password", false)]
+            protected static readonly SerializationInfo<SignUpRequestParameters, string> password = new SerializationInfo<SignUpRequestParameters, string>("password", false, (x) => x.Password, (x, v) => x.Password = v);
             public string Password { get; set; }
         }
 
@@ -59,9 +59,9 @@ namespace TyphenApi.WebApi
 
         class LoginRequestParameters : TyphenApi.TypeBase
         {
-            [TyphenApi.SerializablePropertyAttribute("name", false)]
+            protected static readonly SerializationInfo<LoginRequestParameters, string> name = new SerializationInfo<LoginRequestParameters, string>("name", false, (x) => x.Name, (x, v) => x.Name = v);
             public string Name { get; set; }
-            [TyphenApi.SerializablePropertyAttribute("password", false)]
+            protected static readonly SerializationInfo<LoginRequestParameters, string> password = new SerializationInfo<LoginRequestParameters, string>("password", false, (x) => x.Password, (x, v) => x.Password = v);
             public string Password { get; set; }
         }
 
@@ -81,7 +81,7 @@ namespace TyphenApi.WebApi
 
         class FindUserRequestParameters : TyphenApi.TypeBase
         {
-            [TyphenApi.SerializablePropertyAttribute("name", false)]
+            protected static readonly SerializationInfo<FindUserRequestParameters, string> name = new SerializationInfo<FindUserRequestParameters, string>("name", false, (x) => x.Name, (x, v) => x.Name = v);
             public string Name { get; set; }
         }
 

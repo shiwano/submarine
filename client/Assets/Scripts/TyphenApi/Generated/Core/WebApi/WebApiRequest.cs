@@ -39,7 +39,7 @@ namespace TyphenApi
         public Dictionary<string, string> Headers { get; set; }
         public bool NoAuthenticationRequired { get; set; }
         public TypeBase Body { get; set; }
-        public byte[] BodyBytes { get { return controller.Serializer.Serialize(Body); } }
+        public byte[] BodyBytes { get { return controller.RequestSerializer.Serialize(Body); } }
         public bool HasSent { get { return sendingRoutine != null; } }
 
         public WebApiResponse<ResponseT> Response { get; private set; }
@@ -77,10 +77,10 @@ namespace TyphenApi
             {
                 try
                 {
-                    var response = controller.Deserializer.Deserialize<ResponseT>(bytes);
+                    var response = controller.ResponseDeserializer.Deserialize<ResponseT>(bytes);
                     Response = new WebApiResponse<ResponseT>(headers, response);
                 }
-                catch (SerializationError)
+                catch (SerializationException)
                 {
                     Error = new WebApiError<ErrorT>(headers, null, bytes, "Failed to deserialize a response");
                 }
@@ -89,10 +89,10 @@ namespace TyphenApi
             {
                 try
                 {
-                    var error = controller.Deserializer.Deserialize<ErrorT>(bytes);
+                    var error = controller.ResponseDeserializer.Deserialize<ErrorT>(bytes);
                     Error = new WebApiError<ErrorT>(headers, error, bytes, errorText);
                 }
-                catch (SerializationError)
+                catch (SerializationException)
                 {
                     Error = new WebApiError<ErrorT>(headers, null, bytes, errorText);
                 }

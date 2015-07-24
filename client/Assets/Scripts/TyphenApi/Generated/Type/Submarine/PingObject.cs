@@ -6,7 +6,7 @@ namespace TyphenApi.Type.Submarine
 {
     public partial class PingObject : TyphenApi.TypeBase
     {
-        [TyphenApi.SerializablePropertyAttribute("message", false)]
+        protected static readonly SerializationInfo<PingObject, string> message = new SerializationInfo<PingObject, string>("message", false, (x) => x.Message, (x, v) => x.Message = v);
         public string Message { get; set; }
     }
 }

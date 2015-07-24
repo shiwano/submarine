@@ -6,11 +6,11 @@ namespace TyphenApi.Type.Submarine
 {
     public partial class Error : TyphenApi.TypeBase
     {
-        [TyphenApi.SerializablePropertyAttribute("code", false)]
-        public int Code { get; set; }
-        [TyphenApi.SerializablePropertyAttribute("name", false)]
+        protected static readonly SerializationInfo<Error, long> code = new SerializationInfo<Error, long>("code", false, (x) => x.Code, (x, v) => x.Code = v);
+        public long Code { get; set; }
+        protected static readonly SerializationInfo<Error, string> name = new SerializationInfo<Error, string>("name", false, (x) => x.Name, (x, v) => x.Name = v);
         public string Name { get; set; }
-        [TyphenApi.SerializablePropertyAttribute("message", false)]
+        protected static readonly SerializationInfo<Error, string> message = new SerializationInfo<Error, string>("message", false, (x) => x.Message, (x, v) => x.Message = v);
         public string Message { get; set; }
     }
 }
