@@ -87,6 +87,7 @@ module.exports = function(typhen, options, helpers) {
       if (!options.excludeUnityFiles) {
         generator.generate('lib/unity/templates/Unity/WebApiRequestSenderWWW.cs', 'TyphenApi/Generated/Core/Unity/WebApiRequestSenderWWW.cs');
         generator.generate('lib/unity/templates/Unity/WebApiRequest.Unity.cs', 'TyphenApi/Generated/Core/Unity/WebApiRequest.Unity.cs');
+        generator.generate('lib/unity/templates/Unity/FormDataSerializer.cs', 'TyphenApi/Generated/Core/Unity/FormDataSerializer.cs');
 
         if (options.includeUniRxFiles) {
           generator.generate('lib/unity/templates/Unity/WebApiRequest.UniRx.cs', 'TyphenApi/Generated/Core/Unity/WebApiRequest.UniRx.cs');

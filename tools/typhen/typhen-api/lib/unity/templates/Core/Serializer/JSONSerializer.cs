@@ -76,7 +76,7 @@ namespace TyphenApi
                     else
                     {
                         var message = string.Format("Failed to serialize {0} ({1}) to {2}.{3}", value, valueType, objType.FullName, property.Name);
-                        throw new SerializeFailedError(message);
+                        throw new SerializeFailedException(message);
                     }
                 }
             }
@@ -123,7 +123,7 @@ namespace TyphenApi
                     else
                     {
                         var message = string.Format("Failed to deserialize {0} ({1}) to {2}.{3}", value, valueType, objType.FullName, property.Name);
-                        throw new DeserializeFailedError(message);
+                        throw new DeserializeFailedException(message);
                     }
                 }
             }

@@ -80,7 +80,7 @@ namespace TyphenApi
                     var response = controller.Deserializer.Deserialize<ResponseT>(bytes);
                     Response = new WebApiResponse<ResponseT>(headers, response);
                 }
-                catch (SerializationError)
+                catch (SerializationException)
                 {
                     Error = new WebApiError<ErrorT>(headers, null, bytes, "Failed to deserialize a response");
                 }
@@ -92,7 +92,7 @@ namespace TyphenApi
                     var error = controller.Deserializer.Deserialize<ErrorT>(bytes);
                     Error = new WebApiError<ErrorT>(headers, error, bytes, errorText);
                 }
-                catch (SerializationError)
+                catch (SerializationException)
                 {
                     Error = new WebApiError<ErrorT>(headers, null, bytes, errorText);
                 }
