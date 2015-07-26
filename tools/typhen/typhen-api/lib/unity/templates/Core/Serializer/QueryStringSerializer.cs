@@ -2,7 +2,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Reflection;
 using System.Text;
 
 namespace TyphenApi
@@ -11,55 +10,45 @@ namespace TyphenApi
     {
         public byte[] Serialize(object obj)
         {
-            var objType = obj.GetType();
             var texts = new List<string>();
 
-            foreach (var property in objType.GetProperties())
+            foreach (var info in SerializationInfoUtility.FindAll(obj))
             {
-                var attributes = property.GetCustomAttributes(typeof(SerializablePropertyAttribute), true);
+                var value = info.GetValue(obj);
+                var valueType = info.ValueType;
 
-                foreach (var attribute in attributes)
+                if (value == null)
                 {
-                    var metaInfo = (SerializablePropertyAttribute)attribute;
-                    var value = property.GetValue(obj, null);
-
-                    if (metaInfo.IsOptional && value == null)
+                    if (info.IsOptional && value == null)
                     {
                         continue;
                     }
-
-                    var valueType = property.PropertyType;
-
-                    if (value == null && IsNullableType(valueType))
-                    {
-                        var message = string.Format("{0}.{1} is not allowed to be null.", objType.FullName, property.Name);
-                        throw new NoNullAllowedException(message);
-                    }
-                    else if (IsSerializableValue(value, valueType))
-                    {
-                        var fixedValue = valueType.IsEnum ? (int)value : value;
-                        var keyValueText = string.Format("{0}={1}",
-                            Uri.EscapeDataString(metaInfo.PropertyName),
-                            Uri.EscapeDataString(fixedValue.ToString())
-                        );
-                        texts.Add(keyValueText);
-                    }
                     else
                     {
-                        var message = string.Format("Failed to serialize {0} ({1}) to {2}.{3}", value, valueType, objType.FullName, property.Name);
-                        throw new SerializeFailedException(message);
+                        var message = string.Format("{0}.{1} is not allowed to be null.", obj.GetType().FullName, info.PropertyName);
+                        throw new NoNullAllowedException(message);
                     }
+                }
+
+                if (IsSerializableValue(value, valueType))
+                {
+                    var fixedValue = valueType.IsEnum ? (int)value : value;
+                    var keyValueText = string.Format("{0}={1}",
+                        Uri.EscapeDataString(info.PropertyName),
+                        Uri.EscapeDataString(fixedValue.ToString())
+                    );
+                    texts.Add(keyValueText);
+                }
+                else
+                {
+                    var message = string.Format("Failed to serialize {0} ({1}) to {2}.{3}", value, valueType, obj.GetType().FullName, info.PropertyName);
+                    throw new SerializeFailedException(message);
                 }
             }
 
             return texts.Count > 0 ?
                 Encoding.ASCII.GetBytes("?" + string.Join("&", texts.ToArray())) :
                 Encoding.ASCII.GetBytes(string.Empty);
-        }
-
-        bool IsNullableType(System.Type type)
-        {
-            return type.IsClass || Nullable.GetUnderlyingType(type) != null;
         }
 
         bool IsSerializableValue(object value, System.Type valueType)

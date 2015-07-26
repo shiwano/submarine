@@ -10,46 +10,36 @@ namespace TyphenApi
             var objType = obj.GetType();
             var form = new WWWForm();
 
-            foreach (var property in objType.GetProperties())
+            foreach (var info in SerializationInfoUtility.FindAll(obj))
             {
-                var attributes = property.GetCustomAttributes(typeof(SerializablePropertyAttribute), true);
+                var value = info.GetValue(obj);
+                var valueType = info.ValueType;
 
-                foreach (var attribute in attributes)
+                if (value == null)
                 {
-                    var metaInfo = (SerializablePropertyAttribute)attribute;
-                    var value = property.GetValue(obj, null);
-
-                    if (metaInfo.IsOptional && value == null)
+                    if (info.IsOptional)
                     {
                         continue;
                     }
-
-                    var valueType = property.PropertyType;
-
-                    if (value == null && IsNullableType(valueType))
-                    {
-                        var message = string.Format("{0}.{1} is not allowed to be null.", objType.FullName, property.Name);
-                        throw new NoNullAllowedException(message);
-                    }
-                    else if (IsSerializableValue(value, valueType))
-                    {
-                        var fixedValue = valueType.IsEnum ? (int)value : value;
-                        form.AddField(metaInfo.PropertyName, fixedValue.ToString());
-                    }
                     else
                     {
-                        var message = string.Format("Failed to serialize {0} ({1}) to {2}.{3}", value, valueType, objType.FullName, property.Name);
-                        throw new SerializeFailedException(message);
+                        var message = string.Format("{0}.{1} is not allowed to be null.", objType.FullName, info.PropertyName);
+                        throw new NoNullAllowedException(message);
                     }
                 }
+
+                if (IsSerializableValue(value, valueType))
+                {
+                    var fixedValue = valueType.IsEnum ? (int)value : value;
+                    form.AddField(info.PropertyName, fixedValue.ToString());
+                }
+                else
+                {
+                    var message = string.Format("Failed to serialize {0} ({1}) to {2}.{3}", value, valueType, objType.FullName, info.PropertyName);
+                    throw new SerializeFailedException(message);
+                }
             }
-
             return form.data;
-        }
-
-        bool IsNullableType(System.Type type)
-        {
-            return type.IsClass || Nullable.GetUnderlyingType(type) != null;
         }
 
         bool IsSerializableValue(object value, System.Type valueType)

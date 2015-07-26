@@ -38,9 +38,9 @@ module.exports = function(typhen, options, helpers) {
       if (symbol.isArray) {
         return 'List<' + typhen.helpers.upperCamelCase(symbol.type) + '>';
       } else if (name === 'number') {
-        return 'float';
+        return 'double';
       } else if (name === 'integer') {
-        return 'int';
+        return 'long';
       } else if (name === 'boolean') {
         return 'bool';
       } else if (symbol.isGenericType && symbol.typeArguments.length > 0) {
