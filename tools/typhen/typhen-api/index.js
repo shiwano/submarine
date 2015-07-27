@@ -4,6 +4,16 @@ var path = require('path');
 var assert = require('assert');
 var _ = require('lodash');
 
+function isWebApiModule(module) {
+  if (module.functions.length > 0) {
+    return true;
+  } else if (module.modules) {
+    return _.any(module.modules, function(m) { return isWebApiModule(m); });
+  } else {
+    return false;
+  }
+}
+
 module.exports = function(typhen, options) {
   assert(options, 'options is empty');
   assert(typeof options.templateName === 'string', 'options.templateName is required');
@@ -67,14 +77,17 @@ module.exports = function(typhen, options) {
         assert(targetModule, options.targetModule + ' module is not found');
       }
 
-      modules.forEach(function(module) {
-        if (module.parentModule === null || !module.parentModule.isGlobalModule) { return; }
-        var errorType = module.types.filter(function(t) { return t.name === 'Error'; })[0];
-        assert(errorType, 'Not found Error type in ' + module.name + ' module');
+      var filteredTypes = types.filter(function(t) { return !t.tagTable.internal; });
+      var filteredModules = modules.filter(function(m) { return !m.isGlobalModule; });
+
+      filteredModules.forEach(function(module) {
+        if (module.parentModule === null && isWebApiModule(module)) {
+          var errorType = module.types.filter(function(t) { return t.name === 'Error'; })[0];
+          assert(errorType, 'Undefined the Error type in ' + module.name + ' module');
+        }
       });
 
-      var filteredTypes = types.filter(function(t) { return !t.tagTable.internal; });
-      return template.generate(generator, filteredTypes, modules, targetModule);
+      return template.generate(generator, filteredTypes, filteredModules, targetModule);
     }
   });
 };
