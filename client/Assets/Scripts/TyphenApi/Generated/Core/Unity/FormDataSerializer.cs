@@ -10,7 +10,7 @@ namespace TyphenApi
             var objType = obj.GetType();
             var form = new WWWForm();
 
-            foreach (var info in SerializationInfoUtility.FindAll(obj))
+            foreach (var info in SerializationInfoFinder.FindAll(obj))
             {
                 var value = info.GetValue(obj);
                 var valueType = info.ValueType;

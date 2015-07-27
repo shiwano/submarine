@@ -12,14 +12,14 @@ namespace TyphenApi
         {
             var texts = new List<string>();
 
-            foreach (var info in SerializationInfoUtility.FindAll(obj))
+            foreach (var info in SerializationInfoFinder.FindAll(obj))
             {
                 var value = info.GetValue(obj);
                 var valueType = info.ValueType;
 
                 if (value == null)
                 {
-                    if (info.IsOptional && value == null)
+                    if (info.IsOptional)
                     {
                         continue;
                     }

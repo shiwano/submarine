@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace TyphenApi.Type.Submarine
 {
-    public partial class PingObject : TyphenApi.TypeBase
+    public partial class PingObject : TyphenApi.TypeBase<PingObject>
     {
         protected static readonly SerializationInfo<PingObject, string> message = new SerializationInfo<PingObject, string>("message", false, (x) => x.Message, (x, v) => x.Message = v);
         public string Message { get; set; }

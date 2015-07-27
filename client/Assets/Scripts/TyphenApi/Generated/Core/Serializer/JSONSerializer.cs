@@ -42,7 +42,7 @@ namespace TyphenApi
         {
             var dict = new Dictionary<string, object>();
 
-            foreach (var info in SerializationInfoUtility.FindAll(obj))
+            foreach (var info in SerializationInfoFinder.FindAll(obj))
             {
                 var value = info.GetValue(obj);
                 var valueType = info.ValueType;
@@ -81,7 +81,7 @@ namespace TyphenApi
         {
             object obj = Activator.CreateInstance(objType);
 
-            foreach (var info in SerializationInfoUtility.FindAll(objType))
+            foreach (var info in SerializationInfoFinder.FindAll(objType))
             {
                 var value = dict[info.PropertyName];
                 var valueType = info.ValueType;

@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace TyphenApi.Type.Submarine
 {
-    public partial class Error : TyphenApi.TypeBase
+    public partial class Error : TyphenApi.TypeBase<Error>
     {
         protected static readonly SerializationInfo<Error, long> code = new SerializationInfo<Error, long>("code", false, (x) => x.Code, (x, v) => x.Code = v);
         public long Code { get; set; }

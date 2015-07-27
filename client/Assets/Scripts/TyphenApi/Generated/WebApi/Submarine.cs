@@ -16,7 +16,7 @@ namespace TyphenApi.WebApi
             Controller = controller;
         }
 
-        class PingRequestParameters : TyphenApi.TypeBase
+        class PingRequestParameters : TyphenApi.TypeBase<PingRequestParameters>
         {
             protected static readonly SerializationInfo<PingRequestParameters, string> message = new SerializationInfo<PingRequestParameters, string>("message", false, (x) => x.Message, (x, v) => x.Message = v);
             public string Message { get; set; }
@@ -35,7 +35,7 @@ namespace TyphenApi.WebApi
             return request;
         }
 
-        class SignUpRequestParameters : TyphenApi.TypeBase
+        class SignUpRequestParameters : TyphenApi.TypeBase<SignUpRequestParameters>
         {
             protected static readonly SerializationInfo<SignUpRequestParameters, string> name = new SerializationInfo<SignUpRequestParameters, string>("name", false, (x) => x.Name, (x, v) => x.Name = v);
             public string Name { get; set; }
@@ -57,7 +57,7 @@ namespace TyphenApi.WebApi
             return request;
         }
 
-        class LoginRequestParameters : TyphenApi.TypeBase
+        class LoginRequestParameters : TyphenApi.TypeBase<LoginRequestParameters>
         {
             protected static readonly SerializationInfo<LoginRequestParameters, string> name = new SerializationInfo<LoginRequestParameters, string>("name", false, (x) => x.Name, (x, v) => x.Name = v);
             public string Name { get; set; }
@@ -79,7 +79,7 @@ namespace TyphenApi.WebApi
             return request;
         }
 
-        class FindUserRequestParameters : TyphenApi.TypeBase
+        class FindUserRequestParameters : TyphenApi.TypeBase<FindUserRequestParameters>
         {
             protected static readonly SerializationInfo<FindUserRequestParameters, string> name = new SerializationInfo<FindUserRequestParameters, string>("name", false, (x) => x.Name, (x, v) => x.Name = v);
             public string Name { get; set; }
