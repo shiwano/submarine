@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace TyphenApi.Type{{#if namespace}}.{{upperCamelCase namespace}}{{/if}}
 {
-    public partial class {{upperCamelCase name}}{{#if typeParameters}}<{{#each typeParameters}}{{name}}{{#unless @last}}, {{/unless}}{{/each}}>{{/if}} : {{#if baseTypes}}TyphenApi.Type.{{upperCamelCase baseTypes.0.fullName}}{{else}}TyphenApi.TypeBase{{/if}}
+    public partial class {{upperCamelCase name}}{{#if typeParameters}}<{{#each typeParameters}}{{name}}{{#unless @last}}, {{/unless}}{{/each}}>{{/if}} : {{#if baseTypes}}TyphenApi.Type.{{upperCamelCase baseTypes.0.fullName}}{{else}}TyphenApi.TypeBase<{{upperCamelCase name}}>{{/if}}
       {{#each typeParameters}}
       {{#if constraint}}
       where {{name}} : {{{typeName constraint}}}

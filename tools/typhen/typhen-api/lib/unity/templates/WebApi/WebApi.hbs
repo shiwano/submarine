@@ -29,7 +29,7 @@ namespace TyphenApi.WebApi{{#if namespace}}.Parts.{{upperCamelCase namespace}}{{
         }
         {{#each functions}}
 
-        class {{upperCamelCase name}}RequestParameters : TyphenApi.TypeBase
+        class {{upperCamelCase name}}RequestParameters : TyphenApi.TypeBase<{{upperCamelCase name}}RequestParameters>
         {
             {{#each callSignatures.0.parameters}}
             {{#if comment}}

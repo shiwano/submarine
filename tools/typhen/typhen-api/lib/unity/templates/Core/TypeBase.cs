@@ -6,17 +6,12 @@ namespace TyphenApi
 {
     public abstract class TypeBase
     {
-        static readonly JSONSerializer jsonSerializer = new JSONSerializer();
-        static readonly QueryStringSerializer queryStringSerializer = new QueryStringSerializer();
+        protected static readonly JSONSerializer jsonSerializer = new JSONSerializer();
+        protected static readonly QueryStringSerializer queryStringSerializer = new QueryStringSerializer();
 
         public override string ToString()
         {
             return ToJSON();
-        }
-
-        public static T FromJSON<T>(string text) where T : TypeBase, new()
-        {
-            return jsonSerializer.Deserialize<T>(Encoding.UTF8.GetBytes(text));
         }
 
         public string ToJSON()
@@ -27,6 +22,14 @@ namespace TyphenApi
         public string ToQueryString()
         {
             return Encoding.UTF8.GetString(queryStringSerializer.Serialize(this));
+        }
+    }
+
+    public abstract class TypeBase<T> : TypeBase where T : new()
+    {
+        public static T FromJSON(string text)
+        {
+            return jsonSerializer.Deserialize<T>(Encoding.UTF8.GetBytes(text));
         }
     }
 }
