@@ -7,16 +7,20 @@ namespace TyphenApi.WebApi{{#if namespace}}.Parts.{{upperCamelCase namespace}}{{
     public class {{upperCamelCase name}} : TyphenApi.WebApiBase<{{errorTypeName this}}>
     {
         {{#each modules}}
+        {{#if functions}}
         public TyphenApi.WebApi.Parts.{{upperCamelCase fullName}} {{upperCamelCase name}} { get; private set; }
         {{#if @last}}
 
+        {{/if}}
         {{/if}}
         {{/each}}
         public {{upperCamelCase name}}(string baseUri) : base(baseUri)
         {
             Controller = new TyphenApi.Controller.WebApi.{{upperCamelCase fullName}}();
             {{#each modules}}
+            {{#if functions}}
             {{upperCamelCase name}} = new TyphenApi.WebApi.Parts.{{upperCamelCase fullName}}(baseUri, Controller);
+            {{/if}}
             {{/each}}
         }
 
@@ -24,7 +28,9 @@ namespace TyphenApi.WebApi{{#if namespace}}.Parts.{{upperCamelCase namespace}}{{
         {
             Controller = controller;
             {{#each modules}}
+            {{#if functions}}
             {{upperCamelCase name}} = new TyphenApi.WebApi.Parts.{{upperCamelCase fullName}}(baseUri, Controller);
+            {{/if}}
             {{/each}}
         }
         {{#each functions}}

@@ -59,7 +59,7 @@ module.exports = function(typhen, options, helpers) {
       generator.generate('lib/unity/templates/Type/Void.cs', 'TyphenApi/Generated/Type/Void.cs');
 
       modules.forEach(function(module) {
-        if (!module.isGlobalModule) {
+        if (!module.isGlobalModule && module.functions.length > 0) {
           generator.generate('lib/unity/templates/WebApi/WebApi.hbs', 'upperCamelCase:TyphenApi/Generated/WebApi/**/*.cs', module);
 
           if (!module.parentModule) {
