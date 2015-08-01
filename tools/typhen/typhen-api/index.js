@@ -9,8 +9,6 @@ function isWebApiModule(module) {
     return true;
   } else if (module.modules) {
     return _.any(module.modules, function(m) { return isWebApiModule(m); });
-  } else {
-    return false;
   }
 }
 
