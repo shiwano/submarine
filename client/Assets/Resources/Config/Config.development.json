@@ -1,0 +1,4 @@
+{
+  "version": "1.0",
+  "web_api_server_base_uri": "http://localhost:3000"
+}
