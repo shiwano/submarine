@@ -7,6 +7,11 @@ declare module Submarine {
     message: string;
   }
 
+  interface Config {
+    version: string;
+    webApiServerBaseUri: string;
+  }
+
   interface User {
     id: integer;
     name: string;

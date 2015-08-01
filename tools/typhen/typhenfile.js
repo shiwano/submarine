@@ -19,10 +19,7 @@ module.exports = function(typhen) {
   }).then(function() {
     return typhen.run({
       plugin: pluginForUnity,
-      src: [
-        __dirname + '/../../contract/main.d.ts',
-        __dirname + '/../../contract/client.d.ts'
-      ],
+      src: __dirname + '/../../contract/main.d.ts',
       dest: __dirname + '/../../client/Assets/Scripts',
       typingDirectory: __dirname + '/../../contract',
       defaultLibFileName: __dirname + '/../../contract/lib.typhenApi.d.ts'
