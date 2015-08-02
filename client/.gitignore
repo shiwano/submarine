@@ -23,3 +23,5 @@ sysinfo.txt
 Assets/Vendor
 Assets/Settings/Resources/PhotonServerSettings.asset
 Assets/Settings/Resources/PhotonServerSettings.asset.meta
+Assets/Resources/Config/Config.json
+Assets/Resources/Config/Config.json.meta

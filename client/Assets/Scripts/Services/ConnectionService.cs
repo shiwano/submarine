@@ -20,7 +20,7 @@ namespace Submarine
         {
             if (!Connected)
             {
-                PhotonNetwork.ConnectUsingSettings(Constants.Version);
+                PhotonNetwork.ConnectUsingSettings(Constants.Config.Version);
             }
         }
 
