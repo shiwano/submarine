@@ -1,0 +1,3 @@
+generate:
+  summary: Generate code from the contract
+  command: typhen ./tools/typhen/typhenfile.js
