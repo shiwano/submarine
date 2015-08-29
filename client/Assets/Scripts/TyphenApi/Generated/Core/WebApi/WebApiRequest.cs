@@ -22,7 +22,7 @@ namespace TyphenApi
         bool NoAuthenticationRequired { get; set; }
         TypeBase Body { get; }
         byte[] BodyBytes { get; }
-        bool HasSent { get; }
+        bool IsSending { get; }
 
         void OnSendComplete(Dictionary<string, string> headers, byte[] bytes, string errorText);
     }
@@ -40,7 +40,7 @@ namespace TyphenApi
         public bool NoAuthenticationRequired { get; set; }
         public TypeBase Body { get; set; }
         public byte[] BodyBytes { get { return controller.RequestSerializer.Serialize(Body); } }
-        public bool HasSent { get { return sendingRoutine != null; } }
+        public bool IsSending { get { return sendingRoutine != null; } }
 
         public WebApiResponse<ResponseT> Response { get; private set; }
         public WebApiError<ErrorT> Error { get; private set; }
@@ -59,7 +59,7 @@ namespace TyphenApi
 
         public IEnumerator SendAsync()
         {
-            if (HasSent)
+            if (IsSending)
             {
                 return sendingRoutine;
             }
@@ -73,6 +73,10 @@ namespace TyphenApi
 
         public void OnSendComplete(Dictionary<string, string> headers, byte[] bytes, string errorText)
         {
+            sendingRoutine = null;
+            Response = null;
+            Error = null;
+
             if (string.IsNullOrEmpty(errorText))
             {
                 try

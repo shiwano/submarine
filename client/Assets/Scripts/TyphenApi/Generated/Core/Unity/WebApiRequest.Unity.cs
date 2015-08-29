@@ -12,16 +12,25 @@ namespace TyphenApi
     {
         public Coroutine Send(Func<IEnumerator, Coroutine> startCorotineFunc,
             Action<WebApiResponse<ResponseT>> onSuccess,
-            Action<WebApiError<ErrorT>> onError = null)
+            Action<WebApiError<ErrorT>> onError = null,
+            int retryCount = 0)
         {
-            return startCorotineFunc(SendAsync(startCorotineFunc, onSuccess, onError));
+            return startCorotineFunc(SendAsync(startCorotineFunc, onSuccess, onError, retryCount));
         }
 
         IEnumerator SendAsync(Func<IEnumerator, Coroutine> startCorotineFunc,
             Action<WebApiResponse<ResponseT>> onSuccess,
-            Action<WebApiError<ErrorT>> onError = null)
+            Action<WebApiError<ErrorT>> onError = null,
+            int retryCount = 0)
         {
             yield return startCorotineFunc(SendAsync());
+            var sentCount = 1;
+
+            while (Error != null && sentCount < retryCount + 1)
+            {
+                yield return startCorotineFunc(SendAsync());
+                sentCount += 1;
+            }
 
             if (Error == null)
             {
