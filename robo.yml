@@ -1,3 +1,7 @@
 generate:
   summary: Generate code from the contract
   command: typhen ./tools/typhen/typhenfile.js
+
+build:
+  summary: build tasks
+  exec: robo --config build.yml
