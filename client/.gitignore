@@ -28,5 +28,5 @@ Assets/Resources/Config/Config.json.meta
 
 build.log
 iOSXCodeProject
-submarine_*.ipa
-submarine_*.apk
+build_*.ipa
+build_*.apk
