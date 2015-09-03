@@ -1,6 +1,7 @@
 ios:
   summary: build for iOS
   command: |
+    robo build config
     PRODUCT_NAME="{{.build.productName}}" \
     BUNDLE_VERSION="{{.config.version}}" \
     BUNDLE_IDENTIFIER="{{.build.bundleIdentifier}}" \
@@ -12,6 +13,7 @@ ios:
 android:
   summary: build for Android
   command: |
+    robo build config
     PRODUCT_NAME="{{.build.productName}}" \
     BUNDLE_VERSION="{{.config.version}}" \
     BUNDLE_IDENTIFIER="{{.build.bundleIdentifier}}" \
@@ -19,6 +21,7 @@ android:
     tools/build/build.sh
 
 config:
+  summary: make Config.production.json
   command: |
     musta -t tools/build/Config.json.mustache \
       "version={{.config.version}}" \
