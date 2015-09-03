@@ -1,7 +1,9 @@
 ios:
   summary: build for iOS
+  usage: "[build-number]"
   command: |
     robo build config
+    BUILD_NUMBER="${1:-1}" \
     PRODUCT_NAME="{{.build.productName}}" \
     BUNDLE_VERSION="{{.config.version}}" \
     BUNDLE_IDENTIFIER="{{.build.bundleIdentifier}}" \
@@ -12,8 +14,10 @@ ios:
 
 android:
   summary: build for Android
+  usage: "[build-number]"
   command: |
     robo build config
+    BUILD_NUMBER="${1:-1}" \
     PRODUCT_NAME="{{.build.productName}}" \
     BUNDLE_VERSION="{{.config.version}}" \
     BUNDLE_IDENTIFIER="{{.build.bundleIdentifier}}" \

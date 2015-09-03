@@ -3,7 +3,6 @@
 set -e
 
 [[ ! -z ${WORKSPACE} ]]    || WORKSPACE=$(cd $(dirname $0)/../..;pwd)
-[[ ! -z ${BUILD_NUMBER} ]] || BUILD_NUMBER=1
 
 rm -Rf ${WORKSPACE}/client/iOSXCodeProject/
 
