@@ -1,8 +1,4 @@
-# Submarine Cloud
-
-A mobile game that is made with Unity3D.
-
-**NOTE: This repository does not include Asset Store assets.**
+# Submarine Cloud Client
 
 ## Dependencies
 
