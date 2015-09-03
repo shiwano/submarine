@@ -23,8 +23,8 @@ sysinfo.txt
 Assets/Vendor
 Assets/Settings/Resources/PhotonServerSettings.asset
 Assets/Settings/Resources/PhotonServerSettings.asset.meta
-Assets/Resources/Config/Config.json
-Assets/Resources/Config/Config.json.meta
+Assets/Resources/Config/Config.production.json
+Assets/Resources/Config/Config.production.json.meta
 
 build.log
 iOSXCodeProject

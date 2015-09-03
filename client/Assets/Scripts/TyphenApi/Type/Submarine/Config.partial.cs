@@ -7,7 +7,7 @@ namespace TyphenApi.Type.Submarine
         #if UNITY_EDITOR
         public const string Path = "Config/Config.development";
         #else
-        public const string Path = "Config/Config";
+        public const string Path = "Config/Config.production";
         #endif
 
         public static Config Load()
