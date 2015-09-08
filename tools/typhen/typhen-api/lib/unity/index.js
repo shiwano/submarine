@@ -18,7 +18,7 @@ module.exports = function(typhen, options, helpers) {
     },
     nullableToken: function(type, isOptional) {
       if (isOptional && type.isPrimitiveType &&
-        (type.name === 'bool' || type.name === 'float' || type.name === 'int')) {
+        (type.name === 'bool' || type.name === 'double' || type.name === 'long')) {
         return '?';
       }
     },
