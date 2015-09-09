@@ -10,8 +10,7 @@ Install tools.
 
 ```bash
 $ brew tap shiwano/formulas
-$ brew install robo
-$ brew install musta
+$ brew install robo musta
 ```
 
 Make out `build.yml` from `build.example.yml`.
