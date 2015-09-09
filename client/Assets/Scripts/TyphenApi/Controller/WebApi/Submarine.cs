@@ -22,7 +22,7 @@ namespace TyphenApi.Controller.WebApi
             request.Headers["Content-Type"] = "application/json";
         }
 
-        public void OnRequestError(WebApiError<Error> error)
+        public void OnRequestError(IWebApiRequest request, WebApiError<Error> error)
         {
         }
 

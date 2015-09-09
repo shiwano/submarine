@@ -106,9 +106,9 @@ namespace TyphenApi
             {
                 controller.OnRequestSuccess(this, Response);
             }
-            else if (Error.Error != null)
+            else
             {
-                controller.OnRequestError(Error);
+                controller.OnRequestError(this, Error);
             }
         }
     }
