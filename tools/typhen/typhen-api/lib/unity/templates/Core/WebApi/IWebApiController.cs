@@ -9,7 +9,7 @@ namespace TyphenApi
         IDeserializer ResponseDeserializer { get; }
 
         void OnBeforeRequestSend(IWebApiRequest request);
-        void OnRequestError(WebApiError<ErrorT> error);
+        void OnRequestError(IWebApiRequest request, WebApiError<ErrorT> error);
         void OnRequestSuccess(IWebApiRequest request, IWebApiResponse response);
     }
 }
