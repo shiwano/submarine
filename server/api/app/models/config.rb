@@ -1,7 +1,7 @@
 require 'json'
 
 class Config
-  open("#{Rails.root}/../client/Assets/Resources/Config/Config.#{Rails.env}.json") do |file|
+  open("#{Rails.root}/../../client/Assets/Resources/Config/Config.#{Rails.env}.json") do |file|
     json_data = JSON.load(file)
     config = TyphenApi::Model::Submarine::Config.new(json_data)
 

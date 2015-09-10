@@ -13,7 +13,7 @@ module.exports = function(typhen) {
   return typhen.run({
     plugin: pluginForRails,
     src: __dirname + '/../../contract/main.d.ts',
-    dest: __dirname + '/../../server',
+    dest: __dirname + '/../../server/api',
     typingDirectory: __dirname + '/../../contract',
     defaultLibFileName: __dirname + '/../../contract/lib.typhenApi.d.ts'
   }).then(function() {
