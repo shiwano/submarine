@@ -2,17 +2,15 @@
 
 /// <reference no-default-lib="true"/>
 
-interface integer {}
+interface integer { }
 
-interface SocketEvent {}
-interface ServerEvent extends SocketEvent {}
-interface ClientEvent extends SocketEvent {}
+interface RealTimeMessage { }
 
-interface Array<T> {}
-interface Object {}
-interface Function {}
-interface String {}
-interface Boolean {}
-interface Number {}
-interface IArguments {}
-interface RegExp {}
+interface Array<T> { }
+interface Object { }
+interface Function { }
+interface String { }
+interface Boolean { }
+interface Number { }
+interface IArguments { }
+interface RegExp { }
