@@ -1,0 +1,6 @@
+/bin
+/pkg
+/vendor/*
+!/vendor/manifest
+
+/battle

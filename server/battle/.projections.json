@@ -1,0 +1,11 @@
+{
+  "*_test.go": {
+    "alternate": "{}.go"
+  },
+  "*.go": {
+    "alternate": "{}_test.go"
+  },
+  "README.md": {
+    "type": "doc"
+  }
+}
