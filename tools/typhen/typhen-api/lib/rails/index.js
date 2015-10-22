@@ -4,7 +4,7 @@ var path = require('path');
 var fs = require('fs-extra');
 var _ = require('lodash');
 
-module.exports = function(typhen, modules, helpers) {
+module.exports = function(typhen, options, helpers) {
   helpers = _.assign(helpers, {
     controllerName: function(func) {
       return typhen.helpers.upperCamelCase(func.fullName).split('::').slice(1).join('::');

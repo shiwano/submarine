@@ -1,26 +1,34 @@
 'use strict';
 
 module.exports = function(typhen) {
-  var pluginForRails = typhen.loadPlugin(__dirname + '/typhen-api/index', {
-    templateName: 'rails',
-    targetModule: 'Submarine'
-  });
-  var pluginForUnity = typhen.loadPlugin(__dirname + '/typhen-api/index', {
-    templateName: 'unity',
-    includeUniRxFiles: true
-  });
-
   return typhen.run({
-    plugin: pluginForRails,
+    plugin: typhen.loadPlugin(__dirname + '/typhen-api/index', {
+      templateName: 'rails',
+      targetModule: 'Submarine'
+    }),
     src: __dirname + '/../../contract/main.d.ts',
     dest: __dirname + '/../../server/api',
     typingDirectory: __dirname + '/../../contract',
     defaultLibFileName: __dirname + '/../../contract/lib.typhenApi.d.ts'
   }).then(function() {
     return typhen.run({
-      plugin: pluginForUnity,
+      plugin: typhen.loadPlugin(__dirname + '/typhen-api/index', {
+        templateName: 'unity',
+        includeUniRxFiles: true
+      }),
       src: __dirname + '/../../contract/main.d.ts',
       dest: __dirname + '/../../client/Assets/Scripts',
+      typingDirectory: __dirname + '/../../contract',
+      defaultLibFileName: __dirname + '/../../contract/lib.typhenApi.d.ts'
+    });
+  }).then(function() {
+    return typhen.run({
+      plugin: typhen.loadPlugin(__dirname + '/typhen-api/index', {
+        templateName: 'go',
+        importBasePath: 'app/typhen_api',
+      }),
+      src: __dirname + '/../../contract/main.d.ts',
+      dest: __dirname + '/../../server/battle/src/app',
       typingDirectory: __dirname + '/../../contract',
       defaultLibFileName: __dirname + '/../../contract/lib.typhenApi.d.ts'
     });

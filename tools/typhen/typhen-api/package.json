@@ -13,6 +13,7 @@
   "dependencies": {
     "fs-extra": "^0.22.1",
     "glob": "^5.0.14",
+    "hashcode": "^1.0.3",
     "lodash": "^3.10.0"
   }
 }
