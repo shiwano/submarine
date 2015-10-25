@@ -18,5 +18,8 @@ namespace TyphenApi.Type{{#if namespace}}.{{upperCamelCase namespace}}{{/if}}
         protected static readonly SerializationInfo<{{upperCamelCase ../name}}, {{{typeName type}}}{{{nullableToken type isOptional}}}> {{lowerCamelCase name}} = new SerializationInfo<{{upperCamelCase ../name}}, {{{typeName type}}}{{{nullableToken type isOptional}}}>("{{serializablePropertyName this}}", {{isOptional}}, (x) => x.{{upperCamelCase name}}, (x, v) => x.{{upperCamelCase name}} = v);
         public {{{typeName type}}}{{{nullableToken type isOptional}}} {{upperCamelCase name}} { get; set; }
         {{/each}}
+        {{#if (isRealTimeMessage this)}}
+        public override int RealTimeMessageType { get { return {{realTimeMessageType this}}; } }
+        {{/if}}
     }
 }
