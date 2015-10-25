@@ -1,6 +1,6 @@
 # Submarine Cloud
 
-A mobile game that is made with Unity3D and Ruby on Rails.
+A mobile game that is made with Unity3D and RoR, WebSocket server written in Go.
 
 **NOTE: This repository does not include Asset Store assets.**
 
