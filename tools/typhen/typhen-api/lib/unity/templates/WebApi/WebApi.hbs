@@ -58,7 +58,7 @@ namespace TyphenApi.WebApi{{#if namespace}}.Parts.{{upperCamelCase namespace}}{{
 
             var request = new TyphenApi.WebApiRequest<{{typeName callSignatures.0.returnType}}, {{errorTypeName this}}>(Controller);
             request.Uri = new Uri(BaseUri, "{{uriPath this}}{{uriSuffix this}}");
-            request.Method = HttpMethod.{{upperCamelCase (method callSignatures.[0])}};
+            request.Method = HttpMethod.{{upperCamelCase (method this)}};
             request.Body = requestBody;
             request.NoAuthenticationRequired = {{#if tagTable.noAuthRequired}}true{{else}}false{{/if}};
             return request;

@@ -29,20 +29,20 @@ module.exports = function(typhen, options) {
 
   var helpers = {
     method: function(symbol) {
-      assert(symbol.isSignature, 'should be a function call signature');
+      assert(symbol.isFunction, 'should be a function');
       var method = symbol.tagTable.method ? symbol.tagTable.method.value : 'post';
       assert(_.includes(HttpMethods, method), 'unsupported HTTP method: ' + method);
       return method;
     },
     uriPath: function(symbol) {
-      assert(symbol.isFunction || symbol.isSignature, 'should be a function or signature');
+      assert(symbol.isFunction, 'should be a function');
       var inflection = symbol.ancestorModules[0].tagTable.uriInflection;
       var helperName = inflection ? inflection.value : 'underscore';
       assert(_.includes(InflectionOptions, helperName), 'unsupported inflection type: ' + helperName);
       return typhen.helpers[helperName](symbol.fullName).split(template.namespaceSeparator).slice(1).join('/');
     },
     uriSuffix: function(symbol) {
-      assert(symbol.isFunction || symbol.isSignature, 'should be a function or signature');
+      assert(symbol.isFunction, 'should be a function');
       return symbol.ancestorModules[0].tagTable.uriSuffix;
     },
     serializablePropertyName: function(symbol) {
