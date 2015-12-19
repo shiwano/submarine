@@ -22,15 +22,13 @@ namespace Submarine
 
         public ITorpedo Create(TorpedoHooks hooks)
         {
-            using (BindScope scope = container.CreateScope())
-            {
-                scope.Bind<TorpedoHooks>().ToSingleInstance(hooks);
-                container.Inject(hooks);
+            var subContainer = container.CreateSubContainer();
+            subContainer.Bind<TorpedoHooks>().ToSingleInstance(hooks);
+            subContainer.Inject(hooks);
 
-                return hooks.IsMine ?
-                    container.Instantiate<PlayerTorpedo>() as ITorpedo :
-                    container.Instantiate<EnemyTorpedo>();
-            }
+            return hooks.IsMine ?
+                subContainer.Instantiate<PlayerTorpedo>() as ITorpedo :
+                subContainer.Instantiate<EnemyTorpedo>();
         }
 
         TorpedoHooks CreateTorpedoHooks(Vector3 position, Quaternion rotation)

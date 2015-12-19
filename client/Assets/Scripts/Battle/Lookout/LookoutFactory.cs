@@ -22,15 +22,13 @@ namespace Submarine
 
         public ILookout Create(LookoutHooks hooks)
         {
-            using (BindScope scope = container.CreateScope())
-            {
-                scope.Bind<LookoutHooks>().ToSingleInstance(hooks);
-                container.Inject(hooks);
+            var subContainer = container.CreateSubContainer();
+            subContainer.Bind<LookoutHooks>().ToSingleInstance(hooks);
+            subContainer.Inject(hooks);
 
-                return hooks.IsMine ?
-                    container.Instantiate<PlayerLookout>() as ILookout :
-                    container.Instantiate<EnemyLookout>();
-            }
+            return hooks.IsMine ?
+                subContainer.Instantiate<PlayerLookout>() as ILookout :
+                subContainer.Instantiate<EnemyLookout>();
         }
 
         LookoutHooks CreateLookoutHooks(Vector3 position, Quaternion rotation)

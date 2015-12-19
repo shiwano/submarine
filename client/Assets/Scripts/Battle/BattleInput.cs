@@ -18,6 +18,11 @@ namespace Submarine
         public ReactiveProperty<Vector3> TouchStartPosition { get; private set; }
         public ReactiveProperty<DateTime> TouchStartTime { get; private set; }
 
+        public bool IsTouchingUI
+        {
+            get { return EventSystem.current != null && EventSystem.current.currentSelectedGameObject != null; }
+        }
+
         public IObservable<bool> ClickedAsObservable
         {
             get
@@ -61,7 +66,7 @@ namespace Submarine
 
             IsTouched = Observable.EveryUpdate()
                 .Select(_ => Input.GetMouseButton(0))
-                .Where(_ => EventSystem.current.currentSelectedGameObject == null)
+                .Where(_ => !IsTouchingUI)
                 .ToReactiveProperty()
                 .AddTo(disposables);
 

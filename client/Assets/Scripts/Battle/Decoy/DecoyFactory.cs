@@ -22,15 +22,13 @@ namespace Submarine
 
         public IDecoy Create(DecoyHooks hooks)
         {
-            using (BindScope scope = container.CreateScope())
-            {
-                scope.Bind<DecoyHooks>().ToSingleInstance(hooks);
-                container.Inject(hooks);
+            var subContainer = container.CreateSubContainer();
+            subContainer.Bind<DecoyHooks>().ToSingleInstance(hooks);
+            subContainer.Inject(hooks);
 
-                return hooks.IsMine ?
-                    container.Instantiate<PlayerDecoy>() as IDecoy :
-                    container.Instantiate<EnemyDecoy>();
-            }
+            return hooks.IsMine ?
+                subContainer.Instantiate<PlayerDecoy>() as IDecoy :
+                subContainer.Instantiate<EnemyDecoy>();
         }
 
         DecoyHooks CreateDecoyHooks(Vector3 position, Quaternion rotation)

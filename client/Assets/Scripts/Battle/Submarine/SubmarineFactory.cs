@@ -23,20 +23,18 @@ namespace Submarine
 
         public ISubmarine Create(SubmarineHooks hooks)
         {
-            using (BindScope scope = container.CreateScope())
-            {
-                scope.Bind<SubmarineHooks>().ToSingleInstance(hooks);
-                container.Inject(hooks);
+            var subContainer = container.CreateSubContainer();
+            subContainer.Bind<SubmarineHooks>().ToSingleInstance(hooks);
+            subContainer.Inject(hooks);
 
-                if (hooks.IsMine)
-                {
-                    scope.Bind<SubmarineResources>().ToSingle();
-                    return container.Instantiate<PlayerSubmarine>();
-                }
-                else
-                {
-                    return container.Instantiate<EnemySubmarine>();
-                }
+            if (hooks.IsMine)
+            {
+                subContainer.Bind<SubmarineResources>().ToSingle();
+                return subContainer.Instantiate<PlayerSubmarine>();
+            }
+            else
+            {
+                return subContainer.Instantiate<EnemySubmarine>();
             }
         }
 
