@@ -1,7 +1,7 @@
 package main
 
 import (
-	"app/typhen_api/core"
+	"app/typhenapi/core"
 	"github.com/Sirupsen/logrus"
 	"github.com/gin-gonic/gin"
 	"github.com/olahol/melody"

@@ -4,10 +4,9 @@ using System.Collections.Generic;
 
 namespace TyphenApi.Type.Submarine.Battle
 {
-    public partial class Ping : TyphenApi.Type.RealTimeMessage
+    public partial class Ping : TyphenApi.TypeBase<Ping>
     {
         protected static readonly SerializationInfo<Ping, string> message = new SerializationInfo<Ping, string>("message", false, (x) => x.Message, (x, v) => x.Message = v);
         public string Message { get; set; }
-        public override int RealTimeMessageType { get { return -973977363; } }
     }
 }

@@ -4,10 +4,28 @@ using System;
 
 namespace TyphenApi
 {
-    public abstract class WebApiBase<ErrorT> where ErrorT : TypeBase
+    public interface IWebApi<ErrorT> where ErrorT : TypeBase, new()
+    {
+        IWebApiRequestSender RequestSender { get; }
+        ISerializer RequestSerializer { get; }
+        IDeserializer ResponseDeserializer { get; }
+
+        void OnBeforeRequestSend(IWebApiRequest request);
+        void OnRequestError(IWebApiRequest request, WebApiError<ErrorT> error);
+        void OnRequestSuccess(IWebApiRequest request, IWebApiResponse response);
+    }
+
+    public abstract class WebApiBase<ErrorT> : IWebApi<ErrorT> where ErrorT : TypeBase, new()
     {
         public Uri BaseUri { get; private set; }
-        public IWebApiController<ErrorT> Controller { get; protected set; }
+
+        public IWebApiRequestSender RequestSender { get; protected set; }
+        public ISerializer RequestSerializer { get; protected set; }
+        public IDeserializer ResponseDeserializer { get; protected set; }
+
+        public abstract void OnBeforeRequestSend(IWebApiRequest request);
+        public abstract void OnRequestError(IWebApiRequest request, WebApiError<ErrorT> error);
+        public abstract void OnRequestSuccess(IWebApiRequest request, IWebApiResponse response);
 
         protected WebApiBase(string baseUri)
         {

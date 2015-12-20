@@ -2,18 +2,13 @@
 
 using System;
 
-namespace TyphenApi.WebApi
+namespace TyphenApi.WebApi.Base
 {
-    public class Submarine : TyphenApi.WebApiBase<TyphenApi.Type.Submarine.Error>
+    public abstract class Submarine : TyphenApi.WebApiBase<TyphenApi.Type.Submarine.Error>
     {
-        public Submarine(string baseUri) : base(baseUri)
-        {
-            Controller = new TyphenApi.Controller.WebApi.Submarine();
-        }
 
-        public Submarine(string baseUri, IWebApiController<TyphenApi.Type.Submarine.Error> controller) : base(baseUri)
+        protected Submarine(string baseUri) : base(baseUri)
         {
-            Controller = controller;
         }
 
         class PingRequestParameters : TyphenApi.TypeBase<PingRequestParameters>
@@ -27,7 +22,7 @@ namespace TyphenApi.WebApi
             var requestBody = new PingRequestParameters();
             requestBody.Message = message;
 
-            var request = new TyphenApi.WebApiRequest<TyphenApi.Type.Submarine.PingObject, TyphenApi.Type.Submarine.Error>(Controller);
+            var request = new TyphenApi.WebApiRequest<TyphenApi.Type.Submarine.PingObject, TyphenApi.Type.Submarine.Error>(this);
             request.Uri = new Uri(BaseUri, "ping");
             request.Method = HttpMethod.Post;
             request.Body = requestBody;
@@ -49,7 +44,7 @@ namespace TyphenApi.WebApi
             requestBody.Name = name;
             requestBody.Password = password;
 
-            var request = new TyphenApi.WebApiRequest<TyphenApi.Type.Submarine.SignUpObject, TyphenApi.Type.Submarine.Error>(Controller);
+            var request = new TyphenApi.WebApiRequest<TyphenApi.Type.Submarine.SignUpObject, TyphenApi.Type.Submarine.Error>(this);
             request.Uri = new Uri(BaseUri, "sign_up");
             request.Method = HttpMethod.Post;
             request.Body = requestBody;
@@ -71,7 +66,7 @@ namespace TyphenApi.WebApi
             requestBody.Name = name;
             requestBody.Password = password;
 
-            var request = new TyphenApi.WebApiRequest<TyphenApi.Type.Submarine.LoginObject, TyphenApi.Type.Submarine.Error>(Controller);
+            var request = new TyphenApi.WebApiRequest<TyphenApi.Type.Submarine.LoginObject, TyphenApi.Type.Submarine.Error>(this);
             request.Uri = new Uri(BaseUri, "login");
             request.Method = HttpMethod.Post;
             request.Body = requestBody;
@@ -90,12 +85,13 @@ namespace TyphenApi.WebApi
             var requestBody = new FindUserRequestParameters();
             requestBody.Name = name;
 
-            var request = new TyphenApi.WebApiRequest<TyphenApi.Type.Submarine.FindUserObject, TyphenApi.Type.Submarine.Error>(Controller);
+            var request = new TyphenApi.WebApiRequest<TyphenApi.Type.Submarine.FindUserObject, TyphenApi.Type.Submarine.Error>(this);
             request.Uri = new Uri(BaseUri, "find_user");
             request.Method = HttpMethod.Post;
             request.Body = requestBody;
             request.NoAuthenticationRequired = false;
             return request;
         }
+
     }
 }

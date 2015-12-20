@@ -1,8 +1,9 @@
 package main
 
 import (
-	"app/typhen_api/core"
-	messagedispatcher "app/typhen_api/messagedispatcher/submarine"
+	"app/typhenapi/core"
+	"app/typhenapi/type/submarine/battle"
+	api "app/typhenapi/websocket/submarine"
 	"github.com/olahol/melody"
 )
 
@@ -10,23 +11,26 @@ import (
 type Session struct {
 	*melody.Session
 	serializer *typhenapi.Serializer
-	Dispatcher *messagedispatcher.MessageDispatcher
+	api        *api.WebSocketAPI
+}
+
+// Send sends raw message data.
+func (session *Session) Send(msg []byte) {
+	session.WriteBinary(msg)
 }
 
 func newSession(melodySession *melody.Session, serializer *typhenapi.Serializer) *Session {
-	messageDispatcher := messagedispatcher.New(serializer, func(m []byte, err error) { Log.Error(err) })
-	return &Session{melodySession, serializer, messageDispatcher}
+	session := &Session{melodySession, serializer, nil}
+	session.api = api.New(session, serializer, func(m []byte, err error) { Log.Error(err) })
+	session.api.Battle.Ping = session.onPingReceive
+	return session
 }
 
-func (session *Session) send(messageBody interface{}) {
-	message, err := typhenapi.NewMessage(session.serializer, messageBody)
-	if err != nil {
-		Log.Error(err)
-		return
-	}
-	session.WriteBinary(message.Bytes())
+func (session *Session) onPingReceive(message *battle.Ping) {
+	Log.Info("ping")
+	session.api.Battle.SendPing(message)
 }
 
 func (session *Session) handleMessage(data []byte) {
-	session.Dispatcher.HandleMessage(data)
+	session.api.DispatchMessageEvent(data)
 }

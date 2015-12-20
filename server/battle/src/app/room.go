@@ -1,8 +1,7 @@
 package main
 
 import (
-	"app/typhen_api/core"
-	"app/typhen_api/type/submarine/battle"
+	"app/typhenapi/core"
 	"github.com/olahol/melody"
 )
 
@@ -14,11 +13,6 @@ type Room struct {
 
 func (room *Room) join(rawSession *melody.Session) {
 	session := newSession(rawSession, room.serializer)
-
-	session.Dispatcher.Battle.Ping = func(ping *battle.Ping) {
-		session.send(ping)
-	}
-
 	room.sessions[rawSession] = session
 }
 

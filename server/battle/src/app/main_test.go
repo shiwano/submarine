@@ -2,8 +2,9 @@ package main_test
 
 import (
 	"app"
-	"app/typhen_api/core"
-	"app/typhen_api/type/submarine/battle"
+	"app/typhenapi/core"
+	"app/typhenapi/type/submarine/battle"
+	battleapi "app/typhenapi/websocket/submarine/battle"
 	"github.com/Sirupsen/logrus"
 	"github.com/gin-gonic/gin"
 	"github.com/gorilla/websocket"
@@ -39,7 +40,7 @@ func TestNewEngine(t *testing.T) {
 
 	serializer := typhenapi.NewJSONSerializer()
 	ping := &battle.Ping{"Foobar"}
-	message, messageErr := typhenapi.NewMessage(serializer, ping)
+	message, messageErr := typhenapi.NewMessage(serializer, battleapi.MessageType_Ping, ping)
 	assert.NoError(t, messageErr)
 	conn.WriteMessage(websocket.BinaryMessage, message.Bytes())
 
