@@ -1,0 +1,3 @@
+[submodule "client/Assets/Vendor/Private"]
+	path = client/Assets/Vendor/Private
+	url = git@github.com:shiwano/submarine-assets.git
