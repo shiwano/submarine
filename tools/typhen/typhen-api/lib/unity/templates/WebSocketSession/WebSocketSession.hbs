@@ -1,0 +1,39 @@
+using TyphenApi.Type.{{upperCamelCase name}};
+using WebSocketSharp;
+
+namespace TyphenApi.WebSocketSession
+{
+    public class {{upperCamelCase name}} : Base.{{upperCamelCase name}}
+    {
+        public {{upperCamelCase name}}(string requestUri) : base(requestUri)
+        {
+            var jsonSerializer = new JSONSerializer();
+            MessageSerializer = jsonSerializer;
+            MessageDeserializer = jsonSerializer;
+        }
+
+        public override void OnConnectionCreate(WebSocket connection)
+        {
+        }
+
+        public override void OnConnectionOpen()
+        {
+        }
+
+        public override void OnConnectionClose(ushort code, string reason, bool wasClean)
+        {
+        }
+
+        public override void OnBeforeMessageSend(TyphenApi.TypeBase message)
+        {
+        }
+
+        public override void OnMessageReceive(TyphenApi.TypeBase message)
+        {
+        }
+
+        public override void OnError(WebSocketSessionError<Error> error)
+        {
+        }
+    }
+}

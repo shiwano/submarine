@@ -17,15 +17,25 @@ module.exports = function(typhen, options, helpers) {
       }
     },
     nullableToken: function(type, isOptional) {
+      assert(type.isType, 'should be a type');
       if (isOptional && type.isPrimitiveType &&
         (type.name === 'bool' || type.name === 'double' || type.name === 'long')) {
         return '?';
       }
     },
     typeName: function(type) {
+      assert(type.isType, 'should be a type');
       return (type.isPrimitiveType && type.name !== 'void') || type.isArray || type.isTypeParameter ?
         type.name :
         'TyphenApi.Type.' + typhen.helpers.upperCamelCase(type.fullName);
+    },
+    typeConstraint: function(typeParameters) {
+      assert(_.every(typeParameters, function(t) { return t.isTypeParameter; }), 'should be type parameters');
+      var code = typeParameters
+        .filter(function(t) { return _.isObject(t.constraint); })
+        .map(function(t) { return 'where ' + t.name + ' : ' + helpers.typeName(t.constraint); })
+        .join(', ');
+      return _.isEmpty(code) ? '' : ' ' + code;
     }
   });
 
@@ -37,15 +47,18 @@ module.exports = function(typhen, options, helpers) {
     rename: function(symbol, name) {
       if (symbol.isArray) {
         return 'List<' + typhen.helpers.upperCamelCase(symbol.type) + '>';
-      } else if (name === 'number') {
+      } else if (symbol.isPrimitiveType && name === 'number') {
         return 'double';
-      } else if (name === 'integer') {
+      } else if (symbol.isPrimitiveType && name === 'integer') {
         return 'long';
-      } else if (name === 'boolean') {
+      } else if (symbol.isPrimitiveType && name === 'boolean') {
         return 'bool';
       } else if (symbol.isGenericType && symbol.typeArguments.length > 0) {
         var argNames = symbol.typeArguments.map(function(t) { return helpers.typeName(t); });
         return typhen.helpers.upperCamelCase(symbol.rawName) + '<' + argNames.join(', ') + '>';
+      } else if (symbol.isGenericType && symbol.typeArguments.length === 0) {
+        var paramNames = symbol.typeParameters.map(function(t) { return helpers.typeName(t); });
+        return typhen.helpers.upperCamelCase(symbol.rawName) + '<' + paramNames.join(', ') + '>';
       }
       return name;
     },
@@ -57,16 +70,29 @@ module.exports = function(typhen, options, helpers) {
 
       g.generateFiles('lib/unity/templates/Core', '**/*.cs', 'TyphenApi/Generated/Core');
       g.generate('lib/unity/templates/Type/Void.cs', 'TyphenApi/Generated/Type/Void.cs');
-      g.generate('lib/unity/templates/Type/RealTimeMessage.cs', 'TyphenApi/Generated/Type/RealTimeMessage.cs');
 
       modules.forEach(function(module) {
-        if (module.functions.length > 0) {
+        if (helpers.isWebApiModule(module)) {
           g.generate('lib/unity/templates/WebApi/WebApi.hbs', 'upperCamelCase:TyphenApi/Generated/WebApi/**/*.cs', module);
 
           if (!module.parentModule) {
             g.generateUnlessExist('lib/unity/templates/Controller/WebApiController.hbs', 'upperCamelCase:TyphenApi/Controller/WebApi/*.cs', module);
           }
         }
+
+        if (helpers.isWebSocketApiModule(module)) {
+          g.generate('lib/unity/templates/WebSocketApi/WebSocketApi.hbs', 'upperCamelCase:TyphenApi/Generated/WebSocketApi/**/*.cs', module);
+
+          if (module.variables.length > 0 && !options.excludeUnityFiles && options.includeUniRxFiles) {
+            g.generate('lib/unity/templates/Unity/WebSocketApi.UniRx.hbs', 'upperCamelCase:TyphenApi/Generated/WebSocketApi/**/*.UniRx.cs', module);
+          }
+
+          if (!module.parentModule) {
+            g.generate('lib/unity/templates/WebSocketSession/WebSocketSessionBase.hbs', 'upperCamelCase:TyphenApi/Generated/WebSocketSession/*.cs', module);
+            g.generateUnlessExist('lib/unity/templates/WebSocketSession/WebSocketSession.hbs', 'upperCamelCase:TyphenApi/WebSocketSession/*.cs', module);
+          }
+        }
+
       });
 
       types.forEach(function(type) {

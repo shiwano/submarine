@@ -8,19 +8,6 @@ var _ = require('lodash');
 var HttpMethods = ['post', 'get', 'delete', 'put'];
 var InflectionOptions = ['underscore', 'upperCamelCase', 'lowerCamelCase'];
 
-function isWebApiModule(module) {
-  if (module.functions.length > 0) {
-    return true;
-  } else if (module.modules) {
-    return _.any(module.modules, function(m) { return isWebApiModule(m); });
-  }
-}
-
-function isRealTimeMessage(type) {
-  return type.name === 'RealTimeMessage' ||
-    _.some(type.baseTypes, function(t) { return t.name === 'RealTimeMessage'; });
-}
-
 module.exports = function(typhen, options) {
   assert(options, 'options is empty');
   assert(typeof options.templateName === 'string', 'options.templateName is required');
@@ -28,22 +15,42 @@ module.exports = function(typhen, options) {
   var template;
 
   var helpers = {
-    method: function(symbol) {
-      assert(symbol.isFunction, 'should be a function');
-      var method = symbol.tagTable.method ? symbol.tagTable.method.value : 'post';
+    isWebApiModule: function(module) {
+      assert(module.isModule, 'should be a module');
+      if (module.functions.length > 0) {
+        return true;
+      } else if (module.modules.length > 0) {
+        return _.any(module.modules, function(m) { return helpers.isWebApiModule(m); });
+      } else {
+        return false;
+      }
+    },
+    isWebSocketApiModule: function(module) {
+      assert(module.isModule, 'should be a module');
+      if (module.variables.length > 0) {
+        return true;
+      } else if (module.modules.length > 0) {
+        return _.any(module.modules, function(m) { return helpers.isWebSocketApiModule(m); });
+      } else {
+        return false;
+      }
+    },
+    method: function(func) {
+      assert(func.isFunction, 'should be a function');
+      var method = func.tagTable.method ? func.tagTable.method.value : 'post';
       assert(_.includes(HttpMethods, method), 'unsupported HTTP method: ' + method);
       return method;
     },
-    uriPath: function(symbol) {
-      assert(symbol.isFunction, 'should be a function');
-      var inflection = symbol.ancestorModules[0].tagTable.uriInflection;
+    uriPath: function(func) {
+      assert(func.isFunction, 'should be a function');
+      var inflection = func.ancestorModules[0].tagTable.uriInflection;
       var helperName = inflection ? inflection.value : 'underscore';
       assert(_.includes(InflectionOptions, helperName), 'unsupported inflection type: ' + helperName);
-      return typhen.helpers[helperName](symbol.fullName).split(template.namespaceSeparator).slice(1).join('/');
+      return typhen.helpers[helperName](func.fullName).split(template.namespaceSeparator).slice(1).join('/');
     },
-    uriSuffix: function(symbol) {
-      assert(symbol.isFunction, 'should be a function');
-      return symbol.ancestorModules[0].tagTable.uriSuffix;
+    uriSuffix: function(func) {
+      assert(func.isFunction, 'should be a function');
+      return func.ancestorModules[0].tagTable.uriSuffix;
     },
     serializablePropertyName: function(symbol) {
       assert(symbol.isProperty || symbol.isParameter, 'should be a property or function parameter');
@@ -52,14 +59,9 @@ module.exports = function(typhen, options) {
       assert(_.includes(InflectionOptions, helperName), 'unsupported inflection type: ' + helperName);
       return typhen.helpers[helperName](symbol.name);
     },
-    isRealTimeMessage: function(type) {
-      return isRealTimeMessage(type);
-    },
-    realTimeMessages: function(types) {
-      return types.filter(function(t) { return isRealTimeMessage(t); });
-    },
-    realTimeMessageType: function(type) {
-      var name = typhen.helpers.upperCamelCase(type.fullName).replace(template.namespaceSeparator, '.');
+    webSocketMessageType: function(variable) {
+      assert(variable.isVariable, 'should be a variable');
+      var name = typhen.helpers.upperCamelCase(variable.fullName).replace(template.namespaceSeparator, '.');
       return hashCode().value(name);
     },
   };
@@ -102,7 +104,7 @@ module.exports = function(typhen, options) {
       var filteredModules = modules.filter(function(m) { return !m.isGlobalModule; });
 
       filteredModules.forEach(function(module) {
-        if (module.parentModule === null && isWebApiModule(module)) {
+        if (module.parentModule === null && (helpers.isWebApiModule(module) || helpers.isWebSocketApiModule(module))) {
           var errorType = module.types.filter(function(t) { return t.name === 'Error'; })[0];
           assert(errorType, 'Undefined the Error type in ' + module.name + ' module');
         }

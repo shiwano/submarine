@@ -4,22 +4,14 @@ using System.Collections.Generic;
 
 namespace TyphenApi.Type{{#if namespace}}.{{upperCamelCase namespace}}{{/if}}
 {
-    public partial class {{upperCamelCase name}}{{#if typeParameters}}<{{#each typeParameters}}{{name}}{{#unless @last}}, {{/unless}}{{/each}}>{{/if}} : {{#if baseTypes}}TyphenApi.Type.{{upperCamelCase baseTypes.0.fullName}}{{else}}TyphenApi.TypeBase<{{upperCamelCase name}}>{{/if}}
-      {{#each typeParameters}}
-      {{#if constraint}}
-      where {{name}} : {{{typeName constraint}}}
-      {{/if}}
-      {{/each}}
+    public partial class {{{upperCamelCase name}}} : {{#if baseTypes}}{{{typeName baseTypes.[0]}}}{{else}}TyphenApi.TypeBase<{{{upperCamelCase name}}}>{{/if}}{{#if typeParameters}}{{{typeConstraint typeParameters}}}{{/if}}
     {
         {{#each ownProperties}}
         {{#if comment}}
         /// <summary>{{comment}}</summary>
         {{/if}}
-        protected static readonly SerializationInfo<{{upperCamelCase ../name}}, {{{typeName type}}}{{{nullableToken type isOptional}}}> {{lowerCamelCase name}} = new SerializationInfo<{{upperCamelCase ../name}}, {{{typeName type}}}{{{nullableToken type isOptional}}}>("{{serializablePropertyName this}}", {{isOptional}}, (x) => x.{{upperCamelCase name}}, (x, v) => x.{{upperCamelCase name}} = v);
+        protected static readonly SerializationInfo<{{{upperCamelCase ../name}}}, {{{typeName type}}}{{{nullableToken type isOptional}}}> {{lowerCamelCase name}} = new SerializationInfo<{{{upperCamelCase ../name}}}, {{{typeName type}}}{{{nullableToken type isOptional}}}>("{{serializablePropertyName this}}", {{isOptional}}, (x) => x.{{upperCamelCase name}}, (x, v) => x.{{upperCamelCase name}} = v);
         public {{{typeName type}}}{{{nullableToken type isOptional}}} {{upperCamelCase name}} { get; set; }
         {{/each}}
-        {{#if (isRealTimeMessage this)}}
-        public override int RealTimeMessageType { get { return {{realTimeMessageType this}}; } }
-        {{/if}}
     }
 }
