@@ -20,7 +20,6 @@
 # Unity3D Generated File On Crash Reports
 sysinfo.txt
 
-Assets/Vendor
 Assets/Settings/Resources/PhotonServerSettings.asset
 Assets/Settings/Resources/PhotonServerSettings.asset.meta
 Assets/Resources/Config/Config.production.json
