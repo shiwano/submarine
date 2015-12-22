@@ -27,8 +27,10 @@ declare module Submarine {
   function findUser(name: string): { user?: User; };
 
   module Battle {
-    interface Ping extends RealTimeMessage {
+    interface Ping {
       message: string;
     }
+
+    var ping: Ping;
   }
 }

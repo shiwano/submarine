@@ -4,8 +4,6 @@
 
 interface integer { }
 
-interface RealTimeMessage { }
-
 interface Array<T> { }
 interface Object { }
 interface Function { }
