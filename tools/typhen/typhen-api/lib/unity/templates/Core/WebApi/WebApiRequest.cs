@@ -31,7 +31,7 @@ namespace TyphenApi
         where ResponseT : TypeBase, new()
         where ErrorT : TypeBase, new()
     {
-        readonly IWebApiController<ErrorT> controller;
+        readonly IWebApi<ErrorT> api;
         IEnumerator sendingRoutine;
 
         public Uri Uri { get; set; }
@@ -39,16 +39,16 @@ namespace TyphenApi
         public Dictionary<string, string> Headers { get; set; }
         public bool NoAuthenticationRequired { get; set; }
         public TypeBase Body { get; set; }
-        public byte[] BodyBytes { get { return controller.RequestSerializer.Serialize(Body); } }
+        public byte[] BodyBytes { get { return api.RequestSerializer.Serialize(Body); } }
         public bool IsSending { get { return sendingRoutine != null; } }
 
         public WebApiResponse<ResponseT> Response { get; private set; }
         public WebApiError<ErrorT> Error { get; private set; }
 
-        public WebApiRequest(IWebApiController<ErrorT> controller)
+        public WebApiRequest(IWebApi<ErrorT> api)
         {
             Headers = new Dictionary<string, string>();
-            this.controller = controller;
+            this.api = api;
         }
 
         public WebApiRequest<ResponseT, ErrorT> Set(string headerName, string headerValue)
@@ -65,8 +65,8 @@ namespace TyphenApi
             }
             else
             {
-                controller.OnBeforeRequestSend(this);
-                sendingRoutine = controller.RequestSender.Send(this);
+                api.OnBeforeRequestSend(this);
+                sendingRoutine = api.RequestSender.Send(this);
                 return sendingRoutine;
             }
         }
@@ -81,7 +81,7 @@ namespace TyphenApi
             {
                 try
                 {
-                    var response = controller.ResponseDeserializer.Deserialize<ResponseT>(bytes);
+                    var response = api.ResponseDeserializer.Deserialize<ResponseT>(bytes);
                     Response = new WebApiResponse<ResponseT>(headers, response);
                 }
                 catch (SerializationException)
@@ -93,7 +93,7 @@ namespace TyphenApi
             {
                 try
                 {
-                    var error = controller.ResponseDeserializer.Deserialize<ErrorT>(bytes);
+                    var error = api.ResponseDeserializer.Deserialize<ErrorT>(bytes);
                     Error = new WebApiError<ErrorT>(headers, error, bytes, errorText);
                 }
                 catch (SerializationException)
@@ -104,11 +104,11 @@ namespace TyphenApi
 
             if (Error == null)
             {
-                controller.OnRequestSuccess(this, Response);
+                api.OnRequestSuccess(this, Response);
             }
             else
             {
-                controller.OnRequestError(this, Error);
+                api.OnRequestError(this, Error);
             }
         }
     }

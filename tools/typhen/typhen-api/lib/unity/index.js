@@ -73,10 +73,10 @@ module.exports = function(typhen, options, helpers) {
 
       modules.forEach(function(module) {
         if (helpers.isWebApiModule(module)) {
-          g.generate('lib/unity/templates/WebApi/WebApi.hbs', 'upperCamelCase:TyphenApi/Generated/WebApi/**/*.cs', module);
+          g.generate('lib/unity/templates/WebApi/WebApiBase.hbs', 'upperCamelCase:TyphenApi/Generated/WebApi/**/*.cs', module);
 
           if (!module.parentModule) {
-            g.generateUnlessExist('lib/unity/templates/Controller/WebApiController.hbs', 'upperCamelCase:TyphenApi/Controller/WebApi/*.cs', module);
+            g.generateUnlessExist('lib/unity/templates/WebApi/WebApi.hbs', 'upperCamelCase:TyphenApi/WebApi/*.cs', module);
           }
         }
 
