@@ -1,0 +1,82 @@
+package typhenapi_test
+
+import (
+	"{{@importBasePath}}/core"
+	"bytes"
+	"errors"
+	"testing"
+)
+
+type testType struct {
+	Message string `codec:"message"`
+}
+
+func (t *testType) Coerce() error {
+	if t.Message == "" {
+		return errors.New("Message is empty")
+	}
+
+	return nil
+}
+
+func TestNewMessage(t *testing.T) {
+	serializer := typhenapi.NewJSONSerializer()
+	message, err := typhenapi.NewMessage(serializer, 1, &testType{"Foobar"})
+
+	if err != nil {
+		t.Error(err)
+		return
+	}
+	if message.Type != 1 {
+		t.Errorf("message.Type is expected to equal 1: %v", message.Type)
+		return
+	}
+
+	deserialized := &testType{}
+	deserializedErr := serializer.Deserialize(message.Body, deserialized)
+
+	if deserializedErr != nil {
+		t.Error(deserializedErr)
+		return
+	}
+	if deserialized.Message != "Foobar" {
+		t.Errorf("deserialized.Message is expected to equal Foobar: %v", deserialized.Message)
+		return
+	}
+}
+
+func TestNewMessageFromBytes(t *testing.T) {
+	data := []byte{0xF0, 0xFF, 0x00, 0x00, 2, 3, 5, 7, 11}
+	message, err := typhenapi.NewMessageFromBytes(data)
+
+	if err != nil {
+		t.Error(err)
+		return
+	}
+	if message.Type != 65520 {
+		t.Errorf("message.Type is expected to equal 65520: %v", message.Type)
+		return
+	}
+	if !bytes.Equal([]byte{2, 3, 5, 7, 11}, message.Body) {
+		t.Errorf("message.Body is expected to equal %v: %v", []byte{2, 3, 5, 7, 11}, message.Body)
+		return
+	}
+}
+
+func TestMessageBytes(t *testing.T) {
+	serializer := typhenapi.NewJSONSerializer()
+	messageA, _ := typhenapi.NewMessage(serializer, 1, &testType{"Foobar"})
+	message, _ := typhenapi.NewMessageFromBytes(messageA.Bytes())
+
+	deserialized := &testType{}
+	err := serializer.Deserialize(message.Body, deserialized)
+
+	if err != nil {
+		t.Error(err)
+		return
+	}
+	if deserialized.Message != "Foobar" {
+		t.Errorf("deserialized.Message is expected to equal Foobar: %v", deserialized.Message)
+		return
+	}
+}

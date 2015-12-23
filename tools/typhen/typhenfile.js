@@ -25,7 +25,7 @@ module.exports = function(typhen) {
     return typhen.run({
       plugin: typhen.loadPlugin(__dirname + '/typhen-api/index', {
         templateName: 'go',
-        importBasePath: 'app/typhen_api',
+        importBasePath: 'app/typhenapi',
       }),
       src: __dirname + '/../../contract/main.d.ts',
       dest: __dirname + '/../../server/battle/src/app',

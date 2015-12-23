@@ -15,14 +15,14 @@ type Message struct {
 }
 
 // NewMessage creates a Message from a TyphenAPI type
-func NewMessage(serializer *Serializer, v interface{}) (message *Message, err error) {
-	typhenMessage := v.(RealTimeMessage)
+func NewMessage(serializer *Serializer, messageType int32, v interface{}) (message *Message, err error) {
+	typhenType := v.(Coercer)
 
-	if typhenMessage == nil {
-		return nil, errors.New("No TyphenAPI realtime message type")
+	if typhenType == nil {
+		return nil, errors.New("No TyphenAPI type")
 	}
 
-	if err := typhenMessage.Coerce(); err != nil {
+	if err := typhenType.Coerce(); err != nil {
 		return nil, err
 	}
 
@@ -31,7 +31,7 @@ func NewMessage(serializer *Serializer, v interface{}) (message *Message, err er
 		return nil, err
 	}
 
-	return &Message{typhenMessage.RealTimeMessageType(), body}, nil
+	return &Message{messageType, body}, nil
 }
 
 // NewMessageFromBytes creates a Message from bytes

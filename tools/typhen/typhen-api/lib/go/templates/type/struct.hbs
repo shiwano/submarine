@@ -42,10 +42,3 @@ func (t *{{upperCamelCase name}}) Coerce() error {
 	{{/each}}
 	return nil
 }
-{{#if (isRealTimeMessage this)}}
-
-// RealTimeMessageType returns the real time message type.
-func (t *{{upperCamelCase name}}) RealTimeMessageType() int32 {
-	return {{realTimeMessageType this}}
-}
-{{/if}}

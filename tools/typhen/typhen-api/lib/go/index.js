@@ -10,13 +10,22 @@ module.exports = function(typhen, options, helpers) {
   assert(options.importBasePath, 'options.importBasePath is empty');
 
   helpers = _.assign(helpers, {
-    requiredModules: function(type) {
-      return _.chain(type.properties)
-        .map(function(property) {
-          var type = property.type;
+    requiredModules: function(typeOrModule) {
+      assert(typeOrModule.isType || typeOrModule.isModule, 'should be a type or a module');
+      var types;
+      var currentModule;
 
+      if (typeOrModule.isType) {
+        types = typeOrModule.properties.map(function(p) { return p.type; });
+        currentModule = typeOrModule.parentModule;
+      } else {
+        types = typeOrModule.variables.map(function(v) { return v.type; });
+        currentModule = null;
+      }
+      return _.chain(types)
+        .map(function(type) {
           if (type.parentModule === null ||
-              type.parentModule === type.parentModule ||
+              type.parentModule === currentModule ||
               type.parentModule.isGlobalModule ||
               type.isPrimitiveType) {
             return null;
@@ -31,8 +40,9 @@ module.exports = function(typhen, options, helpers) {
         .uniq(function(x) { return x.path; })
         .value();
     },
-    realTimeMessageDispacherModules: function(module) {
+    webSocketApiModules: function(module) {
       return _.chain(module.modules)
+        .filter(function(module) { return helpers.isWebSocketApiModule(module); })
         .map(function(module) {
           return {
             alias: helpers.moduleName(module, '_'),
@@ -78,30 +88,29 @@ module.exports = function(typhen, options, helpers) {
     },
 
     generate: function(g, types, modules, targetModule) {
-      fs.removeSync(path.join(g.outputDirectory, 'typhen_api'));
+      fs.removeSync(path.join(g.outputDirectory, 'typhenapi'));
 
-      g.generate('lib/go/templates/core/message.go', 'typhen_api/core/message.go');
-      g.generate('lib/go/templates/core/type.go', 'typhen_api/core/type.go');
-      g.generate('lib/go/templates/core/serializer.go', 'typhen_api/core/serializer.go');
+      g.generateFiles('lib/go/templates/core', '**/*.go', 'typhenapi/core');
+      g.generate('lib/go/templates/core/message_test.hbs', 'typhenapi/core/message_test.go');
 
       types.forEach(function(type) {
         switch (type.kind) {
           case typhen.SymbolKind.Enum:
-            g.generate('lib/go/templates/type/enum.hbs', 'underscore:typhen_api/type/**/*.go', type);
+            g.generate('lib/go/templates/type/enum.hbs', 'underscore:typhenapi/type/**/*.go', type);
             break;
           case typhen.SymbolKind.Interface:
             if (!type.isGenericType || type.typeArguments.length > 0) {
-              g.generate('lib/go/templates/type/object.hbs', 'underscore:typhen_api/type/**/*.go', type);
+              g.generate('lib/go/templates/type/struct.hbs', 'underscore:typhenapi/type/**/*.go', type);
             }
             break;
           case typhen.SymbolKind.ObjectType:
-            g.generate('lib/go/templates/type/object.hbs', 'underscore:typhen_api/type/**/*.go', type);
+            g.generate('lib/go/templates/type/struct.hbs', 'underscore:typhenapi/type/**/*.go', type);
             break;
         }
       });
 
       modules.forEach(function(module) {
-        g.generate('lib/go/templates/messagedispatcher/messagedispatcher.hbs', 'underscore:typhen_api/messagedispatcher/**/*/messagedispatcher.go', module);
+        g.generate('lib/go/templates/websocket/api.hbs', 'underscore:typhenapi/websocket/**/*/api.go', module);
       });
 
       g.files.forEach(function(file) {
