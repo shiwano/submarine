@@ -103,6 +103,13 @@ module.exports = function(typhen, options) {
       var filteredTypes = types.filter(function(t) { return !t.tagTable.internal; });
       var filteredModules = modules.filter(function(m) { return !m.isGlobalModule; });
 
+      filteredTypes.forEach(function(type) {
+        if (type.isFunction) {
+          var hasNoTypeParameters = type.callSignatures.every(function(s) { return s.typeParameters.length === 0});
+          assert(hasNoTypeParameters, type.fullName + ' can not have type parameters');
+        }
+      });
+
       filteredModules.forEach(function(module) {
         if (module.parentModule === null && (helpers.isWebApiModule(module) || helpers.isWebSocketApiModule(module))) {
           var errorType = module.types.filter(function(t) { return t.name === 'Error'; })[0];
