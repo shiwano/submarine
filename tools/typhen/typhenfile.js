@@ -8,8 +8,7 @@ module.exports = function(typhen) {
     }),
     src: __dirname + '/../../contract/main.d.ts',
     dest: __dirname + '/../../server/api',
-    typingDirectory: __dirname + '/../../contract',
-    defaultLibFileName: __dirname + '/../../contract/lib.typhenApi.d.ts'
+    typingDirectory: __dirname + '/../../contract'
   }).then(function() {
     return typhen.run({
       plugin: typhen.loadPlugin(__dirname + '/typhen-api/index', {
@@ -18,8 +17,7 @@ module.exports = function(typhen) {
       }),
       src: __dirname + '/../../contract/main.d.ts',
       dest: __dirname + '/../../client/Assets/Scripts',
-      typingDirectory: __dirname + '/../../contract',
-      defaultLibFileName: __dirname + '/../../contract/lib.typhenApi.d.ts'
+      typingDirectory: __dirname + '/../../contract'
     });
   }).then(function() {
     return typhen.run({
@@ -29,8 +27,7 @@ module.exports = function(typhen) {
       }),
       src: __dirname + '/../../contract/main.d.ts',
       dest: __dirname + '/../../server/battle/src/app',
-      typingDirectory: __dirname + '/../../contract',
-      defaultLibFileName: __dirname + '/../../contract/lib.typhenApi.d.ts'
+      typingDirectory: __dirname + '/../../contract'
     });
   });
 };

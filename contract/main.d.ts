@@ -1,4 +1,4 @@
-/// <reference path="./lib.typhenApi.d.ts" />
+interface integer { }
 
 declare module Submarine {
   interface Error {
