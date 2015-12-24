@@ -6,7 +6,7 @@ module.exports = function(typhen) {
       templateName: 'rails',
       targetModule: 'Submarine'
     }),
-    src: __dirname + '/../../contract/main.d.ts',
+    src: __dirname + '/../../contract/submarine.d.ts',
     dest: __dirname + '/../../server/api',
     typingDirectory: __dirname + '/../../contract'
   }).then(function() {
@@ -15,7 +15,7 @@ module.exports = function(typhen) {
         templateName: 'unity',
         includeUniRxFiles: true
       }),
-      src: __dirname + '/../../contract/main.d.ts',
+      src: __dirname + '/../../contract/submarine.d.ts',
       dest: __dirname + '/../../client/Assets/Scripts',
       typingDirectory: __dirname + '/../../contract'
     });
@@ -25,7 +25,7 @@ module.exports = function(typhen) {
         templateName: 'go',
         importBasePath: 'app/typhenapi',
       }),
-      src: __dirname + '/../../contract/main.d.ts',
+      src: __dirname + '/../../contract/submarine.d.ts',
       dest: __dirname + '/../../server/battle/src/app',
       typingDirectory: __dirname + '/../../contract'
     });
