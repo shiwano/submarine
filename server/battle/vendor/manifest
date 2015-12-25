@@ -50,6 +50,12 @@
 			"branch": "master"
 		},
 		{
+			"importpath": "github.com/jtolds/gls",
+			"repository": "https://github.com/jtolds/gls",
+			"revision": "9a4a02dbe491bef4bab3c24fd9f3087d6c4c6690",
+			"branch": "master"
+		},
+		{
 			"importpath": "github.com/manucorporat/sse",
 			"repository": "https://github.com/manucorporat/sse",
 			"revision": "fe6ea2c8e398672518ef204bf0fbd9af858d0e15",
@@ -72,6 +78,19 @@
 			"repository": "https://github.com/olahol/melody",
 			"revision": "2db13c4f7f64373d3d7142cc8e2afc0f399f66ac",
 			"branch": "master"
+		},
+		{
+			"importpath": "github.com/smartystreets/assertions",
+			"repository": "https://github.com/smartystreets/assertions",
+			"revision": "edb6e295a22c57a2aa353b2f0729b6eff9f9f4b7",
+			"branch": "master"
+		},
+		{
+			"importpath": "github.com/smartystreets/goconvey/convey",
+			"repository": "https://github.com/smartystreets/goconvey",
+			"revision": "899ed5a77548ac0bc086467509ff3dc49c63a814",
+			"branch": "master",
+			"path": "/convey"
 		},
 		{
 			"importpath": "github.com/stretchr/testify/assert",
