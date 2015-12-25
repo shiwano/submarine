@@ -1,6 +1,6 @@
 class SignUpController < ApplicationController
   include TyphenApi::Controller::Submarine::SignUp
-  include TyphenApiValidation
+  include TyphenApiRespondable
 
   def service
     render_response(user: new_user.to_api_type)

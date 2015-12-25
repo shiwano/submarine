@@ -1,6 +1,6 @@
 class FindUserController < ApplicationController
   include TyphenApi::Controller::Submarine::FindUser
-  include TyphenApiValidation
+  include TyphenApiRespondable
 
   def service
     render_response(user: target_user.try(:to_api_type))

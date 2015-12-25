@@ -1,4 +1,4 @@
-module TyphenApiValidation
+module TyphenApiRespondable
   extend ActiveSupport::Concern
 
   def params_with_validation
