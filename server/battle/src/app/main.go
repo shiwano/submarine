@@ -1,7 +1,6 @@
 package main
 
 import (
-	"app/typhenapi/core"
 	"github.com/Sirupsen/logrus"
 	"github.com/gin-gonic/gin"
 	"github.com/olahol/melody"
@@ -14,8 +13,8 @@ var Log = logrus.New()
 // NewEngine creates a gin.Engine.
 func NewEngine() (*gin.Engine, *io.PipeWriter) {
 	logWriter := Log.Writer()
-	serializer := typhenapi.NewJSONSerializer()
 	rooms := make(map[int]*Room)
+	sessions := make(map[*melody.Session]*Session)
 
 	r := gin.New()
 	r.Use(gin.Recovery(), gin.LoggerWithWriter(logWriter))
@@ -28,30 +27,29 @@ func NewEngine() (*gin.Engine, *io.PipeWriter) {
 	})
 
 	m.HandleConnect(func(rawSession *melody.Session) {
+		session := newSession(rawSession, 1)
+		sessions[rawSession] = session
+
 		room, existsRoom := rooms[1]
 		if !existsRoom {
-			room = &Room{serializer, make(map[*melody.Session]*Session)}
+			room = &Room{make(map[uint64]*Session)}
 			rooms[1] = room
 		}
-		room.join(rawSession)
+		room.join(session)
+		session.room = room
 	})
 
 	m.HandleDisconnect(func(rawSession *melody.Session) {
-		room, existsRoom := rooms[1]
-		if !existsRoom {
-			Log.Warn("No room exists")
-			return
+		if session, ok := sessions[rawSession]; ok && session.room != nil {
+			session.room.leave(session)
+			session.room = nil
 		}
-		room.leave(rawSession)
 	})
 
 	m.HandleMessageBinary(func(rawSession *melody.Session, data []byte) {
-		room, existsRoom := rooms[1]
-		if !existsRoom {
-			Log.Warn("No room exists")
-			return
+		if session, ok := sessions[rawSession]; ok {
+			session.handleMessage(data)
 		}
-		room.handleMessage(rawSession, data)
 	})
 
 	return r, logWriter

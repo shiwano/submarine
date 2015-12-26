@@ -10,7 +10,9 @@ import (
 // Session represents a network session that has user infos.
 type Session struct {
 	*melody.Session
-	api *api.WebSocketAPI
+	id   uint64
+	api  *api.WebSocketAPI
+	room *Room
 }
 
 // Send sends raw message data.
@@ -18,8 +20,9 @@ func (session *Session) Send(msg []byte) {
 	session.WriteBinary(msg)
 }
 
-func newSession(melodySession *melody.Session, serializer *typhenapi.Serializer) *Session {
-	session := &Session{melodySession, nil}
+func newSession(melodySession *melody.Session, id uint64) *Session {
+	serializer := typhenapi.NewJSONSerializer()
+	session := &Session{melodySession, id, nil, nil}
 	session.api = api.New(session, serializer, session.onError)
 	session.api.Battle.OnPingReceive = session.onPingReceive
 	return session
