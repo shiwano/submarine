@@ -19,7 +19,7 @@ namespace TyphenApi
         where ApiT : IWebSocketApi
         where ErrorT : TypeBase
     {
-        const int MessageTypeBytesLength = 4;
+        const byte MessageTypeBytesLength = 4;
 
         protected readonly WebSocket connection;
         protected readonly SynchronizedFunctionCaller synchronizedFunctionCaller = new SynchronizedFunctionCaller();
@@ -129,7 +129,12 @@ namespace TyphenApi
                 {
                     var message = Api.DispatchMessageEvent(messageType, messageData);
 
-                    if (message != null)
+                    if (message is ErrorT)
+                    {
+                        var error = new WebSocketSessionError<ErrorT>((ErrorT)message, null, null);
+                        OnError(error);
+                    }
+                    else if (message != null)
                     {
                         OnMessageReceive(message);
                     }
