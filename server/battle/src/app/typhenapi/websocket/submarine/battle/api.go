@@ -15,13 +15,13 @@ const (
 type WebSocketAPI struct {
 	session      typhenapi.Session
 	serializer   *typhenapi.Serializer
-	errorHandler func([]byte, error)
+	errorHandler func(interface{}, error)
 
-	Ping func(message *submarine_battle.Ping)
+	OnPingReceive func(message *submarine_battle.Ping)
 }
 
 // New creates a WebSocketAPI.
-func New(session typhenapi.Session, serializer *typhenapi.Serializer, errorHandler func([]byte, error)) *WebSocketAPI {
+func New(session typhenapi.Session, serializer *typhenapi.Serializer, errorHandler func(interface{}, error)) *WebSocketAPI {
 	api := &WebSocketAPI{}
 	api.session = session
 	api.serializer = serializer
@@ -30,42 +30,53 @@ func New(session typhenapi.Session, serializer *typhenapi.Serializer, errorHandl
 }
 
 // SendPing sends a ping message.
-func (api *WebSocketAPI) SendPing(ping *submarine_battle.Ping) {
+func (api *WebSocketAPI) SendPing(ping *submarine_battle.Ping) error {
 	message, err := typhenapi.NewMessage(api.serializer, MessageType_Ping, ping)
 
 	if err != nil {
-		api.errorHandler(nil, err)
-		return
+		if api.errorHandler != nil {
+			api.errorHandler(ping, err)
+		}
+		return err
 	}
 
 	api.session.Send(message.Bytes())
+	return nil
 }
 
 // DispatchMessageEvent dispatches a binary message.
-func (api *WebSocketAPI) DispatchMessageEvent(data []byte) {
+func (api *WebSocketAPI) DispatchMessageEvent(data []byte) error {
 
 	message, err := typhenapi.NewMessageFromBytes(data)
 
 	if err != nil {
-		api.errorHandler(data, err)
-		return
+		if api.errorHandler != nil {
+			api.errorHandler(data, err)
+		}
+		return err
 	}
 
 	switch message.Type {
 	case MessageType_Ping:
 		typhenType := new(submarine_battle.Ping)
 		if err := api.serializer.Deserialize(message.Body, typhenType); err != nil {
-			api.errorHandler(data, err)
-			return
+			if api.errorHandler != nil {
+				api.errorHandler(data, err)
+			}
+			return err
 		}
 
 		if err := typhenType.Coerce(); err != nil {
-			api.errorHandler(data, err)
-			return
+			if api.errorHandler != nil {
+				api.errorHandler(data, err)
+			}
+			return err
 		}
 
-		if api.Ping != nil {
-			api.Ping(typhenType)
+		if api.OnPingReceive != nil {
+			api.OnPingReceive(typhenType)
 		}
 	}
+
+	return nil
 }

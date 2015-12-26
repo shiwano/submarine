@@ -11,12 +11,12 @@ import (
 type WebSocketAPI struct {
 	session      typhenapi.Session
 	serializer   *typhenapi.Serializer
-	errorHandler func([]byte, error)
+	errorHandler func(interface{}, error)
 	Battle       *_submarine_battle.WebSocketAPI
 }
 
 // New creates a WebSocketAPI.
-func New(session typhenapi.Session, serializer *typhenapi.Serializer, errorHandler func([]byte, error)) *WebSocketAPI {
+func New(session typhenapi.Session, serializer *typhenapi.Serializer, errorHandler func(interface{}, error)) *WebSocketAPI {
 	api := &WebSocketAPI{}
 	api.session = session
 	api.serializer = serializer
@@ -26,7 +26,8 @@ func New(session typhenapi.Session, serializer *typhenapi.Serializer, errorHandl
 }
 
 // DispatchMessageEvent dispatches a binary message.
-func (api *WebSocketAPI) DispatchMessageEvent(data []byte) {
+func (api *WebSocketAPI) DispatchMessageEvent(data []byte) error {
 	api.Battle.DispatchMessageEvent(data)
 
+	return nil
 }
