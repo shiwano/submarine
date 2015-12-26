@@ -65,7 +65,7 @@ func TestBattleServer(t *testing.T) {
 		Convey("should be connectable by web socket protocol", func() {
 			done := make(chan error)
 			go func() {
-				conn, err := newDialer(server.URL + "/room/1")
+				conn, err := newDialer(server.URL + "/battle?battle_id=1")
 				defer conn.Close()
 				done <- err
 			}()
@@ -76,7 +76,7 @@ func TestBattleServer(t *testing.T) {
 		Convey("should respond to a ping message", func() {
 			done := make(chan *battle.Ping)
 			go func() {
-				session, _ := newSession(server.URL + "/room/1")
+				session, _ := newSession(server.URL + "/battle?battle_id=1")
 				defer session.Close()
 				session.api.Battle.OnPingReceive = func(message *battle.Ping) { done <- message }
 				session.api.Battle.SendPing(&battle.Ping{"Hey"})
