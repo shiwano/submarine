@@ -24,7 +24,7 @@ func (session *clientSession) Send(msg []byte) {
 	session.WriteMessage(websocket.BinaryMessage, msg)
 }
 
-func (session *clientSession) dispatchReceivedMessage() error {
+func (session *clientSession) readMessage() error {
 	_, data, err := session.ReadMessage()
 	if err != nil {
 		return err
@@ -39,11 +39,12 @@ func newDialer(url string) (*websocket.Conn, error) {
 	return conn, err
 }
 
-func newSession(url string, serializer *typhenapi.Serializer) (*clientSession, error) {
+func newSession(url string) (*clientSession, error) {
 	conn, connErr := newDialer(url)
 	if connErr != nil {
 		return nil, connErr
 	}
+	serializer := typhenapi.NewJSONSerializer()
 	session := &clientSession{conn, nil}
 	session.api = api.New(session, serializer, nil)
 	return session, nil
@@ -60,36 +61,29 @@ func newTestServer() (*httptest.Server, *io.PipeWriter) {
 func TestBattleServer(t *testing.T) {
 	Convey("BattleServer", t, func() {
 		server, logWriter := newTestServer()
-		serializer := typhenapi.NewJSONSerializer()
 
-		Convey("should be connectable by web socket protocol", func(c C) {
-			done := make(chan bool)
+		Convey("should be connectable by web socket protocol", func() {
+			done := make(chan error)
 			go func() {
-				conn, connErr := newDialer(server.URL + "/room/1")
+				conn, err := newDialer(server.URL + "/room/1")
 				defer conn.Close()
-				c.So(connErr, ShouldBeNil)
-				done <- true
+				done <- err
 			}()
-			_ = <-done
+			err := <-done
+			So(err, ShouldBeNil)
 		})
 
-		Convey("should respond to a ping message", func(c C) {
-			done := make(chan bool)
+		Convey("should respond to a ping message", func() {
+			done := make(chan *battle.Ping)
 			go func() {
-				session, _ := newSession(server.URL+"/room/1", serializer)
+				session, _ := newSession(server.URL + "/room/1")
 				defer session.Close()
-
-				session.api.Battle.OnPingReceive = func(p *battle.Ping) {
-					c.So(p.Message, ShouldEqual, "Foobar")
-					done <- true
-				}
-
-				ping := &battle.Ping{"Foobar"}
-				session.api.Battle.SendPing(ping)
-				err := session.dispatchReceivedMessage()
-				c.So(err, ShouldBeNil)
+				session.api.Battle.OnPingReceive = func(message *battle.Ping) { done <- message }
+				session.api.Battle.SendPing(&battle.Ping{"Hey"})
+				session.readMessage()
 			}()
-			_ = <-done
+			message := <-done
+			So(message.Message, ShouldEqual, "Hey Hey")
 		})
 
 		Reset(func() {

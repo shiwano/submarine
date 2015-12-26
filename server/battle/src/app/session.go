@@ -29,9 +29,9 @@ func (session *Session) onError(data interface{}, err error) {
 	Log.Error(err)
 }
 
-func (session *Session) onPingReceive(message *battle.Ping) {
-	Log.Info("ping")
-	session.api.Battle.SendPing(message)
+func (session *Session) onPingReceive(ping *battle.Ping) {
+	ping.Message += " " + ping.Message
+	session.api.Battle.SendPing(ping)
 }
 
 func (session *Session) handleMessage(data []byte) {
