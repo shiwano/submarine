@@ -20,6 +20,7 @@ namespace TyphenApi
         where ErrorT : TypeBase
     {
         const byte MessageTypeBytesLength = 4;
+        volatile bool isOpened;
 
         protected readonly WebSocket connection;
         protected readonly SynchronizedFunctionCaller synchronizedFunctionCaller = new SynchronizedFunctionCaller();
@@ -29,7 +30,7 @@ namespace TyphenApi
 
         public Uri RequestUri { get; private set; }
         public ApiT Api { get; protected set; }
-        public bool IsOpened { get; private set; }
+        public bool IsOpened { get { return isOpened; } }
 
         public abstract void OnConnectionCreate(WebSocket connection);
         public abstract void OnConnectionOpen();
@@ -144,13 +145,13 @@ namespace TyphenApi
 
         void OnOpen(object sender, EventArgs e)
         {
-            IsOpened = true;
+            isOpened = true;
             synchronizedFunctionCaller.ReserveCall(() => OnConnectionOpen());
         }
 
         void OnClose(object sender, CloseEventArgs e)
         {
-            IsOpened = false;
+            isOpened = false;
             synchronizedFunctionCaller.ReserveCall(() => OnConnectionClose(e.Code, e.Reason, e.WasClean));
         }
 
