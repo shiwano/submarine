@@ -80,7 +80,7 @@ func TestMain(t *testing.T) {
 					session, _ := newSession(server.URL+"/room/1", serializer)
 					defer session.Close()
 
-					session.api.Battle.Ping = func(p *battle.Ping) {
+					session.api.Battle.OnPingReceive = func(p *battle.Ping) {
 						c.So(p.Message, ShouldEqual, "Foobar")
 						done <- true
 					}
