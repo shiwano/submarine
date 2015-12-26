@@ -10,6 +10,10 @@ func newRoom(battleID uint64) *Room {
 	return &Room{battleID, make(map[uint64]*Session)}
 }
 
+func (room *Room) isEmpty() bool {
+	return len(room.sessions) == 0
+}
+
 func (room *Room) join(session *Session) {
 	room.sessions[session.id] = session
 }

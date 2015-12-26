@@ -48,6 +48,9 @@ func NewEngine() (*gin.Engine, *io.PipeWriter) {
 
 			if session.room != nil {
 				session.room.leave(session)
+				if session.room.isEmpty() {
+					delete(rooms, session.room.battleID)
+				}
 				session.room = nil
 			}
 		}
