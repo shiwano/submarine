@@ -22,8 +22,8 @@ func TestBattleServer(t *testing.T) {
 		Convey("should be connectable by web socket protocol", func() {
 			done := make(chan error)
 			go func() {
-				session, err := newSession(server.URL + "/battle?battle_id=1")
-				defer session.Close()
+				session, err := newClientSession(server.URL + "/battle?battle_id=1")
+				defer session.close()
 				done <- err
 			}()
 			err := <-done
@@ -33,8 +33,8 @@ func TestBattleServer(t *testing.T) {
 		Convey("should respond to a ping message", func() {
 			done := make(chan *battle.PingObject)
 			go func() {
-				session, _ := newSession(server.URL + "/battle?battle_id=1")
-				defer session.Close()
+				session, _ := newClientSession(server.URL + "/battle?battle_id=1")
+				defer session.close()
 				session.api.Battle.OnPingReceive = func(message *battle.PingObject) { done <- message }
 				session.api.Battle.SendPing(&battle.PingObject{"Hey"})
 				session.readMessage()
@@ -59,7 +59,7 @@ func (session *clientSession) Send(msg []byte) {
 	session.conn.WriteMessage(websocket.BinaryMessage, msg)
 }
 
-func (session *clientSession) Close() {
+func (session *clientSession) close() {
 	session.conn.WriteMessage(
 		websocket.CloseMessage,
 		websocket.FormatCloseMessage(websocket.CloseNormalClosure, ""))
@@ -75,14 +75,9 @@ func (session *clientSession) readMessage() error {
 	return nil
 }
 
-func newDialer(url string) (*websocket.Conn, error) {
+func newClientSession(url string) (*clientSession, error) {
 	dialer := &websocket.Dialer{}
-	conn, _, err := dialer.Dial(strings.Replace(url, "http", "ws", 1), nil)
-	return conn, err
-}
-
-func newSession(url string) (*clientSession, error) {
-	conn, connErr := newDialer(url)
+	conn, _, connErr := dialer.Dial(strings.Replace(url, "http", "ws", 1), nil)
 	if connErr != nil {
 		return nil, connErr
 	}
