@@ -74,12 +74,12 @@ func TestBattleServer(t *testing.T) {
 		})
 
 		Convey("should respond to a ping message", func() {
-			done := make(chan *battle.Ping)
+			done := make(chan *battle.PingObject)
 			go func() {
 				session, _ := newSession(server.URL + "/battle?battle_id=1")
 				defer session.Close()
-				session.api.Battle.OnPingReceive = func(message *battle.Ping) { done <- message }
-				session.api.Battle.SendPing(&battle.Ping{"Hey"})
+				session.api.Battle.OnPingReceive = func(message *battle.PingObject) { done <- message }
+				session.api.Battle.SendPing(&battle.PingObject{"Hey"})
 				session.readMessage()
 			}()
 			message := <-done
