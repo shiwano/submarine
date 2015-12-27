@@ -15,49 +15,6 @@ import (
 	"testing"
 )
 
-type clientSession struct {
-	*websocket.Conn
-	api *api.WebSocketAPI
-}
-
-func (session *clientSession) Send(msg []byte) {
-	session.WriteMessage(websocket.BinaryMessage, msg)
-}
-
-func (session *clientSession) readMessage() error {
-	_, data, err := session.ReadMessage()
-	if err != nil {
-		return err
-	}
-	session.api.DispatchMessageEvent(data)
-	return nil
-}
-
-func newDialer(url string) (*websocket.Conn, error) {
-	dialer := &websocket.Dialer{}
-	conn, _, err := dialer.Dial(strings.Replace(url, "http", "ws", 1), nil)
-	return conn, err
-}
-
-func newSession(url string) (*clientSession, error) {
-	conn, connErr := newDialer(url)
-	if connErr != nil {
-		return nil, connErr
-	}
-	serializer := typhenapi.NewJSONSerializer()
-	session := &clientSession{conn, nil}
-	session.api = api.New(session, serializer, nil)
-	return session, nil
-}
-
-func newTestServer() (*httptest.Server, *io.PipeWriter) {
-	main.Log.Level = logrus.WarnLevel
-	gin.SetMode(gin.TestMode)
-	engine, logWriter := main.NewEngine()
-	server := httptest.NewServer(engine)
-	return server, logWriter
-}
-
 func TestBattleServer(t *testing.T) {
 	Convey("BattleServer", t, func() {
 		server, logWriter := newTestServer()
@@ -65,8 +22,8 @@ func TestBattleServer(t *testing.T) {
 		Convey("should be connectable by web socket protocol", func() {
 			done := make(chan error)
 			go func() {
-				conn, err := newDialer(server.URL + "/battle?battle_id=1")
-				defer conn.Close()
+				session, err := newSession(server.URL + "/battle?battle_id=1")
+				defer session.Close()
 				done <- err
 			}()
 			err := <-done
@@ -91,4 +48,55 @@ func TestBattleServer(t *testing.T) {
 			logWriter.Close()
 		})
 	})
+}
+
+type clientSession struct {
+	conn *websocket.Conn
+	api  *api.WebSocketAPI
+}
+
+func (session *clientSession) Send(msg []byte) {
+	session.conn.WriteMessage(websocket.BinaryMessage, msg)
+}
+
+func (session *clientSession) Close() {
+	session.conn.WriteMessage(
+		websocket.CloseMessage,
+		websocket.FormatCloseMessage(websocket.CloseNormalClosure, ""))
+	session.conn.Close()
+}
+
+func (session *clientSession) readMessage() error {
+	_, data, err := session.conn.ReadMessage()
+	if err != nil {
+		return err
+	}
+	session.api.DispatchMessageEvent(data)
+	return nil
+}
+
+func newDialer(url string) (*websocket.Conn, error) {
+	dialer := &websocket.Dialer{}
+	conn, _, err := dialer.Dial(strings.Replace(url, "http", "ws", 1), nil)
+	return conn, err
+}
+
+func newSession(url string) (*clientSession, error) {
+	conn, connErr := newDialer(url)
+	if connErr != nil {
+		return nil, connErr
+	}
+	serializer := typhenapi.NewJSONSerializer()
+	session := &clientSession{}
+	session.conn = conn
+	session.api = api.New(session, serializer, nil)
+	return session, nil
+}
+
+func newTestServer() (*httptest.Server, *io.PipeWriter) {
+	main.Log.Level = logrus.WarnLevel
+	gin.SetMode(gin.TestMode)
+	engine, logWriter := main.NewEngine()
+	server := httptest.NewServer(engine)
+	return server, logWriter
 }

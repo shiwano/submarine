@@ -4,6 +4,7 @@ import (
 	"app/typhenapi/core"
 	"app/typhenapi/type/submarine/battle"
 	api "app/typhenapi/websocket/submarine"
+	"github.com/gorilla/websocket"
 	"github.com/olahol/melody"
 )
 
@@ -28,15 +29,19 @@ func newSession(melodySession *melody.Session, id uint64) *Session {
 	return session
 }
 
+func (session *Session) onMessage(data []byte) {
+	session.api.DispatchMessageEvent(data)
+}
+
 func (session *Session) onError(data interface{}, err error) {
-	Log.Error(err)
+	if closeError, ok := err.(*websocket.CloseError); ok {
+		if closeError.Code != 1000 {
+			Log.Error(err)
+		}
+	}
 }
 
 func (session *Session) onPingReceive(message *battle.PingObject) {
 	message.Message += " " + message.Message
 	session.api.Battle.SendPing(message)
-}
-
-func (session *Session) handleMessage(data []byte) {
-	session.api.DispatchMessageEvent(data)
 }

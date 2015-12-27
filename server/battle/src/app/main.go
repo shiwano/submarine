@@ -58,7 +58,13 @@ func NewEngine() (*gin.Engine, *io.PipeWriter) {
 
 	m.HandleMessageBinary(func(rawSession *melody.Session, data []byte) {
 		if session, ok := sessions[rawSession]; ok {
-			session.handleMessage(data)
+			session.onMessage(data)
+		}
+	})
+
+	m.HandleError(func(rawSession *melody.Session, err error) {
+		if session, ok := sessions[rawSession]; ok {
+			session.onError(nil, err)
 		}
 	})
 
