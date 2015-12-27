@@ -8,12 +8,12 @@ import (
 
 var _ = errors.New
 
-// Ping is kind of a TyphenAPI type.
-type Ping struct {
+// PingObject is kind of a TyphenAPI type.
+type PingObject struct {
 	Message string `codec:"message"`
 }
 
 // Coerce the fields.
-func (t *Ping) Coerce() error {
+func (t *PingObject) Coerce() error {
 	return nil
 }

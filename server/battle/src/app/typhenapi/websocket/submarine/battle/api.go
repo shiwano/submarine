@@ -17,7 +17,7 @@ type WebSocketAPI struct {
 	serializer   *typhenapi.Serializer
 	errorHandler func(interface{}, error)
 
-	OnPingReceive func(message *submarine_battle.Ping)
+	OnPingReceive func(message *submarine_battle.PingObject)
 }
 
 // New creates a WebSocketAPI.
@@ -30,7 +30,7 @@ func New(session typhenapi.Session, serializer *typhenapi.Serializer, errorHandl
 }
 
 // SendPing sends a ping message.
-func (api *WebSocketAPI) SendPing(ping *submarine_battle.Ping) error {
+func (api *WebSocketAPI) SendPing(ping *submarine_battle.PingObject) error {
 	message, err := typhenapi.NewMessage(api.serializer, MessageType_Ping, ping)
 
 	if err != nil {
@@ -58,7 +58,7 @@ func (api *WebSocketAPI) DispatchMessageEvent(data []byte) error {
 
 	switch message.Type {
 	case MessageType_Ping:
-		typhenType := new(submarine_battle.Ping)
+		typhenType := new(submarine_battle.PingObject)
 		if err := api.serializer.Deserialize(message.Body, typhenType); err != nil {
 			if api.errorHandler != nil {
 				api.errorHandler(data, err)

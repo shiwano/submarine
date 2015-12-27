@@ -13,7 +13,7 @@ namespace TyphenApi.WebSocketApi.Parts.Submarine
 
         readonly IWebSocketSession session;
 
-        public event Action<TyphenApi.Type.Submarine.Battle.Ping> OnPingReceive;
+        public event Action<TyphenApi.Type.Submarine.Battle.PingObject> OnPingReceive;
 
 
         public Battle(IWebSocketSession session)
@@ -22,14 +22,14 @@ namespace TyphenApi.WebSocketApi.Parts.Submarine
 
         }
 
-        public void SendPing(TyphenApi.Type.Submarine.Battle.Ping ping)
+        public void SendPing(TyphenApi.Type.Submarine.Battle.PingObject ping)
         {
             session.Send((int)MessageType.Ping, ping);
         }
 
         public void SendPing(string message)
         {
-            session.Send((int)MessageType.Ping, new TyphenApi.Type.Submarine.Battle.Ping()
+            session.Send((int)MessageType.Ping, new TyphenApi.Type.Submarine.Battle.PingObject()
             {
                 Message = message,
             });
@@ -41,7 +41,7 @@ namespace TyphenApi.WebSocketApi.Parts.Submarine
             {
                 case MessageType.Ping:
                 {
-                    var message = session.MessageDeserializer.Deserialize<TyphenApi.Type.Submarine.Battle.Ping>(messageData);
+                    var message = session.MessageDeserializer.Deserialize<TyphenApi.Type.Submarine.Battle.PingObject>(messageData);
 
                     if (OnPingReceive != null)
                     {

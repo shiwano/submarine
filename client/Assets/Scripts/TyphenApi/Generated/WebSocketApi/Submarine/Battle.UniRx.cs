@@ -7,9 +7,9 @@ namespace TyphenApi.WebSocketApi.Parts.Submarine
 {
     public partial class Battle : TyphenApi.IWebSocketApi
     {
-        public IObservable<TyphenApi.Type.Submarine.Battle.Ping> OnPingReceiveAsObservable()
+        public IObservable<TyphenApi.Type.Submarine.Battle.PingObject> OnPingReceiveAsObservable()
         {
-            return Observable.FromEvent<TyphenApi.Type.Submarine.Battle.Ping>(h => OnPingReceive += h, h => OnPingReceive -= h);
+            return Observable.FromEvent<TyphenApi.Type.Submarine.Battle.PingObject>(h => OnPingReceive += h, h => OnPingReceive -= h);
         }
     }
 }
