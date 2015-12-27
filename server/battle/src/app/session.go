@@ -10,15 +10,10 @@ import (
 
 // Session represents a network session that has user infos.
 type Session struct {
-	*melody.Session
+	base *melody.Session
 	id   uint64
 	api  *api.WebSocketAPI
 	room *Room
-}
-
-// Send sends raw message data.
-func (session *Session) Send(msg []byte) {
-	session.WriteBinary(msg)
 }
 
 func newSession(melodySession *melody.Session, id uint64) *Session {
@@ -27,6 +22,15 @@ func newSession(melodySession *melody.Session, id uint64) *Session {
 	session.api = api.New(session, serializer, session.onError)
 	session.api.Battle.OnPingReceive = session.onPingReceive
 	return session
+}
+
+// Send sends raw message data to client.
+func (session *Session) Send(msg []byte) {
+	session.base.WriteBinary(msg)
+}
+
+func (session *Session) close() {
+	session.base.Close()
 }
 
 func (session *Session) onMessage(data []byte) {

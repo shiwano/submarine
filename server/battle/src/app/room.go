@@ -24,7 +24,7 @@ func (room *Room) leave(session *Session) {
 
 func (room *Room) close() {
 	for _, session := range room.sessions {
-		session.Close()
+		session.close()
 	}
 	room.sessions = nil
 }
