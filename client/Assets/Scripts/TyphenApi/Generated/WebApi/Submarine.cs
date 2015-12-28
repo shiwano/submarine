@@ -93,5 +93,56 @@ namespace TyphenApi.WebApi.Base
             return request;
         }
 
+        class CreateRoomRequestParameters : TyphenApi.TypeBase<CreateRoomRequestParameters>
+        {
+        }
+
+        public TyphenApi.WebApiRequest<TyphenApi.Type.Submarine.CreateRoomObject, TyphenApi.Type.Submarine.Error> CreateRoom()
+        {
+            var requestBody = new CreateRoomRequestParameters();
+
+            var request = new TyphenApi.WebApiRequest<TyphenApi.Type.Submarine.CreateRoomObject, TyphenApi.Type.Submarine.Error>(this);
+            request.Uri = new Uri(BaseUri, "create_room");
+            request.Method = HttpMethod.Post;
+            request.Body = requestBody;
+            request.NoAuthenticationRequired = false;
+            return request;
+        }
+
+        class GetRoomsRequestParameters : TyphenApi.TypeBase<GetRoomsRequestParameters>
+        {
+        }
+
+        public TyphenApi.WebApiRequest<TyphenApi.Type.Submarine.GetRoomsObject, TyphenApi.Type.Submarine.Error> GetRooms()
+        {
+            var requestBody = new GetRoomsRequestParameters();
+
+            var request = new TyphenApi.WebApiRequest<TyphenApi.Type.Submarine.GetRoomsObject, TyphenApi.Type.Submarine.Error>(this);
+            request.Uri = new Uri(BaseUri, "get_rooms");
+            request.Method = HttpMethod.Post;
+            request.Body = requestBody;
+            request.NoAuthenticationRequired = false;
+            return request;
+        }
+
+        class JoinIntoRoomRequestParameters : TyphenApi.TypeBase<JoinIntoRoomRequestParameters>
+        {
+            protected static readonly SerializationInfo<JoinIntoRoomRequestParameters, long> roomId = new SerializationInfo<JoinIntoRoomRequestParameters, long>("room_id", false, (x) => x.RoomId, (x, v) => x.RoomId = v);
+            public long RoomId { get; set; }
+        }
+
+        public TyphenApi.WebApiRequest<TyphenApi.Type.Void, TyphenApi.Type.Submarine.Error> JoinIntoRoom(long room_id)
+        {
+            var requestBody = new JoinIntoRoomRequestParameters();
+            requestBody.RoomId = room_id;
+
+            var request = new TyphenApi.WebApiRequest<TyphenApi.Type.Void, TyphenApi.Type.Submarine.Error>(this);
+            request.Uri = new Uri(BaseUri, "join_into_room");
+            request.Method = HttpMethod.Post;
+            request.Body = requestBody;
+            request.NoAuthenticationRequired = false;
+            return request;
+        }
+
     }
 }
