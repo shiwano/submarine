@@ -26,6 +26,17 @@ class User < ActiveRecord::Base
   validates :name, uniqueness: true
   validates :name, length: { minimum: 3 }
 
+  def create_room(params)
+    with_lock do
+      if room.present?
+        raise ApplicationError::RoomCreatingFailed.new('user has already a room')
+      end
+      newRoom = Room.create(params)
+      newRoom.join(self)
+      newRoom
+    end
+  end
+
   def to_api_type
     TyphenApi::Model::Submarine::User.new(id: id, name: name)
   end
