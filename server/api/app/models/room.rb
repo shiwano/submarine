@@ -10,5 +10,6 @@
 #
 
 class Room < ActiveRecord::Base
-  has_many :room_member
+  has_many :room_members
+  has_many :users, through: :room_members
 end
