@@ -7,9 +7,9 @@ RSpec.describe Room, type: :model do
   it { should have_many(:room_members).dependent(:delete_all) }
   it { should have_many :users }
 
-  describe '#join' do
+  describe '#join_user' do
     let(:user) { create(:user) }
-    subject { room.join(user) }
+    subject { room.join_user(user) }
 
     it 'should join an user' do
       expect { subject }.to change { room.users.count }.from(0).to(1)
@@ -19,7 +19,7 @@ RSpec.describe Room, type: :model do
       before do
         room.max_member_count.times do
           user = create(:user)
-          room.join(user)
+          room.join_user(user)
         end
       end
       it 'should raise error' do

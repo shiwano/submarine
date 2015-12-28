@@ -22,7 +22,7 @@ class Room < ActiveRecord::Base
     users.count < max_member_count
   end
 
-  def join(user)
+  def join_user(user)
     with_lock do
       if full?
         RoomMember.create(room: self, user: user)

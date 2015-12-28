@@ -32,7 +32,7 @@ class User < ActiveRecord::Base
         raise ApplicationError::RoomCreatingFailed.new('user has already a room')
       end
       newRoom = Room.create(params)
-      newRoom.join(self)
+      newRoom.join_user(self)
       newRoom
     end
   end

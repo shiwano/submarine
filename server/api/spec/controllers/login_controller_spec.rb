@@ -19,7 +19,7 @@ RSpec.describe LoginController, type: :controller do
       context 'when the user has joined a room' do
         before do
           room = create(:room)
-          room.join(user)
+          room.join_user(user)
           post :service, params
         end
 
