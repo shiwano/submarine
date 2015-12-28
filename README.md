@@ -10,7 +10,8 @@ Install tools.
 
 ```bash
 $ brew tap shiwano/formulas
-$ brew install robo musta
+$ brew install robo musta node
+$ npm install -g typhen
 ```
 
 Make out `build.yml` from `build.example.yml`.
