@@ -12,4 +12,22 @@
 class Room < ActiveRecord::Base
   has_many :room_members
   has_many :users, through: :room_members
+
+  def max_member_count
+    4
+  end
+
+  def full?
+    users.count < max_member_count
+  end
+
+  def join(user)
+    with_lock do
+      if full?
+        RoomMember.create(room: self, user: user)
+      else
+        raise ApplicationError::RoomIsFull.new("room(#{id}) is full")
+      end
+    end
+  end
 end
