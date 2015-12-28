@@ -40,6 +40,7 @@ func NewEngine() (*gin.Engine, *io.PipeWriter) {
 		}
 		room.join(session)
 		session.room = room
+		Log.Infof("Session(%v) is connected", session.id)
 	})
 
 	m.HandleDisconnect(func(rawSession *melody.Session) {
@@ -53,6 +54,7 @@ func NewEngine() (*gin.Engine, *io.PipeWriter) {
 				}
 				session.room = nil
 			}
+			Log.Infof("Session(%v) is disconnected", session.id)
 		}
 	})
 
