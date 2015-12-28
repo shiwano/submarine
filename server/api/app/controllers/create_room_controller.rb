@@ -3,7 +3,15 @@ class CreateRoomController < ApplicationController
   include TyphenApiRespondable
 
   def service
-    # Implement here.
-    render_response(room: nil)
+    render_response(room: new_room.to_api_type)
+  end
+
+  def new_room
+    @new_room ||= current_user.create_room(battle_server_base_uri: battle_server_base_uri)
+  end
+
+  def battle_server_base_uri
+    # TODO: battle_server_base_uri is temporary.
+    'ws://localhost:5000'
   end
 end
