@@ -10,7 +10,7 @@
 #
 
 class Room < ActiveRecord::Base
-  has_many :room_members
+  has_many :room_members, dependent: :delete_all
   has_many :users, through: :room_members
 
   def max_member_count
