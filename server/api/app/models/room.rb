@@ -7,6 +7,7 @@
 #  lock_version           :integer
 #  created_at             :datetime         not null
 #  updated_at             :datetime         not null
+#  room_members_count     :integer
 #
 
 class Room < ActiveRecord::Base
