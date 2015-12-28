@@ -27,10 +27,7 @@ class User < ActiveRecord::Base
   validates :name, length: { minimum: 3 }
 
   def create_room(params)
-    with_lock do
-      if room.present?
-        raise ApplicationError::RoomCreatingFailed.new('user has already a room')
-      end
+    User.transaction do
       newRoom = Room.create(params)
       newRoom.join_user(self)
       newRoom

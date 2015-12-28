@@ -30,10 +30,14 @@ class Room < ActiveRecord::Base
 
   def join_user(user)
     with_lock do
-      if full?
-        RoomMember.create(room: self, user: user)
-      else
+      unless full?
         raise ApplicationError::RoomIsFull.new("room(#{id}) is full")
+      end
+
+      begin
+        RoomMember.create(room: self, user: user)
+      rescue ActiveRecord::RecordNotUnique
+        raise ApplicationError::RoomAlreadyJoined.new("user has already joined")
       end
     end
   end

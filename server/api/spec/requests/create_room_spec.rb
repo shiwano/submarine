@@ -27,7 +27,7 @@ RSpec.describe "CreateRoom", type: :request do
       end
 
       it "should not work" do
-        expect { post create_room_path }.to raise_error(ApplicationError::RoomCreatingFailed)
+        expect { post create_room_path }.to raise_error ApplicationError::RoomAlreadyJoined
       end
     end
   end

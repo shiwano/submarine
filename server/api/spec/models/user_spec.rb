@@ -31,7 +31,7 @@ RSpec.describe User, type: :model do
         user.reload
       end
       it 'should raise error' do
-        expect { subject }.to raise_error ApplicationError::RoomCreatingFailed
+        expect { subject }.to raise_error ApplicationError::RoomAlreadyJoined
       end
     end
   end

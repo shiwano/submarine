@@ -17,6 +17,15 @@ RSpec.describe Room, type: :model do
       expect { subject }.to change { room.users.count }.from(0).to(1)
     end
 
+    context 'with an user that has already joined into a room' do
+      before do
+        room.join_user(user)
+      end
+      it 'should raise error' do
+        expect { subject }.to raise_error ApplicationError::RoomAlreadyJoined
+      end
+    end
+
     context 'when the room is full' do
       before do
         room.max_member_count.times do

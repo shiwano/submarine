@@ -4,5 +4,5 @@ module ApplicationError
   class NotAuthenticated < StandardError; end
 
   class RoomIsFull < StandardError; end
-  class RoomCreatingFailed < StandardError; end
+  class RoomAlreadyJoined < StandardError; end
 end
