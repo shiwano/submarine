@@ -7,6 +7,8 @@ RSpec.describe Room, type: :model do
   it { should have_many(:room_members).dependent(:delete_all) }
   it { should have_many :users }
 
+  it { should validate_presence_of :battle_server_base_uri }
+
   describe '#join_user' do
     let(:user) { create(:user) }
     subject { room.join_user(user) }

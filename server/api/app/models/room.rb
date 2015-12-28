@@ -14,6 +14,8 @@ class Room < ActiveRecord::Base
   has_many :room_members, dependent: :delete_all
   has_many :users, through: :room_members
 
+  validates :battle_server_base_uri, presence: true
+
   def max_member_count
     4
   end
