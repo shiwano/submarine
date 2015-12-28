@@ -7,7 +7,11 @@
 #  lock_version           :integer
 #  created_at             :datetime         not null
 #  updated_at             :datetime         not null
-#  room_members_count     :integer
+#  room_members_count     :integer          default(0)
+#
+# Indexes
+#
+#  index_rooms_on_room_members_count  (room_members_count)
 #
 
 class Room < ActiveRecord::Base

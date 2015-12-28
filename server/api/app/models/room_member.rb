@@ -11,7 +11,7 @@
 # Indexes
 #
 #  index_room_members_on_room_id  (room_id)
-#  index_room_members_on_user_id  (user_id)
+#  index_room_members_on_user_id  (user_id) UNIQUE
 #
 
 class RoomMember < ActiveRecord::Base
