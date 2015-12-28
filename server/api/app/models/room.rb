@@ -20,12 +20,12 @@ class Room < ActiveRecord::Base
 
   validates :battle_server_base_uri, presence: true
 
-  def max_member_count
+  def max_room_members_count
     4
   end
 
   def full?
-    users.count < max_member_count
+    room_members_count < max_room_members_count
   end
 
   def join_user(user)

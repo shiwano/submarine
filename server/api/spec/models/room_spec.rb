@@ -28,7 +28,7 @@ RSpec.describe Room, type: :model do
 
     context 'when the room is full' do
       before do
-        room.max_member_count.times do
+        room.max_room_members_count.times do
           user = create(:user)
           room.join_user(user)
         end
