@@ -26,4 +26,10 @@ RSpec.describe Room, type: :model do
       end
     end
   end
+
+  describe '#to_api_type' do
+    it 'should return an instance of the typhen api type' do
+      expect(subject.to_api_type).to be_a_kind_of TyphenApi::Model::Submarine::Room
+    end
+  end
 end

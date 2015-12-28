@@ -30,4 +30,11 @@ class Room < ActiveRecord::Base
       end
     end
   end
+
+  def to_api_type
+    TyphenApi::Model::Submarine::Room.new(
+      id: id,
+      battle_server_base_uri: battle_server_base_uri,
+      members: users.map { |u| u.to_api_type })
+  end
 end
