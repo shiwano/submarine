@@ -1,5 +1,8 @@
 require 'rails_helper'
 
 RSpec.describe RoomMember, type: :model do
-  pending "add some examples to (or delete) #{__FILE__}"
+  subject { create(:room_member) }
+
+  it { should belong_to :room }
+  it { should belong_to :user }
 end

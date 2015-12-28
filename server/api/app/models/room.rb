@@ -10,4 +10,5 @@
 #
 
 class Room < ActiveRecord::Base
+  has_many :room_member
 end

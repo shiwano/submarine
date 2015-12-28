@@ -18,6 +18,8 @@
 class User < ActiveRecord::Base
   authenticates_with_sorcery!
 
+  has_one :room_member
+
   validates :password, length: { minimum: 6 }
 
   validates :name, presence: true
