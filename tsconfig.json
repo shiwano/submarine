@@ -1,0 +1,36 @@
+{
+  "files": [ "contract/contract.d.ts" ],
+  "compilerOptions": {
+    "module": "commonjs",
+    "experimentalDecorators": true,
+    "target": "ES5"
+  },
+  "typhen": [
+    {
+      "plugin": "./tools/typhen/typhen-api/index",
+      "pluginOptions": {
+        "templateName": "unity",
+        "includeUniRxFiles": true
+      },
+      "outDir": "client/Assets/Scripts"
+    },
+    {
+      "plugin": "./tools/typhen/typhen-api/index",
+      "pluginOptions": {
+        "templateName": "rails",
+        "targetModule": "Submarine"
+      },
+      "outDir": "server/api",
+      "files": [ "contract/server_contract.d.ts" ]
+    },
+    {
+      "plugin": "./tools/typhen/typhen-api/index",
+      "pluginOptions": {
+        "templateName": "go",
+        "importBasePath": "app/typhenapi"
+      },
+      "outDir": "server/battle/src/app",
+      "files": [ "contract/server_contract.d.ts" ]
+    }
+  ]
+}
