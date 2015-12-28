@@ -8,6 +8,7 @@
 #  salt             :string(255)
 #  created_at       :datetime
 #  updated_at       :datetime
+#  lock_version     :integer
 #
 # Indexes
 #
