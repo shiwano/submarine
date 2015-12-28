@@ -18,7 +18,8 @@
       "plugin": "./tools/typhen/typhen-api/index",
       "pluginOptions": {
         "templateName": "rails",
-        "targetModule": "Submarine"
+        "targetModule": "Submarine",
+        "spec": true
       },
       "outDir": "server/api",
       "files": [ "contract/server_contract.d.ts" ]

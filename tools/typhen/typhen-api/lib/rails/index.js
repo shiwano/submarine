@@ -46,11 +46,19 @@ module.exports = function(typhen, options, helpers) {
 
       g.generate('lib/rails/templates/routes.hbs', 'lib/typhen_api/typhen_api/routes.rb', functions);
 
+      if (options.spec) {
+        g.generate('lib/rails/templates/spec/routing.hbs', 'spec/routing/generated_routing_spec.rb', functions);
+      }
+
       functions.forEach(function(func) {
-        var controllerPath = 'app/controllers/' + helpers.controllerPath(func) + '_controller.rb';
-        g.generateUnlessExist('lib/rails/templates/controller/app_controller.hbs', controllerPath, func);
         g.generate('lib/rails/templates/controller/controller.hbs', 'underscore:lib/typhen_api/typhen_api/controller/**/*.rb', func);
+        g.generateUnlessExist('lib/rails/templates/controller/app_controller.hbs', 'app/controllers/' + helpers.controllerPath(func) + '_controller.rb', func);
         g.generateUnlessExist('lib/rails/templates/controller/module.hbs', 'underscore:lib/typhen_api/typhen_api/controller/**/*.rb', func.parentModule);
+
+        if (options.spec) {
+          g.generateUnlessExist('lib/rails/templates/spec/controller_spec.hbs', 'spec/controllers/' + helpers.controllerPath(func) + '_controller_spec.rb', func);
+          g.generateUnlessExist('lib/rails/templates/spec/request_spec.hbs', 'spec/controllers/' + helpers.controllerPath(func) + '_spec.rb', func);
+        }
 
         if (func.parentModule !== targetModule) {
           var modulePath = 'app/controllers/' + helpers.controllerPath(func.parentModule) + '.rb';
