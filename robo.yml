@@ -1,6 +1,6 @@
 gen:
   summary: Generate code from the contract
-  command: typhen ./tools/typhen/typhenfile.js
+  command: typhen
 
 build:
   summary: build tasks
