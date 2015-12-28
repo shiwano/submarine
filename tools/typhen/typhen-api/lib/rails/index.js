@@ -57,7 +57,7 @@ module.exports = function(typhen, options, helpers) {
 
         if (options.spec) {
           g.generateUnlessExist('lib/rails/templates/spec/controller_spec.hbs', 'spec/controllers/' + helpers.controllerPath(func) + '_controller_spec.rb', func);
-          g.generateUnlessExist('lib/rails/templates/spec/request_spec.hbs', 'spec/controllers/' + helpers.controllerPath(func) + '_spec.rb', func);
+          g.generateUnlessExist('lib/rails/templates/spec/request_spec.hbs', 'spec/requests/' + helpers.controllerPath(func) + '_spec.rb', func);
         }
 
         if (func.parentModule !== targetModule) {
