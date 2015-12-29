@@ -1,14 +1,9 @@
 require 'rails_helper'
 
 RSpec.describe JoinIntoRoomController, type: :controller do
-  context 'POST service' do
+  context 'POST service', with_login: true do
     let(:room) { create(:room) }
     let(:params) { { room_id: room.id } }
-
-    before do
-      user = create :user, :with_stupid_password
-      login_user(user)
-    end
 
     describe 'target_room' do
       subject { assigns(:target_room) }

@@ -1,12 +1,12 @@
 require 'rails_helper'
 
 RSpec.describe "SignUp", type: :request do
-
   describe "POST /sign_up" do
+    let(:params) { { name: 'Kongou', password: 'KantaiCollection' } }
 
     context 'with a valid request' do
       before do
-        post sign_up_path, name: 'Kongou', password: 'KantaiCollection'
+        post(sign_up_path, params)
       end
 
       it "should work" do
@@ -19,10 +19,8 @@ RSpec.describe "SignUp", type: :request do
 
     context 'with invalid params' do
       it "should not work" do
-        expect { post sign_up_path }.to raise_error(Virtus::CoercionError)
+        expect { post(sign_up_path) }.to raise_error(Virtus::CoercionError)
       end
     end
-
   end
-
 end

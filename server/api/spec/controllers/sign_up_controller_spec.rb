@@ -9,9 +9,9 @@ RSpec.describe SignUpController, type: :controller do
     end
 
     describe 'new_user' do
-      subject { @controller.new_user }
+      subject { assigns(:new_user) }
       it { should be_a_kind_of(User) }
-      it { should have_attributes(persisted?: true) }
+      its(:persisted?) { should be true }
     end
   end
 end

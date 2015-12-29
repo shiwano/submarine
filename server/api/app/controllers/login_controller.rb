@@ -13,8 +13,4 @@ class LoginController < ApplicationController
   def logged_in_user
     @logged_in_user ||= login(params.name, params.password)
   end
-
-  def joined_room
-    @joinned_room ||= logged_in_user.room
-  end
 end
