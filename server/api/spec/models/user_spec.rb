@@ -10,7 +10,8 @@ RSpec.describe User, type: :model do
   it { should validate_length_of(:password).is_at_least(6) }
   it { should validate_presence_of :name }
   it { should validate_uniqueness_of :name }
-  it { should validate_length_of(:name).is_at_least(3) }
+  it { should allow_value('-_.').for(:name) }
+  it { should_not allow_value('akagi@kankore').for(:name) }
 
   describe '#create_room' do
     let(:params) { { battle_server_base_uri: Faker::Internet.ip_v4_address } }

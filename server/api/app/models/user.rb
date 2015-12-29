@@ -24,7 +24,7 @@ class User < ActiveRecord::Base
   validates :password, length: { minimum: 6 }
   validates :name, presence: true
   validates :name, uniqueness: true
-  validates :name, length: { minimum: 3 }
+  validates :name, format: { with: /\A[A-Z\d\-_.]+\z/i }
 
   def create_room(params)
     User.transaction do
