@@ -36,8 +36,12 @@ gem 'virtus'
 
 gem 'sorcery'
 gem 'redis-session-store'
-gem "rails_config"
-gem "squeel"
+gem 'rails_config'
+gem 'squeel'
+
+group :development do
+  gem 'bullet'
+end
 
 group :development, :test do
   gem 'spring'
@@ -54,7 +58,7 @@ group :development, :test do
 
   gem 'timecop'
   gem 'database_cleaner'
-  gem "faker"
+  gem 'faker'
   gem 'tapp-awesome_print'
   gem 'annotate', '~> 2.6.6'
 end
