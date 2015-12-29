@@ -1,8 +1,8 @@
 FactoryGirl.define do
 
   factory :room_member do
-    user nil
-    room nil
+    user { create(:user) }
+    room { create(:room) }
     room_key Faker::Internet.password
   end
 

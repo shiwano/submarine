@@ -20,4 +20,10 @@ class RoomMember < ActiveRecord::Base
   belongs_to :room, :counter_cache => true
 
   validates :room_key, presence: true
+
+  def to_battle_room_member_api_type
+    TyphenApi::Model::Submarine::Battle::RoomMember.new(
+      name: user.name,
+      room_key: room_key)
+  end
 end
