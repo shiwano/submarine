@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151229043939) do
+ActiveRecord::Schema.define(version: 20151229092357) do
 
   create_table "room_members", force: :cascade do |t|
     t.integer  "user_id",    limit: 4
@@ -26,7 +26,6 @@ ActiveRecord::Schema.define(version: 20151229043939) do
 
   create_table "rooms", force: :cascade do |t|
     t.string   "battle_server_base_uri", limit: 255,             null: false
-    t.integer  "lock_version",           limit: 4
     t.datetime "created_at",                                     null: false
     t.datetime "updated_at",                                     null: false
     t.integer  "room_members_count",     limit: 4,   default: 0
