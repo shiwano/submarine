@@ -19,13 +19,14 @@ class Room < ActiveRecord::Base
   has_many :users, through: :room_members
 
   validates :battle_server_base_uri, presence: true
+  scope :joinable, -> { where { room_members_count < my { max_room_members_count } } }
 
-  def max_room_members_count
+  def self.max_room_members_count
     4
   end
 
   def full?
-    room_members_count >= max_room_members_count
+    room_members_count >= Room.max_room_members_count
   end
 
   def renew_battle_server_base_uri
