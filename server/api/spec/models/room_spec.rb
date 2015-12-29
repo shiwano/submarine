@@ -57,6 +57,11 @@ RSpec.describe Room, type: :model do
     it { should be_a_kind_of TyphenApi::Model::Submarine::Room }
   end
 
+  describe '#to_battle_room_api_type' do
+    subject { room.to_battle_room_api_type }
+    it { should be_a_kind_of TyphenApi::Model::Submarine::Battle::Room }
+  end
+
   describe '#to_joined_room_api_type' do
     let(:room) { create(:room, :with_user) }
     subject { room.to_joined_room_api_type(room.users.first) }
