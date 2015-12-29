@@ -14,7 +14,7 @@ module TyphenApiRespondable
       response = self.class::ResponseType.new(raw_response)
       render_response_without_validation(response)
     else
-      render_response_without_validation(nil)
+      render_response_without_validation({})
     end
   end
 
