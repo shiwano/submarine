@@ -7,6 +7,7 @@
 #  room_id    :integer
 #  created_at :datetime         not null
 #  updated_at :datetime         not null
+#  room_key   :string(255)      not null
 #
 # Indexes
 #
