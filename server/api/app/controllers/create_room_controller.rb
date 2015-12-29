@@ -7,11 +7,6 @@ class CreateRoomController < ApplicationController
   end
 
   def new_room
-    @new_room ||= current_user.create_room(battle_server_base_uri: battle_server_base_uri)
-  end
-
-  def battle_server_base_uri
-    # TODO: battle_server_base_uri is temporary.
-    'ws://localhost:5000'
+    @new_room ||= current_user.create_room!
   end
 end

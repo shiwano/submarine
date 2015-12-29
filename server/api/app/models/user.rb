@@ -26,10 +26,12 @@ class User < ActiveRecord::Base
   validates :name, uniqueness: true
   validates :name, format: { with: /\A[A-Z\d\-_.]+\z/i }
 
-  def create_room(params)
+  def create_room!
     User.transaction do
-      newRoom = Room.create(params)
-      newRoom.join_user(self)
+      newRoom = Room.new
+      newRoom.renew_battle_server_base_uri
+      newRoom.save!
+      newRoom.join_user!(self)
       newRoom
     end
   end

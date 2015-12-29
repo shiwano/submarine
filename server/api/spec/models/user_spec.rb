@@ -13,9 +13,8 @@ RSpec.describe User, type: :model do
   it { should allow_value('-_.').for(:name) }
   it { should_not allow_value('akagi@kankore').for(:name) }
 
-  describe '#create_room' do
-    let(:params) { { battle_server_base_uri: Faker::Internet.ip_v4_address } }
-    subject { user.create_room(params) }
+  describe '#create_room!' do
+    subject { user.create_room! }
 
     context 'when the user has no room' do
       it 'should create a room' do
@@ -27,10 +26,8 @@ RSpec.describe User, type: :model do
     end
 
     context 'when the user has a room' do
-      before do
-        user.create_room(params)
-        user.reload
-      end
+      let(:user) { create(:user, :with_room) }
+
       it 'should raise error' do
         expect { subject }.to raise_error ApplicationError::RoomAlreadyJoined
       end

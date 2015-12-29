@@ -8,6 +8,12 @@ FactoryGirl.define do
     trait :with_stupid_password do
       password 'secret'
     end
+
+    trait :with_room do
+      after(:create) do |user|
+        user.create_room!
+      end
+    end
   end
 
 end

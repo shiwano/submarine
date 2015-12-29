@@ -9,9 +9,9 @@ RSpec.describe Room, type: :model do
 
   it { should validate_presence_of :battle_server_base_uri }
 
-  describe '#join_user' do
+  describe '#join_user!' do
     let(:user) { create(:user) }
-    subject { room.join_user(user) }
+    subject { room.join_user!(user) }
 
     it 'should join an user' do
       expect { subject }.to change { room.users.count }.from(0).to(1)
@@ -19,7 +19,7 @@ RSpec.describe Room, type: :model do
 
     context 'with an user that has already joined into a room' do
       before do
-        room.join_user(user)
+        room.join_user!(user)
       end
       it 'should raise error' do
         expect { subject }.to raise_error ApplicationError::RoomAlreadyJoined
@@ -30,7 +30,7 @@ RSpec.describe Room, type: :model do
       before do
         room.max_room_members_count.times do
           user = create(:user)
-          room.join_user(user)
+          room.join_user!(user)
         end
       end
       it 'should raise error' do
@@ -45,10 +45,7 @@ RSpec.describe Room, type: :model do
   end
 
   describe '#to_joined_room_api_type' do
-    before do
-      user = create(:user)
-      room.join_user(user)
-    end
+    let(:room) { create(:room, :with_user) }
     subject { room.to_joined_room_api_type(room.users.first) }
     it { should be_a_kind_of TyphenApi::Model::Submarine::JoinedRoom }
   end

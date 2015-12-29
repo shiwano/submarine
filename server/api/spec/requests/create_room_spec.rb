@@ -22,9 +22,7 @@ RSpec.describe "CreateRoom", type: :request do
     end
 
     context 'with the user has already a room' do
-      before do
-        user.create_room(battle_server_base_uri: Faker::Internet.ip_v4_address)
-      end
+      let(:user) { create :user, :with_stupid_password, :with_room }
 
       it "should not work" do
         expect { post create_room_path }.to raise_error ApplicationError::RoomAlreadyJoined

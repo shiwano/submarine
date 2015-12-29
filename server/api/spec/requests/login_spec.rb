@@ -8,7 +8,7 @@ RSpec.describe 'Login', type: :request do
 
     context 'with a valid request' do
       before do
-        room.join_user(user)
+        room.join_user!(user)
         post login_path, name: user.name, password: 'secret'
       end
 

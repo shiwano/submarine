@@ -28,11 +28,16 @@ class Room < ActiveRecord::Base
     room_members_count < max_room_members_count
   end
 
+  def renew_battle_server_base_uri
+    # TODO: battle_server_base_uri is temporary.
+    self.battle_server_base_uri = 'ws://localhost:5000'
+  end
+
   def random_room_key
     SecureRandom.urlsafe_base64
   end
 
-  def join_user(user)
+  def join_user!(user)
     with_lock do
       unless full?
         raise ApplicationError::RoomIsFull.new("room(#{id}) is full")
