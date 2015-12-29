@@ -28,6 +28,10 @@ class Room < ActiveRecord::Base
     room_members_count < max_room_members_count
   end
 
+  def random_room_key
+    SecureRandom.urlsafe_base64
+  end
+
   def join_user(user)
     with_lock do
       unless full?
@@ -35,9 +39,9 @@ class Room < ActiveRecord::Base
       end
 
       begin
-        RoomMember.create(room: self, user: user)
+        RoomMember.create(room: self, user: user, room_key: random_room_key)
       rescue ActiveRecord::RecordNotUnique
-        raise ApplicationError::RoomAlreadyJoined.new("user has already joined")
+        raise ApplicationError::RoomAlreadyJoined.new("user(#{user.id}) has already joined")
       end
     end
   end
