@@ -18,4 +18,6 @@
 class RoomMember < ActiveRecord::Base
   belongs_to :user
   belongs_to :room, :counter_cache => true
+
+  validates :room_key, presence: true
 end
