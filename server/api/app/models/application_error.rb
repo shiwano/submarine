@@ -5,4 +5,5 @@ module ApplicationError
 
   class RoomIsFull < StandardError; end
   class RoomAlreadyJoined < StandardError; end
+  class RoomNotFound < StandardError; end
 end
