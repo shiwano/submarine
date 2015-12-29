@@ -10,7 +10,7 @@ module TyphenApi::Controller::Submarine
       attribute :room_id, Integer, :required => true
     end
 
-    ResponseType = nil
+    ResponseType = TyphenApi::Model::Submarine::JoinIntoRoomObject
     ErrorType = TyphenApi::Model::Submarine::Error
 
     def no_authentication_required?

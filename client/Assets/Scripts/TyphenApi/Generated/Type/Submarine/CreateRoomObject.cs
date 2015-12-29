@@ -8,5 +8,7 @@ namespace TyphenApi.Type.Submarine
     {
         protected static readonly SerializationInfo<CreateRoomObject, TyphenApi.Type.Submarine.Room> room = new SerializationInfo<CreateRoomObject, TyphenApi.Type.Submarine.Room>("room", false, (x) => x.Room, (x, v) => x.Room = v);
         public TyphenApi.Type.Submarine.Room Room { get; set; }
+        protected static readonly SerializationInfo<CreateRoomObject, string> roomKey = new SerializationInfo<CreateRoomObject, string>("room_key", false, (x) => x.RoomKey, (x, v) => x.RoomKey = v);
+        public string RoomKey { get; set; }
     }
 }

@@ -131,12 +131,12 @@ namespace TyphenApi.WebApi.Base
             public long RoomId { get; set; }
         }
 
-        public TyphenApi.WebApiRequest<TyphenApi.Type.Void, TyphenApi.Type.Submarine.Error> JoinIntoRoom(long room_id)
+        public TyphenApi.WebApiRequest<TyphenApi.Type.Submarine.JoinIntoRoomObject, TyphenApi.Type.Submarine.Error> JoinIntoRoom(long room_id)
         {
             var requestBody = new JoinIntoRoomRequestParameters();
             requestBody.RoomId = room_id;
 
-            var request = new TyphenApi.WebApiRequest<TyphenApi.Type.Void, TyphenApi.Type.Submarine.Error>(this);
+            var request = new TyphenApi.WebApiRequest<TyphenApi.Type.Submarine.JoinIntoRoomObject, TyphenApi.Type.Submarine.Error>(this);
             request.Uri = new Uri(BaseUri, "join_into_room");
             request.Method = HttpMethod.Post;
             request.Body = requestBody;
