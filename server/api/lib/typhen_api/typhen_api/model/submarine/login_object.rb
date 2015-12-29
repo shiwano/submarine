@@ -4,7 +4,6 @@ module TyphenApi::Model::Submarine
   class LoginObject
     include Virtus.model(:strict => true)
 
-    attribute :user, TyphenApi::Model::Submarine::User, :required => true
-    attribute :joined_room, TyphenApi::Model::Submarine::Room, :required => false
+    attribute :user, TyphenApi::Model::Submarine::LoggedInUser, :required => true
   end
 end

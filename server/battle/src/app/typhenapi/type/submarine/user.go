@@ -10,7 +10,6 @@ var _ = errors.New
 
 // User is kind of a TyphenAPI type.
 type User struct {
-	Id   int    `codec:"id"`
 	Name string `codec:"name"`
 }
 

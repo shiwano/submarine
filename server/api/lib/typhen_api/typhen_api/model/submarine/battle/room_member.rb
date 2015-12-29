@@ -5,6 +5,6 @@ module TyphenApi::Model::Submarine::Battle
     include Virtus.model(:strict => true)
 
     attribute :room_key, String, :required => true
-    attribute :user, TyphenApi::Model::Submarine::User, :required => true
+    attribute :name, String, :required => true
   end
 end

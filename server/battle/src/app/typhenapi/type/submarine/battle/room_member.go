@@ -3,7 +3,6 @@
 package battle
 
 import (
-	submarine "app/typhenapi/type/submarine"
 	"errors"
 )
 
@@ -11,14 +10,11 @@ var _ = errors.New
 
 // RoomMember is kind of a TyphenAPI type.
 type RoomMember struct {
-	RoomKey string          `codec:"room_key"`
-	User    *submarine.User `codec:"user"`
+	RoomKey string `codec:"room_key"`
+	Name    string `codec:"name"`
 }
 
 // Coerce the fields.
 func (t *RoomMember) Coerce() error {
-	if t.User == nil {
-		return errors.New("User should not be empty")
-	}
 	return nil
 }

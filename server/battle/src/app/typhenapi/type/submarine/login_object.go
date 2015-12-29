@@ -10,8 +10,7 @@ var _ = errors.New
 
 // LoginObject is kind of a TyphenAPI type.
 type LoginObject struct {
-	User       *User `codec:"user"`
-	JoinedRoom *Room `codec:"joined_room"`
+	User *LoggedInUser `codec:"user"`
 }
 
 // Coerce the fields.

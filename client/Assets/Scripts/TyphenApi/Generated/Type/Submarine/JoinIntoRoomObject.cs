@@ -6,7 +6,7 @@ namespace TyphenApi.Type.Submarine
 {
     public partial class JoinIntoRoomObject : TyphenApi.TypeBase<JoinIntoRoomObject>
     {
-        protected static readonly SerializationInfo<JoinIntoRoomObject, string> roomKey = new SerializationInfo<JoinIntoRoomObject, string>("room_key", false, (x) => x.RoomKey, (x, v) => x.RoomKey = v);
-        public string RoomKey { get; set; }
+        protected static readonly SerializationInfo<JoinIntoRoomObject, TyphenApi.Type.Submarine.JoinedRoom> room = new SerializationInfo<JoinIntoRoomObject, TyphenApi.Type.Submarine.JoinedRoom>("room", false, (x) => x.Room, (x, v) => x.Room = v);
+        public TyphenApi.Type.Submarine.JoinedRoom Room { get; set; }
     }
 }

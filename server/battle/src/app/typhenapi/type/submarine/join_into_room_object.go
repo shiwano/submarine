@@ -10,10 +10,13 @@ var _ = errors.New
 
 // JoinIntoRoomObject is kind of a TyphenAPI type.
 type JoinIntoRoomObject struct {
-	RoomKey string `codec:"room_key"`
+	Room *JoinedRoom `codec:"room"`
 }
 
 // Coerce the fields.
 func (t *JoinIntoRoomObject) Coerce() error {
+	if t.Room == nil {
+		return errors.New("Room should not be empty")
+	}
 	return nil
 }

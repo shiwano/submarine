@@ -4,6 +4,6 @@ module TyphenApi::Model::Submarine
   class SignUpObject
     include Virtus.model(:strict => true)
 
-    attribute :user, TyphenApi::Model::Submarine::User, :required => true
+    attribute :user, TyphenApi::Model::Submarine::LoggedInUser, :required => true
   end
 end

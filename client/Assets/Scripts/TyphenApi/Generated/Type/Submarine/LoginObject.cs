@@ -6,9 +6,7 @@ namespace TyphenApi.Type.Submarine
 {
     public partial class LoginObject : TyphenApi.TypeBase<LoginObject>
     {
-        protected static readonly SerializationInfo<LoginObject, TyphenApi.Type.Submarine.User> user = new SerializationInfo<LoginObject, TyphenApi.Type.Submarine.User>("user", false, (x) => x.User, (x, v) => x.User = v);
-        public TyphenApi.Type.Submarine.User User { get; set; }
-        protected static readonly SerializationInfo<LoginObject, TyphenApi.Type.Submarine.Room> joinedRoom = new SerializationInfo<LoginObject, TyphenApi.Type.Submarine.Room>("joined_room", true, (x) => x.JoinedRoom, (x, v) => x.JoinedRoom = v);
-        public TyphenApi.Type.Submarine.Room JoinedRoom { get; set; }
+        protected static readonly SerializationInfo<LoginObject, TyphenApi.Type.Submarine.LoggedInUser> user = new SerializationInfo<LoginObject, TyphenApi.Type.Submarine.LoggedInUser>("user", false, (x) => x.User, (x, v) => x.User = v);
+        public TyphenApi.Type.Submarine.LoggedInUser User { get; set; }
     }
 }

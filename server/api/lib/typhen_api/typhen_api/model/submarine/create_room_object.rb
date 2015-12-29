@@ -4,7 +4,6 @@ module TyphenApi::Model::Submarine
   class CreateRoomObject
     include Virtus.model(:strict => true)
 
-    attribute :room, TyphenApi::Model::Submarine::Room, :required => true
-    attribute :room_key, String, :required => true
+    attribute :room, TyphenApi::Model::Submarine::JoinedRoom, :required => true
   end
 end

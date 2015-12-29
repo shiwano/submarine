@@ -10,9 +10,8 @@ var _ = errors.New
 
 // Room is kind of a TyphenAPI type.
 type Room struct {
-	Id                  int    `codec:"id"`
-	BattleServerBaseUri string `codec:"battle_server_base_uri"`
-	Members             []User `codec:"members"`
+	Id      int    `codec:"id"`
+	Members []User `codec:"members"`
 }
 
 // Coerce the fields.

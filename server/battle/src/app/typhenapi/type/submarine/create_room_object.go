@@ -10,8 +10,7 @@ var _ = errors.New
 
 // CreateRoomObject is kind of a TyphenAPI type.
 type CreateRoomObject struct {
-	Room    *Room  `codec:"room"`
-	RoomKey string `codec:"room_key"`
+	Room *JoinedRoom `codec:"room"`
 }
 
 // Coerce the fields.
