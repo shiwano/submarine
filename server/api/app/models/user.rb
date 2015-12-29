@@ -34,7 +34,13 @@ class User < ActiveRecord::Base
     end
   end
 
-  def to_api_type
-    TyphenApi::Model::Submarine::User.new(id: id, name: name)
+  def to_user_api_type
+    TyphenApi::Model::Submarine::User.new(name: name)
+  end
+
+  def to_logged_in_user_api_type
+    TyphenApi::Model::Submarine::LoggedInUser.new(
+      name: name,
+      joined_room: room ? room.to_joined_room_api_type(self) : nil)
   end
 end

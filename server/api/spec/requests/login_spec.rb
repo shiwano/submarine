@@ -16,10 +16,10 @@ RSpec.describe 'Login', type: :request do
         expect(response).to have_http_status(200)
       end
       it 'should return a reasponse that includes the user' do
-        expect(response_json[:user][:id]).to eq user.id
+        expect(response_json[:user][:name]).to eq user.name
       end
       it 'should return a reasponse that includes the joined room' do
-        expect(response_json[:joined_room][:id]).to eq room.id
+        expect(response_json[:user][:joined_room][:id]).to eq room.id
       end
       it 'should return a reasponse that includes the session cookie' do
         expect(response.headers['Set-Cookie']).to include('submarine_api_session')

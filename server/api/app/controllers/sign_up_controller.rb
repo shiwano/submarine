@@ -3,7 +3,7 @@ class SignUpController < ApplicationController
   include TyphenApiRespondable
 
   def service
-    render_response(user: new_user.to_api_type)
+    render_response(user: new_user.to_logged_in_user_api_type)
   end
 
   def new_user

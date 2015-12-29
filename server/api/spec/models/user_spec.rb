@@ -36,8 +36,13 @@ RSpec.describe User, type: :model do
     end
   end
 
-  describe '#to_api_type' do
-    subject { user.to_api_type }
+  describe '#to_user_api_type' do
+    subject { user.to_user_api_type }
     it { should be_a_kind_of TyphenApi::Model::Submarine::User }
+  end
+
+  describe '#to_logged_in_user_api_type' do
+    subject { user.to_logged_in_user_api_type }
+    it { should be_a_kind_of TyphenApi::Model::Submarine::LoggedInUser }
   end
 end
