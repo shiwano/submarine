@@ -11,7 +11,9 @@ declare module Submarine {
       members: RoomMember[];
     }
 
+    /** @noAuthRequired */
     function findRoom(room_id: integer): { room?: Room; }
+    /** @noAuthRequired */
     function closeRoom(room_id: integer): void;
   }
 }
