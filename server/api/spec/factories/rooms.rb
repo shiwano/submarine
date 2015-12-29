@@ -10,6 +10,15 @@ FactoryGirl.define do
         room.join_user!(user)
       end
     end
+
+    trait :full do
+      after(:create) do |room|
+        Room.max_room_members_count.times do
+          user = create(:user)
+          room.join_user!(user)
+        end
+      end
+    end
   end
 
 end

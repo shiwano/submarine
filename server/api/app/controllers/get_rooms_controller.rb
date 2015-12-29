@@ -3,7 +3,11 @@ class GetRoomsController < ApplicationController
   include TyphenApiRespondable
 
   def service
-    # Implement here.
-    render_response(rooms: nil)
+    rooms = joinable_rooms.map { |r| r.to_room_api_type }
+    render_response(rooms: rooms)
+  end
+
+  def joinable_rooms
+    @joinable_rooms ||= Room.joinable.all
   end
 end
