@@ -14,7 +14,7 @@ module TyphenApi::Controller::Submarine::Battle
     ErrorType = TyphenApi::Model::Submarine::Error
 
     def no_authentication_required?
-      false
+      true
     end
   end
 end
