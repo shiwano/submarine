@@ -23,6 +23,8 @@ declare module Submarine {
     members: User[];
   }
 
+  type RoomKey = string;
+
   /** @noAuthRequired */
   function ping(message: string): { message: string; };
   /** @noAuthRequired */
@@ -32,9 +34,9 @@ declare module Submarine {
 
   function findUser(name: string): { user?: User; };
 
-  function createRoom(): { room: Room; };
+  function createRoom(): { room: Room; roomKey: RoomKey; };
   function getRooms(): { rooms: Room[]; }
-  function joinIntoRoom(room_id: integer): void;
+  function joinIntoRoom(room_id: integer): { roomKey: RoomKey; };
 
   module Battle {
     var ping: { message: string; }

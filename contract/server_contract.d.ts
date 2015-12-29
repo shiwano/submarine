@@ -3,7 +3,7 @@
 declare module Submarine {
   module Battle {
     interface RoomMember {
-      roomKey: string;
+      roomKey: RoomKey;
       user: User;
     }
 
