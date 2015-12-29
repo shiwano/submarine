@@ -9,6 +9,19 @@ RSpec.describe Room, type: :model do
 
   it { should validate_presence_of :battle_server_base_uri }
 
+  describe '.joinable' do
+    let(:joinable_rooms) { [ create(:room), create(:room) ] }
+    subject { Room.joinable }
+
+    before do
+      joinable_rooms
+      create(:room, :full)
+    end
+    it 'should return joinable rooms' do
+      expect(subject).to eq joinable_rooms
+    end
+  end
+
   describe '#join_user!' do
     let(:user) { create(:user) }
     subject { room.join_user!(user) }
