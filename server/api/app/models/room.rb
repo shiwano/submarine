@@ -25,7 +25,7 @@ class Room < ActiveRecord::Base
   end
 
   def full?
-    room_members_count < max_room_members_count
+    room_members_count >= max_room_members_count
   end
 
   def renew_battle_server_base_uri
@@ -39,7 +39,7 @@ class Room < ActiveRecord::Base
 
   def join_user!(user)
     with_lock do
-      unless full?
+      if full?
         raise ApplicationError::RoomIsFull.new("room(#{id}) is full")
       end
 
