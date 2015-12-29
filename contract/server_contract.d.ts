@@ -2,9 +2,8 @@
 
 declare module Submarine {
   module Battle {
-    interface RoomMember {
-      roomKey: RoomKey;
-      user: User;
+    interface RoomMember extends User {
+      roomKey: string;
     }
 
     interface Room {

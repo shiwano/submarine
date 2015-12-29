@@ -13,30 +13,35 @@ declare module Submarine {
   }
 
   interface User {
-    id: integer;
     name: string;
+  }
+
+  interface LoggedInUser extends User {
+    joinedRoom?: JoinedRoom;
   }
 
   interface Room {
     id: integer;
-    battleServerBaseUri: string;
     members: User[];
   }
 
-  type RoomKey = string;
+  interface JoinedRoom extends Room {
+    battleServerBaseUri: string;
+    roomKey: string;
+  }
 
   /** @noAuthRequired */
   function ping(message: string): { message: string; };
   /** @noAuthRequired */
-  function signUp(name: string, password: string): { user: User; };
+  function signUp(name: string, password: string): { user: LoggedInUser; };
   /** @noAuthRequired */
-  function login(name: string, password: string): { user: User; joinedRoom?: Room; };
+  function login(name: string, password: string): { user: LoggedInUser; };
 
   function findUser(name: string): { user?: User; };
 
-  function createRoom(): { room: Room; roomKey: RoomKey; };
+  function createRoom(): { room: JoinedRoom; };
   function getRooms(): { rooms: Room[]; }
-  function joinIntoRoom(room_id: integer): { roomKey: RoomKey; };
+  function joinIntoRoom(room_id: integer): { room: JoinedRoom; };
 
   module Battle {
     var ping: { message: string; }
