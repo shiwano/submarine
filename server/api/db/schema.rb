@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151229001739) do
+ActiveRecord::Schema.define(version: 20151229043939) do
 
   create_table "room_members", force: :cascade do |t|
     t.integer  "user_id",    limit: 4
@@ -25,7 +25,7 @@ ActiveRecord::Schema.define(version: 20151229001739) do
   add_index "room_members", ["user_id"], name: "index_room_members_on_user_id", unique: true, using: :btree
 
   create_table "rooms", force: :cascade do |t|
-    t.string   "battle_server_base_uri", limit: 255
+    t.string   "battle_server_base_uri", limit: 255,             null: false
     t.integer  "lock_version",           limit: 4
     t.datetime "created_at",                                     null: false
     t.datetime "updated_at",                                     null: false

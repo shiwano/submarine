@@ -3,7 +3,7 @@
 # Table name: rooms
 #
 #  id                     :integer          not null, primary key
-#  battle_server_base_uri :string(255)
+#  battle_server_base_uri :string(255)      not null
 #  lock_version           :integer
 #  created_at             :datetime         not null
 #  updated_at             :datetime         not null
