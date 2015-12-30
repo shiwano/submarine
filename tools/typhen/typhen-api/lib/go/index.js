@@ -10,18 +10,29 @@ module.exports = function(typhen, options, helpers) {
   assert(options.importBasePath, 'options.importBasePath is empty');
 
   helpers = _.assign(helpers, {
-    requiredModules: function(typeOrModule) {
-      assert(typeOrModule.isType || typeOrModule.isModule, 'should be a type or a module');
+    requiredModules: function(symbol, withErrorType) {
+      assert(symbol.isType || symbol.isModule, 'should be a type or module');
       var types;
       var currentModule;
 
-      if (typeOrModule.isType) {
-        types = typeOrModule.properties.map(function(p) { return p.type; });
-        currentModule = typeOrModule.parentModule;
-      } else {
-        types = typeOrModule.variables.map(function(v) { return v.type; });
+      if (symbol.isFunction) {
+        types = symbol.callSignatures[0].parameters.map(function(p) { return p.type; });
+        currentModule = null;
+      } else if (symbol.isType) {
+        types = symbol.properties.map(function(p) { return p.type; });
+        currentModule = symbol.parentModule;
+      } else { // symbol.isModule
+        types = symbol.variables.map(function(v) { return v.type; });
         currentModule = null;
       }
+
+      if (withErrorType) {
+        var errorType = helpers.errorType(symbol);
+        if (errorType !== undefined) {
+          types.push(errorType);
+        }
+      }
+
       return _.chain(types)
         .map(function(type) {
           if (type.parentModule === null ||
@@ -37,6 +48,18 @@ module.exports = function(typhen, options, helpers) {
           }
         })
         .filter(function(x) { return x !== null; })
+        .uniq(function(x) { return x.path; })
+        .value();
+    },
+    webApiModules: function(module) {
+      return _.chain(module.modules)
+        .filter(function(module) { return helpers.isWebApiModule(module); })
+        .map(function(module) {
+          return {
+            alias: helpers.moduleName(module, '_'),
+            path: helpers.moduleName(module, '/'),
+          };
+        })
         .uniq(function(x) { return x.path; })
         .value();
     },
@@ -61,7 +84,7 @@ module.exports = function(typhen, options, helpers) {
     typeName: function(type, currentModule, isOptional, hasPointerMark) {
       var pointerMark = hasPointerMark ? '*' : '';
       if (type.isPrimitiveType && type.name === 'nil') {
-        return '';
+        return pointerMark + 'typhenapi.Void';
       } else if (type.isPrimitiveType || type.isArray) {
         return isOptional ? pointerMark + type.name : type.name;
       } else if (type.parentModule !== null && type.parentModule !== currentModule) {
@@ -72,6 +95,13 @@ module.exports = function(typhen, options, helpers) {
     },
     isErrorType: function(type) {
       return type.isType && type.name === 'Error' && type.ancestorModules.length === 1;
+    },
+    isRequiredRequestBody: function(func) {
+      var method = helpers.upperCaseMethod(func);
+      return method === 'POST' || method === 'PATCH' || method === 'PUT';
+    },
+    upperCaseMethod: function(func) {
+      return helpers.method(func).toUpperCase();
     }
   });
 
@@ -113,7 +143,17 @@ module.exports = function(typhen, options, helpers) {
       });
 
       modules.forEach(function(module) {
-        g.generate('lib/go/templates/websocket/api.hbs', 'underscore:typhenapi/websocket/**/*/api.go', module);
+        if (helpers.isWebApiModule(module)) {
+          g.generate('lib/go/templates/web/api.hbs', 'underscore:typhenapi/web/**/*/api.go', module);
+
+          module.functions.forEach(function(func) {
+            g.generate('lib/go/templates/web/request_body.hbs', 'underscore:typhenapi/web/**/*_request_body.go', func);
+          });
+        }
+
+        if (helpers.isWebSocketApiModule(module)) {
+          g.generate('lib/go/templates/websocket/api.hbs', 'underscore:typhenapi/websocket/**/*/api.go', module);
+        }
       });
 
       g.files.forEach(function(file) {

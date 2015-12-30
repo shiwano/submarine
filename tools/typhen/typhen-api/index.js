@@ -64,6 +64,11 @@ module.exports = function(typhen, options) {
       var name = typhen.helpers.upperCamelCase(variable.fullName).replace(template.namespaceSeparator, '.');
       return hashCode().value(name);
     },
+    errorType: function(module) {
+      assert(module.isModule, 'should be a module');
+      var rootModule = module.parentModule === null ? module : module.ancestorModules[0];
+      return rootModule.types.filter(function(t) { return t.name === 'Error'; })[0];
+    }
   };
 
   template = require(path.join(__dirname, 'lib', options.templateName, 'index.js'))(typhen, options, helpers);
@@ -112,7 +117,7 @@ module.exports = function(typhen, options) {
 
       filteredModules.forEach(function(module) {
         if (module.parentModule === null && (helpers.isWebApiModule(module) || helpers.isWebSocketApiModule(module))) {
-          var errorType = module.types.filter(function(t) { return t.name === 'Error'; })[0];
+          var errorType = helpers.errorType(module);
           assert(errorType, 'Undefined the Error type in ' + module.name + ' module');
         }
       });

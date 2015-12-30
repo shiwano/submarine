@@ -7,7 +7,7 @@ import (
 	{{#each (webSocketApiModules this)}}
 	_{{alias}} "{{@importBasePath}}/websocket/{{path}}"
 	{{/each}}
-	{{#each (requiredModules this)}}
+	{{#each (requiredModules this false)}}
 	{{alias}} "{{@importBasePath}}/type/{{path}}"
 	{{/each}}
 )

@@ -4,27 +4,25 @@ package {{lowerCamelCase parentModule}}
 
 import (
 	"errors"
+	"net/url"
+	"fmt"
 	"{{@importBasePath}}/core"
 	{{#each (requiredModules this false)}}
 	{{alias}} "{{@importBasePath}}/type/{{path}}"
 	{{/each}}
-	{{#if (isErrorType this)}}
-	"fmt"
-	{{/if}}
 )
 
 var _ = errors.New;
 
-// {{upperCamelCase name}} is a kind of TyphenAPI type.
-type {{upperCamelCase name}} struct {
-	{{#each properties}}
-	{{upperCamelCase name}} {{typeName type ../parentModule isOptional true}} `codec:"{{serializablePropertyName this}}"`
+type {{upperCamelCase name}}RequestBody struct {
+	{{#each callSignatures.0.parameters}}
+	{{upperCamelCase name}} {{typeName type null isOptional true}} `codec:"{{serializablePropertyName this}}"`
 	{{/each}}
 }
 
 // Coerce the fields.
-func (t *{{upperCamelCase name}}) Coerce() error {
-	{{#each properties}}
+func (t *{{upperCamelCase name}}RequestBody) Coerce() error {
+	{{#each callSignatures.0.parameters}}
 	{{#if isOptional}}
 	{{#if type.isEnum}}
 	if err := t.{{upperCamelCase name}}.Coerce(); err != nil {
@@ -47,15 +45,8 @@ func (t *{{upperCamelCase name}}) Coerce() error {
 	return nil
 }
 
-{{#if (isErrorType this)}}
-// Error returns the error message.
-func (t *Error) Error() string {
-	return fmt.Sprintf("{{#each properties}}{{upperCamelCase name}}: %v{{#unless @last}}, {{/unless}}{{/each}}", {{#each properties}}t.{{upperCamelCase name}}{{#unless @last}}, {{/unless}}{{/each}})
-}
-{{/if}}
-
 // Bytes creates the byte array.
-func (t *{{upperCamelCase name}}) Bytes(serializer *typhenapi.Serializer) ([]byte, error) {
+func (t *{{upperCamelCase name}}RequestBody) Bytes(serializer *typhenapi.Serializer) ([]byte, error) {
 	if err := t.Coerce(); err != nil {
 		return nil, err
 	}
@@ -66,4 +57,10 @@ func (t *{{upperCamelCase name}}) Bytes(serializer *typhenapi.Serializer) ([]byt
 	}
 
 	return data, nil
+}
+
+// QueryString returns the query string.
+func (t *{{upperCamelCase name}}RequestBody) QueryString() string {
+	queryString := fmt.Sprintf("{{#each callSignatures.0.parameters}}{{#if type.isPrimitiveType}}{{serializablePropertyName this}}=%v{{#unless @last}}&{{/unless}}{{/if}}{{/each}}", {{#each callSignatures.0.parameters}}{{#if type.isPrimitiveType}}t.{{upperCamelCase name}}{{#unless @last}}, {{/unless}}{{/if}}{{/each}})
+	return url.QueryEscape(queryString)
 }
