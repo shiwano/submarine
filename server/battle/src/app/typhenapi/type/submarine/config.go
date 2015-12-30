@@ -3,12 +3,13 @@
 package submarine
 
 import (
+	"app/typhenapi/core"
 	"errors"
 )
 
 var _ = errors.New
 
-// Config is kind of a TyphenAPI type.
+// Config is a kind of TyphenAPI type.
 type Config struct {
 	Version             string `codec:"version"`
 	WebApiServerBaseUri string `codec:"web_api_server_base_uri"`
@@ -17,4 +18,18 @@ type Config struct {
 // Coerce the fields.
 func (t *Config) Coerce() error {
 	return nil
+}
+
+// Bytes creates the byte array.
+func (t *Config) Bytes(serializer *typhenapi.Serializer) ([]byte, error) {
+	if err := t.Coerce(); err != nil {
+		return nil, err
+	}
+
+	data, err := serializer.Serialize(t)
+	if err != nil {
+		return nil, err
+	}
+
+	return data, nil
 }

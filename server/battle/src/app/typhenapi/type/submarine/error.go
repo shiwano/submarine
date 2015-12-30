@@ -3,12 +3,14 @@
 package submarine
 
 import (
+	"app/typhenapi/core"
 	"errors"
+	"fmt"
 )
 
 var _ = errors.New
 
-// Error is kind of a TyphenAPI type.
+// Error is a kind of TyphenAPI type.
 type Error struct {
 	Code    int    `codec:"code"`
 	Name    string `codec:"name"`
@@ -18,4 +20,23 @@ type Error struct {
 // Coerce the fields.
 func (t *Error) Coerce() error {
 	return nil
+}
+
+// Error returns the error message.
+func (t *Error) Error() string {
+	return fmt.Sprintf("Code: %v, Name: %v, Message: %v", t.Code, t.Name, t.Message)
+}
+
+// Bytes creates the byte array.
+func (t *Error) Bytes(serializer *typhenapi.Serializer) ([]byte, error) {
+	if err := t.Coerce(); err != nil {
+		return nil, err
+	}
+
+	data, err := serializer.Serialize(t)
+	if err != nil {
+		return nil, err
+	}
+
+	return data, nil
 }

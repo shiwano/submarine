@@ -3,12 +3,13 @@
 package battle
 
 import (
+	"app/typhenapi/core"
 	"errors"
 )
 
 var _ = errors.New
 
-// FindRoomObject is kind of a TyphenAPI type.
+// FindRoomObject is a kind of TyphenAPI type.
 type FindRoomObject struct {
 	Room *Room `codec:"room"`
 }
@@ -16,4 +17,18 @@ type FindRoomObject struct {
 // Coerce the fields.
 func (t *FindRoomObject) Coerce() error {
 	return nil
+}
+
+// Bytes creates the byte array.
+func (t *FindRoomObject) Bytes(serializer *typhenapi.Serializer) ([]byte, error) {
+	if err := t.Coerce(); err != nil {
+		return nil, err
+	}
+
+	data, err := serializer.Serialize(t)
+	if err != nil {
+		return nil, err
+	}
+
+	return data, nil
 }

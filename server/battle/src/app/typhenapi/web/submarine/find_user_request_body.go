@@ -5,22 +5,23 @@ package submarine
 import (
 	"app/typhenapi/core"
 	"errors"
+	"fmt"
+	"net/url"
 )
 
 var _ = errors.New
 
-// User is a kind of TyphenAPI type.
-type User struct {
+type FindUserRequestBody struct {
 	Name string `codec:"name"`
 }
 
 // Coerce the fields.
-func (t *User) Coerce() error {
+func (t *FindUserRequestBody) Coerce() error {
 	return nil
 }
 
 // Bytes creates the byte array.
-func (t *User) Bytes(serializer *typhenapi.Serializer) ([]byte, error) {
+func (t *FindUserRequestBody) Bytes(serializer *typhenapi.Serializer) ([]byte, error) {
 	if err := t.Coerce(); err != nil {
 		return nil, err
 	}
@@ -31,4 +32,10 @@ func (t *User) Bytes(serializer *typhenapi.Serializer) ([]byte, error) {
 	}
 
 	return data, nil
+}
+
+// QueryString returns the query string.
+func (t *FindUserRequestBody) QueryString() string {
+	queryString := fmt.Sprintf("name=%v", t.Name)
+	return url.QueryEscape(queryString)
 }

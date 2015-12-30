@@ -3,12 +3,13 @@
 package battle
 
 import (
+	"app/typhenapi/core"
 	"errors"
 )
 
 var _ = errors.New
 
-// RoomMember is kind of a TyphenAPI type.
+// RoomMember is a kind of TyphenAPI type.
 type RoomMember struct {
 	RoomKey string `codec:"room_key"`
 	Name    string `codec:"name"`
@@ -17,4 +18,18 @@ type RoomMember struct {
 // Coerce the fields.
 func (t *RoomMember) Coerce() error {
 	return nil
+}
+
+// Bytes creates the byte array.
+func (t *RoomMember) Bytes(serializer *typhenapi.Serializer) ([]byte, error) {
+	if err := t.Coerce(); err != nil {
+		return nil, err
+	}
+
+	data, err := serializer.Serialize(t)
+	if err != nil {
+		return nil, err
+	}
+
+	return data, nil
 }

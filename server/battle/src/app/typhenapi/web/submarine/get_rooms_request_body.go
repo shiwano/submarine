@@ -5,25 +5,22 @@ package submarine
 import (
 	"app/typhenapi/core"
 	"errors"
+	"fmt"
+	"net/url"
 )
 
 var _ = errors.New
 
-// LoginObject is a kind of TyphenAPI type.
-type LoginObject struct {
-	User *LoggedInUser `codec:"user"`
+type GetRoomsRequestBody struct {
 }
 
 // Coerce the fields.
-func (t *LoginObject) Coerce() error {
-	if t.User == nil {
-		return errors.New("User should not be empty")
-	}
+func (t *GetRoomsRequestBody) Coerce() error {
 	return nil
 }
 
 // Bytes creates the byte array.
-func (t *LoginObject) Bytes(serializer *typhenapi.Serializer) ([]byte, error) {
+func (t *GetRoomsRequestBody) Bytes(serializer *typhenapi.Serializer) ([]byte, error) {
 	if err := t.Coerce(); err != nil {
 		return nil, err
 	}
@@ -34,4 +31,10 @@ func (t *LoginObject) Bytes(serializer *typhenapi.Serializer) ([]byte, error) {
 	}
 
 	return data, nil
+}
+
+// QueryString returns the query string.
+func (t *GetRoomsRequestBody) QueryString() string {
+	queryString := fmt.Sprintf("")
+	return url.QueryEscape(queryString)
 }

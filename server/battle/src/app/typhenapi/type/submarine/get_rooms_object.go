@@ -3,12 +3,13 @@
 package submarine
 
 import (
+	"app/typhenapi/core"
 	"errors"
 )
 
 var _ = errors.New
 
-// GetRoomsObject is kind of a TyphenAPI type.
+// GetRoomsObject is a kind of TyphenAPI type.
 type GetRoomsObject struct {
 	Rooms []Room `codec:"rooms"`
 }
@@ -19,4 +20,18 @@ func (t *GetRoomsObject) Coerce() error {
 		return errors.New("Rooms should not be empty")
 	}
 	return nil
+}
+
+// Bytes creates the byte array.
+func (t *GetRoomsObject) Bytes(serializer *typhenapi.Serializer) ([]byte, error) {
+	if err := t.Coerce(); err != nil {
+		return nil, err
+	}
+
+	data, err := serializer.Serialize(t)
+	if err != nil {
+		return nil, err
+	}
+
+	return data, nil
 }

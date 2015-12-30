@@ -3,12 +3,13 @@
 package submarine
 
 import (
+	"app/typhenapi/core"
 	"errors"
 )
 
 var _ = errors.New
 
-// JoinIntoRoomObject is kind of a TyphenAPI type.
+// JoinIntoRoomObject is a kind of TyphenAPI type.
 type JoinIntoRoomObject struct {
 	Room *JoinedRoom `codec:"room"`
 }
@@ -19,4 +20,18 @@ func (t *JoinIntoRoomObject) Coerce() error {
 		return errors.New("Room should not be empty")
 	}
 	return nil
+}
+
+// Bytes creates the byte array.
+func (t *JoinIntoRoomObject) Bytes(serializer *typhenapi.Serializer) ([]byte, error) {
+	if err := t.Coerce(); err != nil {
+		return nil, err
+	}
+
+	data, err := serializer.Serialize(t)
+	if err != nil {
+		return nil, err
+	}
+
+	return data, nil
 }

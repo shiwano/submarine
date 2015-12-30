@@ -3,12 +3,13 @@
 package submarine
 
 import (
+	"app/typhenapi/core"
 	"errors"
 )
 
 var _ = errors.New
 
-// SignUpObject is kind of a TyphenAPI type.
+// SignUpObject is a kind of TyphenAPI type.
 type SignUpObject struct {
 	User *LoggedInUser `codec:"user"`
 }
@@ -19,4 +20,18 @@ func (t *SignUpObject) Coerce() error {
 		return errors.New("User should not be empty")
 	}
 	return nil
+}
+
+// Bytes creates the byte array.
+func (t *SignUpObject) Bytes(serializer *typhenapi.Serializer) ([]byte, error) {
+	if err := t.Coerce(); err != nil {
+		return nil, err
+	}
+
+	data, err := serializer.Serialize(t)
+	if err != nil {
+		return nil, err
+	}
+
+	return data, nil
 }

@@ -3,12 +3,13 @@
 package submarine
 
 import (
+	"app/typhenapi/core"
 	"errors"
 )
 
 var _ = errors.New
 
-// LoggedInUser is kind of a TyphenAPI type.
+// LoggedInUser is a kind of TyphenAPI type.
 type LoggedInUser struct {
 	JoinedRoom *JoinedRoom `codec:"joined_room"`
 	Name       string      `codec:"name"`
@@ -17,4 +18,18 @@ type LoggedInUser struct {
 // Coerce the fields.
 func (t *LoggedInUser) Coerce() error {
 	return nil
+}
+
+// Bytes creates the byte array.
+func (t *LoggedInUser) Bytes(serializer *typhenapi.Serializer) ([]byte, error) {
+	if err := t.Coerce(); err != nil {
+		return nil, err
+	}
+
+	data, err := serializer.Serialize(t)
+	if err != nil {
+		return nil, err
+	}
+
+	return data, nil
 }

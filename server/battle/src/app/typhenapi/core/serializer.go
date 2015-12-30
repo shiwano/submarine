@@ -20,8 +20,8 @@ func NewJSONSerializer() *Serializer {
 // Serialize an TyphenAPI type to bytes.
 func (s *Serializer) Serialize(v interface{}) (data []byte, err error) {
 	buffer := &bytes.Buffer{}
-	encoder := codec.NewEncoder(buffer, s.Handle)
 
+	encoder := codec.NewEncoder(buffer, s.Handle)
 	if err := encoder.Encode(v); err != nil {
 		return nil, err
 	}
@@ -38,13 +38,12 @@ func (s *Serializer) Deserialize(b []byte, v interface{}) error {
 		return err
 	}
 
-	coercer := v.(Coercer)
-
-	if coercer == nil {
+	typhenType := v.(Type)
+	if typhenType == nil {
 		return errors.New("No TyphenAPI type")
 	}
 
-	if err := coercer.Coerce(); err != nil {
+	if err := typhenType.Coerce(); err != nil {
 		return err
 	}
 

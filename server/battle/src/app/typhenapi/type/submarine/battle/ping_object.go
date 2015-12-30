@@ -3,12 +3,13 @@
 package battle
 
 import (
+	"app/typhenapi/core"
 	"errors"
 )
 
 var _ = errors.New
 
-// PingObject is kind of a TyphenAPI type.
+// PingObject is a kind of TyphenAPI type.
 type PingObject struct {
 	Message string `codec:"message"`
 }
@@ -16,4 +17,18 @@ type PingObject struct {
 // Coerce the fields.
 func (t *PingObject) Coerce() error {
 	return nil
+}
+
+// Bytes creates the byte array.
+func (t *PingObject) Bytes(serializer *typhenapi.Serializer) ([]byte, error) {
+	if err := t.Coerce(); err != nil {
+		return nil, err
+	}
+
+	data, err := serializer.Serialize(t)
+	if err != nil {
+		return nil, err
+	}
+
+	return data, nil
 }

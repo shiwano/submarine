@@ -5,22 +5,23 @@ package submarine
 import (
 	"app/typhenapi/core"
 	"errors"
+	"fmt"
+	"net/url"
 )
 
 var _ = errors.New
 
-// PingObject is a kind of TyphenAPI type.
-type PingObject struct {
+type PingRequestBody struct {
 	Message string `codec:"message"`
 }
 
 // Coerce the fields.
-func (t *PingObject) Coerce() error {
+func (t *PingRequestBody) Coerce() error {
 	return nil
 }
 
 // Bytes creates the byte array.
-func (t *PingObject) Bytes(serializer *typhenapi.Serializer) ([]byte, error) {
+func (t *PingRequestBody) Bytes(serializer *typhenapi.Serializer) ([]byte, error) {
 	if err := t.Coerce(); err != nil {
 		return nil, err
 	}
@@ -31,4 +32,10 @@ func (t *PingObject) Bytes(serializer *typhenapi.Serializer) ([]byte, error) {
 	}
 
 	return data, nil
+}
+
+// QueryString returns the query string.
+func (t *PingRequestBody) QueryString() string {
+	queryString := fmt.Sprintf("message=%v", t.Message)
+	return url.QueryEscape(queryString)
 }
