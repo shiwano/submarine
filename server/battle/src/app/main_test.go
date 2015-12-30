@@ -4,7 +4,7 @@ import (
 	"app"
 	"app/typhenapi/core"
 	"app/typhenapi/type/submarine/battle"
-	api "app/typhenapi/websocket/submarine"
+	websocketapi "app/typhenapi/websocket/submarine"
 	"github.com/Sirupsen/logrus"
 	"github.com/gin-gonic/gin"
 	"github.com/gorilla/websocket"
@@ -52,7 +52,7 @@ func TestBattleServer(t *testing.T) {
 
 type clientSession struct {
 	conn *websocket.Conn
-	api  *api.WebSocketAPI
+	api  *websocketapi.WebSocketAPI
 }
 
 func (session *clientSession) Send(msg []byte) {
@@ -84,7 +84,7 @@ func newClientSession(url string) (*clientSession, error) {
 	serializer := typhenapi.NewJSONSerializer()
 	session := &clientSession{}
 	session.conn = conn
-	session.api = api.New(session, serializer, nil)
+	session.api = websocketapi.New(session, serializer, nil)
 	return session, nil
 }
 
