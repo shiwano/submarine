@@ -8,6 +8,9 @@ import (
 	{{#each (requiredModules this)}}
 	{{alias}} "{{@importBasePath}}/type/{{path}}"
 	{{/each}}
+	{{#if (isErrorType this)}}
+	"fmt"
+	{{/if}}
 )
 
 var _ = errors.New;
@@ -43,6 +46,13 @@ func (t *{{upperCamelCase name}}) Coerce() error {
 	{{/each}}
 	return nil
 }
+
+{{#if (isErrorType this)}}
+// Error returns the error message.
+func (t *Error) Error() string {
+	return fmt.Sprintf("{{#each properties}}{{upperCamelCase name}}: %v{{#unless @last}}, {{/unless}}{{/each}}", {{#each properties}}t.{{upperCamelCase name}}{{#unless @last}}, {{/unless}}{{/each}})
+}
+{{/if}}
 
 // Bytes returns the byte array.
 func (t *{{upperCamelCase name}}) Bytes(serializer *typhenapi.Serializer) ([]byte, error) {

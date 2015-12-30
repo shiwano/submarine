@@ -69,6 +69,9 @@ module.exports = function(typhen, options, helpers) {
       } else {
         return pointerMark + typhen.helpers.upperCamelCase(type.name);
       }
+    },
+    isErrorType: function(type) {
+      return type.isType && type.name === 'Error' && type.ancestorModules.length === 1;
     }
   });
 
