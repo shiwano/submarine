@@ -7,18 +7,6 @@ import (
 	"testing"
 )
 
-type testType struct {
-	Message string `codec:"message"`
-}
-
-func (t *testType) Coerce() error {
-	if t.Message == "" {
-		return errors.New("Message is empty")
-	}
-
-	return nil
-}
-
 func TestNewMessage(t *testing.T) {
 	serializer := typhenapi.NewJSONSerializer()
 	message, err := typhenapi.NewMessage(serializer, 1, &testType{"Foobar"})
@@ -79,4 +67,29 @@ func TestMessageBytes(t *testing.T) {
 		t.Errorf("deserialized.Message is expected to equal Foobar: %v", deserialized.Message)
 		return
 	}
+}
+
+type testType struct {
+	Message string `codec:"message"`
+}
+
+func (t *testType) Coerce() error {
+	if t.Message == "" {
+		return errors.New("Message is empty")
+	}
+
+	return nil
+}
+
+func (t *testType) Bytes(serializer *typhenapi.Serializer) ([]byte, error) {
+	if err := t.Coerce(); err != nil {
+		return nil, err
+	}
+
+	data, err := serializer.Serialize(t)
+	if err != nil {
+		return nil, err
+	}
+
+	return data, nil
 }

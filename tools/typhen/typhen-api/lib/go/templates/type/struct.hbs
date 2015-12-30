@@ -4,6 +4,7 @@ package {{lowerCamelCase parentModule}}
 
 import (
 	"errors"
+	"{{@importBasePath}}/core"
 	{{#each (requiredModules this)}}
 	{{alias}} "{{@importBasePath}}/type/{{path}}"
 	{{/each}}
@@ -41,4 +42,18 @@ func (t *{{upperCamelCase name}}) Coerce() error {
 	{{/if}}
 	{{/each}}
 	return nil
+}
+
+// Bytes returns the byte array.
+func (t *{{upperCamelCase name}}) Bytes(serializer *typhenapi.Serializer) ([]byte, error) {
+	if err := t.Coerce(); err != nil {
+		return nil, err
+	}
+
+	data, err := serializer.Serialize(t)
+	if err != nil {
+		return nil, err
+	}
+
+	return data, nil
 }

@@ -16,22 +16,18 @@ type Message struct {
 
 // NewMessage creates a Message from a TyphenAPI type
 func NewMessage(serializer *Serializer, messageType int32, v interface{}) (message *Message, err error) {
-	typhenType := v.(Coercer)
+	typhenType := v.(Type)
 
 	if typhenType == nil {
 		return nil, errors.New("No TyphenAPI type")
 	}
 
-	if err := typhenType.Coerce(); err != nil {
-		return nil, err
-	}
-
-	body, err := serializer.Serialize(v)
+	data, err := typhenType.Bytes(serializer)
 	if err != nil {
 		return nil, err
 	}
 
-	return &Message{messageType, body}, nil
+	return &Message{messageType, data}, nil
 }
 
 // NewMessageFromBytes creates a Message from bytes
@@ -58,6 +54,5 @@ func (message *Message) Bytes() []byte {
 	buffer := &bytes.Buffer{}
 	binary.Write(buffer, binary.LittleEndian, message.Type)
 	buffer.Write(message.Body)
-
 	return buffer.Bytes()
 }
