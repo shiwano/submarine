@@ -28,7 +28,7 @@ func (t *Error) Error() string {
 }
 
 // Bytes creates the byte array.
-func (t *Error) Bytes(serializer *typhenapi.Serializer) ([]byte, error) {
+func (t *Error) Bytes(serializer typhenapi.Serializer) ([]byte, error) {
 	if err := t.Coerce(); err != nil {
 		return nil, err
 	}

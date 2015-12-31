@@ -26,7 +26,7 @@ func (t *JoinedRoom) Coerce() error {
 }
 
 // Bytes creates the byte array.
-func (t *JoinedRoom) Bytes(serializer *typhenapi.Serializer) ([]byte, error) {
+func (t *JoinedRoom) Bytes(serializer typhenapi.Serializer) ([]byte, error) {
 	if err := t.Coerce(); err != nil {
 		return nil, err
 	}

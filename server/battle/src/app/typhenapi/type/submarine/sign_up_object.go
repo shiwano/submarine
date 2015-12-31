@@ -23,7 +23,7 @@ func (t *SignUpObject) Coerce() error {
 }
 
 // Bytes creates the byte array.
-func (t *SignUpObject) Bytes(serializer *typhenapi.Serializer) ([]byte, error) {
+func (t *SignUpObject) Bytes(serializer typhenapi.Serializer) ([]byte, error) {
 	if err := t.Coerce(); err != nil {
 		return nil, err
 	}

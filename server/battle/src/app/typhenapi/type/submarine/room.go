@@ -24,7 +24,7 @@ func (t *Room) Coerce() error {
 }
 
 // Bytes creates the byte array.
-func (t *Room) Bytes(serializer *typhenapi.Serializer) ([]byte, error) {
+func (t *Room) Bytes(serializer typhenapi.Serializer) ([]byte, error) {
 	if err := t.Coerce(); err != nil {
 		return nil, err
 	}

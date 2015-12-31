@@ -14,14 +14,14 @@ const (
 // WebSocketAPI sends messages, and dispatches message events.
 type WebSocketAPI struct {
 	session      typhenapi.Session
-	serializer   *typhenapi.Serializer
+	serializer   typhenapi.Serializer
 	errorHandler func(interface{}, error)
 
 	OnPingReceive func(message *submarine_battle.PingObject)
 }
 
 // New creates a WebSocketAPI.
-func New(session typhenapi.Session, serializer *typhenapi.Serializer, errorHandler func(interface{}, error)) *WebSocketAPI {
+func New(session typhenapi.Session, serializer typhenapi.Serializer, errorHandler func(interface{}, error)) *WebSocketAPI {
 	api := &WebSocketAPI{}
 	api.session = session
 	api.serializer = serializer

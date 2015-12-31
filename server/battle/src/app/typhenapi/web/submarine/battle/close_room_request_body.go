@@ -21,7 +21,7 @@ func (t *CloseRoomRequestBody) Coerce() error {
 }
 
 // Bytes creates the byte array.
-func (t *CloseRoomRequestBody) Bytes(serializer *typhenapi.Serializer) ([]byte, error) {
+func (t *CloseRoomRequestBody) Bytes(serializer typhenapi.Serializer) ([]byte, error) {
 	if err := t.Coerce(); err != nil {
 		return nil, err
 	}

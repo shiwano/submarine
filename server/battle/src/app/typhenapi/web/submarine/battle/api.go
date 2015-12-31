@@ -15,13 +15,13 @@ import (
 // WebAPI sends request.
 type WebAPI struct {
 	baseURI             string
-	serializer          *typhenapi.Serializer
+	serializer          typhenapi.Serializer
 	Client              *http.Client
 	OnBeforeRequestSend func(*http.Request)
 }
 
 // New creates a WebAPI.
-func New(baseURI string, serializer *typhenapi.Serializer) *WebAPI {
+func New(baseURI string, serializer typhenapi.Serializer) *WebAPI {
 	api := &WebAPI{}
 	api.baseURI = baseURI
 	api.serializer = serializer

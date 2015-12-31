@@ -21,7 +21,7 @@ func (t *FindRoomRequestBody) Coerce() error {
 }
 
 // Bytes creates the byte array.
-func (t *FindRoomRequestBody) Bytes(serializer *typhenapi.Serializer) ([]byte, error) {
+func (t *FindRoomRequestBody) Bytes(serializer typhenapi.Serializer) ([]byte, error) {
 	if err := t.Coerce(); err != nil {
 		return nil, err
 	}
