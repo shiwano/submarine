@@ -31,7 +31,7 @@ func TestWebAPI(t *testing.T) {
 }
 
 type webAPIMock struct {
-	serializer *typhenapi.Serializer
+	serializer typhenapi.Serializer
 }
 
 func (mock *webAPIMock) RoundTrip(request *http.Request) (*http.Response, error) {
