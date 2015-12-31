@@ -25,7 +25,7 @@ func newSession() *Session {
 	session.api.Battle.OnPingReceive = session.onPingReceive
 
 	session.conn = connection.NewConnection(connection.NewSettings())
-	session.conn.OnMessageReceive = session.onConnectionMessageReceive
+	session.conn.OnBinaryMessageReceive = session.onConnectionBinaryMessageReceive
 	session.conn.OnDisconnect = session.onConnectionDisconnect
 	session.conn.OnError = session.onConnectionError
 	return session
@@ -50,7 +50,7 @@ func (session *Session) onConnectionDisconnect() {
 	session.room = nil
 }
 
-func (session *Session) onConnectionMessageReceive(data []byte) {
+func (session *Session) onConnectionBinaryMessageReceive(data []byte) {
 	session.api.DispatchMessageEvent(data)
 }
 

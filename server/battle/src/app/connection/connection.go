@@ -8,15 +8,16 @@ import (
 
 // Connection wraps a web socket connection.
 type Connection struct {
-	base               *websocket.Conn
-	settings           *Settings
-	Upgrader           *websocket.Upgrader
-	OnMessageReceive   func([]byte)
-	OnDisconnect       func()
-	OnError            func(error)
-	WriteBinaryMessage chan []byte
-	WriteTextMessage   chan string
-	WriteCloseMessage  chan struct{}
+	base                   *websocket.Conn
+	settings               *Settings
+	Upgrader               *websocket.Upgrader
+	OnBinaryMessageReceive func([]byte)
+	OnTextMessageReceive   func(string)
+	OnDisconnect           func()
+	OnError                func(error)
+	WriteBinaryMessage     chan []byte
+	WriteTextMessage       chan string
+	WriteCloseMessage      chan struct{}
 }
 
 // NewConnection creates a Connection.
@@ -129,8 +130,13 @@ func (conn *Connection) readPump() {
 			break
 		}
 
-		if messageType == websocket.BinaryMessage && conn.OnMessageReceive != nil {
-			conn.OnMessageReceive(data)
+		if messageType == websocket.BinaryMessage && conn.OnBinaryMessageReceive != nil {
+			conn.OnBinaryMessageReceive(data)
+		}
+
+		if messageType == websocket.TextMessage && conn.OnTextMessageReceive != nil {
+			text := string(data)
+			conn.OnTextMessageReceive(text)
 		}
 	}
 
