@@ -6,8 +6,8 @@ import (
 
 // Settings represents a connection configuration.
 type Settings struct {
-	WriteDeadLine     time.Duration
-	PongDeadLine      time.Duration
+	WriteWait         time.Duration
+	PongWait          time.Duration
 	PingPeriod        time.Duration
 	MaxMessageSize    int64
 	MessageBufferSize int
@@ -18,8 +18,8 @@ type Settings struct {
 // NewSettings creates a default Settings.
 func NewSettings() *Settings {
 	return &Settings{
-		WriteDeadLine:     10 * time.Second,
-		PongDeadLine:      60 * time.Second,
+		WriteWait:         10 * time.Second,
+		PongWait:          60 * time.Second,
 		PingPeriod:        (60 * time.Second * 9) / 10,
 		MaxMessageSize:    512,
 		MessageBufferSize: 512,

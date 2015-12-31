@@ -51,7 +51,7 @@ func (conn *Connection) Connect(responseWriter http.ResponseWriter, request *htt
 }
 
 func (conn *Connection) writeMessage(messageType int, data []byte) error {
-	conn.base.SetWriteDeadline(time.Now().Add(conn.settings.WriteDeadLine))
+	conn.base.SetWriteDeadline(time.Now().Add(conn.settings.WriteWait))
 	return conn.base.WriteMessage(messageType, data)
 }
 
@@ -115,9 +115,9 @@ func (conn *Connection) readPump() {
 	defer conn.base.Close()
 
 	conn.base.SetReadLimit(conn.settings.MaxMessageSize)
-	conn.base.SetReadDeadline(time.Now().Add(conn.settings.PongDeadLine))
+	conn.base.SetReadDeadline(time.Now().Add(conn.settings.PongWait))
 	conn.base.SetPongHandler(func(string) error {
-		conn.base.SetReadDeadline(time.Now().Add(conn.settings.PongDeadLine))
+		conn.base.SetReadDeadline(time.Now().Add(conn.settings.PongWait))
 		return nil
 	})
 
