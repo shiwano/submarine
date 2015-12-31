@@ -6,19 +6,25 @@ import (
 	"github.com/ugorji/go/codec"
 )
 
-// Serializer is the Serializer/Deserializer for TyphenAPI types.
-type Serializer struct {
+// Serializer serialize/deserializer a TyphenAPI type.
+type Serializer interface {
+	Serialize(v interface{}) (data []byte, err error)
+	Deserialize(b []byte, v interface{}) error
+}
+
+// CodecSerializer is the Serializer/Deserializer for TyphenAPI types.
+type CodecSerializer struct {
 	Handle codec.Handle
 }
 
-// NewJSONSerializer creates an Serializer for JSON format.
-func NewJSONSerializer() *Serializer {
+// NewJSONSerializer creates an CodecSerializer for JSON format.
+func NewJSONSerializer() *CodecSerializer {
 	handle := &codec.JsonHandle{}
-	return &Serializer{handle}
+	return &CodecSerializer{handle}
 }
 
 // Serialize an TyphenAPI type to bytes.
-func (s *Serializer) Serialize(v interface{}) (data []byte, err error) {
+func (s *CodecSerializer) Serialize(v interface{}) (data []byte, err error) {
 	buffer := &bytes.Buffer{}
 
 	encoder := codec.NewEncoder(buffer, s.Handle)
@@ -30,7 +36,7 @@ func (s *Serializer) Serialize(v interface{}) (data []byte, err error) {
 }
 
 // Deserialize bytes to an TyphenAPI type.
-func (s *Serializer) Deserialize(b []byte, v interface{}) error {
+func (s *CodecSerializer) Deserialize(b []byte, v interface{}) error {
 	reader := bytes.NewReader(b)
 	decoder := codec.NewDecoder(reader, s.Handle)
 

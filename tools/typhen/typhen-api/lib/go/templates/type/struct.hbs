@@ -55,7 +55,7 @@ func (t *Error) Error() string {
 {{/if}}
 
 // Bytes creates the byte array.
-func (t *{{upperCamelCase name}}) Bytes(serializer *typhenapi.Serializer) ([]byte, error) {
+func (t *{{upperCamelCase name}}) Bytes(serializer typhenapi.Serializer) ([]byte, error) {
 	if err := t.Coerce(); err != nil {
 		return nil, err
 	}

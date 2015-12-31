@@ -12,7 +12,7 @@ func (t *Void) Coerce() error {
 }
 
 // Bytes creates the byte array.
-func (t *Void) Bytes(serializer *Serializer) ([]byte, error) {
+func (t *Void) Bytes(serializer Serializer) ([]byte, error) {
 	data, err := serializer.Serialize(t)
 	if err != nil {
 		return nil, err

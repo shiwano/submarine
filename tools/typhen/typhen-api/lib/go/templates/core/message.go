@@ -15,7 +15,7 @@ type Message struct {
 }
 
 // NewMessage creates a Message from a TyphenAPI type
-func NewMessage(serializer *Serializer, messageType int32, v interface{}) (message *Message, err error) {
+func NewMessage(serializer Serializer, messageType int32, v interface{}) (message *Message, err error) {
 	typhenType := v.(Type)
 
 	if typhenType == nil {

@@ -81,7 +81,7 @@ func (t *testType) Coerce() error {
 	return nil
 }
 
-func (t *testType) Bytes(serializer *typhenapi.Serializer) ([]byte, error) {
+func (t *testType) Bytes(serializer typhenapi.Serializer) ([]byte, error) {
 	if err := t.Coerce(); err != nil {
 		return nil, err
 	}
