@@ -130,13 +130,16 @@ func (conn *Connection) readPump() {
 			break
 		}
 
-		if messageType == websocket.BinaryMessage && conn.OnBinaryMessageReceive != nil {
-			conn.OnBinaryMessageReceive(data)
-		}
-
-		if messageType == websocket.TextMessage && conn.OnTextMessageReceive != nil {
-			text := string(data)
-			conn.OnTextMessageReceive(text)
+		switch messageType {
+		case websocket.BinaryMessage:
+			if conn.OnBinaryMessageReceive != nil {
+				conn.OnBinaryMessageReceive(data)
+			}
+		case websocket.TextMessage:
+			if conn.OnTextMessageReceive != nil {
+				text := string(data)
+				conn.OnTextMessageReceive(text)
+			}
 		}
 	}
 
