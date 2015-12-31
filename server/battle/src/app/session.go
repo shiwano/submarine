@@ -31,7 +31,7 @@ func newSession() *Session {
 	return session
 }
 
-// Connect connects to the client. This starts readPump loop.
+// Connect connects to the client.
 func (session *Session) Connect(responseWriter http.ResponseWriter, request *http.Request) error {
 	return session.conn.Connect(responseWriter, request)
 }
