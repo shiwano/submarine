@@ -41,6 +41,12 @@ func New(baseURI string, serializer *typhenapi.Serializer) *WebAPI {
 
 {{#each functions}}
 // {{upperCamelCase name}} send a {{lowerCamelCase name}} request.
+{{#if comment}}
+// {{comment}}
+{{/if}}
+{{#if (optionalParameters callSignatures.0.parameters)}}
+// Optional parameters: {{#each (optionalParameters callSignatures.0.parameters)}}{{lowerCamelCase name}}{{#unless @last}}, {{/unless}}{{/each}}
+{{/if}}
 func (api *WebAPI) {{upperCamelCase name}}({{#each callSignatures.0.parameters}}{{lowerCamelCase name}} {{{typeName type null isOptional true}}}{{#unless @last}}, {{/unless}}{{/each}}) ({{{typeName callSignatures.0.returnType null false true}}}, error) {
 	reqBody := &{{upperCamelCase name}}RequestBody{}
 	{{#each callSignatures.0.parameters}}

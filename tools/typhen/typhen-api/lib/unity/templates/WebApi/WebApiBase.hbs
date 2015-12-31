@@ -33,8 +33,8 @@ namespace TyphenApi.WebApi.{{#if namespace}}Parts.{{upperCamelCase namespace}}{{
             {{/each}}
         }
 
-        {{#if ../comment}}
-        /// <summary>{{../comment}}</summary>
+        {{#if comment}}
+        /// <summary>{{comment}}</summary>
         {{/if}}
         public TyphenApi.WebApiRequest<{{{typeName callSignatures.0.returnType}}}, {{errorTypeName this}}> {{upperCamelCase name}}({{#each callSignatures.0.parameters}}{{{typeName type}}}{{{nullableToken type isOptional}}} {{serializablePropertyName this}}{{#if isOptional}} = null{{/if}}{{#unless @last}}, {{/unless}}{{/each}})
         {
