@@ -5,8 +5,6 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/olahol/melody"
 	"io"
-	"net/http"
-	"strconv"
 )
 
 // Log is a logrus.Logger
@@ -77,8 +75,4 @@ func main() {
 	engine, logWriter := NewEngine()
 	defer logWriter.Close()
 	engine.Run(":5000")
-}
-
-func getBattleID(request *http.Request) (uint64, error) {
-	return strconv.ParseUint(request.URL.Query().Get("battle_id"), 10, 64)
 }
