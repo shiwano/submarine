@@ -1,48 +1,69 @@
 package main
 
 import (
+	"app/connection"
 	"app/typhenapi/core"
 	"app/typhenapi/type/submarine/battle"
 	api "app/typhenapi/websocket/submarine"
 	"github.com/gorilla/websocket"
-	"github.com/olahol/melody"
+	"net/http"
 )
 
 // Session represents a network session that has user infos.
 type Session struct {
-	base *melody.Session
+	conn *connection.Connection
 	id   uint64
 	api  *api.WebSocketAPI
 	room *Room
 }
 
-func newSession(melodySession *melody.Session, id uint64) *Session {
+func newSession() *Session {
 	serializer := typhenapi.NewJSONSerializer()
-	session := &Session{melodySession, id, nil, nil}
-	session.api = api.New(session, serializer, session.onError)
+	session := &Session{id: 1}
+
+	session.api = api.New(session, serializer, session.onAPIError)
 	session.api.Battle.OnPingReceive = session.onPingReceive
+
+	session.conn = connection.NewConnection()
+	session.conn.OnMessageReceive = session.onConnectionMessageReceive
+	session.conn.OnDisconnect = session.onConnectionDisconnect
+	session.conn.OnError = session.onConnectionError
 	return session
 }
 
-// Send sends raw message data to client.
-func (session *Session) Send(msg []byte) {
-	session.base.WriteBinary(msg)
+// Connect connects to the client. This starts readPump loop.
+func (session *Session) Connect(responseWriter http.ResponseWriter, request *http.Request) error {
+	return session.conn.Connect(responseWriter, request)
+}
+
+// Send sends a binary message to the client.
+func (session *Session) Send(data []byte) {
+	session.conn.WriteBinaryMessage <- data
 }
 
 func (session *Session) close() {
-	session.base.Close()
+	session.conn.WriteCloseMessage <- struct{}{}
 }
 
-func (session *Session) onMessage(data []byte) {
+func (session *Session) onConnectionDisconnect() {
+	session.room.leave(session)
+	session.room = nil
+}
+
+func (session *Session) onConnectionMessageReceive(data []byte) {
 	session.api.DispatchMessageEvent(data)
 }
 
-func (session *Session) onError(data interface{}, err error) {
+func (session *Session) onConnectionError(err error) {
 	if closeError, ok := err.(*websocket.CloseError); ok {
 		if closeError.Code != 1000 {
-			Log.Error(err)
+			Log.Error(session.id, err)
 		}
 	}
+}
+
+func (session *Session) onAPIError(data interface{}, err error) {
+	Log.Error(session.id, err)
 }
 
 func (session *Session) onPingReceive(message *battle.PingObject) {

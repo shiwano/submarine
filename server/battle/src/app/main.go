@@ -3,7 +3,6 @@ package main
 import (
 	"github.com/Sirupsen/logrus"
 	"github.com/gin-gonic/gin"
-	"github.com/olahol/melody"
 	"io"
 )
 
@@ -14,23 +13,14 @@ var Log = logrus.New()
 func NewEngine() (*gin.Engine, *io.PipeWriter) {
 	logWriter := Log.Writer()
 	rooms := make(map[uint64]*Room)
-	sessions := make(map[*melody.Session]*Session)
 
 	r := gin.New()
 	r.Use(gin.Recovery(), gin.LoggerWithWriter(logWriter))
-	m := melody.New()
 
 	r.GET("/battle", func(c *gin.Context) {
-		if _, err := getBattleID(c.Request); err == nil {
-			m.HandleRequest(c.Writer, c.Request)
-		}
-	})
+		session := newSession()
 
-	m.HandleConnect(func(rawSession *melody.Session) {
-		session := newSession(rawSession, 1)
-		sessions[rawSession] = session
-
-		battleID, _ := getBattleID(rawSession.Request)
+		battleID, _ := getBattleID(c.Request)
 		room, existsRoom := rooms[battleID]
 		if !existsRoom {
 			room = newRoom(battleID)
@@ -38,33 +28,10 @@ func NewEngine() (*gin.Engine, *io.PipeWriter) {
 		}
 		room.join(session)
 		session.room = room
-		Log.Infof("Session(%v) is connected", session.id)
-	})
 
-	m.HandleDisconnect(func(rawSession *melody.Session) {
-		if session, ok := sessions[rawSession]; ok {
-			delete(sessions, rawSession)
-
-			if session.room != nil {
-				session.room.leave(session)
-				if session.room.isEmpty() {
-					delete(rooms, session.room.battleID)
-				}
-				session.room = nil
-			}
-			Log.Infof("Session(%v) is disconnected", session.id)
-		}
-	})
-
-	m.HandleMessageBinary(func(rawSession *melody.Session, data []byte) {
-		if session, ok := sessions[rawSession]; ok {
-			session.onMessage(data)
-		}
-	})
-
-	m.HandleError(func(rawSession *melody.Session, err error) {
-		if session, ok := sessions[rawSession]; ok {
-			session.onError(nil, err)
+		err := session.Connect(c.Writer, c.Request)
+		if err != nil {
+			Log.Infof("Session(%v) is created", session.id)
 		}
 	})
 
