@@ -22,7 +22,7 @@ func TestBattleServer(t *testing.T) {
 		Convey("should be connectable by web socket protocol", func() {
 			done := make(chan error)
 			go func() {
-				session, err := newClientSession(server.URL + "/battle?battle_id=1")
+				session, err := newClientSession(server.URL + "/rooms/1?room_key=secret")
 				defer session.close()
 				done <- err
 			}()
@@ -33,7 +33,7 @@ func TestBattleServer(t *testing.T) {
 		Convey("should respond to a ping message", func() {
 			done := make(chan *battle.PingObject)
 			go func() {
-				session, _ := newClientSession(server.URL + "/battle?battle_id=1")
+				session, _ := newClientSession(server.URL + "/rooms/1?room_key=secret")
 				defer session.close()
 				session.api.Battle.OnPingReceive = func(message *battle.PingObject) { done <- message }
 				session.api.Battle.SendPing(&battle.PingObject{"Hey"})
@@ -76,13 +76,13 @@ func (session *clientSession) readMessage() error {
 }
 
 func newClientSession(url string) (*clientSession, error) {
-	dialer := &websocket.Dialer{}
+	dialer := new(websocket.Dialer)
 	conn, _, connErr := dialer.Dial(strings.Replace(url, "http", "ws", 1), nil)
 	if connErr != nil {
 		return nil, connErr
 	}
 	serializer := typhenapi.NewJSONSerializer()
-	session := &clientSession{}
+	session := new(clientSession)
 	session.conn = conn
 	session.api = websocketapi.New(session, serializer, nil)
 	return session, nil

@@ -4,6 +4,7 @@ import (
 	"github.com/Sirupsen/logrus"
 	"github.com/gin-gonic/gin"
 	"io"
+	"strconv"
 )
 
 // Log is a logrus.Logger
@@ -17,22 +18,26 @@ func NewEngine() (*gin.Engine, *io.PipeWriter) {
 	r := gin.New()
 	r.Use(gin.Recovery(), gin.LoggerWithWriter(logWriter))
 
-	r.GET("/battle", func(c *gin.Context) {
+	r.GET("/rooms/:id", func(c *gin.Context) {
 		session := newSession()
 
-		battleID, _ := getBattleID(c.Request)
-		room, existsRoom := rooms[battleID]
-		if !existsRoom {
-			room = newRoom(battleID)
-			rooms[battleID] = room
+		roomID, err := strconv.ParseUint(c.Param("id"), 10, 64)
+		if err != nil {
+			Log.Error(err)
+		}
+
+		room, ok := rooms[roomID]
+		if !ok {
+			room = newRoom(roomID)
+			rooms[roomID] = room
 		}
 		room.join(session)
 		session.room = room
 
-		err := session.Connect(c.Writer, c.Request)
-		if err != nil {
-			Log.Infof("Session(%v) is created", session.id)
+		if err := session.Connect(c.Writer, c.Request); err != nil {
+			Log.Error(err)
 		}
+		Log.Infof("Session(%v) is created", session.id)
 	})
 
 	return r, logWriter
