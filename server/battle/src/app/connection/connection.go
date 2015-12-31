@@ -6,19 +6,10 @@ import (
 	"time"
 )
 
-const (
-	writeDeadLine     = 10 * time.Second
-	pongDeadLine      = 60 * time.Second
-	pingPeriod        = (60 * time.Second * 9) / 10
-	maxMessageSize    = 512
-	messageBufferSize = 512
-	readBufferSize    = 1024
-	writeBufferSize   = 1024
-)
-
 // Connection wraps a web socket connection.
 type Connection struct {
 	base               *websocket.Conn
+	settings           *Settings
 	Upgrader           *websocket.Upgrader
 	OnMessageReceive   func([]byte)
 	OnDisconnect       func()
@@ -29,15 +20,16 @@ type Connection struct {
 }
 
 // NewConnection creates a Connection.
-func NewConnection() *Connection {
+func NewConnection(settings *Settings) *Connection {
 	upgrader := &websocket.Upgrader{
-		ReadBufferSize:  readBufferSize,
-		WriteBufferSize: writeBufferSize,
+		ReadBufferSize:  settings.ReadBufferSize,
+		WriteBufferSize: settings.WriteBufferSize,
 	}
 	connection := &Connection{
+		settings:           settings,
 		Upgrader:           upgrader,
-		WriteBinaryMessage: make(chan []byte, messageBufferSize),
-		WriteTextMessage:   make(chan string, messageBufferSize),
+		WriteBinaryMessage: make(chan []byte, settings.MessageBufferSize),
+		WriteTextMessage:   make(chan string, settings.MessageBufferSize),
 		WriteCloseMessage:  make(chan struct{}),
 	}
 	connection.Upgrader = upgrader
@@ -58,7 +50,7 @@ func (conn *Connection) Connect(responseWriter http.ResponseWriter, request *htt
 }
 
 func (conn *Connection) writeMessage(messageType int, data []byte) error {
-	conn.base.SetWriteDeadline(time.Now().Add(writeDeadLine))
+	conn.base.SetWriteDeadline(time.Now().Add(conn.settings.WriteDeadLine))
 	return conn.base.WriteMessage(messageType, data)
 }
 
@@ -82,7 +74,7 @@ func (conn *Connection) writeTextMessage(text string) error {
 func (conn *Connection) writePump() {
 	defer conn.base.Close()
 
-	ticker := time.NewTicker(pingPeriod)
+	ticker := time.NewTicker(conn.settings.PingPeriod)
 	defer ticker.Stop()
 
 loop:
@@ -121,10 +113,10 @@ loop:
 func (conn *Connection) readPump() {
 	defer conn.base.Close()
 
-	conn.base.SetReadLimit(maxMessageSize)
-	conn.base.SetReadDeadline(time.Now().Add(pongDeadLine))
+	conn.base.SetReadLimit(conn.settings.MaxMessageSize)
+	conn.base.SetReadDeadline(time.Now().Add(conn.settings.PongDeadLine))
 	conn.base.SetPongHandler(func(string) error {
-		conn.base.SetReadDeadline(time.Now().Add(pongDeadLine))
+		conn.base.SetReadDeadline(time.Now().Add(conn.settings.PongDeadLine))
 		return nil
 	})
 

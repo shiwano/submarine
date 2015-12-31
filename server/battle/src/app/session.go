@@ -24,7 +24,7 @@ func newSession() *Session {
 	session.api = api.New(session, serializer, session.onAPIError)
 	session.api.Battle.OnPingReceive = session.onPingReceive
 
-	session.conn = connection.NewConnection()
+	session.conn = connection.NewConnection(connection.NewSettings())
 	session.conn.OnMessageReceive = session.onConnectionMessageReceive
 	session.conn.OnDisconnect = session.onConnectionDisconnect
 	session.conn.OnError = session.onConnectionError
