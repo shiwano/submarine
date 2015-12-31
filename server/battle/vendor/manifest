@@ -74,12 +74,6 @@
 			"branch": "master"
 		},
 		{
-			"importpath": "github.com/olahol/melody",
-			"repository": "https://github.com/olahol/melody",
-			"revision": "241a6879bf85baa617b4bba8e1974eab92ee5601",
-			"branch": "master"
-		},
-		{
 			"importpath": "github.com/smartystreets/assertions",
 			"repository": "https://github.com/smartystreets/assertions",
 			"revision": "edb6e295a22c57a2aa353b2f0729b6eff9f9f4b7",
