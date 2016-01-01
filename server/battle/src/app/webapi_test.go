@@ -15,8 +15,7 @@ import (
 
 func TestWebAPI(t *testing.T) {
 	Convey("WebAPI", t, func() {
-		api := main.NewWebAPI("http://localhost:3000")
-		api.Client.Transport = &webAPIMock{typhenapi.NewJSONSerializer()}
+		api := newWebAPIMock("http://localhost:3000")
 
 		Convey("should send a ping request", func() {
 			res, _ := api.Ping("PING")
@@ -25,26 +24,7 @@ func TestWebAPI(t *testing.T) {
 	})
 }
 
-type webAPIMock struct {
-	serializer typhenapi.Serializer
-}
-
-func (mock *webAPIMock) RoundTrip(request *http.Request) (*http.Response, error) {
-	response := &http.Response{Header: make(http.Header), Request: request}
-	response.Header.Set("Content-Type", "application/json")
-	data, _ := ioutil.ReadAll(request.Body)
-	typhenType, statusCode := mock.Routes(request.URL.Path, data)
-
-	response.StatusCode = statusCode
-	body, _ := typhenType.Bytes(mock.serializer)
-	response.Body = ioutil.NopCloser(bytes.NewReader(body))
-	if response.StatusCode >= 400 {
-		return response, errors.New("Server Error")
-	}
-	return response, nil
-}
-
-func (mock *webAPIMock) Routes(path string, data []byte) (typhenapi.Type, int) {
+func (mock *webAPITransporter) Routes(path string, data []byte) (typhenapi.Type, int) {
 	switch path {
 	case "/ping":
 		params := new(webapi.PingRequestBody)
@@ -55,7 +35,7 @@ func (mock *webAPIMock) Routes(path string, data []byte) (typhenapi.Type, int) {
 	}
 }
 
-func (mock *webAPIMock) Ping(params *webapi.PingRequestBody) (typhenapi.Type, int) {
+func (mock *webAPITransporter) Ping(params *webapi.PingRequestBody) (typhenapi.Type, int) {
 	typhenType := &submarine.PingObject{"PING PONG"}
 	return typhenType, http.StatusOK
 }

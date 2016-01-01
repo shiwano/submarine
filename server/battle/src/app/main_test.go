@@ -48,6 +48,31 @@ func (s *clientSession) close() {
 	s.conn.Close()
 }
 
+type webAPITransporter struct {
+	serializer typhenapi.Serializer
+}
+
+func (mock *webAPITransporter) RoundTrip(request *http.Request) (*http.Response, error) {
+	response := &http.Response{Header: make(http.Header), Request: request}
+	response.Header.Set("Content-Type", "application/json")
+	data, _ := ioutil.ReadAll(request.Body)
+	typhenType, statusCode := mock.Routes(request.URL.Path, data)
+
+	response.StatusCode = statusCode
+	body, _ := typhenType.Bytes(mock.serializer)
+	response.Body = ioutil.NopCloser(bytes.NewReader(body))
+	if response.StatusCode >= 400 {
+		return response, errors.New("Server Error")
+	}
+	return response, nil
+}
+
+func newWebAPIMock(url string) {
+	api := main.NewWebAPI(url)
+	api.Client.Transport = &webAPITransporter{typhenapi.NewJSONSerializer()}
+	return api
+}
+
 func newTestServer() (*httptest.Server, *main.Server) {
 	main.Log.Level = logrus.WarnLevel
 	gin.SetMode(gin.TestMode)
