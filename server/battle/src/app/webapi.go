@@ -10,10 +10,10 @@ import (
 func NewWebAPI(baseURI string) *webapi.WebAPI {
 	serializer := typhenapi.NewJSONSerializer()
 	api := webapi.New(baseURI, serializer)
-	api.OnBeforeRequestSend = onBeforeWebAPIRequestSend
+	api.BeforeRequestHandler = onBeforeWebAPIRequest
 	return api
 }
 
-func onBeforeWebAPIRequestSend(req *http.Request) {
+func onBeforeWebAPIRequest(req *http.Request) {
 	req.Header.Add("Content-Type", "application/json")
 }

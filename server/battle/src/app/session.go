@@ -22,13 +22,13 @@ func newSession(id uint64, roomID uint64) *Session {
 	serializer := typhenapi.NewJSONSerializer()
 	session := &Session{id: id, roomID: roomID}
 
-	session.api = api.New(session, serializer, session.onAPIError)
-	session.api.Battle.OnPingReceive = session.onPingReceive
+	session.api = api.New(session, serializer, session.onError)
+	session.api.Battle.PingHandler = session.onPingReceive
 
 	session.conn = connection.New()
 	session.conn.OnBinaryMessageReceive = session.onConnectionBinaryMessageReceive
 	session.conn.OnDisconnect = session.onConnectionDisconnect
-	session.conn.OnError = session.onConnectionError
+	session.conn.OnError = session.onError
 	return session
 }
 
@@ -56,15 +56,10 @@ func (session *Session) onConnectionBinaryMessageReceive(data []byte) {
 	session.api.DispatchMessageEvent(data)
 }
 
-func (session *Session) onConnectionError(err error) {
-	if closeError, ok := err.(*websocket.CloseError); ok {
-		if closeError.Code != 1000 {
-			Log.Error(session.id, err)
-		}
+func (session *Session) onError(err error) {
+	if closeError, ok := err.(*websocket.CloseError); ok && closeError.Code == 1000 {
+		return
 	}
-}
-
-func (session *Session) onAPIError(data interface{}, err error) {
 	Log.Error(session.id, err)
 }
 

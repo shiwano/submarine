@@ -26,7 +26,7 @@ func TestServer(t *testing.T) {
 			go func() {
 				session, _ := newClientSession(server.URL + "/rooms/1?room_key=secret")
 				defer session.close()
-				session.api.Battle.OnPingReceive = func(message *battle.PingObject) { done <- message }
+				session.api.Battle.PingHandler = func(message *battle.PingObject) { done <- message }
 				session.api.Battle.SendPing(&battle.PingObject{"Hey"})
 				session.readMessage()
 			}()
