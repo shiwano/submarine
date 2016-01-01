@@ -34,7 +34,7 @@ func newSession(id uint64, roomID uint64) *Session {
 
 // Connect connects to the client.
 func (session *Session) Connect(responseWriter http.ResponseWriter, request *http.Request) error {
-	return session.conn.Connect(responseWriter, request)
+	return session.conn.UpgradeFromHTTP(responseWriter, request)
 }
 
 // Send sends a binary message to the client.

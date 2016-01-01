@@ -29,8 +29,8 @@ func New() *Connection {
 	return connection
 }
 
-// Connect to the client.
-func (c *Connection) Connect(responseWriter http.ResponseWriter, request *http.Request) error {
+// UpgradeFromHTTP upgrades HTTP to WebSocket.
+func (c *Connection) UpgradeFromHTTP(responseWriter http.ResponseWriter, request *http.Request) error {
 	c.Upgrader.ReadBufferSize = c.Settings.ReadBufferSize
 	c.Upgrader.WriteBufferSize = c.Settings.WriteBufferSize
 	c.WriteBinaryMessage = make(chan []byte, c.Settings.MessageBufferSize)
