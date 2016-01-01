@@ -19,12 +19,7 @@ func TestWebAPI(t *testing.T) {
 		api.Client.Transport = &webAPIMock{typhenapi.NewJSONSerializer()}
 
 		Convey("should send a ping request", func() {
-			done := make(chan *submarine.PingObject)
-			go func() {
-				res, _ := api.Ping("PING")
-				done <- res
-			}()
-			res := <-done
+			res, _ := api.Ping("PING")
 			So(res.Message, ShouldEqual, "PING PONG")
 		})
 	})
