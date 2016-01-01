@@ -43,7 +43,7 @@ func (session *Session) Send(data []byte) {
 }
 
 func (session *Session) close() {
-	session.conn.WriteCloseMessage <- struct{}{}
+	session.conn.Close()
 }
 
 func (session *Session) onConnectionDisconnect() {

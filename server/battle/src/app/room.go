@@ -31,7 +31,7 @@ loop:
 		case session := <-r.Leave:
 			r.leave(session)
 		case <-r.Close:
-			r.leaveAll()
+			r.leaveAndCloseAll()
 			break loop
 		}
 	}
@@ -50,8 +50,9 @@ func (r *Room) leave(session *Session) {
 	session.room = nil
 }
 
-func (r *Room) leaveAll() {
+func (r *Room) leaveAndCloseAll() {
 	for _, session := range r.sessions {
+		session.close()
 		r.leave(session)
 	}
 }
