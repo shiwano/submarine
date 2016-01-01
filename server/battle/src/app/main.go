@@ -4,6 +4,7 @@ import (
 	"github.com/Sirupsen/logrus"
 	"github.com/gin-gonic/gin"
 	"io"
+	"net/http"
 	"strconv"
 )
 
@@ -13,30 +14,27 @@ var Log = logrus.New()
 // NewEngine creates a gin.Engine.
 func NewEngine() (*gin.Engine, *io.PipeWriter) {
 	logWriter := Log.Writer()
-	rooms := make(map[uint64]*Room)
+	roomManager := newRoomManager()
 
 	r := gin.New()
 	r.Use(gin.Recovery(), gin.LoggerWithWriter(logWriter))
 
 	r.GET("/rooms/:id", func(c *gin.Context) {
-		session := newSession()
-
 		roomID, err := strconv.ParseUint(c.Param("id"), 10, 64)
 		if err != nil {
 			Log.Error(err)
+			c.String(http.StatusBadRequest, "Invalid room id.")
+			return
 		}
 
-		room, ok := rooms[roomID]
-		if !ok {
-			room = newRoom(roomID)
-			rooms[roomID] = room
-		}
-		room.join(session)
-		session.room = room
-
+		session := newSession(1, roomID)
 		if err := session.Connect(c.Writer, c.Request); err != nil {
 			Log.Error(err)
+			c.String(http.StatusBadRequest, "Failed to upgrade the request to web socket protocol.")
+			return
 		}
+
+		roomManager.JoinToRoom <- session
 		Log.Infof("Session(%v) is created", session.id)
 	})
 

@@ -11,15 +11,16 @@ import (
 
 // Session represents a network session that has user infos.
 type Session struct {
-	conn *connection.Connection
-	id   uint64
-	api  *api.WebSocketAPI
-	room *Room
+	id     uint64
+	roomID uint64
+	conn   *connection.Connection
+	api    *api.WebSocketAPI
+	room   *Room
 }
 
-func newSession() *Session {
+func newSession(id uint64, roomID uint64) *Session {
 	serializer := typhenapi.NewJSONSerializer()
-	session := &Session{id: 1}
+	session := &Session{id: id, roomID: roomID}
 
 	session.api = api.New(session, serializer, session.onAPIError)
 	session.api.Battle.OnPingReceive = session.onPingReceive
@@ -46,8 +47,9 @@ func (session *Session) close() {
 }
 
 func (session *Session) onConnectionDisconnect() {
-	session.room.leave(session)
-	session.room = nil
+	if session.room != nil {
+		session.room.Leave <- session
+	}
 }
 
 func (session *Session) onConnectionBinaryMessageReceive(data []byte) {
