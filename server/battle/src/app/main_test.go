@@ -3,52 +3,13 @@ package main_test
 import (
 	"app"
 	"app/typhenapi/core"
-	"app/typhenapi/type/submarine/battle"
 	websocketapi "app/typhenapi/websocket/submarine"
 	"github.com/Sirupsen/logrus"
 	"github.com/gin-gonic/gin"
 	"github.com/gorilla/websocket"
-	. "github.com/smartystreets/goconvey/convey"
-	"io"
 	"net/http/httptest"
 	"strings"
-	"testing"
 )
-
-func TestBattleServer(t *testing.T) {
-	Convey("BattleServer", t, func() {
-		server, logWriter := newTestServer()
-
-		Convey("should be connectable by web socket protocol", func() {
-			done := make(chan error)
-			go func() {
-				session, err := newClientSession(server.URL + "/rooms/1?room_key=secret")
-				defer session.close()
-				done <- err
-			}()
-			err := <-done
-			So(err, ShouldBeNil)
-		})
-
-		Convey("should respond to a ping message", func() {
-			done := make(chan *battle.PingObject)
-			go func() {
-				session, _ := newClientSession(server.URL + "/rooms/1?room_key=secret")
-				defer session.close()
-				session.api.Battle.OnPingReceive = func(message *battle.PingObject) { done <- message }
-				session.api.Battle.SendPing(&battle.PingObject{"Hey"})
-				session.readMessage()
-			}()
-			message := <-done
-			So(message.Message, ShouldEqual, "Hey Hey")
-		})
-
-		Reset(func() {
-			server.Close()
-			logWriter.Close()
-		})
-	})
-}
 
 type clientSession struct {
 	conn *websocket.Conn
@@ -88,10 +49,10 @@ func newClientSession(url string) (*clientSession, error) {
 	return session, nil
 }
 
-func newTestServer() (*httptest.Server, *io.PipeWriter) {
+func newTestServer() (*httptest.Server, *main.Server) {
 	main.Log.Level = logrus.WarnLevel
 	gin.SetMode(gin.TestMode)
-	engine, logWriter := main.NewEngine()
-	server := httptest.NewServer(engine)
-	return server, logWriter
+	rawServer := main.NewServer()
+	server := httptest.NewServer(rawServer)
+	return server, rawServer
 }
