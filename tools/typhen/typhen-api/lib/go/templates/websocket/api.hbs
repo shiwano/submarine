@@ -30,7 +30,7 @@ type WebSocketAPI struct {
 	{{/each}}
 
 	{{#each variables}}
-	On{{upperCamelCase name}}Receive func(message {{typeName type null false true}})
+	{{upperCamelCase name}}Handler func(message {{typeName type null false true}})
 	{{/each}}
 }
 
@@ -97,8 +97,8 @@ func (api *WebSocketAPI) DispatchMessageEvent(data []byte) error {
 			return err
 		}
 
-		if api.On{{upperCamelCase name}}Receive != nil {
-			api.On{{upperCamelCase name}}Receive(typhenType)
+		if api.{{upperCamelCase name}}Handler != nil {
+			api.{{upperCamelCase name}}Handler(typhenType)
 		}
 	{{/each}}
 	}
