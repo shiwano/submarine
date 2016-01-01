@@ -34,37 +34,37 @@ func newSession(id uint64, roomID uint64) *Session {
 }
 
 // Connect connects to the client.
-func (session *Session) Connect(responseWriter http.ResponseWriter, request *http.Request) error {
-	return session.conn.UpgradeFromHTTP(responseWriter, request)
+func (s *Session) Connect(responseWriter http.ResponseWriter, request *http.Request) error {
+	return s.conn.UpgradeFromHTTP(responseWriter, request)
 }
 
 // Send sends a binary message to the client.
-func (session *Session) Send(data []byte) {
-	session.conn.WriteBinaryMessage(data)
+func (s *Session) Send(data []byte) {
+	s.conn.WriteBinaryMessage(data)
 }
 
-func (session *Session) close() {
-	session.conn.Close()
+func (s *Session) close() {
+	s.conn.Close()
 }
 
-func (session *Session) onConnectionDisconnect() {
-	if session.disconnectHandler != nil {
-		session.disconnectHandler(session)
+func (s *Session) onConnectionDisconnect() {
+	if s.disconnectHandler != nil {
+		s.disconnectHandler(session)
 	}
 }
 
-func (session *Session) onConnectionBinaryMessageReceive(data []byte) {
-	session.api.DispatchMessageEvent(data)
+func (s *Session) onConnectionBinaryMessageReceive(data []byte) {
+	s.api.DispatchMessageEvent(data)
 }
 
-func (session *Session) onError(err error) {
+func (s *Session) onError(err error) {
 	if closeError, ok := err.(*websocket.CloseError); ok && (closeError.Code == 1000 || closeError.Code == 1005) {
 		return
 	}
-	Log.Error(session.id, err)
+	Log.Error(s.id, err)
 }
 
-func (session *Session) onPingReceive(message *battle.PingObject) {
+func (s *Session) onPingReceive(message *battle.PingObject) {
 	message.Message += " " + message.Message
-	session.api.Battle.SendPing(message)
+	s.api.Battle.SendPing(message)
 }

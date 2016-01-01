@@ -57,14 +57,14 @@ type webAPITransporter struct {
 	serializer typhenapi.Serializer
 }
 
-func (mock *webAPITransporter) RoundTrip(request *http.Request) (*http.Response, error) {
+func (m *webAPITransporter) RoundTrip(request *http.Request) (*http.Response, error) {
 	response := &http.Response{Header: make(http.Header), Request: request}
 	response.Header.Set("Content-Type", "application/json")
 	data, _ := ioutil.ReadAll(request.Body)
-	typhenType, statusCode := mock.Routes(request.URL.Path, data)
+	typhenType, statusCode := m.Routes(request.URL.Path, data)
 
 	response.StatusCode = statusCode
-	body, _ := typhenType.Bytes(mock.serializer)
+	body, _ := typhenType.Bytes(m.serializer)
 	response.Body = ioutil.NopCloser(bytes.NewReader(body))
 	if response.StatusCode >= 400 {
 		return response, errors.New("Server Error")

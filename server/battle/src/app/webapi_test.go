@@ -20,18 +20,18 @@ func TestWebAPI(t *testing.T) {
 	})
 }
 
-func (mock *webAPITransporter) Routes(path string, data []byte) (typhenapi.Type, int) {
+func (m *webAPITransporter) Routes(path string, data []byte) (typhenapi.Type, int) {
 	switch path {
 	case "/ping":
 		params := new(webapi.PingRequestBody)
-		mock.serializer.Deserialize(data, params)
-		return mock.Ping(params)
+		m.serializer.Deserialize(data, params)
+		return m.Ping(params)
 	default:
 		return &typhenapi.Void{}, http.StatusOK
 	}
 }
 
-func (mock *webAPITransporter) Ping(params *webapi.PingRequestBody) (typhenapi.Type, int) {
+func (m *webAPITransporter) Ping(params *webapi.PingRequestBody) (typhenapi.Type, int) {
 	typhenType := &submarine.PingObject{"PING PONG"}
 	return typhenType, http.StatusOK
 }
