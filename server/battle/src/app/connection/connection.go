@@ -8,8 +8,8 @@ import (
 
 // Connection wraps a web socket connection.
 type Connection struct {
-	base                   *websocket.Conn
-	settings               *Settings
+	conn                   *websocket.Conn
+	Settings               *Settings
 	Upgrader               *websocket.Upgrader
 	OnBinaryMessageReceive func([]byte)
 	OnTextMessageReceive   func(string)
@@ -20,90 +20,88 @@ type Connection struct {
 	WriteCloseMessage      chan struct{}
 }
 
-// NewConnection creates a Connection.
-func NewConnection(settings *Settings) *Connection {
-	upgrader := &websocket.Upgrader{
-		ReadBufferSize:  settings.ReadBufferSize,
-		WriteBufferSize: settings.WriteBufferSize,
-	}
+// New creates a Connection.
+func New() *Connection {
 	connection := &Connection{
-		settings:           settings,
-		Upgrader:           upgrader,
-		WriteBinaryMessage: make(chan []byte, settings.MessageBufferSize),
-		WriteTextMessage:   make(chan string, settings.MessageBufferSize),
-		WriteCloseMessage:  make(chan struct{}),
+		Settings: NewSettings(),
+		Upgrader: new(websocket.Upgrader),
 	}
-	connection.Upgrader = upgrader
 	return connection
 }
 
-// Connect connects to a client.
-func (conn *Connection) Connect(responseWriter http.ResponseWriter, request *http.Request) error {
-	websocketConn, err := conn.Upgrader.Upgrade(responseWriter, request, nil)
+// Connect connects to the client.
+func (c *Connection) Connect(responseWriter http.ResponseWriter, request *http.Request) error {
+	c.Upgrader.ReadBufferSize = c.Settings.ReadBufferSize
+	c.Upgrader.WriteBufferSize = c.Settings.WriteBufferSize
+	c.WriteBinaryMessage = make(chan []byte, c.Settings.MessageBufferSize)
+	c.WriteTextMessage = make(chan string, c.Settings.MessageBufferSize)
+	c.WriteCloseMessage = make(chan struct{})
+
+	websocketConn, err := c.Upgrader.Upgrade(responseWriter, request, nil)
 	if err != nil {
 		return err
 	}
+	c.conn = websocketConn
 
-	conn.base = websocketConn
-	go conn.writePump()
-	go conn.readPump()
+	go c.writePump()
+	go c.readPump()
 	return nil
 }
 
-func (conn *Connection) writeMessage(messageType int, data []byte) error {
-	conn.base.SetWriteDeadline(time.Now().Add(conn.settings.WriteWait))
-	return conn.base.WriteMessage(messageType, data)
+func (c *Connection) writeMessage(messageType int, data []byte) error {
+	c.conn.SetWriteDeadline(time.Now().Add(c.Settings.WriteWait))
+	return c.conn.WriteMessage(messageType, data)
 }
 
-func (conn *Connection) writeCloseMessage() error {
-	return conn.writeMessage(websocket.CloseMessage, websocket.FormatCloseMessage(websocket.CloseNormalClosure, ""))
+func (c *Connection) writeCloseMessage() error {
+	return c.writeMessage(websocket.CloseMessage, websocket.FormatCloseMessage(websocket.CloseNormalClosure, ""))
 }
 
-func (conn *Connection) writePingMessage() error {
-	return conn.writeMessage(websocket.PingMessage, []byte{})
+func (c *Connection) writePingMessage() error {
+	return c.writeMessage(websocket.PingMessage, []byte{})
 }
 
-func (conn *Connection) writeBinaryMessage(data []byte) error {
-	return conn.writeMessage(websocket.BinaryMessage, data)
+func (c *Connection) writeBinaryMessage(data []byte) error {
+	return c.writeMessage(websocket.BinaryMessage, data)
 }
 
-func (conn *Connection) writeTextMessage(text string) error {
+func (c *Connection) writeTextMessage(text string) error {
 	data := []byte(text)
-	return conn.writeMessage(websocket.TextMessage, data)
+	return c.writeMessage(websocket.TextMessage, data)
 }
 
-func (conn *Connection) writePump() {
-	defer conn.base.Close()
+func (c *Connection) writePump() {
+	defer c.conn.Close()
 
-	ticker := time.NewTicker(conn.settings.PingPeriod)
+	ticker := time.NewTicker(c.Settings.PingPeriod)
 	defer ticker.Stop()
 
 loop:
 	for {
 		select {
-		case data := <-conn.WriteBinaryMessage:
-			if err := conn.writeBinaryMessage(data); err != nil {
-				if conn.OnError != nil {
-					conn.OnError(err)
+		case data := <-c.WriteBinaryMessage:
+			if err := c.writeBinaryMessage(data); err != nil {
+				if c.OnError != nil {
+					c.OnError(err)
 				}
 				break loop
 			}
-		case text := <-conn.WriteTextMessage:
-			if err := conn.writeTextMessage(text); err != nil {
-				if conn.OnError != nil {
-					conn.OnError(err)
+		case text := <-c.WriteTextMessage:
+			if err := c.writeTextMessage(text); err != nil {
+				if c.OnError != nil {
+					c.OnError(err)
 				}
 				break loop
 			}
-		case <-conn.WriteCloseMessage:
-			if err := conn.writeCloseMessage(); err != nil && conn.OnError != nil {
-				conn.OnError(err)
+		case <-c.WriteCloseMessage:
+			if err := c.writeCloseMessage(); err != nil && c.OnError != nil {
+				c.OnError(err)
 			}
 			break loop
 		case <-ticker.C:
-			if err := conn.writePingMessage(); err != nil {
-				if conn.OnError != nil {
-					conn.OnError(err)
+			if err := c.writePingMessage(); err != nil {
+				if c.OnError != nil {
+					c.OnError(err)
 				}
 				break loop
 			}
@@ -111,39 +109,39 @@ loop:
 	}
 }
 
-func (conn *Connection) readPump() {
-	defer conn.base.Close()
+func (c *Connection) readPump() {
+	defer c.conn.Close()
 
-	conn.base.SetReadLimit(conn.settings.MaxMessageSize)
-	conn.base.SetReadDeadline(time.Now().Add(conn.settings.PongWait))
-	conn.base.SetPongHandler(func(string) error {
-		conn.base.SetReadDeadline(time.Now().Add(conn.settings.PongWait))
+	c.conn.SetReadLimit(c.Settings.MaxMessageSize)
+	c.conn.SetReadDeadline(time.Now().Add(c.Settings.PongWait))
+	c.conn.SetPongHandler(func(string) error {
+		c.conn.SetReadDeadline(time.Now().Add(c.Settings.PongWait))
 		return nil
 	})
 
 	for {
-		messageType, data, err := conn.base.ReadMessage()
+		messageType, data, err := c.conn.ReadMessage()
 		if err != nil {
-			if conn.OnError != nil {
-				conn.OnError(err)
+			if c.OnError != nil {
+				c.OnError(err)
 			}
 			break
 		}
 
 		switch messageType {
 		case websocket.BinaryMessage:
-			if conn.OnBinaryMessageReceive != nil {
-				conn.OnBinaryMessageReceive(data)
+			if c.OnBinaryMessageReceive != nil {
+				c.OnBinaryMessageReceive(data)
 			}
 		case websocket.TextMessage:
-			if conn.OnTextMessageReceive != nil {
+			if c.OnTextMessageReceive != nil {
 				text := string(data)
-				conn.OnTextMessageReceive(text)
+				c.OnTextMessageReceive(text)
 			}
 		}
 	}
 
-	if conn.OnDisconnect != nil {
-		conn.OnDisconnect()
+	if c.OnDisconnect != nil {
+		c.OnDisconnect()
 	}
 }

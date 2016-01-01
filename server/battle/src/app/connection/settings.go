@@ -4,7 +4,7 @@ import (
 	"time"
 )
 
-// Settings represents a connection configuration.
+// Settings represents connection settings.
 type Settings struct {
 	WriteWait         time.Duration
 	PongWait          time.Duration
@@ -15,7 +15,7 @@ type Settings struct {
 	WriteBufferSize   int
 }
 
-// NewSettings creates a default Settings.
+// NewSettings creates default settings.
 func NewSettings() *Settings {
 	return &Settings{
 		WriteWait:         10 * time.Second,
