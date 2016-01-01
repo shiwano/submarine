@@ -10,6 +10,7 @@ import (
 type Connection struct {
 	conn                 *websocket.Conn
 	Settings             *Settings
+	Dialer               *websocket.Dialer
 	Upgrader             *websocket.Upgrader
 	BinaryMessageHandler func([]byte)
 	TextMessageHandler   func(string)
@@ -24,24 +25,44 @@ type Connection struct {
 func New() *Connection {
 	connection := &Connection{
 		Settings: NewSettings(),
+		Dialer:   new(websocket.Dialer),
 		Upgrader: new(websocket.Upgrader),
 	}
 	return connection
 }
 
-// UpgradeFromHTTP upgrades HTTP to WebSocket.
-func (c *Connection) UpgradeFromHTTP(responseWriter http.ResponseWriter, request *http.Request) error {
-	c.Upgrader.ReadBufferSize = c.Settings.ReadBufferSize
-	c.Upgrader.WriteBufferSize = c.Settings.WriteBufferSize
+// Connect to other.
+func (c *Connection) Connect(url string, requestHeader http.Header) (*http.Response, error) {
 	c.WriteBinaryMessage = make(chan []byte, c.Settings.MessageBufferSize)
 	c.WriteTextMessage = make(chan string, c.Settings.MessageBufferSize)
 	c.WriteCloseMessage = make(chan struct{})
+	c.Dialer.ReadBufferSize = c.Settings.ReadBufferSize
+	c.Dialer.WriteBufferSize = c.Settings.WriteBufferSize
 
-	websocketConn, err := c.Upgrader.Upgrade(responseWriter, request, nil)
+	conn, response, err := c.Dialer.Dial(url, requestHeader)
+	if err != nil {
+		return response, err
+	}
+	c.conn = conn
+
+	go c.writePump()
+	go c.readPump()
+	return response, nil
+}
+
+// UpgradeFromHTTP upgrades HTTP to WebSocket.
+func (c *Connection) UpgradeFromHTTP(responseWriter http.ResponseWriter, request *http.Request) error {
+	c.WriteBinaryMessage = make(chan []byte, c.Settings.MessageBufferSize)
+	c.WriteTextMessage = make(chan string, c.Settings.MessageBufferSize)
+	c.WriteCloseMessage = make(chan struct{})
+	c.Upgrader.ReadBufferSize = c.Settings.ReadBufferSize
+	c.Upgrader.WriteBufferSize = c.Settings.WriteBufferSize
+
+	conn, err := c.Upgrader.Upgrade(responseWriter, request, nil)
 	if err != nil {
 		return err
 	}
-	c.conn = websocketConn
+	c.conn = conn
 
 	go c.writePump()
 	go c.readPump()
