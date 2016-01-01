@@ -1,9 +1,5 @@
 package main
 
-const (
-	maxRoomMembersCount = 4
-)
-
 // Room represents a network group for battle.
 type Room struct {
 	id           uint64
@@ -45,14 +41,8 @@ loop:
 	}
 }
 
-func (r *Room) isFull() bool {
-	return len(r.sessions) >= maxRoomMembersCount
-}
-
 func (r *Room) join(session *Session) {
-	if !r.isFull() {
-		r.sessions[session.id] = session
-	}
+	r.sessions[session.id] = session
 }
 
 func (r *Room) leave(session *Session) {
