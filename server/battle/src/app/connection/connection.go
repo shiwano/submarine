@@ -12,7 +12,7 @@ var (
 	pingEnvelope  = &envelope{websocket.PingMessage, []byte{}}
 )
 
-// Connection wraps a web socket connection.
+// Connection represents a web socket connection.
 type Connection struct {
 	conn                 *websocket.Conn
 	Settings             *Settings
@@ -35,7 +35,7 @@ func New() *Connection {
 	return connection
 }
 
-// Connect to other.
+// Connect to the peer.
 func (c *Connection) Connect(url string, requestHeader http.Header) (*http.Response, error) {
 	c.envelope = make(chan *envelope, c.Settings.MessageBufferSize)
 	c.Dialer.ReadBufferSize = c.Settings.ReadBufferSize
@@ -75,19 +75,19 @@ func (c *Connection) Close() {
 	c.postEnvelope(closeEnvelope)
 }
 
-// WriteBinaryMessage to other.
+// WriteBinaryMessage to the peer.
 func (c *Connection) WriteBinaryMessage(data []byte) {
 	c.postEnvelope(&envelope{websocket.BinaryMessage, data})
 }
 
-// WriteTextMessage to other.
+// WriteTextMessage to the peer.
 func (c *Connection) WriteTextMessage(data []byte) {
 	c.postEnvelope(&envelope{websocket.TextMessage, data})
 }
 
-func (c *Connection) postEnvelope(message *envelope) {
+func (c *Connection) postEnvelope(e *envelope) {
 	select {
-	case c.envelope <- message:
+	case c.envelope <- e:
 	default:
 		c.ErrorHandler(errors.New("Message buffer full"))
 	}
