@@ -41,7 +41,7 @@ func newClientSession(url string) (*clientSession, error) {
 }
 
 func (s *clientSession) Send(data []byte) {
-	s.conn.WriteBinaryMessage <- data
+	s.conn.WriteBinaryMessage(data)
 }
 
 func (s *clientSession) close() {

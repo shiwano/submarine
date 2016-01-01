@@ -40,7 +40,7 @@ func (session *Session) Connect(responseWriter http.ResponseWriter, request *htt
 
 // Send sends a binary message to the client.
 func (session *Session) Send(data []byte) {
-	session.conn.WriteBinaryMessage <- data
+	session.conn.WriteBinaryMessage(data)
 }
 
 func (session *Session) close() {
@@ -58,7 +58,7 @@ func (session *Session) onConnectionBinaryMessageReceive(data []byte) {
 }
 
 func (session *Session) onError(err error) {
-	if closeError, ok := err.(*websocket.CloseError); ok && closeError.Code == 1000 {
+	if closeError, ok := err.(*websocket.CloseError); ok && (closeError.Code == 1000 || closeError.Code == 1005) {
 		return
 	}
 	Log.Error(session.id, err)

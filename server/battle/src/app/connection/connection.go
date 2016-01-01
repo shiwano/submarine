@@ -1,9 +1,15 @@
 package connection
 
 import (
+	"errors"
 	"github.com/gorilla/websocket"
 	"net/http"
 	"time"
+)
+
+var (
+	closeEnvelope = &envelope{websocket.CloseMessage, websocket.FormatCloseMessage(websocket.CloseNormalClosure, "")}
+	pingEnvelope  = &envelope{websocket.PingMessage, []byte{}}
 )
 
 // Connection wraps a web socket connection.
@@ -13,12 +19,10 @@ type Connection struct {
 	Dialer               *websocket.Dialer
 	Upgrader             *websocket.Upgrader
 	BinaryMessageHandler func([]byte)
-	TextMessageHandler   func(string)
+	TextMessageHandler   func([]byte)
 	DisconnectHandler    func()
 	ErrorHandler         func(error)
-	WriteBinaryMessage   chan []byte
-	WriteTextMessage     chan string
-	WriteCloseMessage    chan struct{}
+	envelope             chan *envelope
 }
 
 // New creates a Connection.
@@ -33,9 +37,7 @@ func New() *Connection {
 
 // Connect to other.
 func (c *Connection) Connect(url string, requestHeader http.Header) (*http.Response, error) {
-	c.WriteBinaryMessage = make(chan []byte, c.Settings.MessageBufferSize)
-	c.WriteTextMessage = make(chan string, c.Settings.MessageBufferSize)
-	c.WriteCloseMessage = make(chan struct{})
+	c.envelope = make(chan *envelope, c.Settings.MessageBufferSize)
 	c.Dialer.ReadBufferSize = c.Settings.ReadBufferSize
 	c.Dialer.WriteBufferSize = c.Settings.WriteBufferSize
 
@@ -44,6 +46,7 @@ func (c *Connection) Connect(url string, requestHeader http.Header) (*http.Respo
 		return response, err
 	}
 	c.conn = conn
+	c.conn.SetPingHandler(nil)
 
 	go c.writePump()
 	go c.readPump()
@@ -52,9 +55,7 @@ func (c *Connection) Connect(url string, requestHeader http.Header) (*http.Respo
 
 // UpgradeFromHTTP upgrades HTTP to WebSocket.
 func (c *Connection) UpgradeFromHTTP(responseWriter http.ResponseWriter, request *http.Request) error {
-	c.WriteBinaryMessage = make(chan []byte, c.Settings.MessageBufferSize)
-	c.WriteTextMessage = make(chan string, c.Settings.MessageBufferSize)
-	c.WriteCloseMessage = make(chan struct{})
+	c.envelope = make(chan *envelope, c.Settings.MessageBufferSize)
 	c.Upgrader.ReadBufferSize = c.Settings.ReadBufferSize
 	c.Upgrader.WriteBufferSize = c.Settings.WriteBufferSize
 
@@ -71,29 +72,34 @@ func (c *Connection) UpgradeFromHTTP(responseWriter http.ResponseWriter, request
 
 // Close the conenction.
 func (c *Connection) Close() {
-	c.WriteCloseMessage <- struct{}{}
+	c.postEnvelope(closeEnvelope)
 }
 
-func (c *Connection) writeMessage(messageType int, data []byte) error {
+// WriteBinaryMessage to other.
+func (c *Connection) WriteBinaryMessage(data []byte) {
+	c.postEnvelope(&envelope{websocket.BinaryMessage, data})
+}
+
+// WriteTextMessage to other.
+func (c *Connection) WriteTextMessage(data []byte) {
+	c.postEnvelope(&envelope{websocket.TextMessage, data})
+}
+
+func (c *Connection) postEnvelope(message *envelope) {
+	select {
+	case c.envelope <- message:
+	default:
+		c.ErrorHandler(errors.New("Message buffer full"))
+	}
+}
+
+func (c *Connection) writeMessage(e *envelope) error {
 	c.conn.SetWriteDeadline(time.Now().Add(c.Settings.WriteWait))
-	return c.conn.WriteMessage(messageType, data)
-}
-
-func (c *Connection) writeCloseMessage() error {
-	return c.writeMessage(websocket.CloseMessage, websocket.FormatCloseMessage(websocket.CloseNormalClosure, ""))
-}
-
-func (c *Connection) writePingMessage() error {
-	return c.writeMessage(websocket.PingMessage, []byte{})
-}
-
-func (c *Connection) writeBinaryMessage(data []byte) error {
-	return c.writeMessage(websocket.BinaryMessage, data)
-}
-
-func (c *Connection) writeTextMessage(text string) error {
-	data := []byte(text)
-	return c.writeMessage(websocket.TextMessage, data)
+	err := c.conn.WriteMessage(e.messageType, e.data)
+	if err != nil && c.ErrorHandler != nil {
+		c.ErrorHandler(err)
+	}
+	return err
 }
 
 func (c *Connection) writePump() {
@@ -105,30 +111,16 @@ func (c *Connection) writePump() {
 loop:
 	for {
 		select {
-		case data := <-c.WriteBinaryMessage:
-			if err := c.writeBinaryMessage(data); err != nil {
-				if c.ErrorHandler != nil {
-					c.ErrorHandler(err)
-				}
+		case e, ok := <-c.envelope:
+			if !ok {
+				c.writeMessage(closeEnvelope)
 				break loop
 			}
-		case text := <-c.WriteTextMessage:
-			if err := c.writeTextMessage(text); err != nil {
-				if c.ErrorHandler != nil {
-					c.ErrorHandler(err)
-				}
+			if err := c.writeMessage(e); err != nil {
 				break loop
 			}
-		case <-c.WriteCloseMessage:
-			if err := c.writeCloseMessage(); err != nil && c.ErrorHandler != nil {
-				c.ErrorHandler(err)
-			}
-			break loop
 		case <-ticker.C:
-			if err := c.writePingMessage(); err != nil {
-				if c.ErrorHandler != nil {
-					c.ErrorHandler(err)
-				}
+			if err := c.writeMessage(pingEnvelope); err != nil {
 				break loop
 			}
 		}
@@ -161,8 +153,7 @@ func (c *Connection) readPump() {
 			}
 		case websocket.TextMessage:
 			if c.TextMessageHandler != nil {
-				text := string(data)
-				c.TextMessageHandler(text)
+				c.TextMessageHandler(data)
 			}
 		}
 	}
