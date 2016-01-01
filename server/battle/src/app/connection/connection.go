@@ -8,8 +8,9 @@ import (
 )
 
 var (
-	closeEnvelope = &envelope{websocket.CloseMessage, websocket.FormatCloseMessage(websocket.CloseNormalClosure, "")}
-	pingEnvelope  = &envelope{websocket.PingMessage, []byte{}}
+	closeEnvelope      = &envelope{websocket.CloseMessage, websocket.FormatCloseMessage(websocket.CloseNormalClosure, "")}
+	closeErrorEnvelope = &envelope{websocket.CloseMessage, websocket.FormatCloseMessage(websocket.CloseInternalServerErr, "")}
+	pingEnvelope       = &envelope{websocket.PingMessage, []byte{}}
 )
 
 // Connection represents a web socket connection.
@@ -113,7 +114,7 @@ loop:
 		select {
 		case e, ok := <-c.envelope:
 			if !ok {
-				c.writeMessage(closeEnvelope)
+				c.writeMessage(closeErrorEnvelope)
 				break loop
 			}
 			if err := c.writeMessage(e); err != nil {
