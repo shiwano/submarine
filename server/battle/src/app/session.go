@@ -49,7 +49,7 @@ func (s *Session) close() {
 
 func (s *Session) onConnectionDisconnect() {
 	if s.disconnectHandler != nil {
-		s.disconnectHandler(session)
+		s.disconnectHandler(s)
 	}
 }
 
