@@ -26,9 +26,9 @@ func newSession(id uint64, roomID uint64) *Session {
 	session.api.Battle.PingHandler = session.onPingReceive
 
 	session.conn = connection.New()
-	session.conn.OnBinaryMessageReceive = session.onConnectionBinaryMessageReceive
-	session.conn.OnDisconnect = session.onConnectionDisconnect
-	session.conn.OnError = session.onError
+	session.conn.BinaryMessageHandler = session.onConnectionBinaryMessageReceive
+	session.conn.DisconnectHandler = session.onConnectionDisconnect
+	session.conn.ErrorHandler = session.onError
 	return session
 }
 

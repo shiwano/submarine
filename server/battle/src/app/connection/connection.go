@@ -8,16 +8,16 @@ import (
 
 // Connection wraps a web socket connection.
 type Connection struct {
-	conn                   *websocket.Conn
-	Settings               *Settings
-	Upgrader               *websocket.Upgrader
-	OnBinaryMessageReceive func([]byte)
-	OnTextMessageReceive   func(string)
-	OnDisconnect           func()
-	OnError                func(error)
-	WriteBinaryMessage     chan []byte
-	WriteTextMessage       chan string
-	WriteCloseMessage      chan struct{}
+	conn                 *websocket.Conn
+	Settings             *Settings
+	Upgrader             *websocket.Upgrader
+	BinaryMessageHandler func([]byte)
+	TextMessageHandler   func(string)
+	DisconnectHandler    func()
+	ErrorHandler         func(error)
+	WriteBinaryMessage   chan []byte
+	WriteTextMessage     chan string
+	WriteCloseMessage    chan struct{}
 }
 
 // New creates a Connection.
@@ -86,27 +86,27 @@ loop:
 		select {
 		case data := <-c.WriteBinaryMessage:
 			if err := c.writeBinaryMessage(data); err != nil {
-				if c.OnError != nil {
-					c.OnError(err)
+				if c.ErrorHandler != nil {
+					c.ErrorHandler(err)
 				}
 				break loop
 			}
 		case text := <-c.WriteTextMessage:
 			if err := c.writeTextMessage(text); err != nil {
-				if c.OnError != nil {
-					c.OnError(err)
+				if c.ErrorHandler != nil {
+					c.ErrorHandler(err)
 				}
 				break loop
 			}
 		case <-c.WriteCloseMessage:
-			if err := c.writeCloseMessage(); err != nil && c.OnError != nil {
-				c.OnError(err)
+			if err := c.writeCloseMessage(); err != nil && c.ErrorHandler != nil {
+				c.ErrorHandler(err)
 			}
 			break loop
 		case <-ticker.C:
 			if err := c.writePingMessage(); err != nil {
-				if c.OnError != nil {
-					c.OnError(err)
+				if c.ErrorHandler != nil {
+					c.ErrorHandler(err)
 				}
 				break loop
 			}
@@ -127,26 +127,26 @@ func (c *Connection) readPump() {
 	for {
 		messageType, data, err := c.conn.ReadMessage()
 		if err != nil {
-			if c.OnError != nil {
-				c.OnError(err)
+			if c.ErrorHandler != nil {
+				c.ErrorHandler(err)
 			}
 			break
 		}
 
 		switch messageType {
 		case websocket.BinaryMessage:
-			if c.OnBinaryMessageReceive != nil {
-				c.OnBinaryMessageReceive(data)
+			if c.BinaryMessageHandler != nil {
+				c.BinaryMessageHandler(data)
 			}
 		case websocket.TextMessage:
-			if c.OnTextMessageReceive != nil {
+			if c.TextMessageHandler != nil {
 				text := string(data)
-				c.OnTextMessageReceive(text)
+				c.TextMessageHandler(text)
 			}
 		}
 	}
 
-	if c.OnDisconnect != nil {
-		c.OnDisconnect()
+	if c.DisconnectHandler != nil {
+		c.DisconnectHandler()
 	}
 }
