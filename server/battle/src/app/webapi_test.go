@@ -1,14 +1,10 @@
 package main_test
 
 import (
-	"app"
 	"app/typhenapi/core"
 	"app/typhenapi/type/submarine"
 	webapi "app/typhenapi/web/submarine"
-	"bytes"
-	"errors"
 	. "github.com/smartystreets/goconvey/convey"
-	"io/ioutil"
 	"net/http"
 	"testing"
 )

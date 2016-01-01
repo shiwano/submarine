@@ -4,9 +4,14 @@ import (
 	"app"
 	"app/connection"
 	"app/typhenapi/core"
+	webapi "app/typhenapi/web/submarine"
 	websocketapi "app/typhenapi/websocket/submarine"
+	"bytes"
+	"errors"
 	"github.com/Sirupsen/logrus"
 	"github.com/gin-gonic/gin"
+	"io/ioutil"
+	"net/http"
 	"net/http/httptest"
 	"strings"
 )
@@ -67,7 +72,7 @@ func (mock *webAPITransporter) RoundTrip(request *http.Request) (*http.Response,
 	return response, nil
 }
 
-func newWebAPIMock(url string) {
+func newWebAPIMock(url string) *webapi.WebAPI {
 	api := main.NewWebAPI(url)
 	api.Client.Transport = &webAPITransporter{typhenapi.NewJSONSerializer()}
 	return api
