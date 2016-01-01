@@ -24,7 +24,7 @@ type Connection struct {
 // New creates a Connection.
 func New() *Connection {
 	connection := &Connection{
-		Settings: NewSettings(),
+		Settings: newDefaultSettings(),
 		Dialer:   new(websocket.Dialer),
 		Upgrader: new(websocket.Upgrader),
 	}

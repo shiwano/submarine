@@ -15,8 +15,8 @@ type Settings struct {
 	WriteBufferSize   int
 }
 
-// NewSettings creates default settings.
-func NewSettings() *Settings {
+// newDefaultSettings creates default settings.
+func newDefaultSettings() *Settings {
 	return &Settings{
 		WriteWait:         10 * time.Second,
 		PongWait:          60 * time.Second,
