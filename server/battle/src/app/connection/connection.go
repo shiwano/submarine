@@ -29,7 +29,7 @@ func New() *Connection {
 	return connection
 }
 
-// Connect connects to the client.
+// Connect to the client.
 func (c *Connection) Connect(responseWriter http.ResponseWriter, request *http.Request) error {
 	c.Upgrader.ReadBufferSize = c.Settings.ReadBufferSize
 	c.Upgrader.WriteBufferSize = c.Settings.WriteBufferSize
@@ -46,6 +46,11 @@ func (c *Connection) Connect(responseWriter http.ResponseWriter, request *http.R
 	go c.writePump()
 	go c.readPump()
 	return nil
+}
+
+// Close the conenction.
+func (c *Connection) Close() {
+	c.WriteCloseMessage <- struct{}{}
 }
 
 func (c *Connection) writeMessage(messageType int, data []byte) error {
