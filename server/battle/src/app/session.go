@@ -11,11 +11,12 @@ import (
 
 // Session represents a network session that has user infos.
 type Session struct {
-	id     uint64
-	roomID uint64
-	conn   *connection.Connection
-	api    *api.WebSocketAPI
-	room   *Room
+	id                uint64
+	roomID            uint64
+	conn              *connection.Connection
+	api               *api.WebSocketAPI
+	room              *Room
+	disconnectHandler func(*Session)
 }
 
 func newSession(id uint64, roomID uint64) *Session {
@@ -47,8 +48,8 @@ func (session *Session) close() {
 }
 
 func (session *Session) onConnectionDisconnect() {
-	if session.room != nil {
-		session.room.Leave <- session
+	if session.disconnectHandler != nil {
+		session.disconnectHandler(session)
 	}
 }
 

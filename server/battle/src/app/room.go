@@ -31,7 +31,7 @@ loop:
 		case session := <-r.Leave:
 			r.leave(session)
 		case <-r.Close:
-			r.leaveAndCloseAll()
+			r.leaveAndCloseSessions()
 			break loop
 		}
 	}
@@ -43,16 +43,21 @@ loop:
 
 func (r *Room) join(session *Session) {
 	r.sessions[session.id] = session
+	session.room = r
+	session.disconnectHandler = func(session *Session) {
+		r.Leave <- session
+	}
 }
 
 func (r *Room) leave(session *Session) {
-	delete(r.sessions, session.id)
+	session.disconnectHandler = nil
 	session.room = nil
+	delete(r.sessions, session.id)
 }
 
-func (r *Room) leaveAndCloseAll() {
+func (r *Room) leaveAndCloseSessions() {
 	for _, session := range r.sessions {
-		session.close()
 		r.leave(session)
+		session.close()
 	}
 }
