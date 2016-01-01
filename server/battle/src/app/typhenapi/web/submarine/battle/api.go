@@ -14,10 +14,10 @@ import (
 
 // WebAPI sends request.
 type WebAPI struct {
-	baseURI             string
-	serializer          typhenapi.Serializer
-	Client              *http.Client
-	OnBeforeRequestSend func(*http.Request)
+	baseURI              string
+	serializer           typhenapi.Serializer
+	Client               *http.Client
+	BeforeRequestHandler func(*http.Request)
 }
 
 // New creates a WebAPI.
@@ -114,8 +114,8 @@ func (api *WebAPI) createRequest(method, url string, body io.Reader) (*http.Requ
 		return nil, err
 	}
 
-	if api.OnBeforeRequestSend != nil {
-		api.OnBeforeRequestSend(req)
+	if api.BeforeRequestHandler != nil {
+		api.BeforeRequestHandler(req)
 	}
 
 	return req, nil

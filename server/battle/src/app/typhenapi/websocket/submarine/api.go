@@ -11,12 +11,12 @@ import (
 type WebSocketAPI struct {
 	session      typhenapi.Session
 	serializer   typhenapi.Serializer
-	errorHandler func(interface{}, error)
+	errorHandler func(error)
 	Battle       *_submarine_battle.WebSocketAPI
 }
 
 // New creates a WebSocketAPI.
-func New(session typhenapi.Session, serializer typhenapi.Serializer, errorHandler func(interface{}, error)) *WebSocketAPI {
+func New(session typhenapi.Session, serializer typhenapi.Serializer, errorHandler func(error)) *WebSocketAPI {
 	api := &WebSocketAPI{}
 	api.session = session
 	api.serializer = serializer
