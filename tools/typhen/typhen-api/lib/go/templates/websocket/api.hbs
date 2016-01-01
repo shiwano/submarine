@@ -24,7 +24,7 @@ const (
 type WebSocketAPI struct {
 	session      typhenapi.Session
 	serializer   typhenapi.Serializer
-	errorHandler func(interface{}, error)
+	errorHandler func(error)
 	{{#each modules}}
 	{{upperCamelCase name}} *_{{moduleName this '_'}}.WebSocketAPI
 	{{/each}}
@@ -35,7 +35,7 @@ type WebSocketAPI struct {
 }
 
 // New creates a WebSocketAPI.
-func New(session typhenapi.Session, serializer typhenapi.Serializer, errorHandler func(interface{}, error)) *WebSocketAPI {
+func New(session typhenapi.Session, serializer typhenapi.Serializer, errorHandler func(error)) *WebSocketAPI {
 	api := &WebSocketAPI{}
 	api.session = session
 	api.serializer = serializer
@@ -53,7 +53,7 @@ func (api *WebSocketAPI) Send{{upperCamelCase name}}({{lowerCamelCase name}} {{t
 
 	if err != nil {
 		if api.errorHandler != nil {
-			api.errorHandler({{lowerCamelCase name}}, err)
+			api.errorHandler(err)
 		}
 		return err
 	}
@@ -74,7 +74,7 @@ func (api *WebSocketAPI) DispatchMessageEvent(data []byte) error {
 
 	if err != nil {
 		if api.errorHandler != nil {
-			api.errorHandler(data, err)
+			api.errorHandler(err)
 		}
 		return err
 	}
@@ -85,14 +85,14 @@ func (api *WebSocketAPI) DispatchMessageEvent(data []byte) error {
 		typhenType := new({{typeName type null false false}})
 		if err := api.serializer.Deserialize(message.Body, typhenType); err != nil {
 			if api.errorHandler != nil {
-				api.errorHandler(data, err)
+				api.errorHandler(err)
 			}
 			return err
 		}
 
 		if err := typhenType.Coerce(); err != nil {
 			if api.errorHandler != nil {
-				api.errorHandler(data, err)
+				api.errorHandler(err)
 			}
 			return err
 		}
