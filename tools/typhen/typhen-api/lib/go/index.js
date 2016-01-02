@@ -72,8 +72,11 @@ module.exports = function(typhen, options, helpers) {
       var pointerMark = hasPointerMark ? '*' : '';
       if (type.isPrimitiveType && type.name === 'nil') {
         return pointerMark + 'typhenapi.Void';
-      } else if (type.isPrimitiveType || type.isArray) {
+      } else if (type.isPrimitiveType) {
         return isOptional ? pointerMark + type.name : type.name;
+      } else if (type.isArray) {
+        var name = '[]' + helpers.typeName(type.type, currentModule, false, hasPointerMark)
+        return isOptional ? pointerMark + name : name;
       } else if (type.parentModule !== null && type.parentModule !== currentModule) {
         return pointerMark + [helpers.namespace(type, '_'), typhen.helpers.upperCamelCase(type.name)].join('.');
       } else {
@@ -100,9 +103,7 @@ module.exports = function(typhen, options, helpers) {
     helpers: helpers,
 
     rename: function(symbol, name) {
-      if (symbol.kind === typhen.SymbolKind.Array) {
-        return '[]' + typhen.helpers.upperCamelCase(symbol.type);
-      } else if (name === 'integer') {
+      if (name === 'integer') {
         return 'int';
       } else if (name === 'void') {
         return 'nil';
