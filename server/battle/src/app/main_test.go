@@ -62,6 +62,10 @@ func (m *webAPITransporter) RoundTrip(request *http.Request) (*http.Response, er
 	response.Header.Set("Content-Type", "application/json")
 	data, _ := ioutil.ReadAll(request.Body)
 	typhenType, statusCode := m.Routes(request.URL.Path, data)
+	err := typhenType.Coerce()
+	if err != nil {
+		return response, err
+	}
 
 	response.StatusCode = statusCode
 	body, _ := typhenType.Bytes(m.serializer)
