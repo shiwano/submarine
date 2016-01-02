@@ -11,10 +11,10 @@ var _ = errors.New
 
 // JoinedRoom is a kind of TyphenAPI type.
 type JoinedRoom struct {
-	BattleServerBaseUri string `codec:"battle_server_base_uri"`
-	RoomKey             string `codec:"room_key"`
-	Id                  int    `codec:"id"`
-	Members             []User `codec:"members"`
+	BattleServerBaseUri string  `codec:"battle_server_base_uri"`
+	RoomKey             string  `codec:"room_key"`
+	Id                  int     `codec:"id"`
+	Members             []*User `codec:"members"`
 }
 
 // Coerce the fields.

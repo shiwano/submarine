@@ -11,8 +11,8 @@ var _ = errors.New
 
 // Room is a kind of TyphenAPI type.
 type Room struct {
-	Id      int    `codec:"id"`
-	Members []User `codec:"members"`
+	Id      int     `codec:"id"`
+	Members []*User `codec:"members"`
 }
 
 // Coerce the fields.

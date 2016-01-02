@@ -22,12 +22,15 @@ type WebAPI struct {
 }
 
 // New creates a WebAPI.
-func New(baseURI string, serializer typhenapi.Serializer) *WebAPI {
+func New(baseURI string, serializer typhenapi.Serializer, client *http.Client) *WebAPI {
+	if client == nil {
+		client = &http.Client{}
+	}
 	api := &WebAPI{}
 	api.baseURI = baseURI
 	api.serializer = serializer
-	api.Client = &http.Client{}
-	api.Battle = _submarine_battle.New(baseURI, serializer)
+	api.Client = client
+	api.Battle = _submarine_battle.New(baseURI, serializer, client)
 	return api
 }
 

@@ -11,7 +11,7 @@ var _ = errors.New
 
 // GetRoomsObject is a kind of TyphenAPI type.
 type GetRoomsObject struct {
-	Rooms []Room `codec:"rooms"`
+	Rooms []*Room `codec:"rooms"`
 }
 
 // Coerce the fields.
