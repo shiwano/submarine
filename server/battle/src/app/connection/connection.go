@@ -44,6 +44,7 @@ func (c *Connection) Connect(url string, requestHeader http.Header) (*http.Respo
 	c.envelope = make(chan *envelope, c.Settings.MessageChannelBufferSize)
 	c.Dialer.ReadBufferSize = c.Settings.ReadBufferSize
 	c.Dialer.WriteBufferSize = c.Settings.WriteBufferSize
+	c.Dialer.HandshakeTimeout = c.Settings.HandshakeTimeout
 
 	conn, response, err := c.Dialer.Dial(url, requestHeader)
 	if err != nil {
@@ -62,6 +63,7 @@ func (c *Connection) UpgradeFromHTTP(responseWriter http.ResponseWriter, request
 	c.envelope = make(chan *envelope, c.Settings.MessageChannelBufferSize)
 	c.Upgrader.ReadBufferSize = c.Settings.ReadBufferSize
 	c.Upgrader.WriteBufferSize = c.Settings.WriteBufferSize
+	c.Upgrader.HandshakeTimeout = c.Settings.HandshakeTimeout
 
 	conn, err := c.Upgrader.Upgrade(responseWriter, request, nil)
 	if err != nil {

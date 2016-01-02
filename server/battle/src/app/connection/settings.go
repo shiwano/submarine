@@ -9,6 +9,7 @@ type Settings struct {
 	WriteWait                time.Duration
 	PongWait                 time.Duration
 	PingPeriod               time.Duration
+	HandshakeTimeout         time.Duration
 	MessageChannelBufferSize int
 	MaxMessageSize           int64
 	ReadBufferSize           int
