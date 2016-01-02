@@ -6,10 +6,14 @@ import (
 	"net/http"
 )
 
+// WebAPIRoundTripper for mock.
+var WebAPIRoundTripper http.RoundTripper
+
 // NewWebAPI creates a submarine WebAPI instance.
 func NewWebAPI(baseURI string) *webapi.WebAPI {
 	serializer := typhenapi.NewJSONSerializer()
 	api := webapi.New(baseURI, serializer, nil)
+	api.Client.Transport = WebAPIRoundTripper
 	api.BeforeRequestHandler = onBeforeWebAPIRequest
 	return api
 }

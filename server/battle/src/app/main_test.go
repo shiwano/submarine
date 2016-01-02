@@ -77,13 +77,13 @@ func (m *webAPITransporter) RoundTrip(request *http.Request) (*http.Response, er
 }
 
 func newWebAPIMock(url string) *webapi.WebAPI {
-	api := main.NewWebAPI(url)
-	api.Client.Transport = &webAPITransporter{typhenapi.NewJSONSerializer()}
-	return api
+	main.WebAPIRoundTripper = &webAPITransporter{typhenapi.NewJSONSerializer()}
+	return main.NewWebAPI(url)
 }
 
 func newTestServer() (*httptest.Server, *main.Server) {
 	main.Log.Level = logrus.WarnLevel
+	main.WebAPIRoundTripper = &webAPITransporter{typhenapi.NewJSONSerializer()}
 	gin.SetMode(gin.TestMode)
 	rawServer := main.NewServer()
 	server := httptest.NewServer(rawServer)
