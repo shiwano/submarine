@@ -8,6 +8,9 @@ import (
 )
 
 var (
+	// ErrMessageChannelFull is returned when the connection's envelope channel is full.
+	ErrMessageChannelFull = errors.New("Message channel is full")
+
 	closeEnvelope      = &envelope{websocket.CloseMessage, websocket.FormatCloseMessage(websocket.CloseNormalClosure, "")}
 	closeErrorEnvelope = &envelope{websocket.CloseMessage, websocket.FormatCloseMessage(websocket.CloseInternalServerErr, "")}
 	pingEnvelope       = &envelope{websocket.PingMessage, []byte{}}
@@ -71,26 +74,27 @@ func (c *Connection) UpgradeFromHTTP(responseWriter http.ResponseWriter, request
 	return nil
 }
 
-// Close the conenction.
-func (c *Connection) Close() {
-	c.postEnvelope(closeEnvelope)
+// Close the connection.
+func (c *Connection) Close() error {
+	return c.postEnvelope(closeEnvelope)
 }
 
 // WriteBinaryMessage to the peer.
-func (c *Connection) WriteBinaryMessage(data []byte) {
-	c.postEnvelope(&envelope{websocket.BinaryMessage, data})
+func (c *Connection) WriteBinaryMessage(data []byte) error {
+	return c.postEnvelope(&envelope{websocket.BinaryMessage, data})
 }
 
 // WriteTextMessage to the peer.
-func (c *Connection) WriteTextMessage(data []byte) {
-	c.postEnvelope(&envelope{websocket.TextMessage, data})
+func (c *Connection) WriteTextMessage(data []byte) error {
+	return c.postEnvelope(&envelope{websocket.TextMessage, data})
 }
 
-func (c *Connection) postEnvelope(e *envelope) {
+func (c *Connection) postEnvelope(e *envelope) error {
 	select {
 	case c.envelope <- e:
+		return nil
 	default:
-		c.ErrorHandler(errors.New("Message buffer full"))
+		return ErrMessageChannelFull
 	}
 }
 
