@@ -34,7 +34,7 @@ func NewServer() *Server {
 			return
 		}
 
-		server.roomManager.JoinToRoom <- session
+		server.roomManager.joinToRoom <- session
 		Log.Infof("Session(%v) is created", session.id)
 	})
 
@@ -44,5 +44,5 @@ func NewServer() *Server {
 // Close the Server.
 func (s *Server) Close() {
 	s.logWriter.Close()
-	s.roomManager.Close <- struct{}{}
+	s.roomManager.close <- struct{}{}
 }

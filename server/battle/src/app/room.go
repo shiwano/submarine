@@ -10,9 +10,9 @@ type Room struct {
 	webAPI       *webapi.WebAPI
 	sessions     map[uint64]*Session
 	closeHandler func(*Room)
-	Join         chan *Session
-	Leave        chan *Session
-	Close        chan struct{}
+	join         chan *Session
+	leave        chan *Session
+	close        chan struct{}
 }
 
 func newRoom(id uint64) *Room {
@@ -20,9 +20,9 @@ func newRoom(id uint64) *Room {
 		id:       id,
 		webAPI:   NewWebAPI("http://localhost:3000"),
 		sessions: make(map[uint64]*Session),
-		Join:     make(chan *Session),
-		Leave:    make(chan *Session),
-		Close:    make(chan struct{}),
+		join:     make(chan *Session, 4),
+		leave:    make(chan *Session, 4),
+		close:    make(chan struct{}),
 	}
 	go room.run()
 	return room
@@ -32,12 +32,12 @@ func (r *Room) run() {
 loop:
 	for {
 		select {
-		case session := <-r.Join:
-			r.join(session)
-		case session := <-r.Leave:
-			r.leave(session)
-		case <-r.Close:
-			r.leaveAndCloseSessions()
+		case session := <-r.join:
+			r._join(session)
+		case session := <-r.leave:
+			r._leave(session)
+		case <-r.close:
+			r._close()
 			break loop
 		}
 	}
@@ -47,23 +47,23 @@ loop:
 	}
 }
 
-func (r *Room) join(session *Session) {
+func (r *Room) _join(session *Session) {
 	r.sessions[session.id] = session
 	session.room = r
 	session.disconnectHandler = func(session *Session) {
-		r.Leave <- session
+		r.leave <- session
 	}
 }
 
-func (r *Room) leave(session *Session) {
+func (r *Room) _leave(session *Session) {
 	session.disconnectHandler = nil
 	session.room = nil
 	delete(r.sessions, session.id)
 }
 
-func (r *Room) leaveAndCloseSessions() {
+func (r *Room) _close() {
 	for _, session := range r.sessions {
-		r.leave(session)
+		r._leave(session)
 		session.close()
 	}
 }
