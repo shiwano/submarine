@@ -38,7 +38,7 @@ func New() *Connection {
 
 // Connect to the peer.
 func (c *Connection) Connect(url string, requestHeader http.Header) (*http.Response, error) {
-	c.envelope = make(chan *envelope, c.Settings.MessageBufferSize)
+	c.envelope = make(chan *envelope, c.Settings.MessageChannelBufferSize)
 	c.Dialer.ReadBufferSize = c.Settings.ReadBufferSize
 	c.Dialer.WriteBufferSize = c.Settings.WriteBufferSize
 
@@ -56,7 +56,7 @@ func (c *Connection) Connect(url string, requestHeader http.Header) (*http.Respo
 
 // UpgradeFromHTTP upgrades HTTP to WebSocket.
 func (c *Connection) UpgradeFromHTTP(responseWriter http.ResponseWriter, request *http.Request) error {
-	c.envelope = make(chan *envelope, c.Settings.MessageBufferSize)
+	c.envelope = make(chan *envelope, c.Settings.MessageChannelBufferSize)
 	c.Upgrader.ReadBufferSize = c.Settings.ReadBufferSize
 	c.Upgrader.WriteBufferSize = c.Settings.WriteBufferSize
 
