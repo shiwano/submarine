@@ -1,8 +1,13 @@
 package main
 
+import (
+	webapi "app/typhenapi/web/submarine"
+)
+
 // Room represents a network group for battle.
 type Room struct {
 	id           uint64
+	webAPI       *webapi.WebAPI
 	sessions     map[uint64]*Session
 	closeHandler func(*Room)
 	Join         chan *Session
@@ -13,6 +18,7 @@ type Room struct {
 func newRoom(id uint64) *Room {
 	room := &Room{
 		id:       id,
+		webAPI:   NewWebAPI("http://localhost:3000"),
 		sessions: make(map[uint64]*Session),
 		Join:     make(chan *Session),
 		Leave:    make(chan *Session),
