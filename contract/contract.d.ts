@@ -45,5 +45,6 @@ declare module Submarine {
 
   module Battle {
     var ping: { message: string; }
+    var room: Room;
   }
 }
