@@ -40,7 +40,9 @@ func (api *WebSocketAPI) SendPing(ping *submarine_battle.PingObject) error {
 		return err
 	}
 
-	api.session.Send(message.Bytes())
+	if err := api.session.Send(message.Bytes()); err != nil {
+		return err
+	}
 	return nil
 }
 

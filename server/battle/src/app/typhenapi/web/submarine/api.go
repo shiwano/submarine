@@ -233,7 +233,7 @@ func (api *WebAPI) GetRooms() (*submarine.GetRoomsObject, error) {
 }
 
 // JoinIntoRoom send a joinIntoRoom request.
-func (api *WebAPI) JoinIntoRoom(roomId int) (*submarine.JoinIntoRoomObject, error) {
+func (api *WebAPI) JoinIntoRoom(roomId int64) (*submarine.JoinIntoRoomObject, error) {
 	reqBody := &JoinIntoRoomRequestBody{}
 	reqBody.RoomId = roomId
 

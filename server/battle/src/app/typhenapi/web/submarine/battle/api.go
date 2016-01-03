@@ -33,7 +33,7 @@ func New(baseURI string, serializer typhenapi.Serializer, client *http.Client) *
 }
 
 // FindRoom send a findRoom request.
-func (api *WebAPI) FindRoom(roomId int) (*submarine_battle.FindRoomObject, error) {
+func (api *WebAPI) FindRoom(roomId int64) (*submarine_battle.FindRoomObject, error) {
 	reqBody := &FindRoomRequestBody{}
 	reqBody.RoomId = roomId
 
@@ -66,7 +66,7 @@ func (api *WebAPI) FindRoom(roomId int) (*submarine_battle.FindRoomObject, error
 }
 
 // CloseRoom send a closeRoom request.
-func (api *WebAPI) CloseRoom(roomId int) (*typhenapi.Void, error) {
+func (api *WebAPI) CloseRoom(roomId int64) (*typhenapi.Void, error) {
 	reqBody := &CloseRoomRequestBody{}
 	reqBody.RoomId = roomId
 

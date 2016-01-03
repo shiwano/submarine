@@ -11,6 +11,7 @@ var _ = errors.New
 
 // RoomMember is a kind of TyphenAPI type.
 type RoomMember struct {
+	Id      int64  `codec:"id"`
 	RoomKey string `codec:"room_key"`
 	Name    string `codec:"name"`
 }

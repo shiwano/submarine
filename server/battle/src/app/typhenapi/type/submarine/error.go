@@ -12,7 +12,7 @@ var _ = errors.New
 
 // Error is a kind of TyphenAPI type.
 type Error struct {
-	Code    int    `codec:"code"`
+	Code    int64  `codec:"code"`
 	Name    string `codec:"name"`
 	Message string `codec:"message"`
 }

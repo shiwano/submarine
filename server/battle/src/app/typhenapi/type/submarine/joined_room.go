@@ -13,7 +13,7 @@ var _ = errors.New
 type JoinedRoom struct {
 	BattleServerBaseUri string  `codec:"battle_server_base_uri"`
 	RoomKey             string  `codec:"room_key"`
-	Id                  int     `codec:"id"`
+	Id                  int64   `codec:"id"`
 	Members             []*User `codec:"members"`
 }
 

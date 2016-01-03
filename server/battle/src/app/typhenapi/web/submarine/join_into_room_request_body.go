@@ -12,7 +12,7 @@ import (
 var _ = errors.New
 
 type JoinIntoRoomRequestBody struct {
-	RoomId int `codec:"room_id"`
+	RoomId int64 `codec:"room_id"`
 }
 
 // Coerce the fields.

@@ -4,6 +4,7 @@ module TyphenApi::Model::Submarine::Battle
   class RoomMember
     include Virtus.model(:strict => true)
 
+    attribute :id, Integer, :required => true
     attribute :room_key, String, :required => true
     attribute :name, String, :required => true
   end
