@@ -16,12 +16,12 @@ import (
 	"net/http"
 )
 
-// WebAPI sends request.
+// WebAPI sends a request.
 type WebAPI struct {
 	baseURI             string
 	serializer          typhenapi.Serializer
+	beforeRequestHandler func(*http.Request)
 	Client              *http.Client
-	BeforeRequestHandler func(*http.Request)
 	{{#each modules}}
 	{{upperCamelCase name}} *_{{moduleName this '_'}}.WebAPI
 	{{/each}}
@@ -89,6 +89,13 @@ func (api *WebAPI) {{upperCamelCase name}}({{#each callSignatures.0.parameters}}
 }
 {{/each}}
 
+func (api *WebAPI) SetBeforeRequestHandler(handler func(*http.Request)) {
+	api.beforeRequestHandler = handler
+	{{#each modules}}
+	api.{{upperCamelCase name}}.SetBeforeRequestHandler(handler)
+	{{/each}}
+}
+
 func (api *WebAPI) tryToDeserializeAPIError(data []byte) error {
 	apiError := new(submarine.Error)
 	if err := api.serializer.Deserialize(data, apiError); err != nil {
@@ -108,8 +115,8 @@ func (api *WebAPI) createRequest(method, url string, body io.Reader) (*http.Requ
 		return nil, err
 	}
 
-	if api.BeforeRequestHandler != nil {
-		api.BeforeRequestHandler(req)
+	if api.beforeRequestHandler != nil {
+		api.beforeRequestHandler(req)
 	}
 
 	return req, nil
