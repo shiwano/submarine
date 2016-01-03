@@ -45,6 +45,6 @@ declare module Submarine {
 
   module Battle {
     var ping: { message: string; }
-    var room: Room;
+    var room: Submarine.Room;
   }
 }
