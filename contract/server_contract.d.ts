@@ -3,6 +3,7 @@
 declare module Submarine {
   module Battle {
     interface RoomMember extends User {
+      id: integer;
       roomKey: string;
     }
 
