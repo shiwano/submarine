@@ -58,7 +58,9 @@ func (api *WebSocketAPI) Send{{upperCamelCase name}}({{lowerCamelCase name}} {{t
 		return err
 	}
 
-	api.session.Send(message.Bytes())
+	if err := api.session.Send(message.Bytes()); err != nil {
+		return err
+	}
 	return nil
 }
 {{/each}}
