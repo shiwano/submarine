@@ -12,12 +12,12 @@ import (
 	"net/http"
 )
 
-// WebAPI sends request.
+// WebAPI sends a request.
 type WebAPI struct {
 	baseURI              string
 	serializer           typhenapi.Serializer
+	beforeRequestHandler func(*http.Request)
 	Client               *http.Client
-	BeforeRequestHandler func(*http.Request)
 	Battle               *_submarine_battle.WebAPI
 }
 
@@ -265,6 +265,11 @@ func (api *WebAPI) JoinIntoRoom(roomId int) (*submarine.JoinIntoRoomObject, erro
 	return result, nil
 }
 
+func (api *WebAPI) SetBeforeRequestHandler(handler func(*http.Request)) {
+	api.beforeRequestHandler = handler
+	api.Battle.SetBeforeRequestHandler(handler)
+}
+
 func (api *WebAPI) tryToDeserializeAPIError(data []byte) error {
 	apiError := new(submarine.Error)
 	if err := api.serializer.Deserialize(data, apiError); err != nil {
@@ -284,8 +289,8 @@ func (api *WebAPI) createRequest(method, url string, body io.Reader) (*http.Requ
 		return nil, err
 	}
 
-	if api.BeforeRequestHandler != nil {
-		api.BeforeRequestHandler(req)
+	if api.beforeRequestHandler != nil {
+		api.beforeRequestHandler(req)
 	}
 
 	return req, nil
