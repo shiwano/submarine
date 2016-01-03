@@ -1,14 +1,14 @@
 package main
 
 import (
-	"fmt"
 	"github.com/Sirupsen/logrus"
+	"github.com/k0kubun/pp"
 )
 
 // Log is a logrus.Logger
 var Log = logrus.New()
 
-var p = fmt.Println
+var p = pp.Println
 
 func main() {
 	server := NewServer()

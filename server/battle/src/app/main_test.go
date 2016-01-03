@@ -8,16 +8,16 @@ import (
 	websocketapi "app/typhenapi/websocket/submarine"
 	"bytes"
 	"errors"
-	"fmt"
 	"github.com/Sirupsen/logrus"
 	"github.com/gin-gonic/gin"
+	"github.com/k0kubun/pp"
 	"io/ioutil"
 	"net/http"
 	"net/http/httptest"
 	"strings"
 )
 
-var p = fmt.Println
+var p = pp.Println
 
 type clientSession struct {
 	conn         *conn.Conn
