@@ -52,7 +52,7 @@ func (s *Server) roomsGET(c *gin.Context) {
 		return
 	}
 
-	session := newSession(1, roomID)
+	session := newSession(roomMember, roomID)
 	if err := session.Connect(c.Writer, c.Request); err != nil {
 		Log.Error(err)
 		c.String(http.StatusBadRequest, "Failed to upgrade the request to web socket protocol.")

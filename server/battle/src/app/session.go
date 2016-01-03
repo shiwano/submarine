@@ -13,23 +13,27 @@ import (
 type Session struct {
 	id                int64
 	roomID            int64
+	info              *battle.RoomMember
 	conn              *connection.Connection
 	api               *api.WebSocketAPI
 	room              *Room
 	disconnectHandler func(*Session)
 }
 
-func newSession(id int64, roomID int64) *Session {
+func newSession(info *battle.RoomMember, roomID int64) *Session {
 	serializer := typhenapi.NewJSONSerializer()
-	session := &Session{id: id, roomID: roomID}
-
-	session.api = api.New(session, serializer, session.onError)
-	session.api.Battle.PingHandler = session.onPingReceive
-
-	session.conn = connection.New()
+	session := &Session{
+		id:     info.Id,
+		info:   info,
+		roomID: roomID,
+		conn:   connection.New(),
+	}
 	session.conn.BinaryMessageHandler = session.onConnectionBinaryMessageReceive
 	session.conn.DisconnectHandler = session.onConnectionDisconnect
 	session.conn.ErrorHandler = session.onError
+
+	session.api = api.New(session, serializer, session.onError)
+	session.api.Battle.PingHandler = session.onPingReceive
 	return session
 }
 
