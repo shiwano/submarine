@@ -19,32 +19,7 @@ func NewServer() *Server {
 	server := &Server{gin.New(), Log.Writer(), newRoomManager()}
 	server.Use(gin.Recovery(), gin.LoggerWithWriter(server.logWriter))
 
-	server.GET("/rooms/:id", func(c *gin.Context) {
-		roomID, err := strconv.ParseUint(c.Param("id"), 10, 64)
-		if err != nil {
-			Log.Error(err)
-			c.String(http.StatusBadRequest, "Invalid room id.")
-			return
-		}
-
-		session := newSession(1, roomID)
-		if err := session.Connect(c.Writer, c.Request); err != nil {
-			Log.Error(err)
-			c.String(http.StatusBadRequest, "Failed to upgrade the request to web socket protocol.")
-			return
-		}
-
-		getOrCreateRoom := newRespondable(roomID)
-		server.roomManager.getOrCreateRoom <- getOrCreateRoom
-		if err := getOrCreateRoom.wait(); err != nil {
-			Log.Error(err)
-			c.String(http.StatusBadRequest, "Failed to get or create the room.")
-		}
-
-		room := getOrCreateRoom.response.(*Room)
-		room.join <- session
-		Log.Infof("Session(%v) is created", session.id)
-	})
+	server.GET("/rooms/:id", server.roomsGET)
 
 	return server
 }
@@ -53,4 +28,31 @@ func NewServer() *Server {
 func (s *Server) Close() {
 	s.logWriter.Close()
 	s.roomManager.close <- struct{}{}
+}
+
+func (s *Server) roomsGET(c *gin.Context) {
+	roomID, err := strconv.ParseUint(c.Param("id"), 10, 64)
+	if err != nil {
+		Log.Error(err)
+		c.String(http.StatusBadRequest, "Invalid room id.")
+		return
+	}
+
+	session := newSession(1, roomID)
+	if err := session.Connect(c.Writer, c.Request); err != nil {
+		Log.Error(err)
+		c.String(http.StatusBadRequest, "Failed to upgrade the request to web socket protocol.")
+		return
+	}
+
+	getOrCreateRoom := newRespondable(roomID)
+	s.roomManager.getOrCreateRoom <- getOrCreateRoom
+	if err := getOrCreateRoom.wait(); err != nil {
+		Log.Error(err)
+		c.String(http.StatusBadRequest, "Failed to get or create the room.")
+	}
+
+	room := getOrCreateRoom.response.(*Room)
+	room.join <- session
+	Log.Infof("Session(%v) is created", session.id)
 }
