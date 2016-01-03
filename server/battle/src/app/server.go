@@ -38,6 +38,20 @@ func (s *Server) roomsGET(c *gin.Context) {
 		return
 	}
 
+	room, err := s.roomManager.tryGetRoom(roomID)
+	if err != nil {
+		Log.Error(err)
+		c.String(http.StatusBadRequest, "Failed to get or create the room.\n")
+		return
+	}
+
+	roomKey := c.Query("room_key")
+	roomMember := room.findRoomMember(roomKey)
+	if roomMember == nil {
+		c.String(http.StatusBadRequest, "Disallow the user as the room member.")
+		return
+	}
+
 	session := newSession(1, roomID)
 	if err := session.Connect(c.Writer, c.Request); err != nil {
 		Log.Error(err)
@@ -45,12 +59,6 @@ func (s *Server) roomsGET(c *gin.Context) {
 		return
 	}
 
-	room, err := s.roomManager.tryGetRoom(roomID)
-	if err != nil {
-		Log.Error(err)
-		c.String(http.StatusBadRequest, "Failed to get or create the room.")
-		return
-	}
 	room.join <- session
 	Log.Infof("Session(%v) is created", session.id)
 }

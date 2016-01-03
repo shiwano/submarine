@@ -1,13 +1,16 @@
 package main
 
 import (
+	"app/typhenapi/type/submarine/battle"
 	webapi "app/typhenapi/web/submarine"
+	"errors"
 )
 
 // Room represents a network group for battle.
 type Room struct {
 	id           uint64
 	webAPI       *webapi.WebAPI
+	info         *battle.Room
 	sessions     map[uint64]*Session
 	closeHandler func(*Room)
 	join         chan *Session
@@ -15,17 +18,30 @@ type Room struct {
 	close        chan struct{}
 }
 
-func newRoom(id uint64) *Room {
+func newRoom(id uint64) (*Room, error) {
+	webAPI := NewWebAPI("http://localhost:3000")
+
+	// TODO: Validation for creatable the room in the battle server.
+	res, err := webAPI.Battle.FindRoom(int(id))
+	if err != nil {
+		return nil, err
+	}
+	if res.Room == nil {
+		return nil, errors.New("No room found.")
+	}
+
 	room := &Room{
 		id:       id,
-		webAPI:   NewWebAPI("http://localhost:3000"),
+		webAPI:   webAPI,
+		info:     res.Room,
 		sessions: make(map[uint64]*Session),
 		join:     make(chan *Session, 4),
 		leave:    make(chan *Session, 4),
 		close:    make(chan struct{}),
 	}
+
 	go room.run()
-	return room
+	return room, nil
 }
 
 func (r *Room) run() {
@@ -45,6 +61,15 @@ loop:
 	if r.closeHandler != nil {
 		r.closeHandler(r)
 	}
+}
+
+func (r *Room) findRoomMember(roomKey string) *battle.RoomMember {
+	for _, m := range r.info.Members {
+		if m.RoomKey == roomKey {
+			return m
+		}
+	}
+	return nil
 }
 
 func (r *Room) _join(session *Session) {

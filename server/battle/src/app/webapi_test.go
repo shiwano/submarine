@@ -61,7 +61,7 @@ func (m *webAPITransporter) Ping(params *webapi.PingRequestBody) (typhenapi.Type
 }
 
 func (m *webAPITransporter) FindRoom(params *webapi_battle.FindRoomRequestBody) (typhenapi.Type, int) {
-	if params.RoomId <= 0 {
+	if params.RoomId != 1 {
 		return new(typhenapi.Void), http.StatusInternalServerError
 	}
 	typhenType := &battle.FindRoomObject{

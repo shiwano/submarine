@@ -37,15 +37,25 @@ loop:
 func (m *RoomManager) tryGetRoom(roomID uint64) (*Room, error) {
 	respondable := newRespondable(roomID)
 	m.getOrCreateRoom <- respondable
-	response, err := respondable.wait()
-	return response.(*Room), err
+	res, err := respondable.wait()
+	if res == nil || err != nil {
+		return nil, err
+	}
+	return res.(*Room), err
 }
 
 func (m *RoomManager) _getOrCreateRoom(respondable *Respondable) {
 	roomID := respondable.value.(uint64)
 	room, ok := m.rooms[roomID]
 	if !ok {
-		room = newRoom(roomID)
+		newRoom, err := newRoom(roomID)
+		if err != nil {
+			respondable.err = err
+			respondable.done <- nil
+			return
+		}
+
+		room = newRoom
 		room.closeHandler = func(room *Room) {
 			m.deleteRoom <- room
 		}

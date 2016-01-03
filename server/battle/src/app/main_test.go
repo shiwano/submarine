@@ -22,17 +22,13 @@ type clientSession struct {
 	disconnected chan struct{}
 }
 
-func newClientSession(url string) (*clientSession, error) {
-	conn := connection.New()
-	_, err := conn.Connect(strings.Replace(url, "http", "ws", 1), nil)
-	if err != nil {
-		return nil, err
-	}
-
+func newClientSession() *clientSession {
 	serializer := typhenapi.NewJSONSerializer()
-	session := new(clientSession)
-	session.disconnected = make(chan struct{})
-	session.conn = conn
+	session := &clientSession{
+		conn:         connection.New(),
+		disconnected: make(chan struct{}),
+	}
+	session.api = websocketapi.New(session, serializer, nil)
 	session.conn.DisconnectHandler = func() {
 		session.disconnected <- struct{}{}
 	}
@@ -41,12 +37,16 @@ func newClientSession(url string) (*clientSession, error) {
 			main.Log.Error(err)
 		}
 	}
-	session.api = websocketapi.New(session, serializer, nil)
-	return session, nil
+	return session
 }
 
 func (s *clientSession) Send(data []byte) {
 	s.conn.WriteBinaryMessage(data)
+}
+
+func (s *clientSession) connect(url string) error {
+	_, err := s.conn.Connect(strings.Replace(url, "http", "ws", 1), nil)
+	return err
 }
 
 func (s *clientSession) close() {
@@ -71,7 +71,7 @@ func (m *webAPITransporter) RoundTrip(request *http.Request) (*http.Response, er
 	body, _ := typhenType.Bytes(m.serializer)
 	response.Body = ioutil.NopCloser(bytes.NewReader(body))
 	if response.StatusCode >= 400 {
-		return response, errors.New("Server Error")
+		return nil, errors.New("Server Error")
 	}
 	return response, nil
 }
@@ -82,7 +82,7 @@ func newWebAPIMock(url string) *webapi.WebAPI {
 }
 
 func newTestServer() (*httptest.Server, *main.Server) {
-	main.Log.Level = logrus.WarnLevel
+	main.Log.Level = logrus.PanicLevel
 	main.WebAPIRoundTripper = &webAPITransporter{typhenapi.NewJSONSerializer()}
 	gin.SetMode(gin.TestMode)
 	rawServer := main.NewServer()
