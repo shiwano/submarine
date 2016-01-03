@@ -12,7 +12,7 @@ func newRespondable(value interface{}) *Respondable {
 	return &Respondable{value: value, done: make(chan interface{}, 1)}
 }
 
-func (r *Respondable) wait() error {
+func (r *Respondable) wait() (interface{}, error) {
 	r.response = <-r.done
-	return r.err
+	return r.response, r.err
 }

@@ -34,6 +34,13 @@ loop:
 	}
 }
 
+func (m *RoomManager) tryGetRoom(roomID uint64) (*Room, error) {
+	respondable := newRespondable(roomID)
+	m.getOrCreateRoom <- respondable
+	response, err := respondable.wait()
+	return response.(*Room), err
+}
+
 func (m *RoomManager) _getOrCreateRoom(respondable *Respondable) {
 	roomID := respondable.value.(uint64)
 	room, ok := m.rooms[roomID]

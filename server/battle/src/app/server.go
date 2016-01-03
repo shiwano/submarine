@@ -45,14 +45,11 @@ func (s *Server) roomsGET(c *gin.Context) {
 		return
 	}
 
-	getOrCreateRoom := newRespondable(roomID)
-	s.roomManager.getOrCreateRoom <- getOrCreateRoom
-	if err := getOrCreateRoom.wait(); err != nil {
+	room, err := s.roomManager.tryGetRoom(roomID)
+	if err != nil {
 		Log.Error(err)
 		c.String(http.StatusBadRequest, "Failed to get or create the room.")
 	}
-
-	room := getOrCreateRoom.response.(*Room)
 	room.join <- session
 	Log.Infof("Session(%v) is created", session.id)
 }
