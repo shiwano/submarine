@@ -31,7 +31,7 @@ func (s *Server) Close() {
 }
 
 func (s *Server) roomsGET(c *gin.Context) {
-	roomID, err := strconv.ParseUint(c.Param("id"), 10, 64)
+	roomID, err := strconv.ParseInt(c.Param("id"), 10, 64)
 	if err != nil {
 		Log.Error(err)
 		c.String(http.StatusBadRequest, "Invalid room id.")

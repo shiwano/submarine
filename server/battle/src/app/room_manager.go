@@ -2,7 +2,7 @@ package main
 
 // RoomManager manages rooms.
 type RoomManager struct {
-	rooms           map[uint64]*Room
+	rooms           map[int64]*Room
 	getOrCreateRoom chan *Respondable
 	deleteRoom      chan *Room
 	close           chan struct{}
@@ -10,7 +10,7 @@ type RoomManager struct {
 
 func newRoomManager() *RoomManager {
 	roomManager := &RoomManager{
-		rooms:           make(map[uint64]*Room),
+		rooms:           make(map[int64]*Room),
 		getOrCreateRoom: make(chan *Respondable, 32),
 		deleteRoom:      make(chan *Room, 8),
 		close:           make(chan struct{}),
@@ -34,7 +34,7 @@ loop:
 	}
 }
 
-func (m *RoomManager) tryGetRoom(roomID uint64) (*Room, error) {
+func (m *RoomManager) tryGetRoom(roomID int64) (*Room, error) {
 	respondable := newRespondable(roomID)
 	m.getOrCreateRoom <- respondable
 	res, err := respondable.wait()
@@ -45,7 +45,7 @@ func (m *RoomManager) tryGetRoom(roomID uint64) (*Room, error) {
 }
 
 func (m *RoomManager) _getOrCreateRoom(respondable *Respondable) {
-	roomID := respondable.value.(uint64)
+	roomID := respondable.value.(int64)
 	room, ok := m.rooms[roomID]
 	if !ok {
 		newRoom, err := newRoom(roomID)

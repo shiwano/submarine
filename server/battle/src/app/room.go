@@ -8,21 +8,21 @@ import (
 
 // Room represents a network group for battle.
 type Room struct {
-	id           uint64
+	id           int64
 	webAPI       *webapi.WebAPI
 	info         *battle.Room
-	sessions     map[uint64]*Session
+	sessions     map[int64]*Session
 	closeHandler func(*Room)
 	join         chan *Session
 	leave        chan *Session
 	close        chan struct{}
 }
 
-func newRoom(id uint64) (*Room, error) {
+func newRoom(id int64) (*Room, error) {
 	webAPI := NewWebAPI("http://localhost:3000")
 
 	// TODO: Validation for creatable the room in the battle server.
-	res, err := webAPI.Battle.FindRoom(int64(id))
+	res, err := webAPI.Battle.FindRoom(id)
 	if err != nil {
 		return nil, err
 	}
@@ -34,7 +34,7 @@ func newRoom(id uint64) (*Room, error) {
 		id:       id,
 		webAPI:   webAPI,
 		info:     res.Room,
-		sessions: make(map[uint64]*Session),
+		sessions: make(map[int64]*Session),
 		join:     make(chan *Session, 4),
 		leave:    make(chan *Session, 4),
 		close:    make(chan struct{}),

@@ -11,15 +11,15 @@ import (
 
 // Session represents a network session that has user infos.
 type Session struct {
-	id                uint64
-	roomID            uint64
+	id                int64
+	roomID            int64
 	conn              *connection.Connection
 	api               *api.WebSocketAPI
 	room              *Room
 	disconnectHandler func(*Session)
 }
 
-func newSession(id uint64, roomID uint64) *Session {
+func newSession(id int64, roomID int64) *Session {
 	serializer := typhenapi.NewJSONSerializer()
 	session := &Session{id: id, roomID: roomID}
 
