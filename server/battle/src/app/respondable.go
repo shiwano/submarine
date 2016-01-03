@@ -14,5 +14,6 @@ func newRespondable(value interface{}) *Respondable {
 
 func (r *Respondable) wait() (interface{}, error) {
 	r.response = <-r.done
+	close(r.done)
 	return r.response, r.err
 }
