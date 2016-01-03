@@ -12,6 +12,5 @@ var p = fmt.Println
 
 func main() {
 	server := NewServer()
-	defer server.Close()
 	server.Run(":5000")
 }

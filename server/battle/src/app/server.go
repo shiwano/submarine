@@ -24,12 +24,6 @@ func NewServer() *Server {
 	return server
 }
 
-// Close the Server.
-func (s *Server) Close() {
-	s.logWriter.Close()
-	s.roomManager.close <- struct{}{}
-}
-
 func (s *Server) roomsGET(c *gin.Context) {
 	roomID, err := strconv.ParseInt(c.Param("id"), 10, 64)
 	if err != nil {
