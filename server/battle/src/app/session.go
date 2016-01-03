@@ -1,7 +1,7 @@
 package main
 
 import (
-	"app/connection"
+	"app/conn"
 	"app/typhenapi/core"
 	"app/typhenapi/type/submarine"
 	"app/typhenapi/type/submarine/battle"
@@ -15,7 +15,7 @@ type Session struct {
 	id                int64
 	roomID            int64
 	info              *battle.RoomMember
-	conn              *connection.Connection
+	conn              *conn.Conn
 	api               *api.WebSocketAPI
 	room              *Room
 	disconnectHandler func(*Session)
@@ -27,10 +27,10 @@ func newSession(info *battle.RoomMember, roomID int64) *Session {
 		id:     info.Id,
 		info:   info,
 		roomID: roomID,
-		conn:   connection.New(),
+		conn:   conn.New(),
 	}
-	session.conn.BinaryMessageHandler = session.onConnectionBinaryMessageReceive
-	session.conn.DisconnectHandler = session.onConnectionDisconnect
+	session.conn.BinaryMessageHandler = session.onBinaryMessageReceive
+	session.conn.DisconnectHandler = session.onDisconnect
 	session.conn.ErrorHandler = session.onError
 
 	session.api = api.New(session, serializer, session.onError)
@@ -56,13 +56,13 @@ func (s *Session) toUserAPIType() *submarine.User {
 	return &submarine.User{Name: s.info.Name}
 }
 
-func (s *Session) onConnectionDisconnect() {
+func (s *Session) onDisconnect() {
 	if s.disconnectHandler != nil {
 		s.disconnectHandler(s)
 	}
 }
 
-func (s *Session) onConnectionBinaryMessageReceive(data []byte) {
+func (s *Session) onBinaryMessageReceive(data []byte) {
 	s.api.DispatchMessageEvent(data)
 }
 

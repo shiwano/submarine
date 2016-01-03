@@ -1,4 +1,4 @@
-package connection
+package conn
 
 import (
 	"errors"
@@ -16,8 +16,8 @@ var (
 	pingEnvelope       = &envelope{websocket.PingMessage, []byte{}}
 )
 
-// Connection represents a web socket connection.
-type Connection struct {
+// Conn represents a web socket connection.
+type Conn struct {
 	conn                 *websocket.Conn
 	Settings             *Settings
 	Dialer               *websocket.Dialer
@@ -30,17 +30,17 @@ type Connection struct {
 }
 
 // New creates a Connection.
-func New() *Connection {
-	connection := &Connection{
+func New() *Conn {
+	conn := &Conn{
 		Settings: newDefaultSettings(),
 		Dialer:   new(websocket.Dialer),
 		Upgrader: new(websocket.Upgrader),
 	}
-	return connection
+	return conn
 }
 
 // Connect to the peer.
-func (c *Connection) Connect(url string, requestHeader http.Header) (*http.Response, error) {
+func (c *Conn) Connect(url string, requestHeader http.Header) (*http.Response, error) {
 	c.envelope = make(chan *envelope, c.Settings.MessageChannelBufferSize)
 	c.Dialer.ReadBufferSize = c.Settings.ReadBufferSize
 	c.Dialer.WriteBufferSize = c.Settings.WriteBufferSize
@@ -59,7 +59,7 @@ func (c *Connection) Connect(url string, requestHeader http.Header) (*http.Respo
 }
 
 // UpgradeFromHTTP upgrades HTTP to WebSocket.
-func (c *Connection) UpgradeFromHTTP(responseWriter http.ResponseWriter, request *http.Request) error {
+func (c *Conn) UpgradeFromHTTP(responseWriter http.ResponseWriter, request *http.Request) error {
 	c.envelope = make(chan *envelope, c.Settings.MessageChannelBufferSize)
 	c.Upgrader.ReadBufferSize = c.Settings.ReadBufferSize
 	c.Upgrader.WriteBufferSize = c.Settings.WriteBufferSize
@@ -77,21 +77,21 @@ func (c *Connection) UpgradeFromHTTP(responseWriter http.ResponseWriter, request
 }
 
 // Close the connection.
-func (c *Connection) Close() error {
+func (c *Conn) Close() error {
 	return c.postEnvelope(closeEnvelope)
 }
 
 // WriteBinaryMessage to the peer.
-func (c *Connection) WriteBinaryMessage(data []byte) error {
+func (c *Conn) WriteBinaryMessage(data []byte) error {
 	return c.postEnvelope(&envelope{websocket.BinaryMessage, data})
 }
 
 // WriteTextMessage to the peer.
-func (c *Connection) WriteTextMessage(data []byte) error {
+func (c *Conn) WriteTextMessage(data []byte) error {
 	return c.postEnvelope(&envelope{websocket.TextMessage, data})
 }
 
-func (c *Connection) postEnvelope(e *envelope) error {
+func (c *Conn) postEnvelope(e *envelope) error {
 	select {
 	case c.envelope <- e:
 		return nil
@@ -100,7 +100,7 @@ func (c *Connection) postEnvelope(e *envelope) error {
 	}
 }
 
-func (c *Connection) writeMessage(e *envelope) error {
+func (c *Conn) writeMessage(e *envelope) error {
 	c.conn.SetWriteDeadline(time.Now().Add(c.Settings.WriteWait))
 	err := c.conn.WriteMessage(e.messageType, e.data)
 	if err != nil && c.ErrorHandler != nil {
@@ -109,7 +109,7 @@ func (c *Connection) writeMessage(e *envelope) error {
 	return err
 }
 
-func (c *Connection) writePump() {
+func (c *Conn) writePump() {
 	defer c.conn.Close()
 
 	ticker := time.NewTicker(c.Settings.PingPeriod)
@@ -134,7 +134,7 @@ loop:
 	}
 }
 
-func (c *Connection) readPump() {
+func (c *Conn) readPump() {
 	defer c.conn.Close()
 
 	c.conn.SetReadLimit(c.Settings.MaxMessageSize)

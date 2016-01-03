@@ -2,7 +2,7 @@ package main_test
 
 import (
 	"app"
-	"app/connection"
+	"app/conn"
 	"app/typhenapi/core"
 	webapi "app/typhenapi/web/submarine"
 	websocketapi "app/typhenapi/websocket/submarine"
@@ -20,7 +20,7 @@ import (
 var p = fmt.Println
 
 type clientSession struct {
-	conn         *connection.Connection
+	conn         *conn.Conn
 	api          *websocketapi.WebSocketAPI
 	disconnected chan struct{}
 }
@@ -28,7 +28,7 @@ type clientSession struct {
 func newClientSession() *clientSession {
 	serializer := typhenapi.NewJSONSerializer()
 	session := &clientSession{
-		conn:         connection.New(),
+		conn:         conn.New(),
 		disconnected: make(chan struct{}),
 	}
 	session.api = websocketapi.New(session, serializer, nil)
