@@ -14,7 +14,7 @@ func NewWebAPI(baseURI string) *webapi.WebAPI {
 	serializer := typhenapi.NewJSONSerializer()
 	api := webapi.New(baseURI, serializer, nil)
 	api.Client.Transport = WebAPIRoundTripper
-	api.BeforeRequestHandler = onBeforeWebAPIRequest
+	api.SetBeforeRequestHandler(onBeforeWebAPIRequest)
 	return api
 }
 
