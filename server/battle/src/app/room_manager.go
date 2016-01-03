@@ -1,9 +1,13 @@
 package main
 
+import (
+	"app/respondable"
+)
+
 // RoomManager manages rooms.
 type RoomManager struct {
 	rooms           map[int64]*Room
-	getOrCreateRoom chan *Respondable
+	getOrCreateRoom chan *respondable.Respondable
 	deleteRoom      chan *Room
 	close           chan struct{}
 }
@@ -11,7 +15,7 @@ type RoomManager struct {
 func newRoomManager() *RoomManager {
 	roomManager := &RoomManager{
 		rooms:           make(map[int64]*Room),
-		getOrCreateRoom: make(chan *Respondable, 32),
+		getOrCreateRoom: make(chan *respondable.Respondable, 32),
 		deleteRoom:      make(chan *Room, 8),
 		close:           make(chan struct{}),
 	}
@@ -35,23 +39,22 @@ loop:
 }
 
 func (m *RoomManager) tryGetRoom(roomID int64) (*Room, error) {
-	respondable := newRespondable(roomID)
+	respondable := respondable.New(roomID)
 	m.getOrCreateRoom <- respondable
-	res, err := respondable.wait()
-	if res == nil || err != nil {
+	res, err := respondable.Receive()
+	if err != nil {
 		return nil, err
 	}
-	return res.(*Room), err
+	return res.(*Room), nil
 }
 
-func (m *RoomManager) _getOrCreateRoom(respondable *Respondable) {
-	roomID := respondable.value.(int64)
+func (m *RoomManager) _getOrCreateRoom(respondable *respondable.Respondable) {
+	roomID := respondable.Value.(int64)
 	room, ok := m.rooms[roomID]
 	if !ok {
 		newRoom, err := newRoom(roomID)
 		if err != nil {
-			respondable.err = err
-			respondable.done <- nil
+			respondable.Respond(nil, err)
 			return
 		}
 
@@ -61,7 +64,7 @@ func (m *RoomManager) _getOrCreateRoom(respondable *Respondable) {
 		}
 		m.rooms[roomID] = room
 	}
-	respondable.done <- room
+	respondable.Respond(room, nil)
 }
 
 func (m *RoomManager) _deleteRoom(room *Room) {
