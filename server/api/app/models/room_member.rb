@@ -23,6 +23,7 @@ class RoomMember < ActiveRecord::Base
 
   def to_battle_room_member_api_type
     TyphenApi::Model::Submarine::Battle::RoomMember.new(
+      id: user.id,
       name: user.name,
       room_key: room_key)
   end
