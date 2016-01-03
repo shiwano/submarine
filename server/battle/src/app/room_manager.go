@@ -1,13 +1,13 @@
 package main
 
 import (
-	"app/respondable"
+	"app/resp"
 )
 
 // RoomManager manages rooms.
 type RoomManager struct {
 	rooms           map[int64]*Room
-	getOrCreateRoom chan *respondable.Respondable
+	getOrCreateRoom chan *resp.Respondable
 	deleteRoom      chan *Room
 	close           chan struct{}
 }
@@ -15,7 +15,7 @@ type RoomManager struct {
 func newRoomManager() *RoomManager {
 	roomManager := &RoomManager{
 		rooms:           make(map[int64]*Room),
-		getOrCreateRoom: make(chan *respondable.Respondable, 32),
+		getOrCreateRoom: make(chan *resp.Respondable, 32),
 		deleteRoom:      make(chan *Room, 8),
 		close:           make(chan struct{}),
 	}
@@ -39,7 +39,7 @@ loop:
 }
 
 func (m *RoomManager) tryGetRoom(roomID int64) (*Room, error) {
-	respondable := respondable.New(roomID)
+	respondable := resp.New(roomID)
 	m.getOrCreateRoom <- respondable
 	res, err := respondable.Receive()
 	if err != nil {
@@ -48,7 +48,7 @@ func (m *RoomManager) tryGetRoom(roomID int64) (*Room, error) {
 	return res.(*Room), nil
 }
 
-func (m *RoomManager) _getOrCreateRoom(respondable *respondable.Respondable) {
+func (m *RoomManager) _getOrCreateRoom(respondable *resp.Respondable) {
 	roomID := respondable.Value.(int64)
 	room, ok := m.rooms[roomID]
 	if !ok {
