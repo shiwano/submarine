@@ -51,8 +51,10 @@ loop:
 		select {
 		case session := <-r.join:
 			r._join(session)
+			r.broadcastRoom()
 		case session := <-r.leave:
 			r._leave(session)
+			r.broadcastRoom()
 		case <-r.close:
 			r._close()
 			break loop
@@ -98,14 +100,12 @@ func (r *Room) _join(session *Session) {
 	session.disconnectHandler = func(session *Session) {
 		r.leave <- session
 	}
-	r.broadcastRoom()
 }
 
 func (r *Room) _leave(session *Session) {
 	session.disconnectHandler = nil
 	session.room = nil
 	delete(r.sessions, session.id)
-	r.broadcastRoom()
 }
 
 func (r *Room) _close() {

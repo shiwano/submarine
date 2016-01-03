@@ -28,8 +28,7 @@ type clientSession struct {
 func newClientSession() *clientSession {
 	serializer := typhenapi.NewJSONSerializer()
 	session := &clientSession{
-		conn:         conn.New(),
-		disconnected: make(chan struct{}),
+		conn: conn.New(),
 	}
 	session.api = websocketapi.New(session, serializer, nil)
 	session.conn.DisconnectHandler = func() {
@@ -48,12 +47,19 @@ func (s *clientSession) Send(data []byte) error {
 }
 
 func (s *clientSession) connect(url string) error {
+	s.disconnected = make(chan struct{}, 1)
 	_, err := s.conn.Connect(strings.Replace(url, "http", "ws", 1), nil)
 	return err
 }
 
 func (s *clientSession) close() {
 	s.conn.Close()
+}
+
+func (s *clientSession) waitForDisconnected() {
+	if s.disconnected != nil {
+		<-s.disconnected
+	}
 }
 
 type webAPITransporter struct {
@@ -84,11 +90,10 @@ func newWebAPIMock(url string) *webapi.WebAPI {
 	return main.NewWebAPI(url)
 }
 
-func newTestServer() (*httptest.Server, *main.Server) {
+func newTestServer() *httptest.Server {
 	main.Log.Level = logrus.PanicLevel
 	main.WebAPIRoundTripper = &webAPITransporter{typhenapi.NewJSONSerializer()}
 	gin.SetMode(gin.TestMode)
-	rawServer := main.NewServer()
-	server := httptest.NewServer(rawServer)
-	return server, rawServer
+	server := httptest.NewServer(main.NewServer())
+	return server
 }

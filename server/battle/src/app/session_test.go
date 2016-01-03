@@ -9,29 +9,30 @@ import (
 
 func TestSession(t *testing.T) {
 	Convey("Session", t, func() {
-		server, rawServer := newTestServer()
-		session := newClientSession()
-		session.connect(server.URL + "/rooms/1?room_key=key_1")
+		server := newTestServer()
+		s := newClientSession()
+		s2 := newClientSession()
 
 		Convey("should respond/receive to a ping message", func() {
 			done := make(chan *battle.PingObject)
-			session.api.Battle.PingHandler = func(m *battle.PingObject) { done <- m }
-			session.api.Battle.SendPing(&battle.PingObject{"Hey"})
+			s.connect(server.URL + "/rooms/1?room_key=key_1")
+			s.api.Battle.PingHandler = func(m *battle.PingObject) { done <- m }
+			s.api.Battle.SendPing(&battle.PingObject{"Hey"})
 			m := <-done
 			So(m.Message, ShouldEqual, "Hey Hey")
 		})
 
-		Convey("should respond to a room message", func() {
+		Convey("should join to the room", func() {
 			done := make(chan *submarine.Room)
-			session.api.Battle.RoomHandler = func(m *submarine.Room) { done <- m }
+			s2.api.Battle.RoomHandler = func(m *submarine.Room) { done <- m }
+			s.connect(server.URL + "/rooms/1?room_key=key_1")
+			s2.connect(server.URL + "/rooms/1?room_key=key_2")
 			m := <-done
 			So(m.Id, ShouldEqual, 1)
-			So(m.Members, ShouldHaveLength, 1)
+			So(m.Members, ShouldHaveLength, 2)
 		})
 
 		Reset(func() {
-			rawServer.Close()
-			<-session.disconnected
 			server.Close()
 		})
 	})
