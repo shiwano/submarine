@@ -2,18 +2,18 @@ package main
 
 // RoomManager manages rooms.
 type RoomManager struct {
-	rooms      map[uint64]*Room
-	joinToRoom chan *Session
-	deleteRoom chan *Room
-	close      chan struct{}
+	rooms           map[uint64]*Room
+	getOrCreateRoom chan *Respondable
+	deleteRoom      chan *Room
+	close           chan struct{}
 }
 
 func newRoomManager() *RoomManager {
 	roomManager := &RoomManager{
-		rooms:      make(map[uint64]*Room),
-		joinToRoom: make(chan *Session, 32),
-		deleteRoom: make(chan *Room, 8),
-		close:      make(chan struct{}),
+		rooms:           make(map[uint64]*Room),
+		getOrCreateRoom: make(chan *Respondable, 32),
+		deleteRoom:      make(chan *Room, 8),
+		close:           make(chan struct{}),
 	}
 	go roomManager.run()
 	return roomManager
@@ -23,8 +23,8 @@ func (m *RoomManager) run() {
 loop:
 	for {
 		select {
-		case session := <-m.joinToRoom:
-			m._joinToRoom(session)
+		case respondable := <-m.getOrCreateRoom:
+			m._getOrCreateRoom(respondable)
 		case room := <-m.deleteRoom:
 			m._deleteRoom(room)
 		case <-m.close:
@@ -34,16 +34,17 @@ loop:
 	}
 }
 
-func (m *RoomManager) _joinToRoom(session *Session) {
-	room, ok := m.rooms[session.roomID]
+func (m *RoomManager) _getOrCreateRoom(respondable *Respondable) {
+	roomID := respondable.value.(uint64)
+	room, ok := m.rooms[roomID]
 	if !ok {
-		room = newRoom(session.roomID)
+		room = newRoom(roomID)
 		room.closeHandler = func(room *Room) {
 			m.deleteRoom <- room
 		}
-		m.rooms[session.roomID] = room
+		m.rooms[roomID] = room
 	}
-	room.join <- session
+	respondable.done <- room
 }
 
 func (m *RoomManager) _deleteRoom(room *Room) {

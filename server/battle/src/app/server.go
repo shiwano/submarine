@@ -34,7 +34,15 @@ func NewServer() *Server {
 			return
 		}
 
-		server.roomManager.joinToRoom <- session
+		getOrCreateRoom := newRespondable(roomID)
+		server.roomManager.getOrCreateRoom <- getOrCreateRoom
+		if err := getOrCreateRoom.wait(); err != nil {
+			Log.Error(err)
+			c.String(http.StatusBadRequest, "Failed to get or create the room.")
+		}
+
+		room := getOrCreateRoom.response.(*Room)
+		room.join <- session
 		Log.Infof("Session(%v) is created", session.id)
 	})
 

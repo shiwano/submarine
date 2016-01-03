@@ -9,7 +9,7 @@ type Respondable struct {
 }
 
 func newRespondable(value interface{}) *Respondable {
-	return &Respondable{value: value, done: make(chan interface{})}
+	return &Respondable{value: value, done: make(chan interface{}, 1)}
 }
 
 func (r *Respondable) wait() error {
