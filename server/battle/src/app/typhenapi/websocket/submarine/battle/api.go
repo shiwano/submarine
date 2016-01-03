@@ -4,6 +4,7 @@ package battle
 
 import (
 	"app/typhenapi/core"
+	submarine "app/typhenapi/type/submarine"
 	submarine_battle "app/typhenapi/type/submarine/battle"
 )
 
@@ -19,7 +20,7 @@ type WebSocketAPI struct {
 	errorHandler func(error)
 
 	PingHandler func(message *submarine_battle.PingObject)
-	RoomHandler func(message *submarine_battle.Room)
+	RoomHandler func(message *submarine.Room)
 }
 
 // New creates a WebSocketAPI.
@@ -49,7 +50,7 @@ func (api *WebSocketAPI) SendPing(ping *submarine_battle.PingObject) error {
 }
 
 // SendRoom sends a room message.
-func (api *WebSocketAPI) SendRoom(room *submarine_battle.Room) error {
+func (api *WebSocketAPI) SendRoom(room *submarine.Room) error {
 	message, err := typhenapi.NewMessage(api.serializer, MessageType_Room, room)
 
 	if err != nil {
@@ -98,7 +99,7 @@ func (api *WebSocketAPI) DispatchMessageEvent(data []byte) error {
 			api.PingHandler(typhenType)
 		}
 	case MessageType_Room:
-		typhenType := new(submarine_battle.Room)
+		typhenType := new(submarine.Room)
 		if err := api.serializer.Deserialize(message.Body, typhenType); err != nil {
 			if api.errorHandler != nil {
 				api.errorHandler(err)
