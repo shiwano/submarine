@@ -11,5 +11,9 @@ namespace TyphenApi.WebSocketApi.Parts.Submarine
         {
             return Observable.FromEvent<TyphenApi.Type.Submarine.Battle.PingObject>(h => OnPingReceive += h, h => OnPingReceive -= h);
         }
+        public IObservable<TyphenApi.Type.Submarine.Room> OnRoomReceiveAsObservable()
+        {
+            return Observable.FromEvent<TyphenApi.Type.Submarine.Room>(h => OnRoomReceive += h, h => OnRoomReceive -= h);
+        }
     }
 }

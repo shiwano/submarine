@@ -9,6 +9,7 @@ import (
 
 const (
 	MessageType_Ping int32 = -973977363
+	MessageType_Room int32 = -973911978
 )
 
 // WebSocketAPI sends messages, and dispatches message events.
@@ -18,6 +19,7 @@ type WebSocketAPI struct {
 	errorHandler func(error)
 
 	PingHandler func(message *submarine_battle.PingObject)
+	RoomHandler func(message *submarine_battle.Room)
 }
 
 // New creates a WebSocketAPI.
@@ -32,6 +34,23 @@ func New(session typhenapi.Session, serializer typhenapi.Serializer, errorHandle
 // SendPing sends a ping message.
 func (api *WebSocketAPI) SendPing(ping *submarine_battle.PingObject) error {
 	message, err := typhenapi.NewMessage(api.serializer, MessageType_Ping, ping)
+
+	if err != nil {
+		if api.errorHandler != nil {
+			api.errorHandler(err)
+		}
+		return err
+	}
+
+	if err := api.session.Send(message.Bytes()); err != nil {
+		return err
+	}
+	return nil
+}
+
+// SendRoom sends a room message.
+func (api *WebSocketAPI) SendRoom(room *submarine_battle.Room) error {
+	message, err := typhenapi.NewMessage(api.serializer, MessageType_Room, room)
 
 	if err != nil {
 		if api.errorHandler != nil {
@@ -77,6 +96,25 @@ func (api *WebSocketAPI) DispatchMessageEvent(data []byte) error {
 
 		if api.PingHandler != nil {
 			api.PingHandler(typhenType)
+		}
+	case MessageType_Room:
+		typhenType := new(submarine_battle.Room)
+		if err := api.serializer.Deserialize(message.Body, typhenType); err != nil {
+			if api.errorHandler != nil {
+				api.errorHandler(err)
+			}
+			return err
+		}
+
+		if err := typhenType.Coerce(); err != nil {
+			if api.errorHandler != nil {
+				api.errorHandler(err)
+			}
+			return err
+		}
+
+		if api.RoomHandler != nil {
+			api.RoomHandler(typhenType)
 		}
 	}
 

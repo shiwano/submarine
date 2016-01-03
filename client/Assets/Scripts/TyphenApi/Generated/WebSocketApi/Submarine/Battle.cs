@@ -9,11 +9,13 @@ namespace TyphenApi.WebSocketApi.Parts.Submarine
         public enum MessageType
         {
             Ping = -973977363,
+            Room = -973911978,
         }
 
         readonly IWebSocketSession session;
 
         public event Action<TyphenApi.Type.Submarine.Battle.PingObject> OnPingReceive;
+        public event Action<TyphenApi.Type.Submarine.Room> OnRoomReceive;
 
 
         public Battle(IWebSocketSession session)
@@ -34,6 +36,19 @@ namespace TyphenApi.WebSocketApi.Parts.Submarine
                 Message = message,
             });
         }
+        public void SendRoom(TyphenApi.Type.Submarine.Room room)
+        {
+            session.Send((int)MessageType.Room, room);
+        }
+
+        public void SendRoom(long id, List<User> members)
+        {
+            session.Send((int)MessageType.Room, new TyphenApi.Type.Submarine.Room()
+            {
+                Id = id,
+                Members = members,
+            });
+        }
 
         public TyphenApi.TypeBase DispatchMessageEvent(int messageType, byte[] messageData)
         {
@@ -46,6 +61,17 @@ namespace TyphenApi.WebSocketApi.Parts.Submarine
                     if (OnPingReceive != null)
                     {
                         OnPingReceive(message);
+                    }
+
+                    return message;
+                }
+                case MessageType.Room:
+                {
+                    var message = session.MessageDeserializer.Deserialize<TyphenApi.Type.Submarine.Room>(messageData);
+
+                    if (OnRoomReceive != null)
+                    {
+                        OnRoomReceive(message);
                     }
 
                     return message;
