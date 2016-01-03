@@ -1,6 +1,7 @@
 package main
 
 import (
+	"app/typhenapi/type/submarine"
 	"app/typhenapi/type/submarine/battle"
 	webapi "app/typhenapi/web/submarine"
 	"errors"
@@ -70,6 +71,14 @@ func (r *Room) findRoomMember(roomKey string) *battle.RoomMember {
 		}
 	}
 	return nil
+}
+
+func (r *Room) toRoomAPIType() *submarine.Room {
+	members := make([]*submarine.User, len(r.sessions))
+	for i, s := range r.sessions {
+		members[i] = s.toUserAPIType()
+	}
+	return &submarine.Room{Id: r.id, Members: members}
 }
 
 func (r *Room) _join(session *Session) {

@@ -3,6 +3,7 @@ package main
 import (
 	"app/connection"
 	"app/typhenapi/core"
+	"app/typhenapi/type/submarine"
 	"app/typhenapi/type/submarine/battle"
 	api "app/typhenapi/websocket/submarine"
 	"github.com/gorilla/websocket"
@@ -49,6 +50,10 @@ func (s *Session) Send(data []byte) error {
 
 func (s *Session) close() {
 	s.conn.Close()
+}
+
+func (s *Session) toUserAPIType() *submarine.User {
+	return &submarine.User{Name: s.info.Name}
 }
 
 func (s *Session) onConnectionDisconnect() {
