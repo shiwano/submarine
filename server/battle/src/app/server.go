@@ -49,6 +49,7 @@ func (s *Server) roomsGET(c *gin.Context) {
 	if err != nil {
 		Log.Error(err)
 		c.String(http.StatusBadRequest, "Failed to get or create the room.")
+		return
 	}
 	room.join <- session
 	Log.Infof("Session(%v) is created", session.id)
