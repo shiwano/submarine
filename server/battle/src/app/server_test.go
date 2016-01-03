@@ -10,7 +10,7 @@ func TestServer(t *testing.T) {
 		server, rawServer := newTestServer()
 		session := newClientSession()
 
-		Convey("with valid a room key", func() {
+		Convey("with valid params", func() {
 			connectionError := session.connect(server.URL + "/rooms/1?room_key=key_1")
 
 			Convey("should connect", func() {
@@ -23,7 +23,7 @@ func TestServer(t *testing.T) {
 			})
 		})
 
-		Convey("with invalid a room key", func() {
+		Convey("with a invalid room key", func() {
 			connectionError := session.connect(server.URL + "/rooms/1?room_key=invalid_room_key")
 
 			Convey("should not connect", func() {
@@ -35,7 +35,7 @@ func TestServer(t *testing.T) {
 			})
 		})
 
-		Convey("with invalid a room id", func() {
+		Convey("with a invalid room id", func() {
 			connectionError := session.connect(server.URL + "/rooms/400?room_key=key_1")
 
 			Convey("should not connect", func() {
