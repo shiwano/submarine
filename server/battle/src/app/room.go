@@ -75,10 +75,21 @@ func (r *Room) findRoomMember(roomKey string) *battle.RoomMember {
 
 func (r *Room) toRoomAPIType() *submarine.Room {
 	members := make([]*submarine.User, len(r.sessions))
-	for i, s := range r.sessions {
-		members[i] = s.toUserAPIType()
+	i := 0
+	for _, m := range r.info.Members {
+		if s, ok := r.sessions[m.Id]; ok {
+			members[i] = s.toUserAPIType()
+			i++
+		}
 	}
 	return &submarine.Room{Id: r.id, Members: members}
+}
+
+func (r *Room) broadcastRoom() {
+	typhenType := r.toRoomAPIType()
+	for _, s := range r.sessions {
+		s.api.Battle.SendRoom(typhenType)
+	}
 }
 
 func (r *Room) _join(session *Session) {
@@ -87,12 +98,14 @@ func (r *Room) _join(session *Session) {
 	session.disconnectHandler = func(session *Session) {
 		r.leave <- session
 	}
+	r.broadcastRoom()
 }
 
 func (r *Room) _leave(session *Session) {
 	session.disconnectHandler = nil
 	session.room = nil
 	delete(r.sessions, session.id)
+	r.broadcastRoom()
 }
 
 func (r *Room) _close() {
