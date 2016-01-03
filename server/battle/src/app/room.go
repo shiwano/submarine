@@ -22,7 +22,7 @@ func newRoom(id uint64) (*Room, error) {
 	webAPI := NewWebAPI("http://localhost:3000")
 
 	// TODO: Validation for creatable the room in the battle server.
-	res, err := webAPI.Battle.FindRoom(int(id))
+	res, err := webAPI.Battle.FindRoom(int64(id))
 	if err != nil {
 		return nil, err
 	}

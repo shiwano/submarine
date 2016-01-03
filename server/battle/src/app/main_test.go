@@ -40,8 +40,8 @@ func newClientSession() *clientSession {
 	return session
 }
 
-func (s *clientSession) Send(data []byte) {
-	s.conn.WriteBinaryMessage(data)
+func (s *clientSession) Send(data []byte) error {
+	return s.conn.WriteBinaryMessage(data)
 }
 
 func (s *clientSession) connect(url string) error {

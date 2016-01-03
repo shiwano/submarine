@@ -39,8 +39,8 @@ func (s *Session) Connect(responseWriter http.ResponseWriter, request *http.Requ
 }
 
 // Send sends a binary message to the client.
-func (s *Session) Send(data []byte) {
-	s.conn.WriteBinaryMessage(data)
+func (s *Session) Send(data []byte) error {
+	return s.conn.WriteBinaryMessage(data)
 }
 
 func (s *Session) close() {

@@ -68,10 +68,10 @@ func (m *webAPITransporter) FindRoom(params *webapi_battle.FindRoomRequestBody) 
 		Room: &battle.Room{
 			Id: params.RoomId,
 			Members: []*battle.RoomMember{
-				&battle.RoomMember{RoomKey: "key_1", Name: "I168"},
-				&battle.RoomMember{RoomKey: "key_2", Name: "I8"},
-				&battle.RoomMember{RoomKey: "key_3", Name: "I19"},
-				&battle.RoomMember{RoomKey: "key_4", Name: "I58"},
+				&battle.RoomMember{Id: 1, RoomKey: "key_1", Name: "I168"},
+				&battle.RoomMember{Id: 2, RoomKey: "key_2", Name: "I8"},
+				&battle.RoomMember{Id: 3, RoomKey: "key_3", Name: "I19"},
+				&battle.RoomMember{Id: 4, RoomKey: "key_4", Name: "I58"},
 			},
 		},
 	}
