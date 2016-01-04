@@ -11,26 +11,23 @@ func TestServer(t *testing.T) {
 		s := newClientSession()
 
 		Convey("with valid params", func() {
-			connError := s.connect(server.URL + "/rooms/1?room_key=key_1")
-
 			Convey("should connect", func() {
-				So(connError, ShouldBeNil)
+				err := s.connect(server.URL + "/rooms/1?room_key=key_1")
+				So(err, ShouldBeNil)
 			})
 		})
 
 		Convey("with a invalid room key", func() {
-			connError := s.connect(server.URL + "/rooms/1?room_key=invalid_room_key")
-
 			Convey("should not connect", func() {
-				So(connError, ShouldNotBeNil)
+				err := s.connect(server.URL + "/rooms/1?room_key=invalid_room_key")
+				So(err, ShouldNotBeNil)
 			})
 		})
 
 		Convey("with a invalid room id", func() {
-			connError := s.connect(server.URL + "/rooms/400?room_key=key_1")
-
 			Convey("should not connect", func() {
-				So(connError, ShouldNotBeNil)
+				err := s.connect(server.URL + "/rooms/400?room_key=key_1")
+				So(err, ShouldNotBeNil)
 			})
 		})
 
