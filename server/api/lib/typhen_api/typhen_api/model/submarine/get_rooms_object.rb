@@ -4,6 +4,6 @@ module TyphenApi::Model::Submarine
   class GetRoomsObject
     include Virtus.model(:strict => true)
 
-    attribute :rooms, Array[Room], :required => true
+    attribute :rooms, Array[TyphenApi::Model::Submarine::Room], :required => true
   end
 end

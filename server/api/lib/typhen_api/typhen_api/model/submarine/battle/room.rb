@@ -5,6 +5,6 @@ module TyphenApi::Model::Submarine::Battle
     include Virtus.model(:strict => true)
 
     attribute :id, Integer, :required => true
-    attribute :members, Array[RoomMember], :required => true
+    attribute :members, Array[TyphenApi::Model::Submarine::Battle::RoomMember], :required => true
   end
 end

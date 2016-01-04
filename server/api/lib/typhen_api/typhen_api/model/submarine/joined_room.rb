@@ -7,6 +7,6 @@ module TyphenApi::Model::Submarine
     attribute :battle_server_base_uri, String, :required => true
     attribute :room_key, String, :required => true
     attribute :id, Integer, :required => true
-    attribute :members, Array[User], :required => true
+    attribute :members, Array[TyphenApi::Model::Submarine::User], :required => true
   end
 end
