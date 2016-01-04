@@ -4,7 +4,7 @@ import (
 	"app/typhenapi/type/submarine"
 	"app/typhenapi/type/submarine/battle"
 	webapi "app/typhenapi/web/submarine"
-	"errors"
+	"fmt"
 )
 
 // Room represents a network group for battle.
@@ -28,7 +28,7 @@ func newRoom(id int64) (*Room, error) {
 		return nil, err
 	}
 	if res.Room == nil {
-		return nil, errors.New("No room found.")
+		return nil, fmt.Errorf("No room(%v) found.", id)
 	}
 
 	room := &Room{
