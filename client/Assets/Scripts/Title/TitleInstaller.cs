@@ -7,24 +7,15 @@ namespace Submarine
 {
     public class TitleInstaller : MonoInstaller
     {
-        [Serializable]
-        public class Settings
-        {
-            public Button StartButton;
-            public GameObject MatchingServicePrefab;
-        }
-
-        public Settings InstallerSettings;
+        [SerializeField]
+        TitleView view;
 
         public override void InstallBindings()
         {
-            Container.Bind<Settings>().ToSingleInstance(InstallerSettings);
+            Container.Bind<TitleView>().ToSingleInstance(view);
 
-            Container.Bind<IInitializable>().ToSingle<TitleController>();
-            Container.Bind<IDisposable>().ToSingle<TitleController>();
-            Container.Bind<TitleController>().ToSingle();
-
-            Container.Bind<MatchingService>().ToSinglePrefab(InstallerSettings.MatchingServicePrefab);
+            Container.Bind<IInitializable>().ToSingle<TitleMediator>();
+            Container.Bind<TitleMediator>().ToSingle();
         }
     }
 }
