@@ -19,10 +19,10 @@ namespace Submarine
         public static float Fps { get { return 1f / Time.deltaTime; } }
         public static float FpsRate { get { return Fps / FrameRate; } }
 
-        public static class SceneNames
+        public enum SceneNames
         {
-            public const string Title = "Title";
-            public const string Battle = "Battle";
+            Title,
+            Battle,
         }
     }
 }

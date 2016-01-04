@@ -7,20 +7,15 @@ namespace Submarine
 {
     public class CommonInstaller : MonoInstaller
     {
-        [Serializable]
-        public class Settings
-        {
-            public GameObject ConnectionServicePrefab;
-        }
-
-        public Settings InstallerSettings;
-
         public override void InstallBindings()
         {
-            Container.Bind<IInitializable>().ToSingle<CommonController>();
-            Container.Bind<CommonController>().ToSingle();
+            Container.Bind<IInitializable>().ToSingle<CommonMediator>();
+            Container.Bind<CommonMediator>().ToSingle();
 
-            Container.Bind<ConnectionService>().ToSinglePrefab(InstallerSettings.ConnectionServicePrefab);
+            Container.Bind<Commands.ApplicationStart>().ToSingle().WhenInjectedInto<CommonMediator>();
+            Container.Bind<Commands.ApplicationPause>().ToSingle().WhenInjectedInto<CommonMediator>();
+            Container.Bind<Commands.ApplicationQuit>().ToSingle().WhenInjectedInto<CommonMediator>();
+            Container.Bind<Commands.SceneChange>().ToSingle();
         }
     }
 }

@@ -36,7 +36,7 @@ namespace Submarine
 
         void OnMatchingServiceJoinedRoom()
         {
-            ZenUtil.LoadScene(Constants.SceneNames.Battle);
+            ZenUtil.LoadScene(Constants.SceneNames.Battle.ToString());
         }
     }
 }

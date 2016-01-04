@@ -149,7 +149,7 @@ namespace Submarine
 
         void MoveToTitle()
         {
-            ZenUtil.LoadScene(Constants.SceneNames.Title);
+            ZenUtil.LoadScene(Constants.SceneNames.Title.ToString());
         }
 
         void OnResultDecided(bool result)
