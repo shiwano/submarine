@@ -46,7 +46,7 @@ module.exports = function(typhen, options, helpers) {
 
     rename: function(symbol, name) {
       if (symbol.isArray) {
-        return 'List<' + typhen.helpers.upperCamelCase(symbol.type) + '>';
+        return 'List<' + helpers.typeName(symbol.type) + '>';
       } else if (symbol.isPrimitiveType && name === 'number') {
         return 'double';
       } else if (symbol.isPrimitiveType && name === 'integer') {
