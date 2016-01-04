@@ -35,14 +35,14 @@ func (s *Server) roomsGET(c *gin.Context) {
 	room, err := s.roomManager.tryGetRoom(roomID)
 	if err != nil {
 		Log.Error(err)
-		c.String(http.StatusBadRequest, "Failed to get or create the room.\n")
+		c.String(http.StatusBadRequest, "Failed to get or create the room.")
 		return
 	}
 
 	roomKey := c.Query("room_key")
 	roomMember := room.findRoomMember(roomKey)
 	if roomMember == nil {
-		c.String(http.StatusBadRequest, "Disallow the user as the room member.")
+		c.String(http.StatusBadRequest, "Failed to join to the room.")
 		return
 	}
 
