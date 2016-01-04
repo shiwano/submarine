@@ -5,18 +5,18 @@ using ModestTree;
 
 namespace Zenject
 {
-    [System.Diagnostics.DebuggerStepThrough]
+    //[System.Diagnostics.DebuggerStepThrough]
     public class SingletonProviderMap
     {
-        Dictionary<SingletonId, SingletonLazyCreator> _creators = new Dictionary<SingletonId, SingletonLazyCreator>();
-        DiContainer _container;
+        readonly Dictionary<SingletonId, SingletonLazyCreatorBase> _creators = new Dictionary<SingletonId, SingletonLazyCreatorBase>();
+        readonly DiContainer _container;
 
         public SingletonProviderMap(DiContainer container)
         {
             _container = container;
         }
 
-        internal IEnumerable<SingletonLazyCreator> Creators
+        internal IEnumerable<SingletonLazyCreatorBase> Creators
         {
             get
             {
@@ -30,74 +30,117 @@ namespace Zenject
             Assert.That(success);
         }
 
-        SingletonLazyCreator AddCreatorFromMethod<TConcrete>(
-            string identifier, Func<InjectContext, TConcrete> method)
+        public ProviderBase CreateProviderFromType(string identifier, Type concreteType)
         {
-            SingletonLazyCreator creator;
-
-            var id = new SingletonId(identifier, typeof(TConcrete));
-
-            if (_creators.ContainsKey(id))
-            {
-                throw new ZenjectBindException(
-                    "Found multiple singleton instances bound to type '{0}'".Fmt(typeof(TConcrete)));
-            }
-
-            creator = new SingletonLazyCreator(
-                _container, this, id, (context) => method(context));
-
-            _creators.Add(id, creator);
-
-            creator.IncRefCount();
-            return creator;
+            return CreateProviderFromType(new SingletonId(identifier, concreteType));
         }
 
-        SingletonLazyCreator AddCreator(SingletonId id)
+        public ProviderBase CreateProviderFromType(SingletonId singleId)
         {
-            SingletonLazyCreator creator;
+            var creator = TryGetCreator<SingletonLazyCreatorByType>(singleId);
 
-            if (!_creators.TryGetValue(id, out creator))
+            if (creator == null)
             {
-                creator = new SingletonLazyCreator(_container, this, id);
-                _creators.Add(id, creator);
+                creator = new SingletonLazyCreatorByType(singleId, this, _container);
+                _creators.Add(singleId, creator);
             }
 
-            creator.IncRefCount();
-            return creator;
+            return CreateProvider(creator);
+        }
+
+        public ProviderBase CreateProviderFromFactory<TContract, TFactory>(string identifier)
+            where TFactory : IFactory<TContract>
+        {
+            var singleId = new SingletonId(identifier, typeof(TContract));
+            var creator = TryGetCreator<SingletonLazyCreatorByFactory<TContract, TFactory>>(singleId);
+
+            if (creator == null)
+            {
+                creator = new SingletonLazyCreatorByFactory<TContract, TFactory>(singleId, this, _container);
+                _creators.Add(singleId, creator);
+            }
+
+            return CreateProvider(creator);
         }
 
         public ProviderBase CreateProviderFromMethod<TConcrete>(
             string identifier, Func<InjectContext, TConcrete> method)
         {
-            return new SingletonProvider(_container, AddCreatorFromMethod(identifier, method));
-        }
+            var singleId = new SingletonId(identifier, typeof(TConcrete));
+            var creator = TryGetCreator<SingletonLazyCreatorByMethod<TConcrete>>(singleId);
 
-        public ProviderBase CreateProviderFromType(string identifier, Type concreteType)
-        {
-            return new SingletonProvider(
-                _container, AddCreator(new SingletonId(identifier, concreteType)));
-        }
-
-        public ProviderBase CreateProviderFromInstance(string identifier, Type concreteType, object instance)
-        {
-            Assert.That(instance != null || _container.AllowNullBindings);
-
-            if (instance != null)
+            if (creator == null)
             {
-                Assert.That(instance.GetType().DerivesFromOrEqual(concreteType),
-                    "Expected instance to be type '{0}' but found type '{1}'", concreteType, instance.GetType());
+                creator = new SingletonLazyCreatorByMethod<TConcrete>(singleId, this, method);
+                _creators.Add(singleId, creator);
+            }
+            else
+            {
+                if (!ReferenceEquals(creator.CreateMethod, method))
+                {
+                    throw new ZenjectBindException(
+                        "Tried to bind multiple different methods for type '{0}' using ToSingleMethod".Fmt(singleId.Type.Name()));
+                }
             }
 
-            var creator = AddCreator(new SingletonId(identifier, concreteType));
+            return CreateProvider(creator);
+        }
 
-            if (creator.HasInstance())
+        public ProviderBase CreateProviderFromInstance(
+            string identifier, Type concreteType, object instance)
+        {
+            return CreateProviderFromInstance(
+                new SingletonId(identifier, concreteType), instance);
+        }
+
+        public ProviderBase CreateProviderFromInstance(
+            SingletonId singleId, object instance)
+        {
+            Assert.That(instance != null || _container.IsValidating);
+
+            var creator = TryGetCreator<SingletonLazyCreatorByInstance>(singleId);
+
+            if (creator == null)
             {
-                throw new ZenjectBindException("Found multiple singleton instances bound to the type '{0}'".Fmt(concreteType.Name()));
+                creator = new SingletonLazyCreatorByInstance(singleId, this, _container, instance);
+                _creators.Add(singleId, creator);
+            }
+            else
+            {
+                if (!ReferenceEquals(creator.Instance, instance))
+                {
+                    throw new ZenjectBindException(
+                        "Tried to bind multiple different instances of type '{0}' using ToSingleInstance".Fmt(singleId.Type.Name()));
+                }
             }
 
-            creator.SetInstance(instance);
+            return CreateProvider(creator);
+        }
 
-            return new SingletonProvider(_container, creator);
+        SingletonProvider CreateProvider(SingletonLazyCreatorBase creator)
+        {
+            creator.IncRefCount();
+            return new SingletonProvider(creator);
+        }
+
+        TCreator TryGetCreator<TCreator>(SingletonId singleId)
+            where TCreator : SingletonLazyCreatorBase
+        {
+            SingletonLazyCreatorBase creator;
+
+            if (_creators.TryGetValue(singleId, out creator))
+            {
+                if (creator.GetType() != typeof(TCreator))
+                {
+                    throw new ZenjectBindException(
+                        "Cannot bind type '{0}' to multiple different kinds of singleton providers.  Singleton providers types: '{1}' and '{2}'"
+                        .Fmt(singleId.Type, creator.GetType(), typeof(TCreator)));
+                }
+
+                return (TCreator)creator;
+            }
+
+            return null;
         }
     }
 }

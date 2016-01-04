@@ -36,7 +36,7 @@ namespace Zenject
 
             if (_instance == null)
             {
-                Assert.That(!_container.AllowNullBindings,
+                Assert.That(!_container.IsValidating,
                     "Tried to instantiate a MonoBehaviour with type '{0}' during validation. Object graph: {1}", _componentType, context.GetObjectGraphString());
 
                 _instance = _gameObject.AddComponent(_componentType);

@@ -4,153 +4,51 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using ModestTree.Util;
 using UnityEditor;
 using UnityEngine;
 using ModestTree;
+
+#if UNITY_5_3
 using UnityEditor.SceneManagement;
+#endif
 
 namespace Zenject
 {
     public static class ZenEditorUtil
     {
-        public static DiContainer GetContainerForCurrentScene()
-        {
-            var compRoot = GameObject.FindObjectsOfType<SceneCompositionRoot>().OnlyOrDefault();
-
-            if (compRoot == null)
-            {
-                throw new ZenjectException(
-                    "Unable to find SceneCompositionRoot in current scene.");
-            }
-
-            return compRoot.Container;
-        }
-
-        public static List<ZenjectResolveException> ValidateAllActiveScenes(int maxErrors)
-        {
-            var activeScenes = UnityEditor.EditorBuildSettings.scenes.Where(x => x.enabled).Select(x => x.ToString()).ToList();
-            return ValidateScenes(activeScenes, maxErrors);
-        }
-
-        // This can be called by build scripts using batch mode unity for continuous integration testing
-        public static void ValidateAllScenesFromScript()
-        {
-            var activeScenes = UnityEditor.EditorBuildSettings.scenes.Where(x => x.enabled).Select(x => x.ToString()).ToList();
-            ValidateScenes(activeScenes, 25, true);
-        }
-
-        public static List<ZenjectResolveException> ValidateScenes(List<string> sceneNames, int maxErrors)
-        {
-            return ValidateScenes(sceneNames, maxErrors, false);
-        }
-
-        public static List<ZenjectResolveException> ValidateScenes(List<string> sceneNames, int maxErrors, bool exitAfter)
-        {
-            var errors = new List<ZenjectResolveException>();
-            var activeScenes = sceneNames
-                .Select(x => new { Name = x, Path = GetScenePath(x) }).ToList();
-
-            foreach (var sceneInfo in activeScenes)
-            {
-                Log.Trace("Validating Scene '{0}'", sceneInfo.Path);
-#if UNITY_5_3
-				EditorSceneManager.OpenScene(sceneInfo.Path, OpenSceneMode.Single);
-#else
-				EditorApplication.OpenScene(sceneInfo.Path);
-#endif
-
-                var sceneErrors = ValidateCurrentScene().Take(maxErrors - errors.Count).ToList();
-
-                if (sceneErrors.Any())
-                {
-                    Log.Trace("Failed to validate scene '{0}'", sceneInfo.Path);
-                }
-                else
-                {
-                    Log.Trace("Scene '{0}' validated successfully", sceneInfo.Path);
-                }
-
-                errors.AddRange(sceneErrors);
-
-                if (errors.Count >= maxErrors)
-                {
-                    break;
-                }
-            }
-
-            if (errors.IsEmpty())
-            {
-                Log.Trace("Successfully validated all {0} scenes", activeScenes.Count);
-
-                if (exitAfter)
-                {
-                    // 0 = no errors
-                    EditorApplication.Exit(0);
-                }
-            }
-            else
-            {
-                Log.Error("Zenject Validation failed!  Found {0} errors.", errors.Count);
-
-                foreach (var err in errors)
-                {
-                    Log.ErrorException(err);
-                }
-
-                if (exitAfter)
-                {
-                    // 1 = errors occurred
-                    EditorApplication.Exit(1);
-                }
-            }
-
-            return errors;
-        }
-
-        static string GetScenePath(string sceneName)
-        {
-            var namesToPaths = UnityEditor.EditorBuildSettings.scenes.ToDictionary(
-                x => Path.GetFileNameWithoutExtension(x.path), x => x.path);
-
-            if (!namesToPaths.ContainsKey(sceneName))
-            {
-                throw new Exception(
-                    "Could not find scene with name '" + sceneName + "'");
-            }
-
-            return namesToPaths[sceneName];
-        }
-
-        public static IEnumerable<ZenjectResolveException> ValidateCurrentScene()
-        {
-            var compRoot = GameObject.FindObjectsOfType<SceneCompositionRoot>().OnlyOrDefault();
-
-            if (compRoot == null || compRoot.Installers.IsEmpty())
-            {
-                return Enumerable.Empty<ZenjectResolveException>();
-            }
-
-            return ZenEditorUtil.ValidateInstallers(compRoot);
-        }
-
         public static IEnumerable<ZenjectResolveException> ValidateInstallers(SceneCompositionRoot compRoot)
+        {
+            return ValidateInstallers(compRoot, null);
+        }
+
+        public static IEnumerable<ZenjectResolveException> ValidateInstallers(SceneCompositionRoot compRoot, GameObject rootGameObject)
         {
             var globalContainer = GlobalCompositionRoot.CreateContainer(true, null);
             var container = compRoot.CreateContainer(true, globalContainer, new List<IInstaller>());
 
-            foreach (var error in container.ValidateResolve(new InjectContext(container, typeof(IFacade), null)))
+            foreach (var error in container.ValidateResolve(
+                new InjectContext(container, typeof(IFacade), null)))
             {
                 yield return error;
             }
 
+            var injectedGameObjects = rootGameObject != null ? rootGameObject.GetComponentsInChildren<Transform>() : GameObject.FindObjectsOfType<Transform>();
+
             // Also make sure we can fill in all the dependencies in the built-in scene
-            foreach (var curTransform in compRoot.GetComponentsInChildren<Transform>())
+            foreach (var curTransform in injectedGameObjects)
             {
                 foreach (var monoBehaviour in curTransform.GetComponents<MonoBehaviour>())
                 {
                     if (monoBehaviour == null)
                     {
-                        Log.Warn("Found null MonoBehaviour on " + curTransform.name);
+                        // fiBackupSceneStorage shows up sometimes for reasons I don't understand
+                        // but it's normal so ignore
+                        if (curTransform.name != "fiBackupSceneStorage")
+                        {
+                            Log.Warn("Found null MonoBehaviour on " + curTransform.name);
+                        }
+
                         continue;
                     }
 
@@ -161,14 +59,11 @@ namespace Zenject
                 }
             }
 
-            foreach (var installer in globalContainer.InstalledInstallers.Concat(container.InstalledInstallers))
+            foreach (var installer in globalContainer.InstalledInstallers.Concat(container.InstalledInstallers).OfType<IValidatable>())
             {
-                if (installer is IValidatable)
+                foreach (var error in installer.Validate())
                 {
-                    foreach (var error in ((IValidatable)installer).Validate())
-                    {
-                        yield return error;
-                    }
+                    yield return error;
                 }
             }
 
@@ -178,72 +73,315 @@ namespace Zenject
             }
         }
 
-        public static void OutputObjectGraphForCurrentScene(
-            DiContainer container, IEnumerable<Type> ignoreTypes, IEnumerable<Type> contractTypes)
+        public static void ValidateCurrentSceneThenPlay()
         {
-            string dotFilePath = EditorUtility.SaveFilePanel("Choose the path to export the object graph", "", "ObjectGraph", "dot");
-
-            if (!dotFilePath.IsEmpty())
+            if (ValidateCurrentScene())
             {
-                ObjectGraphVisualizer.OutputObjectGraphToFile(
-                    container, dotFilePath, ignoreTypes, contractTypes);
-
-                var dotExecPath = EditorPrefs.GetString("Zenject.GraphVizDotExePath", "");
-
-                if (dotExecPath.IsEmpty() || !File.Exists(dotExecPath))
-                {
-                    EditorUtility.DisplayDialog(
-                        "GraphViz", "Unable to locate GraphViz.  Please select the graphviz 'dot.exe' file which can be found at [GraphVizInstallDirectory]/bin/dot.exe.  If you do not have GraphViz you can download it at http://www.graphviz.org", "Ok");
-
-                    dotExecPath = EditorUtility.OpenFilePanel("Please select dot.exe from GraphViz bin directory", "", "exe");
-
-                    EditorPrefs.SetString("Zenject.GraphVizDotExePath", dotExecPath);
-                }
-
-                if (!dotExecPath.IsEmpty())
-                {
-                    RunDotExe(dotExecPath, dotFilePath);
-                }
+                EditorApplication.isPlaying = true;
             }
         }
 
-        static void RunDotExe(string dotExePath, string dotFileInputPath)
+        public static SceneDecoratorCompositionRoot TryGetSceneDecoratorCompositionRoot()
         {
-            var outputDir = Path.GetDirectoryName(dotFileInputPath);
-            var fileBaseName = Path.GetFileNameWithoutExtension(dotFileInputPath);
+            return GameObject.FindObjectsOfType<SceneDecoratorCompositionRoot>().OnlyOrDefault();
+        }
 
-            var proc = new System.Diagnostics.Process();
+        public static SceneCompositionRoot TryGetSceneCompositionRoot()
+        {
+            return GameObject.FindObjectsOfType<SceneCompositionRoot>().OnlyOrDefault();
+        }
 
-            proc.StartInfo.FileName = dotExePath;
-            proc.StartInfo.Arguments = "-Tpng {0}.dot -o{0}.png".Fmt(fileBaseName);
-            proc.StartInfo.RedirectStandardError = true;
-            proc.StartInfo.RedirectStandardOutput = true;
-            proc.StartInfo.UseShellExecute = false;
-            proc.StartInfo.WorkingDirectory = outputDir;
-
-            proc.Start();
-            proc.WaitForExit();
-
-            var errorMessage = proc.StandardError.ReadToEnd();
-            proc.WaitForExit();
-
-            if (errorMessage.IsEmpty())
+        // Returns true if we should continue
+        static bool CheckForExistingCompositionRoot()
+        {
+            if (TryGetSceneCompositionRoot() != null)
             {
-                EditorUtility.DisplayDialog(
-                    "Success!", "Successfully created files {0}.dot and {0}.png".Fmt(fileBaseName), "Ok");
+                var shouldContinue = EditorUtility.DisplayDialog("Error", "There already exists a SceneCompositionRoot in the scene.  Are you sure you want to add another?", "Yes", "Cancel");
+                return shouldContinue;
+            }
+
+            return true;
+        }
+
+        [MenuItem("GameObject/Zenject/Scene Composition Root", false, 9)]
+        public static void CreateSceneCompositionRoot(MenuCommand menuCommand)
+        {
+            if (CheckForExistingCompositionRoot())
+            {
+                var root = new GameObject("CompositionRoot").AddComponent<SceneCompositionRoot>();
+                Selection.activeGameObject = root.gameObject;
+            }
+        }
+
+        [MenuItem("GameObject/Zenject/Decorator Composition Root", false, 9)]
+        public static void CreateDecoratorCompositionRoot(MenuCommand menuCommand)
+        {
+            if (CheckForExistingCompositionRoot())
+            {
+                var root = new GameObject("DecoratorCompositionRoot").AddComponent<SceneDecoratorCompositionRoot>();
+                Selection.activeGameObject = root.gameObject;
+            }
+        }
+
+        [MenuItem("Assets/Create/Zenject/Global Installers Asset")]
+        public static void AddGlobalInstallers()
+        {
+            var dir = UnityEditorUtil.TryGetCurrentDirectoryInProjectsTab();
+
+            var assetName = GlobalCompositionRoot.GlobalInstallersResourceName + ".asset";
+
+            if (dir == null)
+            {
+                EditorUtility.DisplayDialog("Error",
+                    "Could not find directory to place the {0} asset.  Please try again by right clicking in the desired folder within the projects pane.".Fmt(assetName), "Ok");
+                return;
+            }
+
+            var parentFolderName = Path.GetFileName(dir);
+
+            if (parentFolderName != "Resources")
+            {
+                EditorUtility.DisplayDialog("Error", "{0} must be placed inside a directory named 'Resources'.  Please try again by right clicking within the Project pane in a valid Resources folder.".Fmt(assetName), "Ok");
+                return;
+            }
+
+            var asset = ScriptableObject.CreateInstance<GlobalInstallerConfig>();
+
+            string assetPath = AssetDatabase.GenerateUniqueAssetPath(Path.Combine(dir, assetName));
+            AssetDatabase.CreateAsset(asset, assetPath);
+            AssetDatabase.Refresh();
+
+            Debug.Log("Created new asset at '{0}'".Fmt(assetPath));
+        }
+
+        // This can be called by build scripts using batch mode unity for continuous integration testing
+        // This will exit with an error code for whether validation passed or not
+        public static void ValidateAllScenesFromScript()
+        {
+            ValidateAllActiveScenes(true);
+        }
+
+        [MenuItem("Edit/Zenject/Validate All Active Scenes")]
+        public static bool ValidateAllActiveScenes()
+        {
+            return ValidateAllActiveScenes(false);
+        }
+
+        public static bool ValidateAllActiveScenes(bool exitAfter)
+        {
+            return ValidateScenes(UnityEditorUtil.GetAllActiveScenePaths(), exitAfter);
+        }
+
+        static string GetActiveScene()
+        {
+#if UNITY_5_3
+            return EditorSceneManager.GetActiveScene().path;
+#else
+            return EditorApplication.currentScene;
+#endif
+        }
+
+        public static void OpenScene(string scenePath)
+        {
+#if UNITY_5_3
+            EditorSceneManager.OpenScene(scenePath, OpenSceneMode.Single);
+#else
+            EditorApplication.OpenScene(scenePath);
+#endif
+        }
+
+        public static void OpenSceneAdditive(string scenePath)
+        {
+#if UNITY_5_3
+            EditorSceneManager.OpenScene(scenePath, OpenSceneMode.Additive);
+#else
+            EditorApplication.OpenSceneAdditive(scenePath);
+#endif
+        }
+
+        public static bool ValidateScenes(List<string> scenePaths, bool exitAfter)
+        {
+            var startScene = GetActiveScene();
+
+            var failedScenes = new List<string>();
+
+            foreach (var scenePath in scenePaths)
+            {
+                var sceneName = Path.GetFileNameWithoutExtension(scenePath);
+
+                Log.Trace("Validating scene '{0}'...", sceneName);
+
+                OpenScene(scenePath);
+
+                if (!ValidateCurrentScene())
+                {
+                    Log.Error("Failed to validate scene '{0}'", sceneName);
+                    failedScenes.Add(sceneName);
+                }
+            }
+
+            OpenScene(startScene);
+
+            if (failedScenes.IsEmpty())
+            {
+                Log.Trace("Successfully validated all {0} scenes", scenePaths.Count);
+
+                if (exitAfter)
+                {
+                    EditorApplication.Exit(0);
+                }
+
+                return true;
             }
             else
             {
-                EditorUtility.DisplayDialog(
-                    "Error", "Error occurred while generating {0}.png".Fmt(fileBaseName), "Ok");
+                Log.Error("Validated {0}/{1} scenes. Failed to validate the following: {2}",
+                    scenePaths.Count - failedScenes.Count, scenePaths.Count, failedScenes.Join(", "));
 
-                Log.Error("Zenject error: Failure during object graph creation: " + errorMessage);
+                if (exitAfter)
+                {
+                    EditorApplication.Exit(1);
+                }
 
-                // Do we care about STDOUT?
-                //var outputMessage = proc.StandardOutput.ReadToEnd();
-                //Log.Error("outputMessage = " + outputMessage);
+                return false;
+            }
+        }
+
+        [MenuItem("Edit/Zenject/Validate Current Scene #%v")]
+        public static bool ValidateCurrentScene()
+        {
+            var startTime = DateTime.Now;
+            // Only show a few to avoid spamming the log too much
+            var resolveErrors = GetCurrentSceneValidationErrors(10).ToList();
+
+            foreach (var error in resolveErrors)
+            {
+                Log.ErrorException(error);
             }
 
+            var secondsElapsed = (DateTime.Now - startTime).Milliseconds / 1000.0f;
+
+            if (resolveErrors.Any())
+            {
+                Log.Error("Validation Completed With Errors, Took {0:0.00} Seconds.", secondsElapsed);
+                return false;
+            }
+
+            Log.Info("Validation Completed Successfully, Took {0:0.00} Seconds.", secondsElapsed);
+            return true;
+        }
+
+        static List<ZenjectResolveException> GetCurrentSceneValidationErrors(int maxErrors)
+        {
+            var compRoot = GameObject.FindObjectsOfType<SceneCompositionRoot>().OnlyOrDefault();
+
+            if (compRoot != null)
+            {
+                return ValidateCompRoot(compRoot, maxErrors);
+            }
+
+            var decoratorCompRoot = GameObject.FindObjectsOfType<SceneDecoratorCompositionRoot>().OnlyOrDefault();
+
+            if (decoratorCompRoot != null)
+            {
+                return ValidateDecoratorCompRoot(decoratorCompRoot, maxErrors);
+            }
+
+            return new List<ZenjectResolveException>()
+            {
+                new ZenjectResolveException("Unable to find unique composition root in current scene"),
+            };
+        }
+
+        static List<ZenjectResolveException> ValidateDecoratorCompRoot(SceneDecoratorCompositionRoot decoratorCompRoot, int maxErrors)
+        {
+            var sceneName = decoratorCompRoot.SceneName;
+            var scenePath = UnityEditorUtil.GetScenePath(sceneName);
+
+            if (scenePath == null)
+            {
+                return new List<ZenjectResolveException>()
+                {
+                    new ZenjectResolveException(
+                        "Could not find scene path for decorated scene '{0}'".Fmt(sceneName)),
+                };
+            }
+
+            var rootObjectsBefore = UnityUtil.GetRootGameObjects();
+
+            OpenSceneAdditive(scenePath);
+
+            var newRootObjects = UnityUtil.GetRootGameObjects().Except(rootObjectsBefore);
+
+            // Use finally to ensure we clean up the data added from OpenSceneAdditive
+            try
+            {
+                var previousBeforeInstallHook = SceneCompositionRoot.BeforeInstallHooks;
+                SceneCompositionRoot.BeforeInstallHooks = (container) =>
+                {
+                    if (previousBeforeInstallHook != null)
+                    {
+                        previousBeforeInstallHook(container);
+                    }
+
+                    decoratorCompRoot.AddPreBindings(container);
+                };
+
+                var previousAfterInstallHook = SceneCompositionRoot.AfterInstallHooks;
+                SceneCompositionRoot.AfterInstallHooks = (container) =>
+                {
+                    decoratorCompRoot.AddPostBindings(container);
+
+                    if (previousAfterInstallHook != null)
+                    {
+                        previousAfterInstallHook(container);
+                    }
+                };
+
+                var compRoot = newRootObjects.SelectMany(x => x.GetComponentsInChildren<SceneCompositionRoot>()).OnlyOrDefault();
+
+                if (compRoot != null)
+                {
+                    return ValidateCompRoot(compRoot, maxErrors);
+                }
+
+                var newDecoratorCompRoot = newRootObjects.SelectMany(x => x.GetComponentsInChildren<SceneDecoratorCompositionRoot>()).OnlyOrDefault();
+
+                if (newDecoratorCompRoot != null)
+                {
+                    return ValidateDecoratorCompRoot(newDecoratorCompRoot, maxErrors);
+                }
+
+                return new List<ZenjectResolveException>()
+                {
+                    new ZenjectResolveException(
+                        "Could not find composition root for decorated scene '{0}'".Fmt(sceneName)),
+                };
+            }
+            finally
+            {
+#if UNITY_5_3
+                EditorSceneManager.CloseScene(EditorSceneManager.GetSceneByPath(scenePath), true);
+#else
+                foreach (var newObject in newRootObjects)
+                {
+                    GameObject.DestroyImmediate(newObject);
+                }
+#endif
+            }
+        }
+
+        static List<ZenjectResolveException> ValidateCompRoot(SceneCompositionRoot compRoot, int maxErrors)
+        {
+            if (compRoot.Installers.IsEmpty())
+            {
+                return new List<ZenjectResolveException>()
+                {
+                    new ZenjectResolveException("Could not find installers while validating current scene"),
+                };
+            }
+
+            return ValidateInstallers(compRoot).Take(maxErrors).ToList();
         }
     }
 }

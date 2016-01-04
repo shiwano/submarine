@@ -22,6 +22,7 @@ namespace Zenject
             var unboundTypes = _singletonProviderMap.Creators
                 .Select(x => x.GetInstanceType())
                 .Where(x => x.DerivesFrom<T>())
+                .Where(x => !x.DerivesFrom<IFacade>())
                 .Where(x => !ignoreTypes.ContainsItem(x));
 
 #if ZEN_NOT_UNITY3D

@@ -8,6 +8,10 @@ using ModestTree;
 using ModestTree.Util;
 using UnityEngine;
 
+#if UNITY_5_3
+using UnityEngine.SceneManagement;
+#endif
+
 namespace Zenject
 {
     public sealed class SceneCompositionRoot : CompositionRoot
@@ -16,7 +20,6 @@ namespace Zenject
         public static Action<DiContainer> AfterInstallHooks;
 
         public bool OnlyInjectWhenActive = true;
-        public bool InjectFullScene = true;
 
         [SerializeField]
         public MonoInstaller[] Installers = new MonoInstaller[0];
@@ -42,11 +45,23 @@ namespace Zenject
             }
         }
 
+        string GetCurrentSceneName()
+        {
+#if UNITY_5_3
+            return SceneManager.GetActiveScene().name;
+#else
+            return Application.loadedLevelName;
+#endif
+        }
+
         protected override void Initialize()
         {
+            Log.Debug("Initializing SceneCompositionRoot in scene '{0}'", GetCurrentSceneName());
             InitContainer();
+            Log.Debug("SceneCompositionRoot: Finished install phase.  Injecting into scene...");
             InitialInject();
 
+            Log.Debug("SceneCompositionRoot: Resolving root IFacade...");
             _rootFacade = _container.Resolve<IFacade>();
         }
 
@@ -89,29 +104,22 @@ namespace Zenject
 
         void InitialInject()
         {
-            if (InjectFullScene)
-            {
-                var rootGameObjects = GameObject.FindObjectsOfType<Transform>()
-                    .Where(x => x.parent == null && x.GetComponent<GlobalCompositionRoot>() == null && (x.GetComponent<SceneCompositionRoot>() == null || x == this.transform))
-                    .Select(x => x.gameObject).ToList();
+            var rootGameObjects = GameObject.FindObjectsOfType<Transform>()
+                .Where(x => x.parent == null && x.GetComponent<GlobalCompositionRoot>() == null && (x.GetComponent<SceneCompositionRoot>() == null || x == this.transform))
+                .Select(x => x.gameObject).ToList();
 
-                foreach (var rootObj in rootGameObjects)
-                {
-                    _container.InjectGameObject(rootObj, true, !OnlyInjectWhenActive);
-                }
-            }
-            else
+            foreach (var rootObj in rootGameObjects)
             {
-                _container.InjectGameObject(gameObject, true, !OnlyInjectWhenActive);
+                _container.InjectGameObject(rootObj, true, !OnlyInjectWhenActive);
             }
         }
 
         public DiContainer CreateContainer(
-            bool allowNullBindings, DiContainer parentContainer, List<IInstaller> extraInstallers)
+            bool isValidating, DiContainer parentContainer, List<IInstaller> extraInstallers)
         {
             var container = new DiContainer(this.transform, parentContainer);
 
-            container.AllowNullBindings = allowNullBindings;
+            container.IsValidating = isValidating;
 
             container.Bind<SceneCompositionRoot>().ToInstance(this);
             container.Bind<CompositionRoot>().ToInstance(this);

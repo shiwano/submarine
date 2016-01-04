@@ -28,11 +28,6 @@ namespace Zenject
 
         public void Awake()
         {
-            StartCoroutine(Init());
-        }
-
-        IEnumerator Init()
-        {
 #pragma warning disable 168
             // Ensure the global comp root is initialized so that it doesn't get parented to us below
             var globalRoot = GlobalCompositionRoot.Instance;
@@ -44,20 +39,8 @@ namespace Zenject
             _afterInstallHooks = SceneCompositionRoot.AfterInstallHooks;
             SceneCompositionRoot.AfterInstallHooks = null;
 
-            var rootObjectsBeforeLoad = UnityUtil.GetRootGameObjects();
-
             ZenUtil.LoadSceneAdditive(
                 SceneName, AddPreBindings, AddPostBindings);
-
-            // Wait one frame for objects to be added to the scene heirarchy
-            yield return null;
-
-            var newlyAddedObjects = UnityUtil.GetRootGameObjects().Except(rootObjectsBeforeLoad);
-
-            foreach (var obj in newlyAddedObjects)
-            {
-                obj.transform.SetParent(this.transform);
-            }
         }
 
         public void AddPreBindings(DiContainer container)

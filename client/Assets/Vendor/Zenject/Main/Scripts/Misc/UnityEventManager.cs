@@ -6,36 +6,37 @@ using UnityEngine;
 
 namespace Zenject
 {
+    // Note: this corresponds to the values expected in
+    // Input.GetMouseButtonDown() and similar methods
+    public enum MouseButtons
+    {
+        Left,
+        Right,
+        Middle,
+        None,
+    }
+
     [System.Diagnostics.DebuggerStepThrough]
     public class UnityEventManager : MonoBehaviour, ITickable
     {
         public event Action ApplicationGainedFocus = delegate { };
         public event Action ApplicationLostFocus = delegate { };
         public event Action<bool> ApplicationFocusChanged = delegate { };
-
         public event Action ApplicationQuit = delegate { };
         public event Action ChangingScenes = delegate { };
         public event Action DrawGizmos = delegate { };
-
-        public event Action<int> MouseButtonDown = delegate { };
-        public event Action<int> MouseButtonUp = delegate { };
-
+        public event Action<MouseButtons> MouseButtonDown = delegate { };
+        public event Action<MouseButtons> MouseButtonUp = delegate { };
         public event Action LeftMouseButtonDown = delegate { };
         public event Action LeftMouseButtonUp = delegate { };
-
         public event Action MiddleMouseButtonDown = delegate { };
         public event Action MiddleMouseButtonUp = delegate { };
-
         public event Action RightMouseButtonDown = delegate { };
         public event Action RightMouseButtonUp = delegate { };
-
-        public event Action<MouseWheelScrollDirections> MouseWheelMoved = delegate { };
-
-        public event Action MouseMove = delegate { };
-
+        public event Action MouseMoved = delegate { };
         public event Action ScreenSizeChanged = delegate { };
-
         public event Action Started = delegate { };
+        public event Action<float> MouseWheelMoved = delegate { };
 
         Vector3 _lastMousePosition;
 
@@ -57,54 +58,52 @@ namespace Zenject
 
         public void Tick()
         {
-            int buttonLeft = 0;
-            int buttonRight = 1;
-            int buttonMiddle = 2;
-
-            if (Input.GetMouseButtonDown(buttonLeft))
+            if (Input.GetMouseButtonDown((int)MouseButtons.Left))
             {
                 LeftMouseButtonDown();
-                MouseButtonDown(0);
+                MouseButtonDown(MouseButtons.Left);
             }
-            else if (Input.GetMouseButtonUp(buttonLeft))
+            else if (Input.GetMouseButtonUp((int)MouseButtons.Left))
             {
                 LeftMouseButtonUp();
-                MouseButtonUp(0);
+                MouseButtonUp(MouseButtons.Left);
             }
 
-            if (Input.GetMouseButtonDown(buttonRight))
+            if (Input.GetMouseButtonDown((int)MouseButtons.Right))
             {
                 RightMouseButtonDown();
-                MouseButtonDown(1);
+                MouseButtonDown(MouseButtons.Right);
             }
-            else if (Input.GetMouseButtonUp(buttonRight))
+            else if (Input.GetMouseButtonUp((int)MouseButtons.Right))
             {
                 RightMouseButtonUp();
-                MouseButtonUp(1);
+                MouseButtonUp(MouseButtons.Right);
             }
 
-            if (Input.GetMouseButtonDown(buttonMiddle))
+            if (Input.GetMouseButtonDown((int)MouseButtons.Middle))
             {
                 MiddleMouseButtonDown();
-                MouseButtonDown(2);
+                MouseButtonDown(MouseButtons.Middle);
             }
-            else if (Input.GetMouseButtonUp(buttonMiddle))
+            else if (Input.GetMouseButtonUp((int)MouseButtons.Middle))
             {
                 MiddleMouseButtonUp();
-                MouseButtonUp(2);
+                MouseButtonUp(MouseButtons.Middle);
             }
 
             if (_lastMousePosition != Input.mousePosition)
             {
                 _lastMousePosition = Input.mousePosition;
-                MouseMove();
+                MouseMoved();
             }
 
-            var mouseWheelState = UnityUtil.CheckMouseScrollWheel();
+            // By default this event returns 1/10 for each discrete rotation
+            // so correct that
+            var mouseWheelDelta = 10.0f * Input.GetAxis("Mouse ScrollWheel");
 
-            if (mouseWheelState != MouseWheelScrollDirections.None)
+            if (!Mathf.Approximately(mouseWheelDelta, 0))
             {
-                MouseWheelMoved(mouseWheelState);
+                MouseWheelMoved(mouseWheelDelta);
             }
 
             if (_lastWidth != Screen.width || _lastHeight != Screen.height)

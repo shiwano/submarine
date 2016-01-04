@@ -2,18 +2,11 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
+using System.Linq;
 
 namespace ModestTree.Util
 {
-    public enum MouseWheelScrollDirections
-    {
-        None,
-        Up,
-        Down,
-    }
-
     public static class UnityUtil
     {
         public static bool IsAltKeyDown
@@ -56,23 +49,6 @@ namespace ModestTree.Util
             }
         }
 
-        public static MouseWheelScrollDirections CheckMouseScrollWheel()
-        {
-            var value = Input.GetAxis("Mouse ScrollWheel");
-
-            if (Mathf.Approximately(value, 0.0f))
-            {
-                return MouseWheelScrollDirections.None;
-            }
-
-            if (value < 0)
-            {
-                return MouseWheelScrollDirections.Down;
-            }
-
-            return MouseWheelScrollDirections.Up;
-        }
-
         static int GetDepthLevel(Transform transform)
         {
             if (transform == null)
@@ -83,51 +59,28 @@ namespace ModestTree.Util
             return 1 + GetDepthLevel(transform.parent);
         }
 
-        public static IEnumerable<T> GetComponentsInChildrenTopDown<T>(GameObject gameObject, bool includeInactive)
-            where T : Component
+        public static IEnumerable<Component> GetComponentsInChildrenTopDown(GameObject gameObject, bool includeInactive)
         {
-            return gameObject.GetComponentsInChildren<T>(includeInactive)
+            return gameObject.GetComponentsInChildren<Component>(includeInactive)
                 .OrderBy(x =>
                     x == null ? int.MinValue : GetDepthLevel(x.transform));
         }
 
-        public static IEnumerable<T> GetComponentsInChildrenBottomUp<T>(GameObject gameObject, bool includeInactive)
-            where T : Component
+        public static IEnumerable<Component> GetComponentsInChildrenBottomUp(GameObject gameObject, bool includeInactive)
         {
-            return gameObject.GetComponentsInChildren<T>(includeInactive)
+            return gameObject.GetComponentsInChildren<Component>(includeInactive)
                 .OrderByDescending(x =>
                     x == null ? int.MinValue : GetDepthLevel(x.transform));
         }
 
-        public static List<GameObject> GetRootGameObjects()
+        public static IEnumerable<GameObject> GetAllGameObjectsInScene()
         {
-            return GameObject.FindObjectsOfType<Transform>().Where(x => x.parent == null).Select(x => x.gameObject).ToList();
+            return GameObject.FindObjectsOfType<Transform>().Select(x => x.gameObject);
         }
 
-        // Returns more intuitive defaults
-        // eg. An empty string rather than null
-        // An empty collection (eg. List<>) rather than null
-        public static object GetSmartDefaultValue(Type type)
+        public static List<GameObject> GetRootGameObjects()
         {
-            if (type == typeof(string))
-            {
-                return "";
-            }
-            else if (type == typeof(Quaternion))
-            {
-                return Quaternion.identity;
-            }
-            else if (type.IsGenericType)
-            {
-                var genericType = type.GetGenericTypeDefinition();
-
-                if (genericType == typeof(List<>) || genericType == typeof(Dictionary<,>))
-                {
-                    return Activator.CreateInstance(type);
-                }
-            }
-
-            return type.GetDefaultValue();
+            return GetAllGameObjectsInScene().Where(x => x.transform.parent == null).ToList();
         }
     }
 }

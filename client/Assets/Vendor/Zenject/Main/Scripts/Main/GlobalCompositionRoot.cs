@@ -17,6 +17,8 @@ namespace Zenject
         IFacade _rootFacade;
         bool _hasInitialized;
 
+        public const string GlobalInstallersResourceName = "ZenjectGlobalInstallers";
+
         public override DiContainer Container
         {
             get
@@ -66,13 +68,13 @@ namespace Zenject
             }
         }
 
-        public static DiContainer CreateContainer(bool allowNullBindings, GlobalCompositionRoot root)
+        public static DiContainer CreateContainer(bool isValidating, GlobalCompositionRoot root)
         {
-            Assert.That(allowNullBindings || root != null);
+            Assert.That(isValidating || root != null);
 
             var container = new DiContainer(root == null ? null : root.transform);
 
-            container.AllowNullBindings = allowNullBindings;
+            container.IsValidating = isValidating;
 
             container.Bind<GlobalCompositionRoot>().ToInstance(root);
             container.Bind<CompositionRoot>().ToInstance(root);
@@ -86,9 +88,10 @@ namespace Zenject
 
         static IEnumerable<IInstaller> GetGlobalInstallers()
         {
-            // Allow either naming convention
+            // For backwards compatibility include the old name
             var installerConfigs1 = Resources.LoadAll("ZenjectGlobalCompositionRoot", typeof(GlobalInstallerConfig));
-            var installerConfigs2 = Resources.LoadAll("ZenjectGlobalInstallers", typeof(GlobalInstallerConfig));
+
+            var installerConfigs2 = Resources.LoadAll(GlobalInstallersResourceName, typeof(GlobalInstallerConfig));
 
             return installerConfigs1.Concat(installerConfigs2).Cast<GlobalInstallerConfig>().SelectMany(x => x.Installers).Cast<IInstaller>();
         }

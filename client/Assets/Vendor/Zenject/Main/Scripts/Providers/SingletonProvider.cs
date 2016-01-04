@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using ModestTree;
 using System.Linq;
 
 namespace Zenject
@@ -9,14 +10,11 @@ namespace Zenject
     // will get over-written
     internal class SingletonProvider : ProviderBase
     {
-        SingletonLazyCreator _creator;
-        DiContainer _container;
+        SingletonLazyCreatorBase _creator;
 
-        public SingletonProvider(
-            DiContainer container, SingletonLazyCreator creator)
+        public SingletonProvider(SingletonLazyCreatorBase creator)
         {
             _creator = creator;
-            _container = container;
         }
 
         public override void Dispose()
@@ -36,14 +34,7 @@ namespace Zenject
 
         public override IEnumerable<ZenjectResolveException> ValidateBinding(InjectContext context)
         {
-            // Can't validate custom methods so assume they work
-            if (_creator.HasInstance() || _creator.HasCustomCreateMethod)
-            {
-                // This would be the case if given an instance at binding time with ToSingle(instance)
-                return Enumerable.Empty<ZenjectResolveException>();
-            }
-
-            return _container.ValidateObjectGraph(GetInstanceType(), context, _creator.Id.Identifier);
+            return _creator.ValidateBinding(context);
         }
     }
 }

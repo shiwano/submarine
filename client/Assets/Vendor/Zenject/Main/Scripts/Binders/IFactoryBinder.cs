@@ -333,7 +333,7 @@ namespace Zenject
         }
 
         public BindingConditionSetter ToMethod(
-            Func<DiContainer, TParam1, TParam2, TParam3, TParam4, TContract> method)
+            ModestTree.Util.Func<DiContainer, TParam1, TParam2, TParam3, TParam4, TContract> method)
         {
             return _container.Bind<IFactory<TParam1, TParam2, TParam3, TParam4, TContract>>(_identifier)
                 .ToMethod((ctx) => ctx.Container.Instantiate<FactoryMethod<TParam1, TParam2, TParam3, TParam4, TContract>>(method));

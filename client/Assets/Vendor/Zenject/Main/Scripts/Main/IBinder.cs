@@ -17,10 +17,10 @@ namespace Zenject
 
         bool HasBinding(InjectContext context);
 
-        BinderUntyped Bind(Type contractType, string identifier);
-        BinderGeneric<TContract> Bind<TContract>(string identifier);
+        UntypedBinder Bind(Type contractType, string identifier);
+        GenericBinder<TContract> Bind<TContract>(string identifier);
 
-        BinderGeneric<TContract> Rebind<TContract>();
+        GenericBinder<TContract> Rebind<TContract>();
 
         IFactoryBinder<TParam1, TParam2, TParam3, TParam4, TContract> BindIFactory<TParam1, TParam2, TParam3, TParam4, TContract>(string identifier);
         IFactoryBinder<TParam1, TParam2, TParam3, TParam4, TContract> BindIFactory<TParam1, TParam2, TParam3, TParam4, TContract>();
@@ -41,12 +41,11 @@ namespace Zenject
         IFactoryUntypedBinder<TContract> BindIFactoryUntyped<TContract>();
 
         BindingConditionSetter BindInstance<TContract>(string identifier, TContract obj);
-
         BindingConditionSetter BindInstance<TContract>(TContract obj);
 
-        BinderGeneric<TContract> Bind<TContract>();
+        GenericBinder<TContract> Bind<TContract>();
 
-        BinderUntyped Bind(Type contractType);
+        UntypedBinder Bind(Type contractType);
 
         bool Unbind<TContract>();
 
@@ -57,6 +56,29 @@ namespace Zenject
         void BindAllInterfacesToSingle<TConcrete>();
 
         void BindAllInterfacesToSingle(Type concreteType);
+
+        void BindAllInterfacesToInstance(object value);
+        void BindAllInterfacesToInstance(Type concreteType, object value);
+
+        BindingConditionSetter BindFacadeFactory<TFacade, TFacadeFactory>(
+            Action<DiContainer> facadeInstaller)
+            where TFacade : IFacade
+            where TFacadeFactory : FacadeFactory<TFacade>;
+
+        BindingConditionSetter BindFacadeFactory<TParam1, TFacade, TFacadeFactory>(
+            Action<DiContainer, TParam1> facadeInstaller)
+            where TFacade : IFacade
+            where TFacadeFactory : FacadeFactory<TParam1, TFacade>;
+
+        BindingConditionSetter BindFacadeFactory<TParam1, TParam2, TFacade, TFacadeFactory>(
+            Action<DiContainer, TParam1, TParam2> facadeInstaller)
+            where TFacade : IFacade
+            where TFacadeFactory : FacadeFactory<TParam1, TParam2, TFacade> ;
+
+        BindingConditionSetter BindFacadeFactory<TParam1, TParam2, TParam3, TFacade, TFacadeFactory>(
+            Action<DiContainer, TParam1, TParam2, TParam3> facadeInstaller)
+            where TFacade : IFacade
+            where TFacadeFactory : FacadeFactory<TParam1, TParam2, TParam3, TFacade>;
 
 #if !ZEN_NOT_UNITY3D
         BindingConditionSetter BindGameObjectFactory<T>(

@@ -37,7 +37,7 @@ namespace Zenject
             if (_instance == null)
             {
                 // This is valid sometimes
-                //Assert.That(!_container.AllowNullBindings,
+                //Assert.That(!_container.IsValidating,
                     //"Tried to instantiate a MonoBehaviour with type '{0}' during validation. Object graph: {1}", _componentType, DiContainer.GetCurrentObjectGraph());
 
                 // We don't use the generic version here to avoid duplicate generic arguments to binder
