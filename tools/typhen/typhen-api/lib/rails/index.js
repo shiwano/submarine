@@ -25,7 +25,7 @@ module.exports = function(typhen, options, helpers) {
 
     rename: function(symbol, name) {
       if (symbol.kind === typhen.SymbolKind.Array) {
-        return 'Array[' + typhen.helpers.upperCamelCase(symbol.type) + ']';
+        return 'Array[' + helpers.typeName(symbol.type) + ']';
       } else if (name === 'void') {
         return 'nil';
       }
