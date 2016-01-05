@@ -2,6 +2,7 @@
 using System;
 using System.Collections;
 using Zenject;
+using Type = TyphenApi.Type.Submarine;
 
 namespace Submarine
 {
@@ -9,6 +10,12 @@ namespace Submarine
     {
         public override void InstallBindings()
         {
+            var config = Type.Config.Load();
+            var webApi = new TyphenApi.WebApi.Submarine(config.WebApiServerBaseUri);
+
+            Container.Bind<Type.Config>().ToSingleInstance(config);
+            Container.Bind<TyphenApi.WebApi.Submarine>().ToSingleInstance(webApi);
+
             Container.Bind<Services.LoginApi>().ToSingle();
             Container.Bind<Services.PermanentDataStore>().ToSingle();
 
