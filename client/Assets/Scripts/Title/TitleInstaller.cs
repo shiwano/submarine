@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System;
 using Zenject;
+using Zenject.Commands;
 using UnityEngine.UI;
 
 namespace Submarine
@@ -15,6 +16,7 @@ namespace Submarine
             Container.Bind<Services.LoginApi>().ToSingle();
 
             Container.Bind<TitleEvent>().ToSingle();
+            Container.BindCommand<Commands.Login>().HandleWithSingle<Commands.Login.Handler>();
 
             Container.Bind<TitleView>().ToSingleInstance(view);
             Container.Bind<TitleMediator>().ToSingle();
