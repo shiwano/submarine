@@ -13,7 +13,7 @@ namespace Submarine
 
         public override void InstallBindings()
         {
-            Container.Bind<Services.LoginApi>().ToSingle();
+            Container.Bind<Services.Authentication>().ToSingle();
 
             Container.Bind<TitleEvent>().ToSingle();
             Container.BindCommand<Commands.Login>().HandleWithSingle<Commands.Login.Handler>();

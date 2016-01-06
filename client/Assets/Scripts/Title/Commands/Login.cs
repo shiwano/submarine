@@ -14,7 +14,7 @@ namespace Submarine.Commands
             [Inject]
             Models.User user;
             [Inject]
-            Services.LoginApi loginApi;
+            Services.Authentication auth;
             [Inject]
             Services.PermanentDataStore dataStore;
             [Inject]
@@ -27,7 +27,7 @@ namespace Submarine.Commands
                     throw new InvalidOperationException("Not signed to the API server.");
                 }
 
-                loginApi.Login(dataStore.UserName, dataStore.Password).Subscribe(res =>
+                auth.Login(dataStore.UserName, dataStore.Password).Subscribe(res =>
                 {
                     user.LoggedInUser = res.LoggedInUser;
                     user.ApiSessionKey = res.SessionKey;

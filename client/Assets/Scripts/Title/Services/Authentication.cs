@@ -8,7 +8,7 @@ using Type = TyphenApi.Type.Submarine;
 
 namespace Submarine.Services
 {
-    public class LoginApi
+    public class Authentication
     {
         public struct Result
         {
