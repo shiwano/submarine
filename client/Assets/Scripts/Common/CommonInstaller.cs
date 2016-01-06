@@ -17,7 +17,7 @@ namespace Submarine
             Container.Bind<Type.Config>().ToSingleInstance(config);
             Container.Bind<TyphenApi.WebApi.Submarine>().ToSingleInstance(webApi);
 
-            Container.Bind<Services.LoginApi>().ToSingle();
+            Container.Bind<Models.User>().ToSingle();
             Container.Bind<Services.PermanentDataStore>().ToSingle();
 
             Container.BindCommand<Commands.SceneChange, SceneNames>().HandleWithSingle<Commands.SceneChange.Handler>();
