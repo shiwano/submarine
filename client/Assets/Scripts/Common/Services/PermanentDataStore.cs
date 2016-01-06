@@ -19,8 +19,8 @@ namespace Submarine.Services
 
         public string Password
         {
-            get { return PlayerPrefs.GetString("UserName"); }
-            set { PlayerPrefs.SetString("UserName", value); }
+            get { return PlayerPrefs.GetString("Password"); }
+            set { PlayerPrefs.SetString("Password", value); }
         }
 
         public void Save()
