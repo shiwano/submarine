@@ -15,7 +15,7 @@ namespace Submarine
         public void Initialize()
         {
             view.StartButtonClickedAsObservable().Subscribe(_ =>
-                sceneChangeCommand.Execute(Constants.SceneNames.Battle));
+                sceneChangeCommand.Execute(SceneNames.Battle));
         }
     }
 }
