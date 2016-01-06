@@ -5,6 +5,11 @@ namespace Submarine.Services
 {
     public class PermanentDataStore
     {
+        public bool HasSigned
+        {
+            get { return string.IsNullOrEmpty(UserName) || string.IsNullOrEmpty(Password); }
+        }
+
         public string ApiSessionKey
         {
             get { return PlayerPrefs.GetString("ApiSessionKey"); }
