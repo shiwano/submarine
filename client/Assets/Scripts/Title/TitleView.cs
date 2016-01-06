@@ -9,11 +9,11 @@ namespace Submarine
     public class TitleView : MonoBehaviour
     {
         [SerializeField]
-        Button StartButton;
+        Button startButton;
 
         public IObservable<Unit> StartButtonClickedAsObservable()
         {
-            return StartButton.OnClickAsObservable();
+            return startButton.OnClickAsObservable();
         }
     }
 }

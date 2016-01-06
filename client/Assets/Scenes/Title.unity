@@ -186,7 +186,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 739913222a9724bbba442bcd32e507b2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  StartButton: {fileID: 1179573966}
+  startButton: {fileID: 1179573966}
 --- !u!1 &493162598
 GameObject:
   m_ObjectHideFlags: 0
