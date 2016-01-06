@@ -1,14 +1,18 @@
 ﻿using UnityEngine;
 using System.Collections;
+using Zenject.Commands;
 
 namespace Submarine.Commands
 {
-    public class ApplicationStart
+    public class ApplicationStart : Command
     {
-        public void Execute()
+        public class Handler : ICommandHandler
         {
-            Debug.Log("Game Start");
-            Application.targetFrameRate = Constants.FrameRate;
+            public void Execute()
+            {
+                Debug.Log("Game Start");
+                Application.targetFrameRate = Constants.FrameRate;
+            }
         }
     }
 }

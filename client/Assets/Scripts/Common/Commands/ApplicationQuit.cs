@@ -1,13 +1,17 @@
 ﻿using UnityEngine;
 using System.Collections;
+using Zenject.Commands;
 
 namespace Submarine.Commands
 {
-    public class ApplicationQuit
+    public class ApplicationQuit : Command
     {
-        public void Execute()
+        public class Handler : ICommandHandler
         {
-            Debug.Log("Game Quit");
+            public void Execute()
+            {
+                Debug.Log("Game Quit");
+            }
         }
     }
 }

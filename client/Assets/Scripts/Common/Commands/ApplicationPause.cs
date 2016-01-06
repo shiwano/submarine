@@ -1,13 +1,17 @@
 ﻿using UnityEngine;
 using System.Collections;
+using Zenject.Commands;
 
 namespace Submarine.Commands
 {
-    public class ApplicationPause
+    public class ApplicationPause : Command
     {
-        public void Execute()
+        public class Handler : ICommandHandler
         {
-            Debug.Log("Game Pause");
+            public void Execute()
+            {
+                Debug.Log("Game Pause");
+            }
         }
     }
 }
