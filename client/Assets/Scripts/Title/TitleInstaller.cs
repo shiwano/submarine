@@ -12,10 +12,13 @@ namespace Submarine
 
         public override void InstallBindings()
         {
-            Container.Bind<TitleView>().ToSingleInstance(view);
+            Container.Bind<Services.LoginApi>().ToSingle();
 
-            Container.Bind<IInitializable>().ToSingle<TitleMediator>();
+            Container.Bind<TitleEvent>().ToSingle();
+
+            Container.Bind<TitleView>().ToSingleInstance(view);
             Container.Bind<TitleMediator>().ToSingle();
+            Container.Bind<IInitializable>().ToSingle<TitleMediator>();
         }
     }
 }
