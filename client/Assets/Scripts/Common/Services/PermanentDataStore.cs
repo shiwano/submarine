@@ -7,7 +7,7 @@ namespace Submarine.Services
     {
         public bool HasSigned
         {
-            get { return string.IsNullOrEmpty(UserName) || string.IsNullOrEmpty(Password); }
+            get { return !string.IsNullOrEmpty(UserName) && !string.IsNullOrEmpty(Password); }
         }
 
         public string ApiSessionKey
