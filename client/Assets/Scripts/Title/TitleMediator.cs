@@ -9,6 +9,7 @@ namespace Submarine
         readonly Commands.Login loginCommand;
         readonly Commands.SignUp signUpCommand;
         readonly Commands.SceneChange sceneChangeCommand;
+        readonly Commands.DeleteLoginData deleteLoginDataCommand;
         readonly Events.Title events;
         readonly TitleView view;
 
@@ -17,6 +18,7 @@ namespace Submarine
             Commands.Login loginCommand,
             Commands.SignUp signUpCommand,
             Commands.SceneChange sceneChangeCommand,
+            Commands.DeleteLoginData deleteLoginDataCommand,
             Events.Title events,
             TitleView view)
         {
@@ -24,6 +26,7 @@ namespace Submarine
             this.loginCommand = loginCommand;
             this.signUpCommand = signUpCommand;
             this.sceneChangeCommand = sceneChangeCommand;
+            this.deleteLoginDataCommand = deleteLoginDataCommand;
             this.events = events;
             this.view = view;
         }
@@ -32,6 +35,7 @@ namespace Submarine
         {
             events.LoginSucceeded.AddListener(OnLoginSuccess);
             view.StartButtonClickedAsObservable().Take(1).Subscribe(_ => OnStartButtonClick());
+            view.DeleteLoginButtonClickedAsObservable().Subscribe(_ => OnDeleteLoginDataButton());
         }
 
         void OnStartButtonClick()
@@ -44,6 +48,11 @@ namespace Submarine
             {
                 signUpCommand.Execute("Test");
             }
+        }
+
+        void OnDeleteLoginDataButton()
+        {
+            deleteLoginDataCommand.Execute();
         }
 
         void OnLoginSuccess()
