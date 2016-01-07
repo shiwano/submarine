@@ -13,7 +13,7 @@ namespace Submarine
         {
             Container.Bind<Services.Authentication>().ToSingle();
 
-            Container.Bind<TitleEvent>().ToSingle();
+            Container.Bind<Events.Title>().ToSingle();
             Container.BindCommand<Commands.Login>().HandleWithSingle<Commands.Login.Handler>();
             Container.BindCommand<Commands.SignUp, string>().HandleWithSingle<Commands.SignUp.Handler>();
 

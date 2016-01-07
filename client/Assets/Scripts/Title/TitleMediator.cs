@@ -9,7 +9,7 @@ namespace Submarine
         readonly Commands.Login loginCommand;
         readonly Commands.SignUp signUpCommand;
         readonly Commands.SceneChange sceneChangeCommand;
-        readonly TitleEvent titleEvent;
+        readonly Events.Title events;
         readonly TitleView view;
 
         public TitleMediator(
@@ -17,20 +17,20 @@ namespace Submarine
             Commands.Login loginCommand,
             Commands.SignUp signUpCommand,
             Commands.SceneChange sceneChangeCommand,
-            TitleEvent titleEvent,
+            Events.Title events,
             TitleView view)
         {
             this.dataStore = dataStore;
             this.loginCommand = loginCommand;
             this.signUpCommand = signUpCommand;
             this.sceneChangeCommand = sceneChangeCommand;
-            this.titleEvent = titleEvent;
+            this.events = events;
             this.view = view;
         }
 
         public void Initialize()
         {
-            titleEvent.LoginSucceeded.AddListener(OnLoginSuccess);
+            events.LoginSucceeded.AddListener(OnLoginSuccess);
             view.StartButtonClickedAsObservable().Take(1).Subscribe(_ => OnStartButtonClick());
         }
 

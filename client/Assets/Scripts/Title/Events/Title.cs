@@ -1,8 +1,8 @@
 ﻿using UnityEngine.Events;
 
-namespace Submarine
+namespace Submarine.Events
 {
-    public class TitleEvent
+    public class Title
     {
         public readonly UnityEvent LoginSucceeded = new UnityEvent();
     }

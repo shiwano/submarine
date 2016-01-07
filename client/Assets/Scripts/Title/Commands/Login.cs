@@ -11,18 +11,18 @@ namespace Submarine.Commands
             readonly Models.User user;
             readonly Services.Authentication auth;
             readonly Services.PermanentDataStore dataStore;
-            readonly TitleEvent titleEvent;
+            readonly Events.Title events;
 
             public Handler(
                 Models.User user,
                 Services.Authentication auth,
                 Services.PermanentDataStore dataStore,
-                TitleEvent titleEvent)
+                Events.Title events)
             {
                 this.user = user;
                 this.auth = auth;
                 this.dataStore = dataStore;
-                this.titleEvent = titleEvent;
+                this.events = events;
             }
 
             public void Execute()
@@ -36,7 +36,7 @@ namespace Submarine.Commands
                 {
                     user.LoggedInUser = res.LoggedInUser;
                     user.ApiSessionKey = res.SessionKey;
-                    titleEvent.LoginSucceeded.Invoke();
+                    events.LoginSucceeded.Invoke();
                 });
             }
         }
