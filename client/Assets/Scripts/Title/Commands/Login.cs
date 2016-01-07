@@ -22,7 +22,7 @@ namespace Submarine.Commands
 
             public void Execute()
             {
-                if (!dataStore.HasSigned)
+                if (!dataStore.HasLoginData)
                 {
                     throw new InvalidOperationException("Not signed to the API server.");
                 }

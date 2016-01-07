@@ -5,7 +5,7 @@ namespace Submarine.Services
 {
     public class PermanentDataStore
     {
-        public bool HasSigned
+        public bool HasLoginData
         {
             get { return !string.IsNullOrEmpty(UserName) && !string.IsNullOrEmpty(Password); }
         }
