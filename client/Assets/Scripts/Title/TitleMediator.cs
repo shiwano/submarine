@@ -6,10 +6,16 @@ namespace Submarine
 {
     public class TitleMediator : IInitializable
     {
-        [Inject]
-        TitleView view;
-        [Inject]
-        Commands.SceneChange sceneChangeCommand;
+        readonly Commands.SceneChange sceneChangeCommand;
+        readonly TitleView view;
+
+        public TitleMediator(
+            Commands.SceneChange sceneChangeCommand,
+            TitleView view)
+        {
+            this.view = view;
+            this.sceneChangeCommand = sceneChangeCommand;
+        }
 
         public void Initialize()
         {

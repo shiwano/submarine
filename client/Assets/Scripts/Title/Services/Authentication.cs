@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Text.RegularExpressions;
 using UniRx;
-using Zenject;
 using Type = TyphenApi.Type.Submarine;
 
 namespace Submarine.Services
@@ -22,8 +21,12 @@ namespace Submarine.Services
 
         const string SessionKeyPattern = @"_submarine_api_session=([a-zA-Z0-9]+);";
 
-        [Inject]
-        TyphenApi.WebApi.Submarine webApi;
+        readonly TyphenApi.WebApi.Submarine webApi;
+
+        public Authentication(TyphenApi.WebApi.Submarine webApi)
+        {
+            this.webApi = webApi;
+        }
 
         public IObservable<Result> Login(string userName, string passWord)
         {

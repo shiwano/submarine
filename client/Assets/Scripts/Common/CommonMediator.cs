@@ -5,12 +5,19 @@ namespace Submarine
 {
     public class CommonMediator : IInitializable
     {
-        [Inject]
-        Commands.ApplicationStart startCommand;
-        [Inject]
-        Commands.ApplicationPause pauseCommand;
-        [Inject]
-        Commands.ApplicationQuit quitCommand;
+        readonly Commands.ApplicationStart startCommand;
+        readonly Commands.ApplicationPause pauseCommand;
+        readonly Commands.ApplicationQuit quitCommand;
+
+        public CommonMediator(
+            Commands.ApplicationStart startCommand,
+            Commands.ApplicationPause pauseCommand,
+            Commands.ApplicationQuit quitCommand)
+        {
+            this.startCommand = startCommand;
+            this.pauseCommand = pauseCommand;
+            this.quitCommand = quitCommand;
+        }
 
         public void Initialize()
         {

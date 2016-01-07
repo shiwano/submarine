@@ -1,6 +1,5 @@
 ﻿using System;
 using UniRx;
-using Zenject;
 using Zenject.Commands;
 
 namespace Submarine.Commands
@@ -9,14 +8,22 @@ namespace Submarine.Commands
     {
         public class Handler : ICommandHandler
         {
-            [Inject]
-            Models.User user;
-            [Inject]
-            Services.Authentication auth;
-            [Inject]
-            Services.PermanentDataStore dataStore;
-            [Inject]
-            TitleEvent titleEvent;
+            readonly Models.User user;
+            readonly Services.Authentication auth;
+            readonly Services.PermanentDataStore dataStore;
+            readonly TitleEvent titleEvent;
+
+            public Handler(
+                Models.User user,
+                Services.Authentication auth,
+                Services.PermanentDataStore dataStore,
+                TitleEvent titleEvent)
+            {
+                this.user = user;
+                this.auth = auth;
+                this.dataStore = dataStore;
+                this.titleEvent = titleEvent;
+            }
 
             public void Execute()
             {
