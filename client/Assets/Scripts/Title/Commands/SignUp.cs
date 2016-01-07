@@ -37,7 +37,7 @@ namespace Submarine.Commands
                 auth.SignUp(userName, password).Subscribe(res =>
                 {
                     dataStore.UserName = userName;
-                    dataStore.Password = Guid.NewGuid().ToString();
+                    dataStore.Password = password;
                     dataStore.Save();
 
                     user.LoggedInUser = res.LoggedInUser;
