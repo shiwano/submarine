@@ -15,6 +15,7 @@ namespace Submarine
 
             Container.Bind<TitleEvent>().ToSingle();
             Container.BindCommand<Commands.Login>().HandleWithSingle<Commands.Login.Handler>();
+            Container.BindCommand<Commands.SignUp, string>().HandleWithSingle<Commands.SignUp.Handler>();
 
             Container.Bind<TitleView>().ToSingleInstance(view);
             Container.Bind<TitleMediator>().ToSingle();
