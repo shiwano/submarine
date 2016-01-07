@@ -1,8 +1,6 @@
 ﻿using UnityEngine;
-using System;
 using Zenject;
 using Zenject.Commands;
-using UnityEngine.UI;
 
 namespace Submarine
 {

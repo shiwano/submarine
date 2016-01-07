@@ -1,7 +1,6 @@
 ﻿using UnityEngine;
 using UniRx;
 using Zenject;
-using System;
 
 namespace Submarine
 {
@@ -16,6 +15,7 @@ namespace Submarine
         {
             view.StartButtonClickedAsObservable().Subscribe(_ =>
             {
+                Debug.Log("a");
             });
         }
 

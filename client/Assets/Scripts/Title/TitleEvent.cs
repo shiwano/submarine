@@ -1,6 +1,4 @@
-﻿using UnityEngine;
-using UnityEngine.Events;
-using System.Collections;
+﻿using UnityEngine.Events;
 
 namespace Submarine
 {

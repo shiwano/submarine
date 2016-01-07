@@ -1,7 +1,4 @@
-﻿using UnityEngine;
-using System.Collections;
-using Type = TyphenApi.Type.Submarine;
-using Zenject;
+﻿using Type = TyphenApi.Type.Submarine;
 
 namespace Submarine.Models
 {

@@ -1,6 +1,4 @@
-﻿using UnityEngine;
-using System;
-using System.Collections;
+﻿using System;
 using System.Text.RegularExpressions;
 using UniRx;
 using Zenject;

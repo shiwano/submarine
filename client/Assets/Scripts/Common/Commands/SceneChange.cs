@@ -1,6 +1,4 @@
-﻿using UnityEngine;
-using System.Collections;
-using Zenject;
+﻿using Zenject;
 using Zenject.Commands;
 
 namespace Submarine.Commands
