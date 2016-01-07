@@ -1,4 +1,5 @@
-﻿using Zenject.Commands;
+﻿using UnityEngine;
+using Zenject.Commands;
 
 namespace Submarine.Commands
 {
@@ -16,6 +17,7 @@ namespace Submarine.Commands
             public void Execute()
             {
                 dataStore.Clear();
+                Debug.Log("Deleted login data");
             }
         }
     }

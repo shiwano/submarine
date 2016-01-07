@@ -1,4 +1,5 @@
-﻿using System;
+﻿using UnityEngine;
+using System;
 using UniRx;
 using Zenject.Commands;
 
@@ -43,6 +44,7 @@ namespace Submarine.Commands
                     user.LoggedInUser = res.LoggedInUser;
                     user.ApiSessionKey = res.SessionKey;
                     events.LoginSucceeded.Invoke();
+                    Debug.Log("Succeeded sign up");
                 });
             }
         }
