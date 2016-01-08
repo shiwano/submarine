@@ -34,7 +34,7 @@ namespace Submarine.Services
                 .Send()
                 .Select(r =>
                 {
-                    var sessionKey = GetSessionKeyFromCookie(r.Headers["Set-Cookie"]);
+                    var sessionKey = GetSessionKeyFromCookie(r.Headers["SET-COOKIE"]);
                     return new Result(sessionKey, r.Data.User);
                 });
         }
