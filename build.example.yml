@@ -30,7 +30,7 @@ config:
     musta -t tools/build/Config.json.mustache \
       "version={{.config.version}}" \
       "webApiServerBaseUri={{.config.webApiServerBaseUri}}" \
-      >> client/Assets/Resources/Config/Config.production.json
+      > client/Assets/Resources/Config/Config.production.json
 
 variables:
   config:
