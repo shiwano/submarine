@@ -1,63 +1,26 @@
-﻿using System;
-using System.Text.RegularExpressions;
-using UniRx;
+﻿using UniRx;
+using Zenject;
 using Type = TyphenApi.Type.Submarine;
 
 namespace Submarine.Title
 {
     public class AuthenticationService
     {
-        public struct Result
-        {
-            public readonly string SessionKey;
-            public readonly Type.LoggedInUser LoggedInUser;
+        [Inject]
+        TyphenApi.WebApi.Submarine webApi;
 
-            public Result(string sessionKey, Type.LoggedInUser loggedInUser)
-            {
-                SessionKey = sessionKey;
-                LoggedInUser = loggedInUser;
-            }
-        }
-
-        const string SessionKeyPattern = @"_submarine_api_session=([a-zA-Z0-9]+);";
-
-        readonly TyphenApi.WebApi.Submarine webApi;
-
-        public AuthenticationService(TyphenApi.WebApi.Submarine webApi)
-        {
-            this.webApi = webApi;
-        }
-
-        public IObservable<Result> Login(string userName, string passWord)
+        public IObservable<Type.LoggedInUser> Login(string userName, string passWord)
         {
             return webApi.Login(userName, passWord)
                 .Send()
-                .Select(r =>
-                {
-                    var sessionKey = GetSessionKeyFromCookie(r.Headers["SET-COOKIE"]);
-                    return new Result(sessionKey, r.Data.User);
-                });
+                .Select(r => r.Data.User);
         }
 
-        public IObservable<Result> SignUp(string userName, string passWord)
+        public IObservable<Type.LoggedInUser> SignUp(string userName, string passWord)
         {
             return webApi.SignUp(userName, passWord)
                 .Send()
-                .Select(r =>
-                {
-                    var sessionKey = GetSessionKeyFromCookie(r.Headers["SET-COOKIE"]);
-                    return new Result(sessionKey, r.Data.User);
-                });
-        }
-
-        string GetSessionKeyFromCookie(string cookie)
-        {
-            var match = Regex.Match(cookie, SessionKeyPattern, RegexOptions.Multiline);
-            if (match == null)
-            {
-                throw new InvalidOperationException("No session key!");
-            }
-            return match.Groups[1].Value;
+                .Select(r => r.Data.User);
         }
     }
 }

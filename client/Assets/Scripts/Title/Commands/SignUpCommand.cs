@@ -28,14 +28,13 @@ namespace Submarine.Title
 
                 var password = Guid.NewGuid().ToString();
 
-                auth.SignUp(userName, password).Subscribe(res =>
+                auth.SignUp(userName, password).Subscribe(loggedInUser =>
                 {
                     dataStore.UserName = userName;
                     dataStore.Password = password;
                     dataStore.Save();
 
-                    user.LoggedInUser = res.LoggedInUser;
-                    user.ApiSessionKey = res.SessionKey;
+                    user.LoggedInUser = loggedInUser;
                     events.LoginSucceeded.Invoke();
                     Debug.Log("Succeeded sign up");
                 });

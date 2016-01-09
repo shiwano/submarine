@@ -9,12 +9,6 @@ namespace Submarine
             get { return !string.IsNullOrEmpty(UserName) && !string.IsNullOrEmpty(Password); }
         }
 
-        public string ApiSessionKey
-        {
-            get { return PlayerPrefs.GetString("ApiSessionKey"); }
-            set { PlayerPrefs.SetString("ApiSessionKey", value); }
-        }
-
         public string UserName
         {
             get { return PlayerPrefs.GetString("UserName"); }

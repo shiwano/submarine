@@ -26,10 +26,9 @@ namespace Submarine.Title
                     throw new InvalidOperationException("Not signed to the API server.");
                 }
 
-                auth.Login(dataStore.UserName, dataStore.Password).Subscribe(res =>
+                auth.Login(dataStore.UserName, dataStore.Password).Subscribe(loggedInUser =>
                 {
-                    user.LoggedInUser = res.LoggedInUser;
-                    user.ApiSessionKey = res.SessionKey;
+                    user.LoggedInUser = loggedInUser;
                     events.LoginSucceeded.Invoke();
                     Debug.Log("Succeeded login");
                 });
