@@ -6,25 +6,23 @@ namespace Submarine.Title
     public class TitleMediator : IInitializable
     {
         [Inject]
+        TitleEvents events;
+        [Inject]
         PermanentDataStoreService dataStore;
         [Inject]
         LoginCommand loginCommand;
         [Inject]
-        SignUpCommand signUpCommand;
-        [Inject]
         SceneChangeCommand sceneChangeCommand;
         [Inject]
         DeleteLoginDataCommand deleteLoginDataCommand;
-        [Inject]
-        TitleEvents events;
         [Inject]
         TitleView view;
 
         public void Initialize()
         {
             events.LoginSucceeded.AddListener(OnLoginSuccess);
-            view.StartButtonClickedAsObservable().Subscribe(_ => OnStartButtonClick());
-            view.DeleteLoginButtonClickedAsObservable().Subscribe(_ => OnDeleteLoginDataButton());
+            view.StartButtonClickedAsObservable().Subscribe(_ => OnStartButtonClick()).AddTo(view);
+            view.DeleteLoginButtonClickedAsObservable().Subscribe(_ => OnDeleteLoginDataButton()).AddTo(view);
         }
 
         void OnStartButtonClick()
@@ -35,7 +33,7 @@ namespace Submarine.Title
             }
             else
             {
-                signUpCommand.Execute("Test");
+                events.SignUpStarted.Invoke();
             }
         }
 
