@@ -19,21 +19,21 @@ namespace TyphenApi.WebApi
         {
             request.Headers["Content-Type"] = "application/json";
             #if UNITY_EDITOR
-            Game.Logger.LogWithColor(Color.blue, "WebAPI Request: " + request.Uri, request.Body);
+            Game.Logger.LogWithColor(Color.blue, "[WebAPI] Request: " + request.Uri, request.Body);
             #endif
         }
 
         public override void OnRequestError(IWebApiRequest request, WebApiError<Error> error)
         {
             #if UNITY_EDITOR
-            Game.Logger.LogError("WebAPI Error: " + request.Uri, error);
+            Game.Logger.LogError("[WebAPI] Error: " + request.Uri, error.RawErrorMessage, error.Error);
             #endif
         }
 
         public override void OnRequestSuccess(IWebApiRequest request, IWebApiResponse response)
         {
             #if UNITY_EDITOR
-            Game.Logger.LogWithColor(new Color(0f, 0.4f, 0f), "WebAPI Response: " + request.Uri, response.Body);
+            Game.Logger.LogWithColor(new Color(0f, 0.4f, 0f), "[WebAPI] Response: " + request.Uri, response.Body);
             #endif
         }
     }
