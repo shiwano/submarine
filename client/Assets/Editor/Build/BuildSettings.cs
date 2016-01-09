@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using UnityEditor;
+using System;
 using System.Linq;
 
 public class BuildSettings
@@ -41,8 +42,7 @@ public class BuildSettings
                 BuildTarget = BuildTarget.Android;
                 break;
             default:
-                Debug.LogError("Not supported build target: " + target);
-                return;
+                throw new InvalidOperationException("Not supported build target: " + target);
         }
     }
 }
