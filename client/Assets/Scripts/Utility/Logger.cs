@@ -22,12 +22,12 @@ namespace Submarine
 
         static string BuildMessage(object[] messages, Color? color = null)
         {
-            var message = string.Join("\n", messages.Select(m => m.ToString()).ToArray());
-            if (color != null)
+            return string.Join("\n", messages.Select(message =>
             {
-                message = Colorize(message, color.Value);
-            }
-            return message;
+                return color != null ?
+                    Colorize(message.ToString(), color.Value) :
+                    message.ToString();
+            }).ToArray());
         }
 
         static string Colorize(string str, Color color)
