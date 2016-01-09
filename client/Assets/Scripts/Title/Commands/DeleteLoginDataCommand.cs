@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using Zenject;
 using Zenject.Commands;
 
 namespace Submarine.Title
@@ -7,12 +8,8 @@ namespace Submarine.Title
     {
         public class Handler : ICommandHandler
         {
-            readonly PermanentDataStoreService dataStore;
-
-            public Handler(PermanentDataStoreService dataStore)
-            {
-                this.dataStore = dataStore;
-            }
+            [Inject]
+            PermanentDataStoreService dataStore;
 
             public void Execute()
             {

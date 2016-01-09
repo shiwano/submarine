@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System;
 using UniRx;
+using Zenject;
 using Zenject.Commands;
 
 namespace Submarine.Title
@@ -9,22 +10,14 @@ namespace Submarine.Title
     {
         public class Handler : ICommandHandler
         {
-            readonly UserModel user;
-            readonly AuthenticationService auth;
-            readonly PermanentDataStoreService dataStore;
-            readonly TitleEvents events;
-
-            public Handler(
-                UserModel user,
-                AuthenticationService auth,
-                PermanentDataStoreService dataStore,
-                TitleEvents events)
-            {
-                this.user = user;
-                this.auth = auth;
-                this.dataStore = dataStore;
-                this.events = events;
-            }
+            [Inject]
+            UserModel user;
+            [Inject]
+            AuthenticationService auth;
+            [Inject]
+            PermanentDataStoreService dataStore;
+            [Inject]
+            TitleEvents events;
 
             public void Execute()
             {

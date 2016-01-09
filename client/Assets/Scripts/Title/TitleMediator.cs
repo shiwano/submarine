@@ -5,31 +5,20 @@ namespace Submarine.Title
 {
     public class TitleMediator : IInitializable
     {
-        readonly PermanentDataStoreService dataStore;
-        readonly LoginCommand loginCommand;
-        readonly SignUpCommand signUpCommand;
-        readonly SceneChangeCommand sceneChangeCommand;
-        readonly DeleteLoginDataCommand deleteLoginDataCommand;
-        readonly TitleEvents events;
-        readonly TitleView view;
-
-        public TitleMediator(
-            PermanentDataStoreService dataStore,
-            LoginCommand loginCommand,
-            SignUpCommand signUpCommand,
-            SceneChangeCommand sceneChangeCommand,
-            DeleteLoginDataCommand deleteLoginDataCommand,
-            TitleEvents events,
-            TitleView view)
-        {
-            this.dataStore = dataStore;
-            this.loginCommand = loginCommand;
-            this.signUpCommand = signUpCommand;
-            this.sceneChangeCommand = sceneChangeCommand;
-            this.deleteLoginDataCommand = deleteLoginDataCommand;
-            this.events = events;
-            this.view = view;
-        }
+        [Inject]
+        PermanentDataStoreService dataStore;
+        [Inject]
+        LoginCommand loginCommand;
+        [Inject]
+        SignUpCommand signUpCommand;
+        [Inject]
+        SceneChangeCommand sceneChangeCommand;
+        [Inject]
+        DeleteLoginDataCommand deleteLoginDataCommand;
+        [Inject]
+        TitleEvents events;
+        [Inject]
+        TitleView view;
 
         public void Initialize()
         {
