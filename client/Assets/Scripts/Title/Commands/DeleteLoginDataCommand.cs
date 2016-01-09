@@ -1,15 +1,15 @@
 ﻿using UnityEngine;
 using Zenject.Commands;
 
-namespace Submarine.Commands
+namespace Submarine.Title
 {
-    public class DeleteLoginData : Command
+    public class DeleteLoginDataCommand : Command
     {
         public class Handler : ICommandHandler
         {
-            readonly Services.PermanentDataStore dataStore;
+            readonly PermanentDataStoreService dataStore;
 
-            public Handler(Services.PermanentDataStore dataStore)
+            public Handler(PermanentDataStoreService dataStore)
             {
                 this.dataStore = dataStore;
             }

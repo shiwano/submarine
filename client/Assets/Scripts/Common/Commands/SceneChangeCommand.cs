@@ -2,9 +2,9 @@
 using Zenject;
 using Zenject.Commands;
 
-namespace Submarine.Commands
+namespace Submarine
 {
-    public class SceneChange : Command<SceneNames>
+    public class SceneChangeCommand : Command<SceneNames>
     {
         public class Handler : ICommandHandler<SceneNames>
         {

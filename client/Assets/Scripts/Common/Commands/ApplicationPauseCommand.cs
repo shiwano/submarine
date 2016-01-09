@@ -1,15 +1,15 @@
 ﻿using UnityEngine;
 using Zenject.Commands;
 
-namespace Submarine.Commands
+namespace Submarine
 {
-    public class ApplicationQuit : Command
+    public class ApplicationPauseCommand : Command
     {
         public class Handler : ICommandHandler
         {
             public void Execute()
             {
-                Debug.Log("Game Quit");
+                Debug.Log("Game Pause");
             }
         }
     }

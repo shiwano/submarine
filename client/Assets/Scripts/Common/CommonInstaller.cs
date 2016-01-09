@@ -14,13 +14,13 @@ namespace Submarine
             Container.Bind<Type.Config>().ToSingleInstance(config);
             Container.Bind<TyphenApi.WebApi.Submarine>().ToSingleInstance(webApi);
 
-            Container.Bind<Models.User>().ToSingle();
-            Container.Bind<Services.PermanentDataStore>().ToSingle();
+            Container.Bind<UserModel>().ToSingle();
+            Container.Bind<PermanentDataStoreService>().ToSingle();
 
-            Container.BindCommand<Commands.SceneChange, SceneNames>().HandleWithSingle<Commands.SceneChange.Handler>();
-            Container.BindCommand<Commands.ApplicationStart>().HandleWithSingle<Commands.ApplicationStart.Handler>();
-            Container.BindCommand<Commands.ApplicationPause>().HandleWithSingle<Commands.ApplicationPause.Handler>();
-            Container.BindCommand<Commands.ApplicationQuit>().HandleWithSingle<Commands.ApplicationQuit.Handler>();
+            Container.BindCommand<SceneChangeCommand, SceneNames>().HandleWithSingle<SceneChangeCommand.Handler>();
+            Container.BindCommand<ApplicationStartCommand>().HandleWithSingle<ApplicationStartCommand.Handler>();
+            Container.BindCommand<ApplicationPauseCommand>().HandleWithSingle<ApplicationPauseCommand.Handler>();
+            Container.BindCommand<ApplicationQuitCommand>().HandleWithSingle<ApplicationQuitCommand.Handler>();
 
             Container.Bind<IInitializable>().ToSingle<CommonMediator>();
             Container.Bind<CommonMediator>().ToSingle();

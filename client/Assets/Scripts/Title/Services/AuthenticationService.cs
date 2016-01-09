@@ -3,9 +3,9 @@ using System.Text.RegularExpressions;
 using UniRx;
 using Type = TyphenApi.Type.Submarine;
 
-namespace Submarine.Services
+namespace Submarine.Title
 {
-    public class Authentication
+    public class AuthenticationService
     {
         public struct Result
         {
@@ -23,7 +23,7 @@ namespace Submarine.Services
 
         readonly TyphenApi.WebApi.Submarine webApi;
 
-        public Authentication(TyphenApi.WebApi.Submarine webApi)
+        public AuthenticationService(TyphenApi.WebApi.Submarine webApi)
         {
             this.webApi = webApi;
         }

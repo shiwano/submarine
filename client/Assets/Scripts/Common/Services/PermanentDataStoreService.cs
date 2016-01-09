@@ -1,8 +1,8 @@
 ﻿using UnityEngine;
 
-namespace Submarine.Services
+namespace Submarine
 {
-    public class PermanentDataStore
+    public class PermanentDataStoreService
     {
         public bool HasLoginData
         {

@@ -1,8 +1,8 @@
 ﻿using Type = TyphenApi.Type.Submarine;
 
-namespace Submarine.Models
+namespace Submarine
 {
-    public class User
+    public class UserModel
     {
         public Type.LoggedInUser LoggedInUser { get; set; }
         public string ApiSessionKey { get; set; }

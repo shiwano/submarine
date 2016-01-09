@@ -3,22 +3,22 @@ using System;
 using UniRx;
 using Zenject.Commands;
 
-namespace Submarine.Commands
+namespace Submarine.Title
 {
-    public class SignUp : Command<string>
+    public class SignUpCommand : Command<string>
     {
         public class Handler : ICommandHandler<string>
         {
-            readonly Models.User user;
-            readonly Services.Authentication auth;
-            readonly Services.PermanentDataStore dataStore;
-            readonly Events.Title events;
+            readonly UserModel user;
+            readonly AuthenticationService auth;
+            readonly PermanentDataStoreService dataStore;
+            readonly TitleEvents events;
 
             public Handler(
-                Models.User user,
-                Services.Authentication auth,
-                Services.PermanentDataStore dataStore,
-                Events.Title events)
+                UserModel user,
+                AuthenticationService auth,
+                PermanentDataStoreService dataStore,
+                TitleEvents events)
             {
                 this.user = user;
                 this.auth = auth;

@@ -1,25 +1,25 @@
 ﻿using UniRx;
 using Zenject;
 
-namespace Submarine
+namespace Submarine.Title
 {
     public class TitleMediator : IInitializable
     {
-        readonly Services.PermanentDataStore dataStore;
-        readonly Commands.Login loginCommand;
-        readonly Commands.SignUp signUpCommand;
-        readonly Commands.SceneChange sceneChangeCommand;
-        readonly Commands.DeleteLoginData deleteLoginDataCommand;
-        readonly Events.Title events;
+        readonly PermanentDataStoreService dataStore;
+        readonly LoginCommand loginCommand;
+        readonly SignUpCommand signUpCommand;
+        readonly SceneChangeCommand sceneChangeCommand;
+        readonly DeleteLoginDataCommand deleteLoginDataCommand;
+        readonly TitleEvents events;
         readonly TitleView view;
 
         public TitleMediator(
-            Services.PermanentDataStore dataStore,
-            Commands.Login loginCommand,
-            Commands.SignUp signUpCommand,
-            Commands.SceneChange sceneChangeCommand,
-            Commands.DeleteLoginData deleteLoginDataCommand,
-            Events.Title events,
+            PermanentDataStoreService dataStore,
+            LoginCommand loginCommand,
+            SignUpCommand signUpCommand,
+            SceneChangeCommand sceneChangeCommand,
+            DeleteLoginDataCommand deleteLoginDataCommand,
+            TitleEvents events,
             TitleView view)
         {
             this.dataStore = dataStore;

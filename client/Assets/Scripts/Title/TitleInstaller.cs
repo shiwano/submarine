@@ -2,7 +2,7 @@
 using Zenject;
 using Zenject.Commands;
 
-namespace Submarine
+namespace Submarine.Title
 {
     public class TitleInstaller : MonoInstaller
     {
@@ -11,12 +11,12 @@ namespace Submarine
 
         public override void InstallBindings()
         {
-            Container.Bind<Services.Authentication>().ToSingle();
+            Container.Bind<AuthenticationService>().ToSingle();
 
-            Container.Bind<Events.Title>().ToSingle();
-            Container.BindCommand<Commands.Login>().HandleWithSingle<Commands.Login.Handler>();
-            Container.BindCommand<Commands.SignUp, string>().HandleWithSingle<Commands.SignUp.Handler>();
-            Container.BindCommand<Commands.DeleteLoginData>().HandleWithSingle<Commands.DeleteLoginData.Handler>();
+            Container.Bind<TitleEvents>().ToSingle();
+            Container.BindCommand<LoginCommand>().HandleWithSingle<LoginCommand.Handler>();
+            Container.BindCommand<SignUpCommand, string>().HandleWithSingle<SignUpCommand.Handler>();
+            Container.BindCommand<DeleteLoginDataCommand>().HandleWithSingle<DeleteLoginDataCommand.Handler>();
 
             Container.Bind<TitleView>().ToSingleInstance(view);
             Container.Bind<TitleMediator>().ToSingle();

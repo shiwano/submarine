@@ -2,7 +2,7 @@
 using UnityEngine.UI;
 using UniRx;
 
-namespace Submarine
+namespace Submarine.Title
 {
     public class TitleView : MonoBehaviour
     {
