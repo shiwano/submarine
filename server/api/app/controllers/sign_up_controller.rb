@@ -7,6 +7,6 @@ class SignUpController < ApplicationController
   end
 
   def new_user
-    @new_user ||= User.create(name: params.name, password: params.password)
+    @new_user ||= User.create!(name: params.name, password: params.password)
   end
 end
