@@ -8,11 +8,8 @@ namespace Submarine
     {
         public override void InstallBindings()
         {
-            var config = Type.Config.Load();
-            var webApi = new TyphenApi.WebApi.Submarine(config.WebApiServerBaseUri);
-
-            Container.Bind<Type.Config>().ToSingleInstance(config);
-            Container.Bind<TyphenApi.WebApi.Submarine>().ToSingleInstance(webApi);
+            Container.Bind<Type.Config>().ToSingleInstance(Type.Config.Load());
+            Container.Bind<TyphenApi.WebApi.Submarine>().ToSingle();
 
             Container.Bind<UserModel>().ToSingle();
             Container.Bind<PermanentDataStoreService>().ToSingle();
@@ -22,8 +19,8 @@ namespace Submarine
             Container.BindCommand<ApplicationPauseCommand>().HandleWithSingle<ApplicationPauseCommand.Handler>();
             Container.BindCommand<ApplicationQuitCommand>().HandleWithSingle<ApplicationQuitCommand.Handler>();
 
-            Container.Bind<IInitializable>().ToSingle<CommonMediator>();
             Container.Bind<CommonMediator>().ToSingle();
+            Container.Bind<IInitializable>().ToSingle<CommonMediator>();
         }
     }
 }

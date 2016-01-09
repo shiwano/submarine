@@ -29,7 +29,7 @@ namespace TyphenApi.WebApi
 
         SessionKey sessionKey;
 
-        public Submarine(string baseUri) : base(baseUri)
+        public Submarine(Config config) : base(config.WebApiServerBaseUri)
         {
             RequestSender = new WebApiRequestSenderWWW();
 
