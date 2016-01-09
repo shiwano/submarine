@@ -12,10 +12,10 @@ public static class BuildScript
 
     static void Execute(BuildSettings settings)
     {
-        Debug.Log("buildTarget: " + settings.BuildTarget);
-        Debug.Log("bundleIdentifier" + settings.BundleIdentifier);
-        Debug.Log("bundleVersion" + settings.BundleVersion);
-        Debug.Log("productName" + settings.ProductName);
+        Debug.Log("BuildTarget: " + settings.BuildTarget);
+        Debug.Log("BundleIdentifier" + settings.BundleIdentifier);
+        Debug.Log("BundleVersion" + settings.BundleVersion);
+        Debug.Log("ProductName" + settings.ProductName);
 
         PlayerSettings.bundleIdentifier = settings.BundleIdentifier;
         PlayerSettings.bundleVersion = settings.BundleVersion;
