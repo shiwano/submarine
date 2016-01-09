@@ -13,12 +13,12 @@ namespace Submarine.Title
 
         public IObservable<Unit> StartButtonClickedAsObservable()
         {
-            return startButton.OnClickAsObservable();
+            return startButton.onClickAsObservableWithThrottle();
         }
 
         public IObservable<Unit> DeleteLoginButtonClickedAsObservable()
         {
-            return deleteLoginDataButton.OnClickAsObservable();
+            return deleteLoginDataButton.onClickAsObservableWithThrottle();
         }
     }
 }

@@ -23,7 +23,7 @@ namespace Submarine.Title
         public void Initialize()
         {
             events.LoginSucceeded.AddListener(OnLoginSuccess);
-            view.StartButtonClickedAsObservable().Take(1).Subscribe(_ => OnStartButtonClick());
+            view.StartButtonClickedAsObservable().Subscribe(_ => OnStartButtonClick());
             view.DeleteLoginButtonClickedAsObservable().Subscribe(_ => OnDeleteLoginDataButton());
         }
 
