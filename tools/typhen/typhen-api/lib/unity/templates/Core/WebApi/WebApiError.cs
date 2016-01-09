@@ -24,8 +24,7 @@ namespace TyphenApi
 
         public override string ToString()
         {
-            return string.Format("[WebApiError: RawError={0}, RawErrorMessage={1}, Error={2}]",
-                RawError, RawErrorMessage, Error);
+            return string.Format("[WebApiError: RawErrorMessage={0}, Error={1}]", RawErrorMessage, Error);
         }
     }
 }
