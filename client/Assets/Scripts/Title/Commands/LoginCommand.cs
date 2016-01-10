@@ -18,8 +18,6 @@ namespace Submarine.Title
             AuthenticationService auth;
             [Inject]
             PermanentDataStoreService dataStore;
-            [Inject]
-            TitleEvents events;
 
             public void Execute()
             {
@@ -32,7 +30,6 @@ namespace Submarine.Title
                 {
                     user.LoggedInUser.Value = loggedInUser;
                     lobbyModel.JoinedRoom.Value = loggedInUser.JoinedRoom;
-                    events.LoginSucceeded.Invoke();
                     Debug.Log("Succeeded login");
                 });
             }

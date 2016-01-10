@@ -8,6 +8,8 @@ namespace Submarine.Title
         [Inject]
         TitleEvents events;
         [Inject]
+        UserModel userModel;
+        [Inject]
         PermanentDataStoreService dataStore;
         [Inject]
         LoginCommand loginCommand;
@@ -20,7 +22,7 @@ namespace Submarine.Title
 
         public void Initialize()
         {
-            events.LoginSucceeded.AddListener(OnLoginSuccess);
+            userModel.HasLoggedIn.Where(v => v).Subscribe(_ => OnUserLogin()).AddTo(view);
             view.StartButtonClickedAsObservable().Subscribe(_ => OnStartButtonClick()).AddTo(view);
             view.DeleteLoginButtonClickedAsObservable().Subscribe(_ => OnDeleteLoginDataButton()).AddTo(view);
         }
@@ -42,7 +44,7 @@ namespace Submarine.Title
             deleteLoginDataCommand.Execute();
         }
 
-        void OnLoginSuccess()
+        void OnUserLogin()
         {
             sceneChangeCommand.Execute(SceneNames.Lobby);
         }
