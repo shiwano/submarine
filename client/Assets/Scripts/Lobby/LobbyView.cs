@@ -8,5 +8,10 @@ namespace Submarine.Lobby
     {
         [SerializeField]
         Button createRoomButton;
+
+        public IObservable<Unit> CreateRoomButtonClickedAsObservable()
+        {
+            return createRoomButton.onClickAsObservableWithThrottle();
+        }
     }
 }
