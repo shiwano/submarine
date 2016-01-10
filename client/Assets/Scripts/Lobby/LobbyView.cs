@@ -6,5 +6,7 @@ namespace Submarine.Lobby
 {
     public class LobbyView : MonoBehaviour
     {
+        [SerializeField]
+        Button createRoomButton;
     }
 }
