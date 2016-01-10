@@ -13,6 +13,8 @@ namespace Submarine.Title
             [Inject]
             UserModel user;
             [Inject]
+            LobbyModel lobbyModel;
+            [Inject]
             AuthenticationService auth;
             [Inject]
             PermanentDataStoreService dataStore;
@@ -29,6 +31,7 @@ namespace Submarine.Title
                 auth.Login(dataStore.UserName, dataStore.Password).Subscribe(loggedInUser =>
                 {
                     user.LoggedInUser.Value = loggedInUser;
+                    lobbyModel.JoinedRoom.Value = loggedInUser.JoinedRoom;
                     events.LoginSucceeded.Invoke();
                     Debug.Log("Succeeded login");
                 });
