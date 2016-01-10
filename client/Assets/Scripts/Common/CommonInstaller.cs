@@ -12,6 +12,7 @@ namespace Submarine
             Container.Bind<TyphenApi.WebApi.Submarine>().ToSingle();
 
             Container.Bind<UserModel>().ToSingle();
+            Container.Bind<LobbyModel>().ToSingle();
             Container.Bind<PermanentDataStoreService>().ToSingle();
 
             Container.BindCommand<SceneChangeCommand, SceneNames>().HandleWithSingle<SceneChangeCommand.Handler>();
