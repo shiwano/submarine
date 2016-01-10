@@ -34,7 +34,7 @@ namespace Submarine.Title
                     dataStore.Password = password;
                     dataStore.Save();
 
-                    user.LoggedInUser = loggedInUser;
+                    user.LoggedInUser.Value = loggedInUser;
                     events.LoginSucceeded.Invoke();
                     Debug.Log("Succeeded sign up");
                 });

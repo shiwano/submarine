@@ -28,7 +28,7 @@ namespace Submarine.Title
 
                 auth.Login(dataStore.UserName, dataStore.Password).Subscribe(loggedInUser =>
                 {
-                    user.LoggedInUser = loggedInUser;
+                    user.LoggedInUser.Value = loggedInUser;
                     events.LoginSucceeded.Invoke();
                     Debug.Log("Succeeded login");
                 });
