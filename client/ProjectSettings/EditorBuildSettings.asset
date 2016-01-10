@@ -9,3 +9,5 @@ EditorBuildSettings:
     path: Assets/Scenes/Title.unity
   - enabled: 1
     path: Assets/Scenes/Battle.unity
+  - enabled: 1
+    path: Assets/Scenes/Lobby.unity

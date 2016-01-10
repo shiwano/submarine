@@ -4,5 +4,6 @@
     {
         Title,
         Battle,
+        Lobby,
     }
 }
