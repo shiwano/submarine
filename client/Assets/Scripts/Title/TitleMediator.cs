@@ -44,7 +44,7 @@ namespace Submarine.Title
 
         void OnLoginSuccess()
         {
-            sceneChangeCommand.Execute(SceneNames.Battle);
+            sceneChangeCommand.Execute(SceneNames.Lobby);
         }
     }
 }
