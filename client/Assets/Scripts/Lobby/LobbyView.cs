@@ -2,7 +2,7 @@
 using UnityEngine.UI;
 using UniRx;
 
-namespace Submarine.Title
+namespace Submarine.Lobby
 {
     public class LobbyView : MonoBehaviour
     {

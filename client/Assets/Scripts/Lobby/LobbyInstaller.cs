@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using Zenject;
 
-namespace Submarine.Title
+namespace Submarine.Lobby
 {
     public class LobbyInstaller : MonoInstaller
     {

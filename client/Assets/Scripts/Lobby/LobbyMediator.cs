@@ -1,6 +1,6 @@
 ﻿using Zenject;
 
-namespace Submarine.Title
+namespace Submarine.Lobby
 {
     public class LobbyMediator : IInitializable
     {

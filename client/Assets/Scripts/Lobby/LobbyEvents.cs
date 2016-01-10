@@ -1,6 +1,6 @@
 ﻿using UnityEngine.Events;
 
-namespace Submarine.Title
+namespace Submarine.Lobby
 {
     public class LobbyEvents
     {
