@@ -7,6 +7,8 @@ namespace Submarine.Lobby
     {
         [SerializeField]
         LobbyView lobbyView;
+        [SerializeField]
+        RoomListView roomListView;
 
         public override void InstallBindings()
         {
@@ -15,6 +17,10 @@ namespace Submarine.Lobby
             Container.Bind<LobbyView>().ToSingleInstance(lobbyView);
             Container.Bind<LobbyMediator>().ToSingle();
             Container.Bind<IInitializable>().ToSingle<LobbyMediator>();
+
+            Container.Bind<RoomListView>().ToSingleInstance(roomListView);
+            Container.Bind<RoomListMediator>().ToSingle();
+            Container.Bind<IInitializable>().ToSingle<RoomListMediator>();
         }
     }
 }
