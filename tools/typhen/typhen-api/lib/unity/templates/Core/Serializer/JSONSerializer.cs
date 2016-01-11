@@ -4,6 +4,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Text;
+using System.Linq;
 using MiniJSON;
 
 namespace TyphenApi
@@ -14,7 +15,7 @@ namespace TyphenApi
         {
             string text = string.Empty;
 
-            if (obj != null && IsSerializableObject(obj.GetType()))
+            if (obj != null && IsSerializableType(obj.GetType()))
             {
                 var dict = SerializeClassOrStruct(obj);
                 text = Json.Serialize(dict);
@@ -45,36 +46,34 @@ namespace TyphenApi
             foreach (var info in SerializationInfoFinder.FindAll(obj))
             {
                 var value = info.GetValue(obj);
-                var valueType = info.ValueType;
-
-                if (value == null)
+                if (value != null)
                 {
-                    if (info.IsOptional)
-                    {
-                        continue;
-                    }
-                    else
-                    {
-                        var message = string.Format("{0}.{1} is not allowed to be null.", obj.GetType().FullName, info.PropertyName);
-                        throw new NoNullAllowedException(message);
-                    }
+                    dict[info.PropertyName] = SerializeValue(value, info.ValueType);
                 }
-
-                if (IsSerializableValue(value, valueType))
+                else if (!info.IsOptional)
                 {
-                    dict[info.PropertyName] = valueType.IsEnum ? (long)value : value;
-                }
-                else if (IsSerializableObject(valueType))
-                {
-                    dict[info.PropertyName] = SerializeClassOrStruct(value);
-                }
-                else
-                {
-                    var message = string.Format("Failed to serialize {0} ({1}) to {2}.{3}", value, valueType, obj.GetType().FullName, info.PropertyName);
-                    throw new SerializeFailedException(message);
+                    throw new NoNullAllowedException(string.Format("{0}.{1} is not allowed to be null.", obj.GetType().FullName, info.PropertyName));
                 }
             }
             return dict;
+        }
+
+        object SerializeValue(object value, System.Type valueType)
+        {
+            if (IsValue(value, valueType))
+            {
+                return valueType.IsEnum ? (long)value : value;
+            }
+            else if (IsList(value))
+            {
+                var itemType = valueType.GetGenericArguments().First();
+                return ((IList<object>)value).Select(i => SerializeValue(i, itemType)).ToList();
+            }
+            else if (IsSerializableType(valueType))
+            {
+                return SerializeClassOrStruct(value);
+            }
+            throw new SerializeFailedException(string.Format("Failed to serialize {0} to {1}", value, valueType));
         }
 
         object DeserializeClassOrStruct(System.Type objType, Dictionary<string, object> dict)
@@ -84,42 +83,39 @@ namespace TyphenApi
             foreach (var info in SerializationInfoFinder.FindAll(objType))
             {
                 var value = dict[info.PropertyName];
-                var valueType = info.ValueType;
-
-                if (value == null)
+                if (value != null)
                 {
-                    if (info.IsOptional)
-                    {
-                        continue;
-                    }
-                    else
-                    {
-                        var message = string.Format("{0}.{1} is not allowed to be null.", objType.FullName, info.PropertyName);
-                        throw new NoNullAllowedException(message);
-                    }
+                    info.SetValue(obj, DeserializeValue(value, info.ValueType));
                 }
-
-                if (IsSerializableValue(value, valueType))
+                else if (!info.IsOptional)
                 {
-                    info.SetValue(obj, value);
-                }
-                else if (IsSerializableObject(valueType))
-                {
-                    var parsed = DeserializeClassOrStruct(valueType, (Dictionary<string, object>)value);
-                    info.SetValue(obj, parsed);
-                }
-                else
-                {
-                    var message = string.Format("Failed to deserialize {0} ({1}) to {2}.{3}", value, valueType, objType.FullName, info.PropertyName);
-                    throw new DeserializeFailedException(message);
+                    throw new NoNullAllowedException(string.Format("{0}.{1} is not allowed to be null.", objType.FullName, info.PropertyName));
                 }
             }
             return obj;
         }
 
-        bool IsIDictionaryImplementation(System.Type type)
+        object DeserializeValue(object value, System.Type valueType)
         {
-            return typeof(IDictionary).IsAssignableFrom(type);
+            if (IsValue(value, valueType))
+            {
+                return value;
+            }
+            else if (IsList(value))
+            {
+                var itemType = valueType.GetGenericArguments().First();
+                return ((IList<object>)value).Select(i => DeserializeValue(i, itemType));
+            }
+            else if (IsSerializableType(valueType))
+            {
+                return DeserializeClassOrStruct(valueType, (Dictionary<string, object>)value);
+            }
+            throw new DeserializeFailedException(string.Format("Failed to deserialize {0} to {1}", value, valueType));
+        }
+
+        bool IsSerializableType(System.Type type)
+        {
+            return type.IsClass || IsStruct(type);
         }
 
         bool IsStruct(System.Type type)
@@ -127,16 +123,19 @@ namespace TyphenApi
             return type.IsValueType && !type.IsEnum;
         }
 
-        bool IsSerializableObject(System.Type type)
+        bool IsValue(object value, System.Type valueType)
         {
-            return type.IsClass || IsStruct(type);
+            return valueType.IsPrimitive || valueType.IsEnum || value is string;
         }
 
-        bool IsSerializableValue(object value, System.Type valueType)
+        bool IsList(object value)
         {
-            return valueType.IsPrimitive || valueType.IsEnum ||
-                value is string || value is IList ||
-                (value is IDictionary && IsIDictionaryImplementation(valueType));
+            return value is IList;
+        }
+
+        bool IsDictionary(object value, System.Type valueType)
+        {
+            return value is IDictionary && typeof(IDictionary).IsAssignableFrom(valueType);
         }
     }
 }
