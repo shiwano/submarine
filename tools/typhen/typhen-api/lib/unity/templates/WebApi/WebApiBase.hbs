@@ -23,16 +23,16 @@ namespace TyphenApi.WebApi.{{#if namespace}}Parts.{{upperCamelCase namespace}}{{
         }
 
         {{#each functions}}
-        class {{upperCamelCase name}}RequestParameters : TyphenApi.TypeBase<{{upperCamelCase name}}RequestParameters>
+        class {{upperCamelCase name}}RequestBody : TyphenApi.TypeBase<{{upperCamelCase name}}RequestBody>
         {
             {{#each callSignatures.0.parameters}}
             {{#if comment}}
             /// <summary>{{comment}}</summary>
             {{/if}}
             {{#if type.isArray}}
-            protected static readonly SerializationInfoForInfo<{{upperCamelCase ../name}}RequestParameters, {{{typeName type.type}}}> {{lowerCamelCase name}} = new SerializationInfoForList<{{upperCamelCase ../name}}RequestParameters, {{{typeName type.type}}}>("{{serializablePropertyName this}}", {{isOptional}}, (x) => x.{{upperCamelCase name}}, (x, v) => x.{{upperCamelCase name}} = v);
+            protected static readonly SerializationInfoForInfo<{{upperCamelCase ../name}}RequestBody, {{{typeName type.type}}}> {{lowerCamelCase name}} = new SerializationInfoForList<{{upperCamelCase ../name}}RequestBody, {{{typeName type.type}}}>("{{serializablePropertyName this}}", {{isOptional}}, (x) => x.{{upperCamelCase name}}, (x, v) => x.{{upperCamelCase name}} = v);
             {{else}}
-            protected static readonly SerializationInfo<{{upperCamelCase ../name}}RequestParameters, {{{typeName type}}}{{{nullableToken type isOptional}}}> {{lowerCamelCase name}} = new SerializationInfo<{{upperCamelCase ../name}}RequestParameters, {{{typeName type}}}{{{nullableToken type isOptional}}}>("{{serializablePropertyName this}}", {{isOptional}}, (x) => x.{{upperCamelCase name}}, (x, v) => x.{{upperCamelCase name}} = v);
+            protected static readonly SerializationInfo<{{upperCamelCase ../name}}RequestBody, {{{typeName type}}}{{{nullableToken type isOptional}}}> {{lowerCamelCase name}} = new SerializationInfo<{{upperCamelCase ../name}}RequestBody, {{{typeName type}}}{{{nullableToken type isOptional}}}>("{{serializablePropertyName this}}", {{isOptional}}, (x) => x.{{upperCamelCase name}}, (x, v) => x.{{upperCamelCase name}} = v);
             {{/if}}
             public {{{typeName type}}}{{{nullableToken type isOptional}}} {{upperCamelCase name}} { get; set; }
             {{/each}}
@@ -43,7 +43,7 @@ namespace TyphenApi.WebApi.{{#if namespace}}Parts.{{upperCamelCase namespace}}{{
         {{/if}}
         public TyphenApi.WebApiRequest<{{{typeName callSignatures.0.returnType}}}, {{errorTypeName this}}> {{upperCamelCase name}}({{#each callSignatures.0.parameters}}{{{typeName type}}}{{{nullableToken type isOptional}}} {{serializablePropertyName this}}{{#if isOptional}} = null{{/if}}{{#unless @last}}, {{/unless}}{{/each}})
         {
-            var requestBody = new {{upperCamelCase name}}RequestParameters();
+            var requestBody = new {{upperCamelCase name}}RequestBody();
             {{#each callSignatures.0.parameters}}
             requestBody.{{upperCamelCase name}} = {{serializablePropertyName this}};
             {{/each}}
