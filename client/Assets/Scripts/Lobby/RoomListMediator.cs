@@ -40,8 +40,12 @@ namespace Submarine.Lobby
             view.ClearRooms();
             view.CreateRooms(rooms, room =>
             {
-                joinIntoRoomCommand.Execute(room);
             });
+        }
+
+        void OnRoomClick(Type.Room room)
+        {
+            joinIntoRoomCommand.Execute(room);
         }
     }
 }
