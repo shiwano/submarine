@@ -13,7 +13,7 @@ namespace Submarine
 
         public LobbyModel()
         {
-            Rooms = new ReactiveProperty<List<Type.Room>>();
+            Rooms = new ReactiveProperty<List<Type.Room>>(new List<Type.Room>());
             JoinedRoom = new ReactiveProperty<Type.JoinedRoom>();
 
             HasJoinedIntoRoom = JoinedRoom.Select(r => r != null).ToReadOnlyReactiveProperty();
