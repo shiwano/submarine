@@ -40,7 +40,7 @@ namespace Submarine
             var g = (int)(color.g * 255);
             var b = (int)(color.b * 255);
             var hex = r.ToString("X2") + g.ToString("X2") + b.ToString("X2");
-            return string.Format ("<color=#{0}>{1}</color>", hex, str);
+            return string.Format("<color=#{0}>{1}</color>", hex, str);
         }
     }
 }
