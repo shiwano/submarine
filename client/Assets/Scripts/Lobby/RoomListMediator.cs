@@ -38,9 +38,7 @@ namespace Submarine.Lobby
         void OnRoomsChange(List<Type.Room> rooms)
         {
             view.ClearRooms();
-            view.CreateRooms(rooms, room =>
-            {
-            });
+            view.CreateRooms(rooms, OnRoomClick);
         }
 
         void OnRoomClick(Type.Room room)

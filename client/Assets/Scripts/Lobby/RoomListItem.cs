@@ -7,7 +7,7 @@ using Type = TyphenApi.Type.Submarine;
 
 namespace Submarine.Lobby
 {
-    public class RoomListItemView : MonoBehaviour
+    public class RoomListItem : MonoBehaviour
     {
         [SerializeField]
         Button button;

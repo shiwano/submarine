@@ -12,7 +12,7 @@ namespace Submarine.Lobby
         [SerializeField]
         RectTransform content;
         [SerializeField]
-        RoomListItemView listItemTemplate;
+        RoomListItem listItemTemplate;
         [SerializeField]
         Button createRoomButton;
         [SerializeField]
@@ -40,7 +40,7 @@ namespace Submarine.Lobby
         {
             foreach (var room in rooms)
             {
-                var listItem = Instantiate<RoomListItemView>(listItemTemplate);
+                var listItem = Instantiate<RoomListItem>(listItemTemplate);
                 listItem.transform.SetParent(content, false);
                 listItem.Setup(room, onClick);
             }
