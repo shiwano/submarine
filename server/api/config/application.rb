@@ -23,6 +23,7 @@ module SubmarineApi
     # Do not swallow errors in after_commit/after_rollback callbacks.
     config.active_record.raise_in_transactional_callbacks = true
 
+    config.middleware.insert_before(ActionDispatch::Cookies, Rack::MergeCookies, header_name: 'X-COOKIE')
     config.paths["config/routes.rb"] << "#{Rails.root}/lib/typhen_api/typhen_api/routes.rb"
     config.autoload_paths << "#{Rails.root}/lib/typhen_api"
     config.assets.enabled = false
