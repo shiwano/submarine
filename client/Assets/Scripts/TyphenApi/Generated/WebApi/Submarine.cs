@@ -12,15 +12,15 @@ namespace TyphenApi.WebApi.Base
         {
         }
 
-        class PingRequestParameters : TyphenApi.TypeBase<PingRequestParameters>
+        class PingRequestBody : TyphenApi.TypeBase<PingRequestBody>
         {
-            protected static readonly SerializationInfo<PingRequestParameters, string> message = new SerializationInfo<PingRequestParameters, string>("message", false, (x) => x.Message, (x, v) => x.Message = v);
+            protected static readonly SerializationInfo<PingRequestBody, string> message = new SerializationInfo<PingRequestBody, string>("message", false, (x) => x.Message, (x, v) => x.Message = v);
             public string Message { get; set; }
         }
 
         public TyphenApi.WebApiRequest<TyphenApi.Type.Submarine.PingObject, TyphenApi.Type.Submarine.Error> Ping(string message)
         {
-            var requestBody = new PingRequestParameters();
+            var requestBody = new PingRequestBody();
             requestBody.Message = message;
 
             var request = new TyphenApi.WebApiRequest<TyphenApi.Type.Submarine.PingObject, TyphenApi.Type.Submarine.Error>(this);
@@ -31,17 +31,17 @@ namespace TyphenApi.WebApi.Base
             return request;
         }
 
-        class SignUpRequestParameters : TyphenApi.TypeBase<SignUpRequestParameters>
+        class SignUpRequestBody : TyphenApi.TypeBase<SignUpRequestBody>
         {
-            protected static readonly SerializationInfo<SignUpRequestParameters, string> name = new SerializationInfo<SignUpRequestParameters, string>("name", false, (x) => x.Name, (x, v) => x.Name = v);
+            protected static readonly SerializationInfo<SignUpRequestBody, string> name = new SerializationInfo<SignUpRequestBody, string>("name", false, (x) => x.Name, (x, v) => x.Name = v);
             public string Name { get; set; }
-            protected static readonly SerializationInfo<SignUpRequestParameters, string> password = new SerializationInfo<SignUpRequestParameters, string>("password", false, (x) => x.Password, (x, v) => x.Password = v);
+            protected static readonly SerializationInfo<SignUpRequestBody, string> password = new SerializationInfo<SignUpRequestBody, string>("password", false, (x) => x.Password, (x, v) => x.Password = v);
             public string Password { get; set; }
         }
 
         public TyphenApi.WebApiRequest<TyphenApi.Type.Submarine.SignUpObject, TyphenApi.Type.Submarine.Error> SignUp(string name, string password)
         {
-            var requestBody = new SignUpRequestParameters();
+            var requestBody = new SignUpRequestBody();
             requestBody.Name = name;
             requestBody.Password = password;
 
@@ -53,17 +53,17 @@ namespace TyphenApi.WebApi.Base
             return request;
         }
 
-        class LoginRequestParameters : TyphenApi.TypeBase<LoginRequestParameters>
+        class LoginRequestBody : TyphenApi.TypeBase<LoginRequestBody>
         {
-            protected static readonly SerializationInfo<LoginRequestParameters, string> name = new SerializationInfo<LoginRequestParameters, string>("name", false, (x) => x.Name, (x, v) => x.Name = v);
+            protected static readonly SerializationInfo<LoginRequestBody, string> name = new SerializationInfo<LoginRequestBody, string>("name", false, (x) => x.Name, (x, v) => x.Name = v);
             public string Name { get; set; }
-            protected static readonly SerializationInfo<LoginRequestParameters, string> password = new SerializationInfo<LoginRequestParameters, string>("password", false, (x) => x.Password, (x, v) => x.Password = v);
+            protected static readonly SerializationInfo<LoginRequestBody, string> password = new SerializationInfo<LoginRequestBody, string>("password", false, (x) => x.Password, (x, v) => x.Password = v);
             public string Password { get; set; }
         }
 
         public TyphenApi.WebApiRequest<TyphenApi.Type.Submarine.LoginObject, TyphenApi.Type.Submarine.Error> Login(string name, string password)
         {
-            var requestBody = new LoginRequestParameters();
+            var requestBody = new LoginRequestBody();
             requestBody.Name = name;
             requestBody.Password = password;
 
@@ -75,15 +75,15 @@ namespace TyphenApi.WebApi.Base
             return request;
         }
 
-        class FindUserRequestParameters : TyphenApi.TypeBase<FindUserRequestParameters>
+        class FindUserRequestBody : TyphenApi.TypeBase<FindUserRequestBody>
         {
-            protected static readonly SerializationInfo<FindUserRequestParameters, string> name = new SerializationInfo<FindUserRequestParameters, string>("name", false, (x) => x.Name, (x, v) => x.Name = v);
+            protected static readonly SerializationInfo<FindUserRequestBody, string> name = new SerializationInfo<FindUserRequestBody, string>("name", false, (x) => x.Name, (x, v) => x.Name = v);
             public string Name { get; set; }
         }
 
         public TyphenApi.WebApiRequest<TyphenApi.Type.Submarine.FindUserObject, TyphenApi.Type.Submarine.Error> FindUser(string name)
         {
-            var requestBody = new FindUserRequestParameters();
+            var requestBody = new FindUserRequestBody();
             requestBody.Name = name;
 
             var request = new TyphenApi.WebApiRequest<TyphenApi.Type.Submarine.FindUserObject, TyphenApi.Type.Submarine.Error>(this);
@@ -94,13 +94,13 @@ namespace TyphenApi.WebApi.Base
             return request;
         }
 
-        class CreateRoomRequestParameters : TyphenApi.TypeBase<CreateRoomRequestParameters>
+        class CreateRoomRequestBody : TyphenApi.TypeBase<CreateRoomRequestBody>
         {
         }
 
         public TyphenApi.WebApiRequest<TyphenApi.Type.Submarine.CreateRoomObject, TyphenApi.Type.Submarine.Error> CreateRoom()
         {
-            var requestBody = new CreateRoomRequestParameters();
+            var requestBody = new CreateRoomRequestBody();
 
             var request = new TyphenApi.WebApiRequest<TyphenApi.Type.Submarine.CreateRoomObject, TyphenApi.Type.Submarine.Error>(this);
             request.Uri = new Uri(BaseUri, "create_room");
@@ -110,13 +110,13 @@ namespace TyphenApi.WebApi.Base
             return request;
         }
 
-        class GetRoomsRequestParameters : TyphenApi.TypeBase<GetRoomsRequestParameters>
+        class GetRoomsRequestBody : TyphenApi.TypeBase<GetRoomsRequestBody>
         {
         }
 
         public TyphenApi.WebApiRequest<TyphenApi.Type.Submarine.GetRoomsObject, TyphenApi.Type.Submarine.Error> GetRooms()
         {
-            var requestBody = new GetRoomsRequestParameters();
+            var requestBody = new GetRoomsRequestBody();
 
             var request = new TyphenApi.WebApiRequest<TyphenApi.Type.Submarine.GetRoomsObject, TyphenApi.Type.Submarine.Error>(this);
             request.Uri = new Uri(BaseUri, "get_rooms");
@@ -126,15 +126,15 @@ namespace TyphenApi.WebApi.Base
             return request;
         }
 
-        class JoinIntoRoomRequestParameters : TyphenApi.TypeBase<JoinIntoRoomRequestParameters>
+        class JoinIntoRoomRequestBody : TyphenApi.TypeBase<JoinIntoRoomRequestBody>
         {
-            protected static readonly SerializationInfo<JoinIntoRoomRequestParameters, long> roomId = new SerializationInfo<JoinIntoRoomRequestParameters, long>("room_id", false, (x) => x.RoomId, (x, v) => x.RoomId = v);
+            protected static readonly SerializationInfo<JoinIntoRoomRequestBody, long> roomId = new SerializationInfo<JoinIntoRoomRequestBody, long>("room_id", false, (x) => x.RoomId, (x, v) => x.RoomId = v);
             public long RoomId { get; set; }
         }
 
         public TyphenApi.WebApiRequest<TyphenApi.Type.Submarine.JoinIntoRoomObject, TyphenApi.Type.Submarine.Error> JoinIntoRoom(long room_id)
         {
-            var requestBody = new JoinIntoRoomRequestParameters();
+            var requestBody = new JoinIntoRoomRequestBody();
             requestBody.RoomId = room_id;
 
             var request = new TyphenApi.WebApiRequest<TyphenApi.Type.Submarine.JoinIntoRoomObject, TyphenApi.Type.Submarine.Error>(this);

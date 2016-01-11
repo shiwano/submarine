@@ -8,7 +8,7 @@ namespace TyphenApi.Type.Submarine
     {
         protected static readonly SerializationInfo<Room, long> id = new SerializationInfo<Room, long>("id", false, (x) => x.Id, (x, v) => x.Id = v);
         public long Id { get; set; }
-        protected static readonly SerializationInfo<Room, List<TyphenApi.Type.Submarine.User>> members = new SerializationInfo<Room, List<TyphenApi.Type.Submarine.User>>("members", false, (x) => x.Members, (x, v) => x.Members = v);
+        protected static readonly SerializationInfoForList<Room, TyphenApi.Type.Submarine.User> members = new SerializationInfoForList<Room, TyphenApi.Type.Submarine.User>("members", false, (x) => x.Members, (x, v) => x.Members = v);
         public List<TyphenApi.Type.Submarine.User> Members { get; set; }
     }
 }

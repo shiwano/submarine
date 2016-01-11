@@ -6,7 +6,7 @@ namespace TyphenApi.Type.Submarine
 {
     public partial class GetRoomsObject : TyphenApi.TypeBase<GetRoomsObject>
     {
-        protected static readonly SerializationInfo<GetRoomsObject, List<TyphenApi.Type.Submarine.Room>> rooms = new SerializationInfo<GetRoomsObject, List<TyphenApi.Type.Submarine.Room>>("rooms", false, (x) => x.Rooms, (x, v) => x.Rooms = v);
+        protected static readonly SerializationInfoForList<GetRoomsObject, TyphenApi.Type.Submarine.Room> rooms = new SerializationInfoForList<GetRoomsObject, TyphenApi.Type.Submarine.Room>("rooms", false, (x) => x.Rooms, (x, v) => x.Rooms = v);
         public List<TyphenApi.Type.Submarine.Room> Rooms { get; set; }
     }
 }
