@@ -29,7 +29,11 @@ namespace TyphenApi.WebApi.{{#if namespace}}Parts.{{upperCamelCase namespace}}{{
             {{#if comment}}
             /// <summary>{{comment}}</summary>
             {{/if}}
+            {{#if type.isArray}}
+            protected static readonly SerializationInfoForInfo<{{upperCamelCase ../name}}RequestParameters, {{{typeName type.type}}}> {{lowerCamelCase name}} = new SerializationInfoForList<{{upperCamelCase ../name}}RequestParameters, {{{typeName type.type}}}>("{{serializablePropertyName this}}", {{isOptional}}, (x) => x.{{upperCamelCase name}}, (x, v) => x.{{upperCamelCase name}} = v);
+            {{else}}
             protected static readonly SerializationInfo<{{upperCamelCase ../name}}RequestParameters, {{{typeName type}}}{{{nullableToken type isOptional}}}> {{lowerCamelCase name}} = new SerializationInfo<{{upperCamelCase ../name}}RequestParameters, {{{typeName type}}}{{{nullableToken type isOptional}}}>("{{serializablePropertyName this}}", {{isOptional}}, (x) => x.{{upperCamelCase name}}, (x, v) => x.{{upperCamelCase name}} = v);
+            {{/if}}
             public {{{typeName type}}}{{{nullableToken type isOptional}}} {{upperCamelCase name}} { get; set; }
             {{/each}}
         }
