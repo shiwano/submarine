@@ -5,12 +5,16 @@ RSpec.describe LoginController, type: :controller do
     let(:user) { create(:user, :with_stupid_password) }
     let(:params) { { name: user.name, password: 'secret' } }
 
-    before do
+    it 'should call login' do
+      expect(@controller).to receive(:login).and_call_original
       post :service, params
     end
 
     describe 'logged_in_user' do
       subject { assigns(:logged_in_user) }
+      before do
+        post :service, params
+      end
 
       it { should be_a_kind_of(User) }
       its(:persisted?) { should be true }
