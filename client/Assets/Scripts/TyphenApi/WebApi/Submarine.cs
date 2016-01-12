@@ -86,7 +86,7 @@ namespace TyphenApi.WebApi
                 if (sessionId.Update(setCookieValue))
                 {
                     #if UNITY_EDITOR
-                    Game.Logger.LogWithColor(new Color(0.5f, 0f, 0.5f), "[WebAPI] SessionKey: " + sessionId.Id, setCookieValue);
+                    Game.Logger.LogWithColor(new Color(0.5f, 0f, 0.5f), "[WebAPI] SessionId: " + sessionId.Id, setCookieValue);
                     #endif
                 }
             }
