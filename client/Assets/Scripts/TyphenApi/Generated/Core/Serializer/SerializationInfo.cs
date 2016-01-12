@@ -78,7 +78,7 @@ namespace TyphenApi
 
         public object GetValue(object obj)
         {
-            return getValueFunc((ClassT)obj).OfType<object>();
+            return getValueFunc((ClassT)obj).Select(o => (object)o).ToList();
         }
 
         public void SetValue(object obj, object rawValue)
