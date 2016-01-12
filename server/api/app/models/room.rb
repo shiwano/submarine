@@ -69,7 +69,7 @@ class Room < ActiveRecord::Base
     TyphenApi::Model::Submarine::JoinedRoom.new(
       id: id,
       members: users.map { |u| u.to_user_api_type },
-      room_key: room_members.find { |m| m.user == user }.room_key,
+      room_key: room_members.includes(:user).find { |m| m.user == user }.room_key,
       battle_server_base_uri: battle_server_base_uri)
   end
 end
