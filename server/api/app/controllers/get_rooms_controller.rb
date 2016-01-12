@@ -8,6 +8,6 @@ class GetRoomsController < ApplicationController
   end
 
   def joinable_rooms
-    @joinable_rooms ||= Room.joinable.all
+    @joinable_rooms ||= current_user.room.present? ? [] : Room.joinable.all
   end
 end
