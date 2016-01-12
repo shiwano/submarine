@@ -41,8 +41,9 @@ namespace Submarine.Lobby
             foreach (var room in rooms)
             {
                 var listItem = Instantiate<RoomListItem>(listItemTemplate);
-                listItem.transform.SetParent(content, false);
                 listItem.Setup(room, onClick);
+                listItem.transform.SetParent(content, false);
+                listItem.gameObject.SetActive(true);
             }
         }
 
