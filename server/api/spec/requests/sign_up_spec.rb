@@ -15,6 +15,9 @@ RSpec.describe "SignUp", type: :request do
       it "should return a reasponse that includes a user" do
         expect(response_json[:user][:name]).to eq 'Kongou'
       end
+      it 'should return a response that includes the session cookie' do
+        expect(response.headers['Set-Cookie']).to include('submarine_api_session')
+      end
     end
 
     context 'with invalid params' do
