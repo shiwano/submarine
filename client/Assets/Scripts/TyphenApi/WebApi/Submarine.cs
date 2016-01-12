@@ -63,7 +63,14 @@ namespace TyphenApi.WebApi
         public override void OnRequestError(IWebApiRequest request, WebApiError<Error> error)
         {
             #if UNITY_EDITOR
-            Game.Logger.LogError("[WebAPI] Error: " + request.Uri, error.RawErrorMessage, error.Error);
+            if (error.Error != null)
+            {
+                Game.Logger.LogError("[WebAPI] Error: " + request.Uri, error.Error.Code + ": " + error.Error.Name, error.Error);
+            }
+            else
+            {
+                Game.Logger.LogError("[WebAPI] Error: " + request.Uri, error.RawErrorMessage);
+            }
             #endif
         }
 
