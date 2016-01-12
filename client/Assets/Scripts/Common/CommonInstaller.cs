@@ -14,6 +14,7 @@ namespace Submarine
             Container.Bind<UserModel>().ToSingle();
             Container.Bind<LobbyModel>().ToSingle();
             Container.Bind<PermanentDataStoreService>().ToSingle();
+            Container.Bind<BattleService>().ToSingle();
 
             Container.BindCommand<SceneChangeCommand, SceneNames>().HandleWithSingle<SceneChangeCommand.Handler>();
             Container.BindCommand<ApplicationStartCommand>().HandleWithSingle<ApplicationStartCommand.Handler>();
