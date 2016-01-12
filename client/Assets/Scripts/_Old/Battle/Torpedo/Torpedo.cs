@@ -37,14 +37,14 @@ namespace Submarine
 
     public class PlayerTorpedo : TorpedoBase
     {
-        readonly BattleService battleService;
+        readonly OldBattleService battleService;
         readonly BattleObjectContainer objectContainer;
 
         public float LifeTime { get { return 6f; } }
         public Vector3 Acceleration { get { return Hooks.transform.forward * 17f; } }
         public Vector3 ShockPower { get { return Hooks.transform.forward * 40f; } }
 
-        public PlayerTorpedo(TorpedoHooks hooks, BattleService battleService,
+        public PlayerTorpedo(TorpedoHooks hooks, OldBattleService battleService,
             BattleObjectContainer objectContainer) : base(hooks)
         {
             this.battleService = battleService;

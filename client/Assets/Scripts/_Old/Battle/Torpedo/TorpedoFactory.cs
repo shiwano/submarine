@@ -6,9 +6,9 @@ namespace Submarine
     public class TorpedoFactory
     {
         readonly DiContainer container;
-        readonly BattleService battleService;
+        readonly OldBattleService battleService;
 
-        public TorpedoFactory(DiContainer container, BattleService battleService)
+        public TorpedoFactory(DiContainer container, OldBattleService battleService)
         {
             this.container = container;
             this.battleService = battleService;

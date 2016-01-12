@@ -12,7 +12,7 @@ namespace Submarine
         public class Settings
         {
             public Camera MainCamera;
-            public BattleService BattleService;
+            public OldBattleService BattleService;
             public Radar Radar;
             public MapSettings Map;
             public UISettings UI;
@@ -49,7 +49,7 @@ namespace Submarine
             Container.Bind<Settings>().ToSingleInstance(InstallerSettings);
             Container.Bind<Camera>("MainCamera").ToSingleInstance(InstallerSettings.MainCamera);
 
-            Container.Bind<BattleService>().ToSingleInstance(InstallerSettings.BattleService);
+            Container.Bind<OldBattleService>().ToSingleInstance(InstallerSettings.BattleService);
             Container.Bind<Radar>().ToSingleInstance(InstallerSettings.Radar);
 
             Container.Bind<IDisposable>().ToSingle<BattleInput>();

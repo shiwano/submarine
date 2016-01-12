@@ -10,7 +10,7 @@ namespace Submarine
     {
         readonly BattleInstaller.Settings settings;
         readonly ConnectionService connection;
-        readonly BattleService battleService;
+        readonly OldBattleService battleService;
         readonly BattleObjectContainer objectContainer;
         readonly ThirdPersonCamera thirdPersonCamera;
         readonly Radar radar;
@@ -21,7 +21,7 @@ namespace Submarine
         public BattleController(
             BattleInstaller.Settings settings,
             ConnectionService connection,
-            BattleService battleService,
+            OldBattleService battleService,
             BattleObjectContainer objectContainer,
             ThirdPersonCamera thirdPersonCamera,
             Radar radar)

@@ -22,7 +22,7 @@ namespace Submarine
         public static event Action<IBattleObjectHooks> Created = delegate {};
         public static event Action<IBattleObjectHooks> Destroyed = delegate {};
 
-        BattleService battleService;
+        OldBattleService battleService;
 
         public abstract BattleObjectType Type { get; }
         public bool IsMine { get { return photonView.isMine; } }
@@ -33,7 +33,7 @@ namespace Submarine
         protected abstract void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info);
 
         [PostInject]
-        public void Initialize(BattleService battleService)
+        public void Initialize(OldBattleService battleService)
         {
             this.battleService = battleService;
         }

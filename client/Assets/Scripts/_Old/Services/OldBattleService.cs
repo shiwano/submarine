@@ -5,7 +5,7 @@ using Zenject;
 
 namespace Submarine
 {
-    public class BattleService : Photon.MonoBehaviour
+    public class OldBattleService : Photon.MonoBehaviour
     {
         ConnectionService connection;
         BattleObjectContainer objectContainer;
