@@ -34,8 +34,8 @@ namespace Submarine.Title
                     dataStore.Password = password;
                     dataStore.Save();
 
-                    user.LoggedInUser.Value = loggedInUser;
                     lobbyModel.JoinedRoom.Value = loggedInUser.JoinedRoom;
+                    user.LoggedInUser.Value = loggedInUser;
                     Debug.Log("Succeeded sign up");
                 });
             }
