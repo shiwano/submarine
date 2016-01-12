@@ -6,6 +6,8 @@ namespace TyphenApi.WebSocketSession
 {
     public class Submarine : Base.Submarine
     {
+        CompositeDisposable disposables = new CompositeDisposable();
+
         public readonly ReactiveProperty<bool> IsConnected;
 
         public Submarine(string requestUri) : base(requestUri)
@@ -15,6 +17,7 @@ namespace TyphenApi.WebSocketSession
             MessageDeserializer = jsonSerializer;
 
             IsConnected = new ReactiveProperty<bool>();
+            Observable.EveryUpdate().Subscribe(_ => Update()).AddTo(disposables);
         }
 
         public override void OnConnectionCreate(WebSocket connection)
@@ -29,6 +32,8 @@ namespace TyphenApi.WebSocketSession
         public override void OnConnectionClose(ushort code, string reason, bool wasClean)
         {
             IsConnected.Value = false;
+            disposables.Dispose();
+            disposables = new CompositeDisposable();
         }
 
         public override void OnBeforeMessageSend(TyphenApi.TypeBase message)
@@ -44,3 +49,4 @@ namespace TyphenApi.WebSocketSession
         }
     }
 }
+
