@@ -3,7 +3,7 @@ class FindUserController < ApplicationController
   include TyphenApiRespondable
 
   def service
-    render_response(user: target_user.try(:to_user_api_type))
+    render_response(user: target_user.try(:as_user_api_type))
   end
 
   def target_user

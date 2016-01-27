@@ -52,19 +52,19 @@ RSpec.describe Room, type: :model do
     end
   end
 
-  describe '#to_room_api_type' do
-    subject { room.to_room_api_type }
+  describe '#as_room_api_type' do
+    subject { room.as_room_api_type }
     it { should be_a_kind_of TyphenApi::Model::Submarine::Room }
   end
 
-  describe '#to_battle_room_api_type' do
-    subject { room.to_battle_room_api_type }
+  describe '#as_battle_room_api_type' do
+    subject { room.as_battle_room_api_type }
     it { should be_a_kind_of TyphenApi::Model::Submarine::Battle::Room }
   end
 
-  describe '#to_joined_room_api_type' do
+  describe '#as_joined_room_api_type' do
     let(:room) { create(:room, :with_user) }
-    subject { room.to_joined_room_api_type(room.users.first) }
+    subject { room.as_joined_room_api_type(room.users.first) }
     it { should be_a_kind_of TyphenApi::Model::Submarine::JoinedRoom }
   end
 end

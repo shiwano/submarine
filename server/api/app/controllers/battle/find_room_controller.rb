@@ -3,7 +3,7 @@ class Battle::FindRoomController < ApplicationController
   include TyphenApiRespondable
 
   def service
-    render_response(room: target_room.try(:to_battle_room_api_type))
+    render_response(room: target_room.try(:as_battle_room_api_type))
   end
 
   def target_room

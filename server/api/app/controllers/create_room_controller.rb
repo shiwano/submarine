@@ -3,7 +3,7 @@ class CreateRoomController < ApplicationController
   include TyphenApiRespondable
 
   def service
-    render_response(room: new_room.to_joined_room_api_type(current_user))
+    render_response(room: new_room.as_joined_room_api_type(current_user))
   end
 
   def new_room

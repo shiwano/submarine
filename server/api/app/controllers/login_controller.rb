@@ -7,7 +7,7 @@ class LoginController < ApplicationController
       raise ApplicationError::LoginFailed.new('The user name or password is incorrect')
     end
 
-    render_response(user: logged_in_user.to_logged_in_user_api_type)
+    render_response(user: logged_in_user.as_logged_in_user_api_type)
   end
 
   def logged_in_user

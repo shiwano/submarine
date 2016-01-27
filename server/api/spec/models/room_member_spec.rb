@@ -9,8 +9,8 @@ RSpec.describe RoomMember, type: :model do
 
   it { should validate_presence_of :room_key }
 
-  describe '#to_battle_room_member_api_type' do
-    subject { room_member.to_battle_room_member_api_type }
+  describe '#as_battle_room_member_api_type' do
+    subject { room_member.as_battle_room_member_api_type }
     it { should be_a_kind_of TyphenApi::Model::Submarine::Battle::RoomMember }
   end
 end

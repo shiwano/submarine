@@ -21,7 +21,7 @@ class RoomMember < ActiveRecord::Base
 
   validates :room_key, presence: true
 
-  def to_battle_room_member_api_type
+  def as_battle_room_member_api_type
     TyphenApi::Model::Submarine::Battle::RoomMember.new(
       name: user.name,
       id: user.id,

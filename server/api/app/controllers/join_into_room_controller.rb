@@ -8,7 +8,7 @@ class JoinIntoRoomController < ApplicationController
     end
 
     target_room.join_user!(current_user)
-    render_response(room: target_room.to_joined_room_api_type(current_user))
+    render_response(room: target_room.as_joined_room_api_type(current_user))
   end
 
   def target_room

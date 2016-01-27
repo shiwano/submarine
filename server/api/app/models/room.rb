@@ -51,24 +51,24 @@ class Room < ActiveRecord::Base
     end
   end
 
-  def to_room_api_type
+  def as_room_api_type
     TyphenApi::Model::Submarine::Room.new(
       id: id,
-      members: users.map { |u| u.to_user_api_type })
+      members: users.map { |u| u.as_user_api_type })
   end
 
-  def to_battle_room_api_type
+  def as_battle_room_api_type
     TyphenApi::Model::Submarine::Battle::Room.new(
       id: id,
       members: room_members.includes(:user).map { |m|
-        m.to_battle_room_member_api_type
+        m.as_battle_room_member_api_type
       })
   end
 
-  def to_joined_room_api_type(user)
+  def as_joined_room_api_type(user)
     TyphenApi::Model::Submarine::JoinedRoom.new(
       id: id,
-      members: users.map { |u| u.to_user_api_type },
+      members: users.map { |u| u.as_user_api_type },
       room_key: room_members.includes(:user).find { |m| m.user == user }.room_key,
       battle_server_base_uri: battle_server_base_uri)
   end
