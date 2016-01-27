@@ -9,18 +9,18 @@ import (
 
 var _ = errors.New
 
-// Room is a kind of TyphenAPI type.
-type Room struct {
-	Id int64 `codec:"id"`
+// FindRoomMemberObject is a kind of TyphenAPI type.
+type FindRoomMemberObject struct {
+	RoomMember *RoomMember `codec:"room_member"`
 }
 
 // Coerce the fields.
-func (t *Room) Coerce() error {
+func (t *FindRoomMemberObject) Coerce() error {
 	return nil
 }
 
 // Bytes creates the byte array.
-func (t *Room) Bytes(serializer typhenapi.Serializer) ([]byte, error) {
+func (t *FindRoomMemberObject) Bytes(serializer typhenapi.Serializer) ([]byte, error) {
 	if err := t.Coerce(); err != nil {
 		return nil, err
 	}

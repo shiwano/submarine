@@ -27,6 +27,9 @@ RSpec.describe 'Generated routing by typhen-api', :type => :routing do
   it 'routes /battle/find_room to battle/find_room#service' do
     expect(:post => 'battle/find_room').to route_to(controller: 'battle/find_room', action: 'service')
   end
+  it 'routes /battle/find_room_member to battle/find_room_member#service' do
+    expect(:post => 'battle/find_room_member').to route_to(controller: 'battle/find_room_member', action: 'service')
+  end
   it 'routes /battle/close_room to battle/close_room#service' do
     expect(:post => 'battle/close_room').to route_to(controller: 'battle/close_room', action: 'service')
   end

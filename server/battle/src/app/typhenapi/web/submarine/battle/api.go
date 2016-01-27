@@ -65,6 +65,39 @@ func (api *WebAPI) FindRoom(roomId int64) (*submarine_battle.FindRoomObject, err
 	return result, nil
 }
 
+// FindRoomMember send a findRoomMember request.
+func (api *WebAPI) FindRoomMember(roomKey string) (*submarine_battle.FindRoomMemberObject, error) {
+	reqBody := &FindRoomMemberRequestBody{}
+	reqBody.RoomKey = roomKey
+
+	reqBodyData, err := reqBody.Bytes(api.serializer)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := api.createRequest("POST", api.baseURI+"/battle/find_room_member", bytes.NewReader(reqBodyData))
+	if err != nil {
+		return nil, err
+	}
+
+	res, data, err := api.sendRequest(req)
+	if err != nil {
+		return nil, err
+	}
+	if res.StatusCode >= 400 {
+		return nil, api.tryToDeserializeAPIError(data)
+	}
+
+	result := new(submarine_battle.FindRoomMemberObject)
+	if err := api.serializer.Deserialize(data, result); err != nil {
+		return nil, err
+	}
+	if err := result.Coerce(); err != nil {
+		return nil, err
+	}
+	return result, nil
+}
+
 // CloseRoom send a closeRoom request.
 func (api *WebAPI) CloseRoom(roomId int64) (*typhenapi.Void, error) {
 	reqBody := &CloseRoomRequestBody{}

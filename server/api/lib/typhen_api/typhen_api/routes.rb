@@ -10,6 +10,7 @@ Rails.application.routes.draw do
   post 'get_rooms' => 'get_rooms#service'
   post 'join_into_room' => 'join_into_room#service'
   post 'battle/find_room' => 'battle/find_room#service'
+  post 'battle/find_room_member' => 'battle/find_room_member#service'
   post 'battle/close_room' => 'battle/close_room#service'
 
 end
