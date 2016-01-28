@@ -31,7 +31,6 @@ func TestWebAPI(t *testing.T) {
 			res, err := api.Battle.FindRoom(1)
 			So(err, ShouldBeNil)
 			So(res.Room.Id, ShouldEqual, 1)
-			So(res.Room.Members, ShouldHaveLength, 4)
 		})
 	})
 }
@@ -46,6 +45,10 @@ func (m *webAPITransporter) Routes(path string, data []byte) (typhenapi.Type, in
 		params := new(webapi_battle.FindRoomRequestBody)
 		m.serializer.Deserialize(data, params)
 		return m.FindRoom(params)
+	case "/battle/find_room_member":
+		params := new(webapi_battle.FindRoomMemberRequestBody)
+		m.serializer.Deserialize(data, params)
+		return m.FindRoomMember(params)
 	case "/battle/close_room":
 		params := new(webapi_battle.CloseRoomRequestBody)
 		m.serializer.Deserialize(data, params)
@@ -60,18 +63,28 @@ func (m *webAPITransporter) Ping(params *webapi.PingRequestBody) (typhenapi.Type
 	return typhenType, http.StatusOK
 }
 
+func (m *webAPITransporter) FindRoomMember(params *webapi_battle.FindRoomMemberRequestBody) (typhenapi.Type, int) {
+	typhenType := new(battle.FindRoomMemberObject)
+
+	switch params.RoomKey {
+	case "key_1":
+		typhenType.RoomMember = &battle.RoomMember{Id: 1, RoomId: 1, Name: "I168"}
+	case "key_2":
+		typhenType.RoomMember = &battle.RoomMember{Id: 2, RoomId: 1, Name: "I8"}
+	case "key_3":
+		typhenType.RoomMember = &battle.RoomMember{Id: 3, RoomId: 1, Name: "I19"}
+	case "key_4":
+		typhenType.RoomMember = &battle.RoomMember{Id: 4, RoomId: 1, Name: "I58"}
+	}
+	return typhenType, http.StatusOK
+}
+
 func (m *webAPITransporter) FindRoom(params *webapi_battle.FindRoomRequestBody) (typhenapi.Type, int) {
 	typhenType := new(battle.FindRoomObject)
 
 	if params.RoomId == 1 {
 		typhenType.Room = &battle.Room{
 			Id: params.RoomId,
-			Members: []*battle.RoomMember{
-				&battle.RoomMember{Id: 1, RoomKey: "key_1", Name: "I168"},
-				&battle.RoomMember{Id: 2, RoomKey: "key_2", Name: "I8"},
-				&battle.RoomMember{Id: 3, RoomKey: "key_3", Name: "I19"},
-				&battle.RoomMember{Id: 4, RoomKey: "key_4", Name: "I58"},
-			},
 		}
 	}
 	return typhenType, http.StatusOK

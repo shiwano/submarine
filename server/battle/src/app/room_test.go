@@ -33,7 +33,6 @@ func TestRoom(t *testing.T) {
 				m := <-done
 				So(m.Id, ShouldEqual, 1)
 				So(m.Members, ShouldHaveLength, 2)
-				So(m.Members[1].Name, ShouldEqual, "I8")
 			})
 		})
 

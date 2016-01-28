@@ -1,6 +1,7 @@
 package main
 
 import (
+	webapi "app/typhenapi/web/submarine"
 	"github.com/gin-gonic/gin"
 	"io"
 	"net/http"
@@ -12,11 +13,17 @@ type Server struct {
 	*gin.Engine
 	logWriter   *io.PipeWriter
 	roomManager *RoomManager
+	webAPI      *webapi.WebAPI
 }
 
 // NewServer creates a Server.
 func NewServer() *Server {
-	server := &Server{gin.New(), Log.Writer(), newRoomManager()}
+	server := &Server{
+		Engine:      gin.New(),
+		logWriter:   Log.Writer(),
+		roomManager: newRoomManager(),
+		webAPI:      NewWebAPI("http://localhost:3000"),
+	}
 	server.Use(gin.Recovery(), gin.LoggerWithWriter(server.logWriter))
 
 	server.GET("/rooms/:id", server.roomsGET)
@@ -39,14 +46,18 @@ func (s *Server) roomsGET(c *gin.Context) {
 		return
 	}
 
-	roomKey := c.Query("room_key")
-	roomMember := room.findRoomMember(roomKey)
-	if roomMember == nil {
-		c.String(http.StatusBadRequest, "Failed to join to the room.")
+	res, err := s.webAPI.Battle.FindRoomMember(c.Query("room_key"))
+	if err != nil {
+		Log.Error(err)
+		c.String(http.StatusBadRequest, "Failed to authenticate the room key.")
+		return
+	}
+	if res.RoomMember == nil {
+		c.String(http.StatusBadRequest, "Invalid room key.")
 		return
 	}
 
-	session := newSession(roomMember, roomID)
+	session := newSession(res.RoomMember, roomID)
 	if err := session.Connect(c.Writer, c.Request); err != nil {
 		Log.Error(err)
 		c.String(http.StatusBadRequest, "Failed to upgrade the request to web socket protocol.")

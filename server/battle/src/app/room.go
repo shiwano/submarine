@@ -66,23 +66,12 @@ loop:
 	}
 }
 
-func (r *Room) findRoomMember(roomKey string) *battle.RoomMember {
-	for _, m := range r.info.Members {
-		if m.RoomKey == roomKey {
-			return m
-		}
-	}
-	return nil
-}
-
 func (r *Room) toRoomAPIType() *submarine.Room {
 	members := make([]*submarine.User, len(r.sessions))
 	i := 0
-	for _, m := range r.info.Members {
-		if s, ok := r.sessions[m.Id]; ok {
-			members[i] = s.toUserAPIType()
-			i++
-		}
+	for _, s := range r.sessions {
+		members[i] = s.toUserAPIType()
+		i++
 	}
 	return &submarine.Room{Id: r.id, Members: members}
 }
