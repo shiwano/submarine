@@ -5,8 +5,8 @@ RSpec.describe JoinIntoRoomController, type: :controller do
     let(:room) { create(:room) }
     let(:params) { { room_id: room.id } }
 
-    describe 'target_room' do
-      subject { assigns(:target_room) }
+    describe '#room' do
+      subject { assigns(:room) }
 
       it 'should return a Room' do
         post :service, params

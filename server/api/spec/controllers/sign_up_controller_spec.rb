@@ -9,7 +9,7 @@ RSpec.describe SignUpController, type: :controller do
       post :service, params
     end
 
-    describe 'new_user' do
+    describe '#new_user' do
       subject { assigns(:new_user) }
       before do
         post :service, params

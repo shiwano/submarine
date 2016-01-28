@@ -10,7 +10,7 @@ RSpec.describe LoginController, type: :controller do
       post :service, params
     end
 
-    describe 'logged_in_user' do
+    describe '#logged_in_user' do
       subject { assigns(:logged_in_user) }
       before do
         post :service, params

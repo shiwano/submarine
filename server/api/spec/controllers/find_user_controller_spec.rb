@@ -7,8 +7,8 @@ RSpec.describe FindUserController, type: :controller do
       post :service, params
     end
 
-    describe 'target_user' do
-      subject { assigns(:target_user) }
+    describe '#user' do
+      subject { assigns(:user) }
 
       context 'with an existing user name' do
         let(:params) { { name: 'Shimakaze' } }
