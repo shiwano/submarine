@@ -2,7 +2,6 @@
 
 var path = require('path');
 var assert = require('assert');
-var hashCode = require('hashcode').hashCode;
 var _ = require('lodash');
 
 var HttpMethods = ['post', 'get', 'delete', 'put'];
@@ -62,7 +61,11 @@ module.exports = function(typhen, options) {
     webSocketMessageType: function(variable) {
       assert(variable.isVariable, 'should be a variable');
       var name = typhen.helpers.upperCamelCase(variable.fullName).replace(template.namespaceSeparator, '.');
-      return hashCode().value(name);
+      var hash = 0;
+      for (var i = 0; i < name.length; i++) {
+        hash = (((hash << 5) - hash) + name.charCodeAt(i)) & 0x7FFFFFFF;
+      }
+      return hash;
     },
     errorType: function(module) {
       assert(module.isModule, 'should be a module');
