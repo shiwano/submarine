@@ -41,7 +41,7 @@ declare module Submarine {
 
   function createRoom(): { room: JoinedRoom; };
   function getRooms(): { rooms: Room[]; }
-  function joinIntoRoom(room_id: integer): { room: JoinedRoom; };
+  function joinIntoRoom(roomId: integer): { room: JoinedRoom; };
 
   module Battle {
     var ping: { message: string; }
