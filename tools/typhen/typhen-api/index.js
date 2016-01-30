@@ -24,6 +24,7 @@ module.exports = function(typhen, options) {
         return false;
       }
     },
+
     isWebSocketApiModule: function(module) {
       assert(module.isModule, 'should be a module');
       if (module.variables.length > 0) {
@@ -34,12 +35,14 @@ module.exports = function(typhen, options) {
         return false;
       }
     },
+
     method: function(func) {
       assert(func.isFunction, 'should be a function');
       var method = func.tagTable.method ? func.tagTable.method.value : 'post';
       assert(_.includes(HttpMethods, method), 'unsupported HTTP method: ' + method);
       return method;
     },
+
     uriPath: function(func) {
       assert(func.isFunction, 'should be a function');
       var inflection = func.ancestorModules[0].tagTable.uriInflection;
@@ -47,10 +50,12 @@ module.exports = function(typhen, options) {
       assert(_.includes(InflectionOptions, helperName), 'unsupported inflection type: ' + helperName);
       return typhen.helpers[helperName](func.fullName).split(template.namespaceSeparator).slice(1).join('/');
     },
+
     uriSuffix: function(func) {
       assert(func.isFunction, 'should be a function');
       return func.ancestorModules[0].tagTable.uriSuffix;
     },
+
     serializablePropertyName: function(symbol) {
       assert(symbol.isProperty || symbol.isParameter, 'should be a property or function parameter');
       var inflection = symbol.ancestorModules[0].tagTable.serializablePropertyInflection;
@@ -58,6 +63,7 @@ module.exports = function(typhen, options) {
       assert(_.includes(InflectionOptions, helperName), 'unsupported inflection type: ' + helperName);
       return typhen.helpers[helperName](symbol.name);
     },
+
     webSocketMessageType: function(variable) {
       assert(variable.isVariable, 'should be a variable');
       var name = typhen.helpers.upperCamelCase(variable.fullName).replace(template.namespaceSeparator, '.');
@@ -67,10 +73,11 @@ module.exports = function(typhen, options) {
       }
       return hash;
     },
+
     errorType: function(module) {
       assert(module.isModule, 'should be a module');
       var rootModule = module.parentModule === null ? module : module.ancestorModules[0];
-      return rootModule.types.filter(function(t) { return t.name === 'Error'; })[0];
+      return rootModule.types.find(function(t) { return t.name === 'Error'; });
     }
   };
 
@@ -104,7 +111,7 @@ module.exports = function(typhen, options) {
       var targetModule = null;
 
       if (template.requiredTargetModule) {
-        targetModule = modules.filter(function(m) { return m.fullName === options.targetModule; })[0];
+        targetModule = modules.find(function(m) { return m.fullName === options.targetModule; });
         assert(targetModule, options.targetModule + ' module is not found');
       }
 
@@ -113,16 +120,27 @@ module.exports = function(typhen, options) {
 
       filteredTypes.forEach(function(type) {
         if (type.isFunction) {
-          var hasNoTypeParameters = type.callSignatures.every(function(s) { return s.typeParameters.length === 0});
-          assert(hasNoTypeParameters, type.fullName + ' can not have type parameters');
+          assert(
+            type.callSignatures.every(function(s) { return s.typeParameters.length === 0}),
+            type.fullName + ' can\'t have type parameters at ' + type.declarationInfos
+          );
         }
       });
 
       filteredModules.forEach(function(module) {
         if (module.parentModule === null && (helpers.isWebApiModule(module) || helpers.isWebSocketApiModule(module))) {
-          var errorType = helpers.errorType(module);
-          assert(errorType, 'Undefined the Error type in ' + module.name + ' module');
+          assert(
+            helpers.errorType(module),
+            'Undefined the Error type in ' + module.name + ' module'
+          );
         }
+
+        module.variables.forEach(function(variable) {
+          assert(
+            variable.type.isObjectType || variable.type.isInterface || variable.type.isClass,
+            'Disallow to use ' + variable.type.name + ' as realtime message at ' + variable.declarationInfos
+          );
+        });
       });
 
       return template.generate(generator, filteredTypes, filteredModules, targetModule);
