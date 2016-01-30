@@ -1,3 +1,5 @@
+/// <reference path='./battle.d.ts' />
+
 interface integer { }
 
 declare module Submarine {
