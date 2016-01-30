@@ -9,8 +9,18 @@ import (
 )
 
 const (
-	MessageType_Ping int32 = -973977363
-	MessageType_Room int32 = -973911978
+	MessageType_Ping                int32 = 2065492188
+	MessageType_Room                int32 = 2065557573
+	MessageType_Now                 int32 = 135900716
+	MessageType_Start               int32 = 1756318264
+	MessageType_Finish              int32 = 376815997
+	MessageType_Actor               int32 = 1739206603
+	MessageType_Movement            int32 = 1912906521
+	MessageType_Destruction         int32 = 525255176
+	MessageType_AccelerationRequest int32 = 1902689605
+	MessageType_BrakeRequest        int32 = 1754056270
+	MessageType_PingerRequest       int32 = 668114886
+	MessageType_ActorRequest        int32 = 1617498180
 )
 
 // WebSocketAPI sends messages, and dispatches message events.
@@ -19,8 +29,18 @@ type WebSocketAPI struct {
 	serializer   typhenapi.Serializer
 	errorHandler func(error)
 
-	PingHandler func(message *submarine_battle.PingObject)
-	RoomHandler func(message *submarine.Room)
+	PingHandler                func(message *submarine_battle.PingObject)
+	RoomHandler                func(message *submarine.Room)
+	NowHandler                 func(message *submarine_battle.NowObject)
+	StartHandler               func(message *submarine_battle.Start)
+	FinishHandler              func(message *submarine_battle.Finish)
+	ActorHandler               func(message *submarine_battle.Actor)
+	MovementHandler            func(message *submarine_battle.Movement)
+	DestructionHandler         func(message *submarine_battle.Destruction)
+	AccelerationRequestHandler func(message *submarine_battle.AccelerationRequestObject)
+	BrakeRequestHandler        func(message *submarine_battle.BrakeRequestObject)
+	PingerRequestHandler       func(message *submarine_battle.PingerRequestObject)
+	ActorRequestHandler        func(message *submarine_battle.ActorRequestObject)
 }
 
 // New creates a WebSocketAPI.
@@ -52,6 +72,176 @@ func (api *WebSocketAPI) SendPing(ping *submarine_battle.PingObject) error {
 // SendRoom sends a room message.
 func (api *WebSocketAPI) SendRoom(room *submarine.Room) error {
 	message, err := typhenapi.NewMessage(api.serializer, MessageType_Room, room)
+
+	if err != nil {
+		if api.errorHandler != nil {
+			api.errorHandler(err)
+		}
+		return err
+	}
+
+	if err := api.session.Send(message.Bytes()); err != nil {
+		return err
+	}
+	return nil
+}
+
+// SendNow sends a now message.
+func (api *WebSocketAPI) SendNow(now *submarine_battle.NowObject) error {
+	message, err := typhenapi.NewMessage(api.serializer, MessageType_Now, now)
+
+	if err != nil {
+		if api.errorHandler != nil {
+			api.errorHandler(err)
+		}
+		return err
+	}
+
+	if err := api.session.Send(message.Bytes()); err != nil {
+		return err
+	}
+	return nil
+}
+
+// SendStart sends a start message.
+func (api *WebSocketAPI) SendStart(start *submarine_battle.Start) error {
+	message, err := typhenapi.NewMessage(api.serializer, MessageType_Start, start)
+
+	if err != nil {
+		if api.errorHandler != nil {
+			api.errorHandler(err)
+		}
+		return err
+	}
+
+	if err := api.session.Send(message.Bytes()); err != nil {
+		return err
+	}
+	return nil
+}
+
+// SendFinish sends a finish message.
+func (api *WebSocketAPI) SendFinish(finish *submarine_battle.Finish) error {
+	message, err := typhenapi.NewMessage(api.serializer, MessageType_Finish, finish)
+
+	if err != nil {
+		if api.errorHandler != nil {
+			api.errorHandler(err)
+		}
+		return err
+	}
+
+	if err := api.session.Send(message.Bytes()); err != nil {
+		return err
+	}
+	return nil
+}
+
+// SendActor sends a actor message.
+func (api *WebSocketAPI) SendActor(actor *submarine_battle.Actor) error {
+	message, err := typhenapi.NewMessage(api.serializer, MessageType_Actor, actor)
+
+	if err != nil {
+		if api.errorHandler != nil {
+			api.errorHandler(err)
+		}
+		return err
+	}
+
+	if err := api.session.Send(message.Bytes()); err != nil {
+		return err
+	}
+	return nil
+}
+
+// SendMovement sends a movement message.
+func (api *WebSocketAPI) SendMovement(movement *submarine_battle.Movement) error {
+	message, err := typhenapi.NewMessage(api.serializer, MessageType_Movement, movement)
+
+	if err != nil {
+		if api.errorHandler != nil {
+			api.errorHandler(err)
+		}
+		return err
+	}
+
+	if err := api.session.Send(message.Bytes()); err != nil {
+		return err
+	}
+	return nil
+}
+
+// SendDestruction sends a destruction message.
+func (api *WebSocketAPI) SendDestruction(destruction *submarine_battle.Destruction) error {
+	message, err := typhenapi.NewMessage(api.serializer, MessageType_Destruction, destruction)
+
+	if err != nil {
+		if api.errorHandler != nil {
+			api.errorHandler(err)
+		}
+		return err
+	}
+
+	if err := api.session.Send(message.Bytes()); err != nil {
+		return err
+	}
+	return nil
+}
+
+// SendAccelerationRequest sends a accelerationRequest message.
+func (api *WebSocketAPI) SendAccelerationRequest(accelerationRequest *submarine_battle.AccelerationRequestObject) error {
+	message, err := typhenapi.NewMessage(api.serializer, MessageType_AccelerationRequest, accelerationRequest)
+
+	if err != nil {
+		if api.errorHandler != nil {
+			api.errorHandler(err)
+		}
+		return err
+	}
+
+	if err := api.session.Send(message.Bytes()); err != nil {
+		return err
+	}
+	return nil
+}
+
+// SendBrakeRequest sends a brakeRequest message.
+func (api *WebSocketAPI) SendBrakeRequest(brakeRequest *submarine_battle.BrakeRequestObject) error {
+	message, err := typhenapi.NewMessage(api.serializer, MessageType_BrakeRequest, brakeRequest)
+
+	if err != nil {
+		if api.errorHandler != nil {
+			api.errorHandler(err)
+		}
+		return err
+	}
+
+	if err := api.session.Send(message.Bytes()); err != nil {
+		return err
+	}
+	return nil
+}
+
+// SendPingerRequest sends a pingerRequest message.
+func (api *WebSocketAPI) SendPingerRequest(pingerRequest *submarine_battle.PingerRequestObject) error {
+	message, err := typhenapi.NewMessage(api.serializer, MessageType_PingerRequest, pingerRequest)
+
+	if err != nil {
+		if api.errorHandler != nil {
+			api.errorHandler(err)
+		}
+		return err
+	}
+
+	if err := api.session.Send(message.Bytes()); err != nil {
+		return err
+	}
+	return nil
+}
+
+// SendActorRequest sends a actorRequest message.
+func (api *WebSocketAPI) SendActorRequest(actorRequest *submarine_battle.ActorRequestObject) error {
+	message, err := typhenapi.NewMessage(api.serializer, MessageType_ActorRequest, actorRequest)
 
 	if err != nil {
 		if api.errorHandler != nil {
@@ -116,6 +306,196 @@ func (api *WebSocketAPI) DispatchMessageEvent(data []byte) error {
 
 		if api.RoomHandler != nil {
 			api.RoomHandler(typhenType)
+		}
+	case MessageType_Now:
+		typhenType := new(submarine_battle.NowObject)
+		if err := api.serializer.Deserialize(message.Body, typhenType); err != nil {
+			if api.errorHandler != nil {
+				api.errorHandler(err)
+			}
+			return err
+		}
+
+		if err := typhenType.Coerce(); err != nil {
+			if api.errorHandler != nil {
+				api.errorHandler(err)
+			}
+			return err
+		}
+
+		if api.NowHandler != nil {
+			api.NowHandler(typhenType)
+		}
+	case MessageType_Start:
+		typhenType := new(submarine_battle.Start)
+		if err := api.serializer.Deserialize(message.Body, typhenType); err != nil {
+			if api.errorHandler != nil {
+				api.errorHandler(err)
+			}
+			return err
+		}
+
+		if err := typhenType.Coerce(); err != nil {
+			if api.errorHandler != nil {
+				api.errorHandler(err)
+			}
+			return err
+		}
+
+		if api.StartHandler != nil {
+			api.StartHandler(typhenType)
+		}
+	case MessageType_Finish:
+		typhenType := new(submarine_battle.Finish)
+		if err := api.serializer.Deserialize(message.Body, typhenType); err != nil {
+			if api.errorHandler != nil {
+				api.errorHandler(err)
+			}
+			return err
+		}
+
+		if err := typhenType.Coerce(); err != nil {
+			if api.errorHandler != nil {
+				api.errorHandler(err)
+			}
+			return err
+		}
+
+		if api.FinishHandler != nil {
+			api.FinishHandler(typhenType)
+		}
+	case MessageType_Actor:
+		typhenType := new(submarine_battle.Actor)
+		if err := api.serializer.Deserialize(message.Body, typhenType); err != nil {
+			if api.errorHandler != nil {
+				api.errorHandler(err)
+			}
+			return err
+		}
+
+		if err := typhenType.Coerce(); err != nil {
+			if api.errorHandler != nil {
+				api.errorHandler(err)
+			}
+			return err
+		}
+
+		if api.ActorHandler != nil {
+			api.ActorHandler(typhenType)
+		}
+	case MessageType_Movement:
+		typhenType := new(submarine_battle.Movement)
+		if err := api.serializer.Deserialize(message.Body, typhenType); err != nil {
+			if api.errorHandler != nil {
+				api.errorHandler(err)
+			}
+			return err
+		}
+
+		if err := typhenType.Coerce(); err != nil {
+			if api.errorHandler != nil {
+				api.errorHandler(err)
+			}
+			return err
+		}
+
+		if api.MovementHandler != nil {
+			api.MovementHandler(typhenType)
+		}
+	case MessageType_Destruction:
+		typhenType := new(submarine_battle.Destruction)
+		if err := api.serializer.Deserialize(message.Body, typhenType); err != nil {
+			if api.errorHandler != nil {
+				api.errorHandler(err)
+			}
+			return err
+		}
+
+		if err := typhenType.Coerce(); err != nil {
+			if api.errorHandler != nil {
+				api.errorHandler(err)
+			}
+			return err
+		}
+
+		if api.DestructionHandler != nil {
+			api.DestructionHandler(typhenType)
+		}
+	case MessageType_AccelerationRequest:
+		typhenType := new(submarine_battle.AccelerationRequestObject)
+		if err := api.serializer.Deserialize(message.Body, typhenType); err != nil {
+			if api.errorHandler != nil {
+				api.errorHandler(err)
+			}
+			return err
+		}
+
+		if err := typhenType.Coerce(); err != nil {
+			if api.errorHandler != nil {
+				api.errorHandler(err)
+			}
+			return err
+		}
+
+		if api.AccelerationRequestHandler != nil {
+			api.AccelerationRequestHandler(typhenType)
+		}
+	case MessageType_BrakeRequest:
+		typhenType := new(submarine_battle.BrakeRequestObject)
+		if err := api.serializer.Deserialize(message.Body, typhenType); err != nil {
+			if api.errorHandler != nil {
+				api.errorHandler(err)
+			}
+			return err
+		}
+
+		if err := typhenType.Coerce(); err != nil {
+			if api.errorHandler != nil {
+				api.errorHandler(err)
+			}
+			return err
+		}
+
+		if api.BrakeRequestHandler != nil {
+			api.BrakeRequestHandler(typhenType)
+		}
+	case MessageType_PingerRequest:
+		typhenType := new(submarine_battle.PingerRequestObject)
+		if err := api.serializer.Deserialize(message.Body, typhenType); err != nil {
+			if api.errorHandler != nil {
+				api.errorHandler(err)
+			}
+			return err
+		}
+
+		if err := typhenType.Coerce(); err != nil {
+			if api.errorHandler != nil {
+				api.errorHandler(err)
+			}
+			return err
+		}
+
+		if api.PingerRequestHandler != nil {
+			api.PingerRequestHandler(typhenType)
+		}
+	case MessageType_ActorRequest:
+		typhenType := new(submarine_battle.ActorRequestObject)
+		if err := api.serializer.Deserialize(message.Body, typhenType); err != nil {
+			if api.errorHandler != nil {
+				api.errorHandler(err)
+			}
+			return err
+		}
+
+		if err := typhenType.Coerce(); err != nil {
+			if api.errorHandler != nil {
+				api.errorHandler(err)
+			}
+			return err
+		}
+
+		if api.ActorRequestHandler != nil {
+			api.ActorRequestHandler(typhenType)
 		}
 	}
 
