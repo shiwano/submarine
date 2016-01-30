@@ -1,4 +1,4 @@
-/// <reference path='./contract.d.ts' />
+/// <reference path='../contract.d.ts' />
 
 declare module Submarine {
   module Battle {

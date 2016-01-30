@@ -22,7 +22,10 @@
         "spec": true
       },
       "outDir": "server/api",
-      "files": [ "contract/server_contract.d.ts" ]
+      "files": [
+        "contract/contract.d.ts",
+        "contract/intranet/contract.d.ts"
+      ]
     },
     {
       "plugin": "./tools/typhen/typhen-api/index",
@@ -31,7 +34,10 @@
         "importBasePath": "app/typhenapi"
       },
       "outDir": "server/battle/src/app",
-      "files": [ "contract/server_contract.d.ts" ]
+      "files": [
+        "contract/contract.d.ts",
+        "contract/intranet/contract.d.ts"
+      ]
     }
   ]
 }
