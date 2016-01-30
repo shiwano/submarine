@@ -12,10 +12,10 @@ declare module Submarine {
     }
 
     /** @noAuthRequired */
-    function findRoom(room_id: integer): { room?: Room; }
+    function findRoom(roomId: integer): { room?: Room; }
     /** @noAuthRequired */
-    function findRoomMember(room_key: string): { room_member?: RoomMember; }
+    function findRoomMember(roomKey: string): { roomMember?: RoomMember; }
     /** @noAuthRequired */
-    function closeRoom(room_id: integer): void;
+    function closeRoom(roomId: integer): void;
   }
 }
