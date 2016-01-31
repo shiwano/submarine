@@ -12,26 +12,19 @@ namespace Submarine.Lobby
         [Inject]
         StartBattleCommand startBattleCommand;
         [Inject]
+        SceneChangeCommand sceneChangeCommand;
+        [Inject]
         LobbyView view;
 
         public void Initialize()
         {
             lobbyModel.HasJoinedIntoRoom.Where(v => v).Take(1).Subscribe(_ => OnJoinIntoRoom()).AddTo(view);
-            battleService.IsStarted.Where(v => v).Take(1).Subscribe(_ => OnBattleStart()).AddTo(view);
         }
 
         void OnJoinIntoRoom()
         {
             startBattleCommand.Execute(lobbyModel.JoinedRoom.Value);
-        }
-
-        void OnBattleStart()
-        {
-            battleService.Api.OnPingReceiveAsObservable().Subscribe(message =>
-            {
-                Logger.Log(message.Message);
-            });
-            battleService.Api.SendPing("Hey");
+            sceneChangeCommand.Execute(SceneNames.Battle);
         }
     }
 }
