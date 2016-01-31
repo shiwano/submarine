@@ -52,6 +52,7 @@ loop:
 		case session := <-r.join:
 			r._join(session)
 			r.broadcastRoom()
+			session.synchronizeTime()
 		case session := <-r.leave:
 			r._leave(session)
 			r.broadcastRoom()

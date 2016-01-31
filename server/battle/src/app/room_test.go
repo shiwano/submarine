@@ -1,7 +1,9 @@
 package main_test
 
 import (
+	"app/currentmillis"
 	"app/typhenapi/type/submarine"
+	"app/typhenapi/type/submarine/battle"
 	. "github.com/smartystreets/goconvey/convey"
 	"testing"
 )
@@ -20,6 +22,16 @@ func TestRoom(t *testing.T) {
 				m := <-done
 				So(m.Id, ShouldEqual, 1)
 				So(m.Members, ShouldHaveLength, 1)
+			})
+
+			Convey("should send a now message", func() {
+				currentmillis.StubNow = func() int64 { return 123456 }
+				done := make(chan *battle.NowObject)
+				s.api.Battle.NowHandler = func(m *battle.NowObject) { done <- m }
+				s.connect(server.URL + "/rooms/1?room_key=key_1")
+				m := <-done
+				currentmillis.StubNow = nil
+				So(m.Time, ShouldEqual, 123456)
 			})
 		})
 

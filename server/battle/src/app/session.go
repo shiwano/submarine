@@ -2,6 +2,7 @@ package main
 
 import (
 	"app/conn"
+	"app/currentmillis"
 	"app/typhenapi/core"
 	"app/typhenapi/type/submarine"
 	"app/typhenapi/type/submarine/battle"
@@ -76,4 +77,8 @@ func (s *Session) onError(err error) {
 func (s *Session) onPingReceive(message *battle.PingObject) {
 	message.Message += " " + message.Message
 	s.api.Battle.SendPing(message)
+}
+
+func (s *Session) synchronizeTime() {
+	s.api.Battle.SendNow(&battle.NowObject{Time: currentmillis.Now()})
 }
