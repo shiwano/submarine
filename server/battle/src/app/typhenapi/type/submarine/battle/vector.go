@@ -11,8 +11,8 @@ var _ = errors.New
 
 // Vector is a kind of TyphenAPI type.
 type Vector struct {
-	X number `codec:"x"`
-	Y number `codec:"y"`
+	X float64 `codec:"x"`
+	Y float64 `codec:"y"`
 }
 
 // Coerce the fields.

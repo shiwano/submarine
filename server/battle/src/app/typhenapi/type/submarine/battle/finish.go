@@ -11,8 +11,8 @@ var _ = errors.New
 
 // Finish is a kind of TyphenAPI type.
 type Finish struct {
-	HasWon     boolean `codec:"has_won"`
-	FinishedAt int64   `codec:"finished_at"`
+	HasWon     bool  `codec:"has_won"`
+	FinishedAt int64 `codec:"finished_at"`
 }
 
 // Coerce the fields.
