@@ -105,6 +105,10 @@ module.exports = function(typhen, options, helpers) {
     rename: function(symbol, name) {
       if (name === 'integer') {
         return 'int64';
+      } else if (name === 'number') {
+        return 'float64';
+      } else if (name === 'boolean') {
+        return 'bool';
       } else if (name === 'void') {
         return 'nil';
       }
