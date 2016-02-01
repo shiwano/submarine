@@ -69,7 +69,7 @@ module.exports = function(typhen, options) {
       var name = typhen.helpers.upperCamelCase(variable.fullName).replace(template.namespaceSeparator, '.');
       var hash = 0;
       for (var i = 0; i < name.length; i++) {
-        hash = (((hash << 5) - hash) + name.charCodeAt(i)) & 0x7FFFFFFF;
+        hash = (((hash << 5) - hash) + name.charCodeAt(i)) & 0xFFFFFFFE;
       }
       return hash;
     },
