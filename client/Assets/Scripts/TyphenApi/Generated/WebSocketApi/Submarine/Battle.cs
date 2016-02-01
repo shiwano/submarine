@@ -9,18 +9,18 @@ namespace TyphenApi.WebSocketApi.Parts.Submarine
     {
         public enum MessageType
         {
-            Ping = 2065492188,
-            Room = 2065557573,
-            Now = 135900716,
-            Start = 1756318264,
-            Finish = 376815997,
-            Actor = 1739206603,
-            Movement = 1912906521,
-            Destruction = 525255176,
-            AccelerationRequest = 1902689605,
-            BrakeRequest = 1754056270,
-            PingerRequest = 668114886,
-            ActorRequest = 1617498180,
+            Ping = -1287020902,
+            Room = -1286955548,
+            Now = -1565539188,
+            Start = -1240750730,
+            Finish = -162791524,
+            Actor = -1257891252,
+            Movement = 1298310360,
+            Destruction = -1118469016,
+            AccelerationRequest = -710337400,
+            BrakeRequest = 1492486768,
+            PingerRequest = 110864488,
+            ActorRequest = 275126852,
         }
 
         readonly IWebSocketSession session;

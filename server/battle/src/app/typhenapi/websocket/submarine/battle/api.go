@@ -9,18 +9,18 @@ import (
 )
 
 const (
-	MessageType_Ping                int32 = 2065492188
-	MessageType_Room                int32 = 2065557573
-	MessageType_Now                 int32 = 135900716
-	MessageType_Start               int32 = 1756318264
-	MessageType_Finish              int32 = 376815997
-	MessageType_Actor               int32 = 1739206603
-	MessageType_Movement            int32 = 1912906521
-	MessageType_Destruction         int32 = 525255176
-	MessageType_AccelerationRequest int32 = 1902689605
-	MessageType_BrakeRequest        int32 = 1754056270
-	MessageType_PingerRequest       int32 = 668114886
-	MessageType_ActorRequest        int32 = 1617498180
+	MessageType_Ping                int32 = -1287020902
+	MessageType_Room                int32 = -1286955548
+	MessageType_Now                 int32 = -1565539188
+	MessageType_Start               int32 = -1240750730
+	MessageType_Finish              int32 = -162791524
+	MessageType_Actor               int32 = -1257891252
+	MessageType_Movement            int32 = 1298310360
+	MessageType_Destruction         int32 = -1118469016
+	MessageType_AccelerationRequest int32 = -710337400
+	MessageType_BrakeRequest        int32 = 1492486768
+	MessageType_PingerRequest       int32 = 110864488
+	MessageType_ActorRequest        int32 = 275126852
 )
 
 // WebSocketAPI sends messages, and dispatches message events.
