@@ -35,32 +35,32 @@ func (s *Server) roomsGET(c *gin.Context) {
 	roomID, err := strconv.ParseInt(c.Param("id"), 10, 64)
 	if err != nil {
 		Log.Error(err)
-		c.String(http.StatusBadRequest, "Invalid room id.")
+		c.String(http.StatusForbidden, "Invalid room id.")
 		return
 	}
 
 	room, err := s.roomManager.tryGetRoom(roomID)
 	if err != nil {
 		Log.Error(err)
-		c.String(http.StatusBadRequest, "Failed to get or create the room.")
+		c.String(http.StatusForbidden, "Failed to get or create the room.")
 		return
 	}
 
 	res, err := s.webAPI.Battle.FindRoomMember(c.Query("room_key"))
 	if err != nil {
 		Log.Error(err)
-		c.String(http.StatusBadRequest, "Failed to authenticate the room key.")
+		c.String(http.StatusInternalServerError, "Failed to authenticate the room key.")
 		return
 	}
 	if res.RoomMember == nil {
-		c.String(http.StatusBadRequest, "Invalid room key.")
+		c.String(http.StatusForbidden, "Invalid room key.")
 		return
 	}
 
 	session := newSession(res.RoomMember, roomID)
 	if err := session.Connect(c.Writer, c.Request); err != nil {
 		Log.Error(err)
-		c.String(http.StatusBadRequest, "Failed to upgrade the request to web socket protocol.")
+		c.String(http.StatusForbidden, "Failed to upgrade the request to web socket protocol.")
 		return
 	}
 
