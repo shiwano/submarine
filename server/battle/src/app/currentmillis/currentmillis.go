@@ -5,6 +5,12 @@ import "time"
 // StubNow For Test.
 var StubNow func() int64
 
+// Second.
+const Second int64 = 1000
+
+// Minute.
+const Minute int64 = 60 * Second
+
 // Now returns the number of the current time milliseconds elapsed since UNIX epoch time.
 func Now() int64 {
 	if StubNow != nil {
