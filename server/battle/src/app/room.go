@@ -1,6 +1,8 @@
 package main
 
 import (
+	battleLogic "app/battle"
+	"app/currentmillis"
 	"app/typhenapi/type/submarine"
 	"app/typhenapi/type/submarine/battle"
 	webapi "app/typhenapi/web/submarine"
@@ -13,6 +15,7 @@ type Room struct {
 	webAPI       *webapi.WebAPI
 	info         *battle.Room
 	sessions     map[int64]*Session
+	battle       *battleLogic.Battle
 	closeHandler func(*Room)
 	join         chan *Session
 	leave        chan *Session
@@ -36,6 +39,7 @@ func newRoom(id int64) (*Room, error) {
 		webAPI:   webAPI,
 		info:     res.Room,
 		sessions: make(map[int64]*Session),
+		battle:   battleLogic.New(currentmillis.Second * 60),
 		join:     make(chan *Session, 4),
 		leave:    make(chan *Session, 4),
 		close:    make(chan struct{}),
@@ -59,6 +63,8 @@ loop:
 		case <-r.close:
 			r._close()
 			break loop
+		case output := <-r.battle.Gateway.Output:
+			r.onBattleOutputReceive(output)
 		}
 	}
 
@@ -90,6 +96,11 @@ func (r *Room) _join(session *Session) {
 	session.disconnectHandler = func(session *Session) {
 		r.leave <- session
 	}
+
+	// TODO: Add relevant room members counting.
+	if len(r.sessions) >= 1 {
+		r.battle.Start()
+	}
 }
 
 func (r *Room) _leave(session *Session) {
@@ -99,8 +110,25 @@ func (r *Room) _leave(session *Session) {
 }
 
 func (r *Room) _close() {
+	r.battle.Gateway.Close <- struct{}{}
 	for _, session := range r.sessions {
 		r._leave(session)
 		session.close()
+	}
+}
+
+func (r *Room) onBattleOutputReceive(output interface{}) {
+	switch message := output.(type) {
+	case *battle.Start:
+		Log.Infof("Room(%v)'s battle has started'", r.id)
+		for _, s := range r.sessions {
+			s.api.Battle.SendStart(message)
+		}
+	case *battle.Finish:
+		Log.Infof("Room(%v)'s battle has finished'", r.id)
+		for _, s := range r.sessions {
+			s.api.Battle.SendFinish(message)
+		}
+		r.close <- struct{}{}
 	}
 }
