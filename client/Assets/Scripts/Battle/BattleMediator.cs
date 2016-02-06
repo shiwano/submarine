@@ -8,7 +8,7 @@ namespace Submarine.Battle
         [Inject]
         LobbyModel lobbyModel;
         [Inject]
-        BattleService battleService;
+        BattleModel battleModel;
         [Inject]
         BattleView view;
         [Inject]
@@ -16,17 +16,26 @@ namespace Submarine.Battle
 
         public void Initialize()
         {
-            battleService.IsConnected.Where(v => v).Take(1).Subscribe(_ => OnBattleStart()).AddTo(view);
+            battleModel.OnPrepareAsObservable().Take(1).Subscribe(_ => OnBattlePrepare()).AddTo(view);
+            battleModel.OnStartAsObservable().Take(1).Subscribe(_ => OnBattleStart()).AddTo(view);
+            battleModel.OnFinishAsObservable().Take(1).Subscribe(_ => OnBattleFinish()).AddTo(view);
+
             startBattleCommand.Execute(lobbyModel.JoinedRoom.Value);
+        }
+
+        void OnBattlePrepare()
+        {
+            Logger.Log("Battle Prepare");
         }
 
         void OnBattleStart()
         {
-            battleService.Api.OnPingReceiveAsObservable().Subscribe(message =>
-            {
-                Logger.Log(message.Message);
-            });
-            battleService.Api.SendPing("Hey");
+            Logger.Log("Battle Start");
+        }
+
+        void OnBattleFinish()
+        {
+            Logger.Log("Battle Finish");
         }
     }
 }
