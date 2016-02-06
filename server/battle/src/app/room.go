@@ -50,7 +50,7 @@ func newRoom(id int64) (*Room, error) {
 }
 
 func (r *Room) run() {
-	Log.Infof("Room(%v) has created", r.id)
+	Log.Infof("Room(%v) is created", r.id)
 
 loop:
 	for {
@@ -93,7 +93,7 @@ func (r *Room) broadcastRoom() {
 }
 
 func (r *Room) _join(session *Session) {
-	Log.Infof("Session(%v) has joined into Room(%v)", session.id, r.id)
+	Log.Infof("Session(%v) is joined into Room(%v)", session.id, r.id)
 	r.sessions[session.id] = session
 	session.room = r
 	session.disconnectHandler = func(session *Session) {
@@ -107,14 +107,14 @@ func (r *Room) _join(session *Session) {
 }
 
 func (r *Room) _leave(session *Session) {
-	Log.Infof("Session(%v) has leaved from Room(%v)", session.id, r.id)
+	Log.Infof("Session(%v) is leaved from Room(%v)", session.id, r.id)
 	session.disconnectHandler = nil
 	session.room = nil
 	delete(r.sessions, session.id)
 }
 
 func (r *Room) _close() {
-	Log.Infof("Room(%v) has closed", r.id)
+	Log.Infof("Room(%v) is closed", r.id)
 	r.battle.Gateway.Close <- struct{}{}
 	for _, session := range r.sessions {
 		r._leave(session)
@@ -125,12 +125,12 @@ func (r *Room) _close() {
 func (r *Room) onBattleOutputReceive(output interface{}) {
 	switch message := output.(type) {
 	case *battle.Start:
-		Log.Infof("Room(%v)'s battle has started", r.id)
+		Log.Infof("Room(%v)'s battle is started", r.id)
 		for _, s := range r.sessions {
 			s.api.Battle.SendStart(message)
 		}
 	case *battle.Finish:
-		Log.Infof("Room(%v)'s battle has finished", r.id)
+		Log.Infof("Room(%v)'s battle is finished", r.id)
 		for _, s := range r.sessions {
 			s.api.Battle.SendFinish(message)
 		}
