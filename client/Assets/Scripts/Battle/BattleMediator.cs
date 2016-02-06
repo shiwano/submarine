@@ -6,13 +6,13 @@ namespace Submarine.Battle
     public class BattleMediator : IInitializable
     {
         [Inject]
-        LobbyModel lobbyModel;
-        [Inject]
         BattleModel battleModel;
         [Inject]
         BattleView view;
         [Inject]
         InitializeBattleCommand initializeBattleCommand;
+        [Inject]
+        SceneChangeCommand sceneChangeCommand;
 
         public void Initialize()
         {
@@ -36,6 +36,7 @@ namespace Submarine.Battle
         void OnBattleFinish()
         {
             Logger.Log("Battle Finish");
+            sceneChangeCommand.Execute(SceneNames.Title);
         }
     }
 }
