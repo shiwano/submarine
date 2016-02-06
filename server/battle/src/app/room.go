@@ -7,6 +7,7 @@ import (
 	"app/typhenapi/type/submarine/battle"
 	webapi "app/typhenapi/web/submarine"
 	"fmt"
+	"time"
 )
 
 // Room represents a network group for battle.
@@ -114,6 +115,14 @@ func (r *Room) _leave(session *Session) {
 }
 
 func (r *Room) _close() {
+	for {
+		if _, err := r.webAPI.Battle.CloseRoom(r.id); err != nil {
+			Log.Errorf("Room(%v) failed to send closeRoom API request: %v", r.id, err)
+			time.Sleep(5 * time.Second)
+			continue
+		}
+		break
+	}
 	Log.Infof("Room(%v) is closed", r.id)
 	r.battle.Gateway.Close <- struct{}{}
 	for _, session := range r.sessions {
