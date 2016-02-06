@@ -6,7 +6,7 @@ using Type = TyphenApi.Type.Submarine;
 
 namespace Submarine.Battle
 {
-    public class StartBattleCommand : Command<Type.JoinedRoom>
+    public class InitializeBattleCommand : Command<Type.JoinedRoom>
     {
         public class Handler : ICommandHandler<Type.JoinedRoom>
         {

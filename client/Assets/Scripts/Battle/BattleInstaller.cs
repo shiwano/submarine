@@ -22,7 +22,7 @@ namespace Submarine.Battle
             Container.Bind<IDisposable>().ToSingle<BattleService>();
             Container.Bind<BattleInputService>().ToSingleInstance(battleInputService);
 
-            Container.BindCommand<StartBattleCommand, Type.JoinedRoom>().HandleWithSingle<StartBattleCommand.Handler>();
+            Container.BindCommand<InitializeBattleCommand, Type.JoinedRoom>().HandleWithSingle<InitializeBattleCommand.Handler>();
 
             Container.Bind<BattleView>().ToSingleInstance(battleView);
             Container.Bind<BattleMediator>().ToSingle();

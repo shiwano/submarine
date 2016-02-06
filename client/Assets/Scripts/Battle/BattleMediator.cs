@@ -12,7 +12,7 @@ namespace Submarine.Battle
         [Inject]
         BattleView view;
         [Inject]
-        StartBattleCommand startBattleCommand;
+        InitializeBattleCommand initializeBattleCommand;
 
         public void Initialize()
         {
@@ -20,7 +20,7 @@ namespace Submarine.Battle
             battleModel.OnStartAsObservable().Take(1).Subscribe(_ => OnBattleStart()).AddTo(view);
             battleModel.OnFinishAsObservable().Take(1).Subscribe(_ => OnBattleFinish()).AddTo(view);
 
-            startBattleCommand.Execute(lobbyModel.JoinedRoom.Value);
+            initializeBattleCommand.Execute(lobbyModel.JoinedRoom.Value);
         }
 
         void OnBattlePrepare()
