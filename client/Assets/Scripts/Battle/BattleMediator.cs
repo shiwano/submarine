@@ -16,7 +16,7 @@ namespace Submarine.Battle
 
         public void Initialize()
         {
-            battleService.IsStarted.Where(v => v).Take(1).Subscribe(_ => OnBattleStart()).AddTo(view);
+            battleService.IsConnected.Where(v => v).Take(1).Subscribe(_ => OnBattleStart()).AddTo(view);
             startBattleCommand.Execute(lobbyModel.JoinedRoom.Value);
         }
 

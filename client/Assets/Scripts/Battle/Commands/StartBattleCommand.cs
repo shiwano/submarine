@@ -16,7 +16,7 @@ namespace Submarine.Battle
             {
                 var baseUri = new Uri(room.BattleServerBaseUri);
                 var relativeUri = string.Format("rooms/{0}?room_key={1}", room.Id, room.RoomKey);
-                battleService.Start(new Uri(baseUri, relativeUri).ToString());
+                battleService.Connect(new Uri(baseUri, relativeUri).ToString());
             }
         }
     }
