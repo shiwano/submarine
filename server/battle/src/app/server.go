@@ -33,7 +33,7 @@ func NewServer() *Server {
 
 func (s *Server) roomsGET(c *gin.Context) {
 	roomID, err := strconv.ParseInt(c.Param("id"), 10, 64)
-	if err != nil {
+	if err != nil || roomID <= 0 {
 		Log.Error(err)
 		c.String(http.StatusForbidden, "Invalid room id.")
 		return
