@@ -18,6 +18,7 @@ namespace Submarine.Battle
         public override void InstallBindings()
         {
             Container.Bind<BattleService>().ToSingle();
+            Container.Bind<BattleModel>().ToSingle();
             Container.Bind<IDisposable>().ToSingle<BattleService>();
             Container.Bind<BattleInputService>().ToSingleInstance(battleInputService);
 
