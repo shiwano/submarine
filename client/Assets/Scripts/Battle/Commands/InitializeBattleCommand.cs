@@ -46,6 +46,7 @@ namespace Submarine.Battle
 
                 battleService.Api.OnFinishReceiveAsObservable().Take(1).Subscribe(message =>
                 {
+                    lobbyModel.JoinedRoom.Value = null;
                     battleModel.FinishedAt = CurrentMillis.FromMilliseconds(message.FinishedAt);
                     battleModel.State.Value = BattleState.Finish;
                 });
