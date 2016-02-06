@@ -2,23 +2,31 @@
 using Zenject;
 using Zenject.Commands;
 using UniRx;
-using Type = TyphenApi.Type.Submarine;
 
 namespace Submarine.Battle
 {
-    public class InitializeBattleCommand : Command<Type.JoinedRoom>
+    public class InitializeBattleCommand : Command
     {
-        public class Handler : ICommandHandler<Type.JoinedRoom>
+        public class Handler : ICommandHandler
         {
             [Inject]
             BattleService battleService;
             [Inject]
             BattleModel battleModel;
+            [Inject]
+            LobbyModel lobbyModel;
 
-            public void Execute(Type.JoinedRoom room)
+            public void Execute()
             {
+                if (!lobbyModel.HasJoinedIntoRoom.Value)
+                {
+                    Logger.LogError("Not joined into a room");
+                    return;
+                }
+
                 battleService.IsConnected.Where(v => v).Take(1).Subscribe(_ => OnBattleConnect());
 
+                var room = lobbyModel.JoinedRoom.Value;
                 var baseUri = new Uri(room.BattleServerBaseUri);
                 var relativeUri = string.Format("rooms/{0}?room_key={1}", room.Id, room.RoomKey);
                 battleService.Connect(new Uri(baseUri, relativeUri).ToString());

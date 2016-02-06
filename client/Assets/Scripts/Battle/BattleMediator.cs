@@ -20,7 +20,7 @@ namespace Submarine.Battle
             battleModel.OnStartAsObservable().Take(1).Subscribe(_ => OnBattleStart()).AddTo(view);
             battleModel.OnFinishAsObservable().Take(1).Subscribe(_ => OnBattleFinish()).AddTo(view);
 
-            initializeBattleCommand.Execute(lobbyModel.JoinedRoom.Value);
+            initializeBattleCommand.Execute();
         }
 
         void OnBattlePrepare()
