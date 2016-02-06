@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using Zenject;
 using Zenject.Commands;
+using Type = TyphenApi.Type.Submarine;
 
 namespace Submarine.Battle
 {
@@ -15,7 +16,10 @@ namespace Submarine.Battle
 
         public override void InstallBindings()
         {
+            Container.Bind<BattleService>().ToSingle();
             Container.Bind<BattleInputService>().ToSingleInstance(battleInputService);
+
+            Container.BindCommand<StartBattleCommand, Type.JoinedRoom>().HandleWithSingle<StartBattleCommand.Handler>();
 
             Container.Bind<BattleView>().ToSingleInstance(battleView);
             Container.Bind<BattleMediator>().ToSingle();

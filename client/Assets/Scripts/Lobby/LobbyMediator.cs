@@ -8,10 +8,6 @@ namespace Submarine.Lobby
         [Inject]
         LobbyModel lobbyModel;
         [Inject]
-        BattleService battleService;
-        [Inject]
-        StartBattleCommand startBattleCommand;
-        [Inject]
         SceneChangeCommand sceneChangeCommand;
         [Inject]
         LobbyView view;
@@ -23,7 +19,6 @@ namespace Submarine.Lobby
 
         void OnJoinIntoRoom()
         {
-            startBattleCommand.Execute(lobbyModel.JoinedRoom.Value);
             sceneChangeCommand.Execute(SceneNames.Battle);
         }
     }

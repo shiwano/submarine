@@ -3,7 +3,7 @@ using Zenject;
 using Zenject.Commands;
 using Type = TyphenApi.Type.Submarine;
 
-namespace Submarine.Lobby
+namespace Submarine.Battle
 {
     public class StartBattleCommand : Command<Type.JoinedRoom>
     {

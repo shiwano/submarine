@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using Zenject;
 using Zenject.Commands;
 
 namespace Submarine
@@ -8,12 +7,8 @@ namespace Submarine
     {
         public class Handler : ICommandHandler
         {
-            [Inject]
-            BattleService battleService;
-
             public void Execute()
             {
-                battleService.Stop();
                 Debug.Log("Game Quit");
             }
         }

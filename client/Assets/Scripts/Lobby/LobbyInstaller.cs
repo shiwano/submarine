@@ -20,7 +20,6 @@ namespace Submarine.Lobby
             Container.BindCommand<CreateRoomCommand>().HandleWithSingle<CreateRoomCommand.Handler>();
             Container.BindCommand<GetRoomsCommand>().HandleWithSingle<GetRoomsCommand.Handler>();
             Container.BindCommand<JoinIntoRoomCommand, Type.Room>().HandleWithSingle<JoinIntoRoomCommand.Handler>();
-            Container.BindCommand<StartBattleCommand, Type.JoinedRoom>().HandleWithSingle<StartBattleCommand.Handler>();
 
             Container.Bind<LobbyView>().ToSingleInstance(lobbyView);
             Container.Bind<LobbyMediator>().ToSingle();
