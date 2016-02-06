@@ -1,8 +1,9 @@
-﻿using UniRx;
+﻿using System;
+using UniRx;
 
 namespace Submarine
 {
-    public class BattleService
+    public class BattleService : IDisposable
     {
         TyphenApi.WebSocketSession.Submarine session;
 
@@ -23,7 +24,7 @@ namespace Submarine
             session.Connect();
         }
 
-        public void Stop()
+        public void Dispose()
         {
             if (session != null && session.IsOpened)
             {
