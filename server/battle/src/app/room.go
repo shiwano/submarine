@@ -42,7 +42,7 @@ func newRoom(id int64) (*Room, error) {
 		battle:   battleLogic.New(currentmillis.Second * 60),
 		join:     make(chan *Session, 4),
 		leave:    make(chan *Session, 4),
-		close:    make(chan struct{}),
+		close:    make(chan struct{}, 1),
 	}
 
 	go room.run()
@@ -134,6 +134,6 @@ func (r *Room) onBattleOutputReceive(output interface{}) {
 		for _, s := range r.sessions {
 			s.api.Battle.SendFinish(message)
 		}
-		r.close <- struct{}{}
+		go func() { r.close <- struct{}{} }()
 	}
 }
