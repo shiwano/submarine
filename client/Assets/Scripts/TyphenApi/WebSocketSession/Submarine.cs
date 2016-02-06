@@ -1,6 +1,8 @@
+using UnityEngine;
 using TyphenApi.Type.Submarine;
 using WebSocketSharp;
 using UniRx;
+using Game = Submarine;
 
 namespace TyphenApi.WebSocketSession
 {
@@ -27,6 +29,7 @@ namespace TyphenApi.WebSocketSession
         public override void OnConnectionOpen()
         {
             IsConnected.Value = true;
+            Game.Logger.Log("[WebSocketApi] Session opened");
         }
 
         public override void OnConnectionClose(ushort code, string reason, bool wasClean)
@@ -34,18 +37,35 @@ namespace TyphenApi.WebSocketSession
             IsConnected.Value = false;
             disposables.Dispose();
             disposables = new CompositeDisposable();
+            Game.Logger.Log("[WebSocketApi] Session closed");
         }
 
         public override void OnBeforeMessageSend(TyphenApi.TypeBase message)
         {
+            #if UNITY_EDITOR
+            Game.Logger.LogWithColor(Color.blue, "[WebSocketApi] Send " + message.GetType().Name + " Message:", message);
+            #endif
         }
 
         public override void OnMessageReceive(TyphenApi.TypeBase message)
         {
+            #if UNITY_EDITOR
+            Game.Logger.LogWithColor(Game.Logger.Green, "[WebSocketApi] Receive " + message.GetType().Name + " Message:", message);
+            #endif
         }
 
         public override void OnError(WebSocketSessionError<Error> error)
         {
+            #if UNITY_EDITOR
+            if (error.Error != null)
+            {
+                Game.Logger.LogError("[WebSocketApi] Error:", error.Error.Code + ": " + error.Error.Name, error.Error);
+            }
+            else
+            {
+                Game.Logger.LogError("[WebSocketApi] Error:", error.RawErrorMessage);
+            }
+            #endif
         }
     }
 }
