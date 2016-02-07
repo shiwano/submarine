@@ -54,7 +54,7 @@ namespace Submarine.Battle
         void OnBattleFinish()
         {
             Logger.Log("Battle Finish");
-            sceneChangeCommand.Execute(SceneNames.Title);
+            sceneChangeCommand.Execute(SceneNames.Lobby);
         }
     }
 }
