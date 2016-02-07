@@ -53,6 +53,7 @@ declare module Submarine.Battle {
 
   var accelerationRequest: {};
   var brakeRequest: {};
+  var turnRequest: { direction: Vector; };
   var pingerRequest: {};
   var actorRequest: { type: ActorType; };
 }
