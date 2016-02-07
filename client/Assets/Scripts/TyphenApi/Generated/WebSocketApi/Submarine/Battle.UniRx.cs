@@ -47,13 +47,17 @@ namespace TyphenApi.WebSocketApi.Parts.Submarine
         {
             return Observable.FromEvent<TyphenApi.Type.Submarine.Battle.BrakeRequestObject>(h => OnBrakeRequestReceive += h, h => OnBrakeRequestReceive -= h);
         }
+        public IObservable<TyphenApi.Type.Submarine.Battle.TurnRequestObject> OnTurnRequestReceiveAsObservable()
+        {
+            return Observable.FromEvent<TyphenApi.Type.Submarine.Battle.TurnRequestObject>(h => OnTurnRequestReceive += h, h => OnTurnRequestReceive -= h);
+        }
         public IObservable<TyphenApi.Type.Submarine.Battle.PingerRequestObject> OnPingerRequestReceiveAsObservable()
         {
             return Observable.FromEvent<TyphenApi.Type.Submarine.Battle.PingerRequestObject>(h => OnPingerRequestReceive += h, h => OnPingerRequestReceive -= h);
         }
-        public IObservable<TyphenApi.Type.Submarine.Battle.ActorRequestObject> OnActorRequestReceiveAsObservable()
+        public IObservable<TyphenApi.Type.Submarine.Battle.TorpedoRequestObject> OnTorpedoRequestReceiveAsObservable()
         {
-            return Observable.FromEvent<TyphenApi.Type.Submarine.Battle.ActorRequestObject>(h => OnActorRequestReceive += h, h => OnActorRequestReceive -= h);
+            return Observable.FromEvent<TyphenApi.Type.Submarine.Battle.TorpedoRequestObject>(h => OnTorpedoRequestReceive += h, h => OnTorpedoRequestReceive -= h);
         }
     }
 }

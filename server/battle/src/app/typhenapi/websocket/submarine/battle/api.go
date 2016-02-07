@@ -19,8 +19,9 @@ const (
 	MessageType_Destruction         int32 = -1118469016
 	MessageType_AccelerationRequest int32 = -710337400
 	MessageType_BrakeRequest        int32 = 1492486768
+	MessageType_TurnRequest         int32 = 698416554
 	MessageType_PingerRequest       int32 = 110864488
-	MessageType_ActorRequest        int32 = 275126852
+	MessageType_TorpedoRequest      int32 = 1327463172
 )
 
 // WebSocketAPI sends messages, and dispatches message events.
@@ -39,8 +40,9 @@ type WebSocketAPI struct {
 	DestructionHandler         func(message *submarine_battle.Destruction)
 	AccelerationRequestHandler func(message *submarine_battle.AccelerationRequestObject)
 	BrakeRequestHandler        func(message *submarine_battle.BrakeRequestObject)
+	TurnRequestHandler         func(message *submarine_battle.TurnRequestObject)
 	PingerRequestHandler       func(message *submarine_battle.PingerRequestObject)
-	ActorRequestHandler        func(message *submarine_battle.ActorRequestObject)
+	TorpedoRequestHandler      func(message *submarine_battle.TorpedoRequestObject)
 }
 
 // New creates a WebSocketAPI.
@@ -222,6 +224,23 @@ func (api *WebSocketAPI) SendBrakeRequest(brakeRequest *submarine_battle.BrakeRe
 	return nil
 }
 
+// SendTurnRequest sends a turnRequest message.
+func (api *WebSocketAPI) SendTurnRequest(turnRequest *submarine_battle.TurnRequestObject) error {
+	message, err := typhenapi.NewMessage(api.serializer, MessageType_TurnRequest, turnRequest)
+
+	if err != nil {
+		if api.errorHandler != nil {
+			api.errorHandler(err)
+		}
+		return err
+	}
+
+	if err := api.session.Send(message.Bytes()); err != nil {
+		return err
+	}
+	return nil
+}
+
 // SendPingerRequest sends a pingerRequest message.
 func (api *WebSocketAPI) SendPingerRequest(pingerRequest *submarine_battle.PingerRequestObject) error {
 	message, err := typhenapi.NewMessage(api.serializer, MessageType_PingerRequest, pingerRequest)
@@ -239,9 +258,9 @@ func (api *WebSocketAPI) SendPingerRequest(pingerRequest *submarine_battle.Pinge
 	return nil
 }
 
-// SendActorRequest sends a actorRequest message.
-func (api *WebSocketAPI) SendActorRequest(actorRequest *submarine_battle.ActorRequestObject) error {
-	message, err := typhenapi.NewMessage(api.serializer, MessageType_ActorRequest, actorRequest)
+// SendTorpedoRequest sends a torpedoRequest message.
+func (api *WebSocketAPI) SendTorpedoRequest(torpedoRequest *submarine_battle.TorpedoRequestObject) error {
+	message, err := typhenapi.NewMessage(api.serializer, MessageType_TorpedoRequest, torpedoRequest)
 
 	if err != nil {
 		if api.errorHandler != nil {
@@ -459,6 +478,25 @@ func (api *WebSocketAPI) DispatchMessageEvent(data []byte) error {
 		if api.BrakeRequestHandler != nil {
 			api.BrakeRequestHandler(typhenType)
 		}
+	case MessageType_TurnRequest:
+		typhenType := new(submarine_battle.TurnRequestObject)
+		if err := api.serializer.Deserialize(message.Body, typhenType); err != nil {
+			if api.errorHandler != nil {
+				api.errorHandler(err)
+			}
+			return err
+		}
+
+		if err := typhenType.Coerce(); err != nil {
+			if api.errorHandler != nil {
+				api.errorHandler(err)
+			}
+			return err
+		}
+
+		if api.TurnRequestHandler != nil {
+			api.TurnRequestHandler(typhenType)
+		}
 	case MessageType_PingerRequest:
 		typhenType := new(submarine_battle.PingerRequestObject)
 		if err := api.serializer.Deserialize(message.Body, typhenType); err != nil {
@@ -478,8 +516,8 @@ func (api *WebSocketAPI) DispatchMessageEvent(data []byte) error {
 		if api.PingerRequestHandler != nil {
 			api.PingerRequestHandler(typhenType)
 		}
-	case MessageType_ActorRequest:
-		typhenType := new(submarine_battle.ActorRequestObject)
+	case MessageType_TorpedoRequest:
+		typhenType := new(submarine_battle.TorpedoRequestObject)
 		if err := api.serializer.Deserialize(message.Body, typhenType); err != nil {
 			if api.errorHandler != nil {
 				api.errorHandler(err)
@@ -494,8 +532,8 @@ func (api *WebSocketAPI) DispatchMessageEvent(data []byte) error {
 			return err
 		}
 
-		if api.ActorRequestHandler != nil {
-			api.ActorRequestHandler(typhenType)
+		if api.TorpedoRequestHandler != nil {
+			api.TorpedoRequestHandler(typhenType)
 		}
 	}
 

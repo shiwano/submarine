@@ -19,8 +19,9 @@ namespace TyphenApi.WebSocketApi.Parts.Submarine
             Destruction = -1118469016,
             AccelerationRequest = -710337400,
             BrakeRequest = 1492486768,
+            TurnRequest = 698416554,
             PingerRequest = 110864488,
-            ActorRequest = 275126852,
+            TorpedoRequest = 1327463172,
         }
 
         readonly IWebSocketSession session;
@@ -35,8 +36,9 @@ namespace TyphenApi.WebSocketApi.Parts.Submarine
         public event Action<TyphenApi.Type.Submarine.Battle.Destruction> OnDestructionReceive;
         public event Action<TyphenApi.Type.Submarine.Battle.AccelerationRequestObject> OnAccelerationRequestReceive;
         public event Action<TyphenApi.Type.Submarine.Battle.BrakeRequestObject> OnBrakeRequestReceive;
+        public event Action<TyphenApi.Type.Submarine.Battle.TurnRequestObject> OnTurnRequestReceive;
         public event Action<TyphenApi.Type.Submarine.Battle.PingerRequestObject> OnPingerRequestReceive;
-        public event Action<TyphenApi.Type.Submarine.Battle.ActorRequestObject> OnActorRequestReceive;
+        public event Action<TyphenApi.Type.Submarine.Battle.TorpedoRequestObject> OnTorpedoRequestReceive;
 
 
         public Battle(IWebSocketSession session)
@@ -171,6 +173,18 @@ namespace TyphenApi.WebSocketApi.Parts.Submarine
             {
             });
         }
+        public void SendTurnRequest(TyphenApi.Type.Submarine.Battle.TurnRequestObject turnRequest)
+        {
+            session.Send((int)MessageType.TurnRequest, turnRequest);
+        }
+
+        public void SendTurnRequest(TyphenApi.Type.Submarine.Battle.Vector direction)
+        {
+            session.Send((int)MessageType.TurnRequest, new TyphenApi.Type.Submarine.Battle.TurnRequestObject()
+            {
+                Direction = direction,
+            });
+        }
         public void SendPingerRequest(TyphenApi.Type.Submarine.Battle.PingerRequestObject pingerRequest)
         {
             session.Send((int)MessageType.PingerRequest, pingerRequest);
@@ -182,16 +196,15 @@ namespace TyphenApi.WebSocketApi.Parts.Submarine
             {
             });
         }
-        public void SendActorRequest(TyphenApi.Type.Submarine.Battle.ActorRequestObject actorRequest)
+        public void SendTorpedoRequest(TyphenApi.Type.Submarine.Battle.TorpedoRequestObject torpedoRequest)
         {
-            session.Send((int)MessageType.ActorRequest, actorRequest);
+            session.Send((int)MessageType.TorpedoRequest, torpedoRequest);
         }
 
-        public void SendActorRequest(TyphenApi.Type.Submarine.Battle.ActorType type)
+        public void SendTorpedoRequest()
         {
-            session.Send((int)MessageType.ActorRequest, new TyphenApi.Type.Submarine.Battle.ActorRequestObject()
+            session.Send((int)MessageType.TorpedoRequest, new TyphenApi.Type.Submarine.Battle.TorpedoRequestObject()
             {
-                Type = type,
             });
         }
 
@@ -309,6 +322,17 @@ namespace TyphenApi.WebSocketApi.Parts.Submarine
 
                     return message;
                 }
+                case MessageType.TurnRequest:
+                {
+                    var message = session.MessageDeserializer.Deserialize<TyphenApi.Type.Submarine.Battle.TurnRequestObject>(messageData);
+
+                    if (OnTurnRequestReceive != null)
+                    {
+                        OnTurnRequestReceive(message);
+                    }
+
+                    return message;
+                }
                 case MessageType.PingerRequest:
                 {
                     var message = session.MessageDeserializer.Deserialize<TyphenApi.Type.Submarine.Battle.PingerRequestObject>(messageData);
@@ -320,13 +344,13 @@ namespace TyphenApi.WebSocketApi.Parts.Submarine
 
                     return message;
                 }
-                case MessageType.ActorRequest:
+                case MessageType.TorpedoRequest:
                 {
-                    var message = session.MessageDeserializer.Deserialize<TyphenApi.Type.Submarine.Battle.ActorRequestObject>(messageData);
+                    var message = session.MessageDeserializer.Deserialize<TyphenApi.Type.Submarine.Battle.TorpedoRequestObject>(messageData);
 
-                    if (OnActorRequestReceive != null)
+                    if (OnTorpedoRequestReceive != null)
                     {
-                        OnActorRequestReceive(message);
+                        OnTorpedoRequestReceive(message);
                     }
 
                     return message;
