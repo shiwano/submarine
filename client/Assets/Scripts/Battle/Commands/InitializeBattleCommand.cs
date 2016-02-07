@@ -35,8 +35,6 @@ namespace Submarine.Battle
             void OnBattleConnect()
             {
                 battleModel.State.Value = BattleState.InPreparation;
-                battleService.Api.OnPingReceiveAsObservable().Subscribe(m => Logger.Log(m.Message));
-                battleService.Api.SendPing("Hey");
 
                 battleService.Api.OnStartReceiveAsObservable().Take(1).Subscribe(message =>
                 {
