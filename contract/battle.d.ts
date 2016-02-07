@@ -15,6 +15,7 @@ declare module Submarine.Battle {
 
   interface Start {
     startedAt: timeStamp;
+    controllableActorId: integer;
   }
 
   interface Finish {
