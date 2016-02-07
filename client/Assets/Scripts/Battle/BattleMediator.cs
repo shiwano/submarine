@@ -3,7 +3,7 @@ using Zenject;
 
 namespace Submarine.Battle
 {
-    public class BattleMediator : IInitializable
+    public class BattleMediator : IInitializable, ITickable
     {
         [Inject]
         BattleModel battleModel;
@@ -21,6 +21,24 @@ namespace Submarine.Battle
             battleModel.OnFinishAsObservable().Take(1).Subscribe(_ => OnBattleFinish()).AddTo(view);
 
             initializeBattleCommand.Execute();
+        }
+
+        public void Tick()
+        {
+            if (battleModel.IsInBattle)
+            {
+                UpdateTimerText();
+            }
+        }
+
+        void UpdateTimerText()
+        {
+            var elapsedTime = battleModel.Now - battleModel.StartedAt;
+            view.TimerText.text = string.Format(
+                "{0:00}:{1:00}",
+                (int)elapsedTime.TotalMinutes,
+                (int)elapsedTime.Seconds
+            );
         }
 
         void OnBattlePrepare()

@@ -25,6 +25,11 @@ namespace Submarine.Battle
             set { differenceFromBattleServerTime = value.Subtract(DateTime.Now); }
         }
 
+        public bool IsInBattle
+        {
+            get { return State.Value == BattleState.InBattle; }
+        }
+
         public BattleModel()
         {
             State = new ReactiveProperty<BattleState>(BattleState.InPreparation);

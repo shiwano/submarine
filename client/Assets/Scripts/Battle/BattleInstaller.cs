@@ -27,6 +27,7 @@ namespace Submarine.Battle
             Container.Bind<BattleView>().ToSingleInstance(battleView);
             Container.Bind<BattleMediator>().ToSingle();
             Container.Bind<IInitializable>().ToSingle<BattleMediator>();
+            Container.Bind<ITickable>().ToSingle<BattleMediator>();
 
             Container.Bind<RadarView>().ToSingleInstance(radarView);
             Container.Bind<RadarMediator>().ToSingle();
