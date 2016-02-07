@@ -5,5 +5,6 @@ module TyphenApi::Model::Submarine::Battle
     include Virtus.model(:strict => true)
 
     attribute :started_at, Integer, :required => true
+    attribute :controllable_actor_id, Integer, :required => true
   end
 end

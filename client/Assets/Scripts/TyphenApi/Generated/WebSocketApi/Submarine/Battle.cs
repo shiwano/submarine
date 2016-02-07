@@ -89,11 +89,12 @@ namespace TyphenApi.WebSocketApi.Parts.Submarine
             session.Send((int)MessageType.Start, start);
         }
 
-        public void SendStart(long startedAt)
+        public void SendStart(long startedAt, long controllableActorId)
         {
             session.Send((int)MessageType.Start, new TyphenApi.Type.Submarine.Battle.Start()
             {
                 StartedAt = startedAt,
+                ControllableActorId = controllableActorId,
             });
         }
         public void SendFinish(TyphenApi.Type.Submarine.Battle.Finish finish)

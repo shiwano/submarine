@@ -8,5 +8,7 @@ namespace TyphenApi.Type.Submarine.Battle
     {
         protected static readonly SerializationInfo<Start, long> startedAt = new SerializationInfo<Start, long>("started_at", false, (x) => x.StartedAt, (x, v) => x.StartedAt = v);
         public long StartedAt { get; set; }
+        protected static readonly SerializationInfo<Start, long> controllableActorId = new SerializationInfo<Start, long>("controllable_actor_id", false, (x) => x.ControllableActorId, (x, v) => x.ControllableActorId = v);
+        public long ControllableActorId { get; set; }
     }
 }
