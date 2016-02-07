@@ -115,10 +115,10 @@ func (r *Room) _leave(session *Session) {
 }
 
 func (r *Room) _close() {
-	for {
+	for c := 1; true; c++ {
 		if _, err := r.webAPI.Battle.CloseRoom(r.id); err != nil {
-			Log.Errorf("Room(%v) failed to send closeRoom API request: %v", r.id, err)
-			time.Sleep(5 * time.Second)
+			Log.Errorf("Room(%v) failed %v times to use closeRoom API: %v", r.id, c, err)
+			time.Sleep(time.Duration(c) * time.Second)
 			continue
 		}
 		break
