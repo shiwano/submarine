@@ -1,6 +1,6 @@
 /// <reference path='./battle.d.ts' />
 
-interface integer { }
+interface integer {}
 
 declare module Submarine {
   type timeStamp = integer; // see http://currentmillis.com/

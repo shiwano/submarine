@@ -55,5 +55,5 @@ declare module Submarine.Battle {
   var brakeRequest: {};
   var turnRequest: { direction: Vector; };
   var pingerRequest: {};
-  var actorRequest: { type: ActorType; };
+  var torpedoRequest: {};
 }
