@@ -19,7 +19,7 @@ type Battle struct {
 func New(timeLimit int64) *Battle {
 	return &Battle{
 		Gateway:   newGateway(),
-		context:   &Context{},
+		context:   newContext(),
 		createdAt: currentmillis.Now(),
 		timeLimit: timeLimit,
 	}
