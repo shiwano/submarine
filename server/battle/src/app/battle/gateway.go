@@ -1,7 +1,9 @@
 package battle
 
 import (
+	"app/currentmillis"
 	"app/typhenapi/type/submarine/battle"
+	"time"
 )
 
 // Gateway represents a battle input/output.
@@ -19,15 +21,15 @@ func newGateway() *Gateway {
 	}
 }
 
-func (g *Gateway) start(startedAt int64) {
+func (g *Gateway) start(startedAt time.Time) {
 	g.Output <- &battle.Start{
-		StartedAt: startedAt,
+		StartedAt: currentmillis.ToMilliseconds(startedAt),
 	}
 }
 
-func (g *Gateway) finish(hasWon bool, finishedAt int64) {
+func (g *Gateway) finish(hasWon bool, finishedAt time.Time) {
 	g.Output <- &battle.Finish{
 		HasWon:     hasWon,
-		FinishedAt: finishedAt,
+		FinishedAt: currentmillis.ToMilliseconds(finishedAt),
 	}
 }

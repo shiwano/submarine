@@ -1,7 +1,6 @@
 package battle
 
 import (
-	"app/currentmillis"
 	"time"
 )
 
@@ -9,18 +8,18 @@ import (
 type Battle struct {
 	Gateway    *Gateway
 	context    *Context
-	createdAt  int64
-	startedAt  int64
-	timeLimit  int64
+	createdAt  time.Time
+	startedAt  time.Time
+	timeLimit  time.Duration
 	hasStarted bool
 }
 
 // New creates a new battle.
-func New(timeLimit int64) *Battle {
+func New(timeLimit time.Duration) *Battle {
 	return &Battle{
 		Gateway:   newGateway(),
 		context:   newContext(),
-		createdAt: currentmillis.Now(),
+		createdAt: time.Now(),
 		timeLimit: timeLimit,
 	}
 }
@@ -35,15 +34,15 @@ func (b *Battle) Start() {
 
 func (b *Battle) run() {
 	ticker := time.Tick(time.Second / 30)
-	b.startedAt = currentmillis.Now()
+	b.startedAt = time.Now()
 	b.Gateway.start(b.startedAt)
 
 loop:
 	for {
 		select {
 		case now := <-ticker:
-			b.context.now = currentmillis.ToMilliseconds(now)
-			if b.context.now >= b.startedAt+b.timeLimit {
+			b.context.now = now
+			if b.context.now.After(b.startedAt.Add(b.timeLimit)) {
 				break loop
 			}
 		case <-b.Gateway.Close:

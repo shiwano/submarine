@@ -2,7 +2,6 @@ package main
 
 import (
 	battleLogic "app/battle"
-	"app/currentmillis"
 	"app/logger"
 	"app/typhenapi/type/submarine"
 	"app/typhenapi/type/submarine/battle"
@@ -41,7 +40,7 @@ func newRoom(id int64) (*Room, error) {
 		webAPI:   webAPI,
 		info:     res.Room,
 		sessions: make(map[int64]*Session),
-		battle:   battleLogic.New(currentmillis.Second * 60),
+		battle:   battleLogic.New(time.Second * 60),
 		join:     make(chan *Session, 4),
 		leave:    make(chan *Session, 4),
 		close:    make(chan struct{}, 1),

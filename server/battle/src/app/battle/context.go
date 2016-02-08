@@ -1,8 +1,12 @@
 package battle
 
+import (
+	"time"
+)
+
 // Context represents a battle context.
 type Context struct {
-	now       int64
+	now       time.Time
 	container *ActorContainer
 }
 
