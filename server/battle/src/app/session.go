@@ -3,6 +3,7 @@ package main
 import (
 	"app/conn"
 	"app/currentmillis"
+	"app/logger"
 	"app/typhenapi/core"
 	"app/typhenapi/type/submarine"
 	"app/typhenapi/type/submarine/battle"
@@ -71,7 +72,7 @@ func (s *Session) onError(err error) {
 	if closeError, ok := err.(*websocket.CloseError); ok && (closeError.Code == 1000 || closeError.Code == 1005) {
 		return
 	}
-	Log.Error(s.id, err)
+	logger.Log.Error(s.id, err)
 }
 
 func (s *Session) onPingReceive(message *battle.PingObject) {

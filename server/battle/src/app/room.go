@@ -3,6 +3,7 @@ package main
 import (
 	battleLogic "app/battle"
 	"app/currentmillis"
+	"app/logger"
 	"app/typhenapi/type/submarine"
 	"app/typhenapi/type/submarine/battle"
 	webapi "app/typhenapi/web/submarine"
@@ -51,7 +52,7 @@ func newRoom(id int64) (*Room, error) {
 }
 
 func (r *Room) run() {
-	Log.Infof("Room(%v) opened", r.id)
+	logger.Log.Infof("Room(%v) opened", r.id)
 
 loop:
 	for {
@@ -94,7 +95,7 @@ func (r *Room) broadcastRoom() {
 }
 
 func (r *Room) _join(session *Session) {
-	Log.Infof("Session(%v) joined into Room(%v)", session.id, r.id)
+	logger.Log.Infof("Session(%v) joined into Room(%v)", session.id, r.id)
 	r.sessions[session.id] = session
 	session.room = r
 	session.disconnectHandler = func(session *Session) {
@@ -108,7 +109,7 @@ func (r *Room) _join(session *Session) {
 }
 
 func (r *Room) _leave(session *Session) {
-	Log.Infof("Session(%v) leaved from Room(%v)", session.id, r.id)
+	logger.Log.Infof("Session(%v) leaved from Room(%v)", session.id, r.id)
 	session.disconnectHandler = nil
 	session.room = nil
 	delete(r.sessions, session.id)
@@ -117,13 +118,13 @@ func (r *Room) _leave(session *Session) {
 func (r *Room) _close() {
 	for c := 1; true; c++ {
 		if _, err := r.webAPI.Battle.CloseRoom(r.id); err != nil {
-			Log.Errorf("Room(%v) failed %v times to use closeRoom API: %v", r.id, c, err)
+			logger.Log.Errorf("Room(%v) failed %v times to use closeRoom API: %v", r.id, c, err)
 			time.Sleep(time.Duration(c) * time.Second)
 			continue
 		}
 		break
 	}
-	Log.Infof("Room(%v) closed", r.id)
+	logger.Log.Infof("Room(%v) closed", r.id)
 	r.battle.Gateway.Close <- struct{}{}
 	for _, session := range r.sessions {
 		r._leave(session)
@@ -134,12 +135,12 @@ func (r *Room) _close() {
 func (r *Room) onBattleOutputReceive(output interface{}) {
 	switch message := output.(type) {
 	case *battle.Start:
-		Log.Infof("Room(%v)'s battle started", r.id)
+		logger.Log.Infof("Room(%v)'s battle started", r.id)
 		for _, s := range r.sessions {
 			s.api.Battle.SendStart(message)
 		}
 	case *battle.Finish:
-		Log.Infof("Room(%v)'s battle finished", r.id)
+		logger.Log.Infof("Room(%v)'s battle finished", r.id)
 		for _, s := range r.sessions {
 			s.api.Battle.SendFinish(message)
 		}

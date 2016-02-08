@@ -3,6 +3,7 @@ package main_test
 import (
 	"app"
 	"app/conn"
+	"app/logger"
 	"app/typhenapi/core"
 	webapi "app/typhenapi/web/submarine"
 	websocketapi "app/typhenapi/websocket/submarine"
@@ -36,7 +37,7 @@ func newClientSession() *clientSession {
 	}
 	session.conn.BinaryMessageHandler = func(data []byte) {
 		if err := session.api.DispatchMessageEvent(data); err != nil {
-			main.Log.Error(err)
+			logger.Log.Error(err)
 		}
 	}
 	return session
@@ -91,7 +92,7 @@ func newWebAPIMock(url string) *webapi.WebAPI {
 }
 
 func newTestServer() *httptest.Server {
-	main.Log.Level = logrus.PanicLevel
+	logger.Log.Level = logrus.PanicLevel
 	main.WebAPIRoundTripper = &webAPITransporter{typhenapi.NewJSONSerializer()}
 	gin.SetMode(gin.TestMode)
 	server := httptest.NewServer(main.NewServer())
