@@ -27,7 +27,7 @@ func TestMilliseconds(t *testing.T) {
 }
 
 func TestTime(t *testing.T) {
-	actualTime := currentmillis.Time(1454249514921)
+	actualTime := currentmillis.ToTime(1454249514921)
 	actual := actualTime.UTC().String()
 	expected := "2016-01-31 14:11:54.921 +0000 UTC"
 

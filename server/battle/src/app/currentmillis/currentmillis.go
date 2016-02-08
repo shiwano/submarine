@@ -24,8 +24,8 @@ func ToMilliseconds(t time.Time) int64 {
 	return t.UnixNano() / 1000000
 }
 
-// Time returns the local Time corresponding to the given currentMillis,
-func Time(currentMillis int64) time.Time {
+// ToTime returns the local Time corresponding to the given currentMillis,
+func ToTime(currentMillis int64) time.Time {
 	sec := currentMillis / 1000
 	nsec := (currentMillis % 1000) * 1000000
 	return time.Unix(sec, nsec)
