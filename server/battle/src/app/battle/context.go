@@ -8,6 +8,6 @@ type Context struct {
 
 func newContext() *Context {
 	return &Context{
-		container: &ActorContainer{},
+		container: newActorContainer(),
 	}
 }
