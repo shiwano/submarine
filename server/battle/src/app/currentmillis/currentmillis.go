@@ -30,3 +30,8 @@ func ToTime(ms int64) time.Time {
 	nsec := (ms % 1000) * 1000000
 	return time.Unix(sec, nsec)
 }
+
+// ToDuration converts the given milliseconds to time.Duration,
+func ToDuration(ms int64) time.Duration {
+	return time.Duration(ms * 1000000)
+}
