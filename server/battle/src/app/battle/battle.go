@@ -42,7 +42,7 @@ loop:
 	for {
 		select {
 		case now := <-ticker:
-			b.context.now = currentmillis.Milliseconds(now)
+			b.context.now = currentmillis.ToMilliseconds(now)
 			if b.context.now >= b.startedAt+b.timeLimit {
 				break loop
 			}
