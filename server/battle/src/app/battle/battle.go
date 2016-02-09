@@ -6,12 +6,12 @@ import (
 
 // Battle represents a battle.
 type Battle struct {
-	Gateway    *Gateway
-	context    *Context
-	createdAt  time.Time
-	startedAt  time.Time
-	timeLimit  time.Duration
-	hasStarted bool
+	Gateway   *Gateway
+	context   *Context
+	createdAt time.Time
+	startedAt time.Time
+	timeLimit time.Duration
+	IsStarted bool
 }
 
 // New creates a new battle.
@@ -26,8 +26,8 @@ func New(timeLimit time.Duration) *Battle {
 
 // Start the battle.
 func (b *Battle) Start() {
-	if !b.hasStarted {
-		b.hasStarted = true
+	if !b.IsStarted {
+		b.IsStarted = true
 		go b.run()
 	}
 }
