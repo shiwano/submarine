@@ -100,6 +100,9 @@ func (r *Room) _join(session *Session) {
 	session.disconnectHandler = func(session *Session) {
 		r.leave <- session
 	}
+	if !r.battle.IsStarted {
+		r.battle.CreateSubmarineUnlessExists(session.id)
+	}
 
 	// TODO: Add relevant room members counting.
 	if len(r.sessions) >= 1 {

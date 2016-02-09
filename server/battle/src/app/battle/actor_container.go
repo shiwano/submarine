@@ -1,6 +1,7 @@
 package battle
 
 import (
+	"app/logger"
 	"app/typhenapi/type/submarine/battle"
 )
 
@@ -30,12 +31,20 @@ func (c *ActorContainer) buildActor(userID int64, actorType battle.ActorType) *a
 }
 
 func (c *ActorContainer) createSubmarine(userID int64) *Submarine {
+	if _, ok := c.submarines[userID]; ok {
+		logger.Log.Errorf("User(%v)'s submarine already exists", userID)
+		return nil
+	}
 	submarine := &Submarine{
 		actor: c.buildActor(userID, battle.ActorType_Submarine),
 	}
 	c.actors[submarine.ID()] = submarine
-	c.submarines[submarine.ID()] = submarine
+	c.submarines[submarine.UserID()] = submarine
 	return submarine
+}
+
+func (c *ActorContainer) getSubmarineByUserID(userID int64) *Submarine {
+	return c.submarines[userID]
 }
 
 func (c *ActorContainer) getActor(actorID int64) Actor {

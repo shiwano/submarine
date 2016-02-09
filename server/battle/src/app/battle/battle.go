@@ -24,6 +24,13 @@ func New(timeLimit time.Duration) *Battle {
 	}
 }
 
+// CreateSubmarineUnlessExists creates the user's submarine unless it exists.
+func (b *Battle) CreateSubmarineUnlessExists(userID int64) {
+	if s := b.context.container.getSubmarineByUserID(userID); s == nil {
+		b.context.container.createSubmarine(userID)
+	}
+}
+
 // Start the battle.
 func (b *Battle) Start() {
 	if !b.IsStarted {
