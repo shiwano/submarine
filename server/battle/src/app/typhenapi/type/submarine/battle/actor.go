@@ -19,9 +19,6 @@ type Actor struct {
 
 // Coerce the fields.
 func (t *Actor) Coerce() error {
-	if t.Type == nil {
-		return errors.New("Type should not be empty")
-	}
 	if err := t.Type.Coerce(); err != nil {
 		return err
 	}
