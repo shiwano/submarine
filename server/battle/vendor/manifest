@@ -26,6 +26,12 @@
 			"branch": "master"
 		},
 		{
+			"importpath": "github.com/chuckpreslar/emission",
+			"repository": "https://github.com/chuckpreslar/emission",
+			"revision": "560ea6572b4ab7e4f297ca453648bc29eec6d812",
+			"branch": "master"
+		},
+		{
 			"importpath": "github.com/dustin/go-broadcast",
 			"repository": "https://github.com/dustin/go-broadcast",
 			"revision": "3bdf6d4a7164a50bc19d5f230e2981d87d2584f1",
