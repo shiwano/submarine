@@ -12,6 +12,7 @@ type Battle struct {
 	startedAt time.Time
 	timeLimit time.Duration
 	IsStarted bool
+	close     chan struct{}
 }
 
 // New creates a new battle.
@@ -21,6 +22,7 @@ func New(timeLimit time.Duration) *Battle {
 		context:   newContext(),
 		createdAt: time.Now(),
 		timeLimit: timeLimit,
+		close:     make(chan struct{}, 1),
 	}
 }
 
@@ -39,6 +41,13 @@ func (b *Battle) Start() {
 	}
 }
 
+// Close the battle.
+func (b *Battle) Close() {
+	if b.IsStarted {
+		b.close <- struct{}{}
+	}
+}
+
 func (b *Battle) run() {
 	ticker := time.Tick(time.Second / 30)
 	b.startedAt = time.Now()
@@ -52,7 +61,7 @@ loop:
 			if b.context.now.After(b.startedAt.Add(b.timeLimit)) {
 				break loop
 			}
-		case <-b.Gateway.Close:
+		case <-b.close:
 			break loop
 		}
 	}

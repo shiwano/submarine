@@ -127,7 +127,7 @@ func (r *Room) _close() {
 		break
 	}
 	logger.Log.Infof("Room(%v) closed", r.id)
-	r.battle.Gateway.Close <- struct{}{}
+	r.battle.Close()
 	for _, session := range r.sessions {
 		r._leave(session)
 		session.close()

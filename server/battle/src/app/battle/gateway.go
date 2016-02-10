@@ -10,14 +10,12 @@ import (
 type Gateway struct {
 	Output chan interface{}
 	Input  chan interface{}
-	Close  chan struct{}
 }
 
 func newGateway() *Gateway {
 	return &Gateway{
 		Output: make(chan interface{}, 256),
 		Input:  make(chan interface{}, 256),
-		Close:  make(chan struct{}, 1),
 	}
 }
 
