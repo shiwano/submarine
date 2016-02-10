@@ -9,7 +9,7 @@ type Actor interface {
 	ID() int64
 	UserID() int64
 	ActorType() battle.ActorType
-	Position() battle.Vector
+	Position() *battle.Vector
 	Update()
 }
 
@@ -35,8 +35,8 @@ func (a *actor) ActorType() battle.ActorType {
 }
 
 // Position returns the current actor position.
-func (a *actor) Position() battle.Vector {
-	return battle.Vector{X: 0, Y: 0}
+func (a *actor) Position() *battle.Vector {
+	return &battle.Vector{X: 0, Y: 0}
 }
 
 // Update the actor. This function is called every frame.
