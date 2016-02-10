@@ -36,32 +36,38 @@ func (s *Server) roomsGET(c *gin.Context) {
 	roomID, err := strconv.ParseInt(c.Param("id"), 10, 64)
 	if err != nil || roomID <= 0 {
 		logger.Log.Error(err)
-		c.String(http.StatusForbidden, "Invalid room id.")
+		c.String(http.StatusForbidden, "Invalid room id")
 		return
 	}
 
 	room, err := s.roomManager.tryGetRoom(roomID)
 	if err != nil {
 		logger.Log.Error(err)
-		c.String(http.StatusForbidden, "Failed to get or create the room.")
+		c.String(http.StatusForbidden, "Failed to get or create the room")
 		return
 	}
 
 	res, err := s.webAPI.Battle.FindRoomMember(c.Query("room_key"))
 	if err != nil {
 		logger.Log.Error(err)
-		c.String(http.StatusInternalServerError, "Failed to authenticate the room key.")
+		c.String(http.StatusInternalServerError, "Failed to authenticate the room key")
 		return
 	}
 	if res.RoomMember == nil {
-		c.String(http.StatusForbidden, "Invalid room key.")
+		c.String(http.StatusForbidden, "Invalid room key")
 		return
 	}
 
 	session := newSession(res.RoomMember, roomID)
 	if err := session.Connect(c.Writer, c.Request); err != nil {
 		logger.Log.Error(err)
-		c.String(http.StatusForbidden, "Failed to upgrade the request to web socket protocol.")
+		c.String(http.StatusForbidden, "Failed to upgrade the request to web socket protocol")
+		return
+	}
+
+	if room.isClosed {
+		logger.Log.Infof("Room(%v) is already closed", session.id)
+		session.close()
 		return
 	}
 

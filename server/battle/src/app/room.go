@@ -21,6 +21,7 @@ type Room struct {
 	join         chan *Session
 	leave        chan *Session
 	close        chan struct{}
+	isClosed     bool
 }
 
 func newRoom(id int64) (*Room, error) {
@@ -70,6 +71,11 @@ loop:
 			r.onBattleOutputReceive(output)
 		}
 	}
+
+	close(r.join)
+	close(r.leave)
+	close(r.close)
+	r.isClosed = true
 
 	if r.closeHandler != nil {
 		r.closeHandler(r)
