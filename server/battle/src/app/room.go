@@ -154,7 +154,7 @@ func (r *Room) onBattleOutputReceive(output interface{}) {
 		}
 		go func() { r.close <- struct{}{} }()
 	case *battle.Actor:
-		logger.Log.Debugf("User(%v)'s actor(%v) is created", message.UserId, message.Id)
+		logger.Log.Debugf("User(%v)'s %v(%v) is created", message.UserId, message.Type.String(), message.Id)
 		for _, s := range r.sessions {
 			s.api.Battle.SendActor(message)
 		}
