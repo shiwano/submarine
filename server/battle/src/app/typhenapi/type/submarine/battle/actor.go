@@ -11,10 +11,10 @@ var _ = errors.New
 
 // Actor is a kind of TyphenAPI type.
 type Actor struct {
-	Id       int64      `codec:"id"`
-	UserId   int64      `codec:"user_id"`
-	Type     *ActorType `codec:"type"`
-	Position *Vector    `codec:"position"`
+	Id       int64     `codec:"id"`
+	UserId   int64     `codec:"user_id"`
+	Type     ActorType `codec:"type"`
+	Position *Vector   `codec:"position"`
 }
 
 // Coerce the fields.
