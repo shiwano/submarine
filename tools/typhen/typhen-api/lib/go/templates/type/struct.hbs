@@ -33,9 +33,11 @@ func (t *{{upperCamelCase name}}) Coerce() error {
 	{{/if}}
 	{{else}}
 	{{#unless type.isPrimitiveType}}
+	{{#unless type.isEnum}}
 	if t.{{upperCamelCase name}} == nil {
 		return errors.New("{{upperCamelCase name}} should not be empty")
 	}
+	{{/unless}}
 	{{/unless}}
 	{{#if type.isEnum}}
 	if err := t.{{upperCamelCase name}}.Coerce(); err != nil {
