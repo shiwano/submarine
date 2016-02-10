@@ -72,7 +72,7 @@ module.exports = function(typhen, options, helpers) {
       var pointerMark = hasPointerMark ? '*' : '';
       if (type.isPrimitiveType && type.name === 'nil') {
         return pointerMark + 'typhenapi.Void';
-      } else if (type.isPrimitiveType) {
+      } else if (type.isPrimitiveType || type.isEnum) {
         return isOptional ? pointerMark + type.name : type.name;
       } else if (type.isArray) {
         var name = '[]' + helpers.typeName(type.type, currentModule, false, hasPointerMark)
