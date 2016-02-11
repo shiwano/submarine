@@ -50,7 +50,7 @@ namespace TyphenApi.WebApi
         public override void OnBeforeRequestSend(IWebApiRequest request)
         {
             #if UNITY_EDITOR
-            Game.Logger.LogWithColor(Color.blue, "[WebAPI] Request: " + request.Uri, request.Body);
+            Game.Logger.LogWithBlue("[WebAPI] Request: " + request.Uri, request.Body);
             #endif
 
             request.Headers["Content-Type"] = "application/json";
@@ -77,7 +77,7 @@ namespace TyphenApi.WebApi
         public override void OnRequestSuccess(IWebApiRequest request, IWebApiResponse response)
         {
             #if UNITY_EDITOR
-            Game.Logger.LogWithColor(new Color(0f, 0.4f, 0f), "[WebAPI] Response: " + request.Uri, response.Body);
+            Game.Logger.LogWithGreen("[WebAPI] Response: " + request.Uri, response.Body);
             #endif
 
             string setCookieValue;
@@ -86,7 +86,7 @@ namespace TyphenApi.WebApi
                 if (sessionId.Update(setCookieValue))
                 {
                     #if UNITY_EDITOR
-                    Game.Logger.LogWithColor(new Color(0.5f, 0f, 0.5f), "[WebAPI] SessionId: " + sessionId.Id, setCookieValue);
+                    Game.Logger.LogWithPurple("[WebAPI] SessionId: " + sessionId.Id, setCookieValue);
                     #endif
                 }
             }

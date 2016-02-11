@@ -5,11 +5,24 @@ namespace Submarine
 {
     public static class Logger
     {
-        public static readonly Color Green = new Color(0f, 0.4f, 0f);
-
         public static void Log(params object[] messages)
         {
             Debug.Log(BuildMessage(messages));
+        }
+
+        public static void LogWithPurple(params object[] messages)
+        {
+            Debug.Log(BuildMessage(messages, new Color(0.5f, 0f, 0.5f)));
+        }
+
+        public static void LogWithBlue(params object[] messages)
+        {
+            Debug.Log(BuildMessage(messages, Color.blue));
+        }
+
+        public static void LogWithGreen(params object[] messages)
+        {
+            Debug.Log(BuildMessage(messages, new Color(0f, 0.4f, 0f)));
         }
 
         public static void LogWithColor(Color color, params object[] messages)

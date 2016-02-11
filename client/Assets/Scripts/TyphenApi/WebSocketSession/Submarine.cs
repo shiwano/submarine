@@ -43,14 +43,14 @@ namespace TyphenApi.WebSocketSession
         public override void OnBeforeMessageSend(TyphenApi.TypeBase message)
         {
             #if UNITY_EDITOR
-            Game.Logger.LogWithColor(Color.blue, "[WebSocketApi] Send " + message.GetType().Name + " Message:", message);
+            Game.Logger.LogWithBlue("[WebSocketApi] Send " + message.GetType().Name + " Message:", message);
             #endif
         }
 
         public override void OnMessageReceive(TyphenApi.TypeBase message)
         {
             #if UNITY_EDITOR
-            Game.Logger.LogWithColor(Game.Logger.Green, "[WebSocketApi] Receive " + message.GetType().Name + " Message:", message);
+            Game.Logger.LogWithGreen("[WebSocketApi] Receive " + message.GetType().Name + " Message:", message);
             #endif
         }
 
