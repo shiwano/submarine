@@ -51,11 +51,15 @@ namespace Submarine
 
         static string Colorize(string str, Color color)
         {
+            #if UNITY_EDITOR
             var r = (int)(color.r * 255);
             var g = (int)(color.g * 255);
             var b = (int)(color.b * 255);
             var hex = r.ToString("X2") + g.ToString("X2") + b.ToString("X2");
             return string.Format("<color=#{0}>{1}</color>", hex, str);
+            #else
+            return str;
+            #endif
         }
     }
 }
