@@ -42,17 +42,9 @@ namespace TyphenApi
 
         public void SetValue(object obj, object rawValue)
         {
-            ValueT value;
-
-            try
-            {
-                value = (ValueT)rawValue;
-            }
-            catch (InvalidCastException)
-            {
-                value = (ValueT)Convert.ChangeType(rawValue, ValueType);
-            }
-
+            ValueT value = ValueType.IsEnum ?
+                (ValueT)Convert.ChangeType(rawValue, typeof(int)) :
+                (ValueT)Convert.ChangeType(rawValue, ValueType);
             setValueFunc((ClassT)obj, value);
         }
     }
