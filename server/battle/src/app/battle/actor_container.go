@@ -10,13 +10,15 @@ type ActorContainer struct {
 	nextActorID int64
 	actors      map[int64]Actor
 	submarines  map[int64]*Submarine
+	context     *Context
 }
 
-func newActorContainer() *ActorContainer {
+func newActorContainer(context *Context) *ActorContainer {
 	return &ActorContainer{
 		nextActorID: 1,
 		actors:      make(map[int64]Actor),
 		submarines:  make(map[int64]*Submarine),
+		context:     context,
 	}
 }
 
@@ -27,6 +29,7 @@ func (c *ActorContainer) buildActor(userID int64, actorType battle.ActorType) *a
 		id:        nextActorID,
 		userID:    userID,
 		actorType: actorType,
+		context:   c.context,
 	}
 }
 

@@ -17,6 +17,7 @@ type actor struct {
 	id        int64
 	userID    int64
 	actorType battle.ActorType
+	context   *Context
 }
 
 // ID returns the actor id.

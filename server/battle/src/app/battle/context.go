@@ -13,8 +13,8 @@ type Context struct {
 }
 
 func newContext() *Context {
-	return &Context{
-		container: newActorContainer(),
-		event:     emission.NewEmitter(),
-	}
+	context := new(Context)
+	context.event = emission.NewEmitter()
+	context.container = newActorContainer(context)
+	return context
 }
