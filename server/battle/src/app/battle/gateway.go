@@ -33,10 +33,11 @@ func (g *Gateway) finish(hasWon bool, finishedAt time.Time) {
 }
 
 func (g *Gateway) actor(actor Actor) {
+	position := actor.Position()
 	g.Output <- &battle.Actor{
 		Id:       actor.ID(),
 		UserId:   actor.UserID(),
 		Type:     actor.ActorType(),
-		Position: actor.Position(),
+		Position: &position,
 	}
 }
