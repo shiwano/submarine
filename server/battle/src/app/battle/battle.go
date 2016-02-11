@@ -17,13 +17,18 @@ type Battle struct {
 
 // New creates a new battle.
 func New(timeLimit time.Duration) *Battle {
-	return &Battle{
+	battle := &Battle{
 		Gateway:   newGateway(),
 		context:   newContext(),
 		createdAt: time.Now(),
 		timeLimit: timeLimit,
 		close:     make(chan struct{}, 1),
 	}
+
+	battle.context.event.On(actorCreated, func(actor Actor) {
+		battle.Gateway.actor(actor)
+	})
+	return battle
 }
 
 // CreateSubmarineUnlessExists creates the user's submarine unless it exists.
