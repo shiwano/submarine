@@ -10,7 +10,9 @@ type Actor interface {
 	UserID() int64
 	ActorType() battle.ActorType
 	Position() battle.Vector
+	Start()
 	Update()
+	OnDestroy()
 }
 
 type actor struct {
@@ -40,5 +42,11 @@ func (a *actor) Position() battle.Vector {
 	return battle.Vector{X: 0, Y: 0}
 }
 
+// Start the actor. This function is called first frame.
+func (a *actor) Start() {}
+
 // Update the actor. This function is called every frame.
 func (a *actor) Update() {}
+
+// OnDestroy is called when the actor is destroyed.
+func (a *actor) OnDestroy() {}
