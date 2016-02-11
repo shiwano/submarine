@@ -12,6 +12,7 @@ type Actor interface {
 	Position() battle.Vector
 	Start()
 	Update()
+	Destroy()
 	OnDestroy()
 }
 
@@ -47,6 +48,11 @@ func (a *actor) Start() {}
 
 // Update the actor. This function is called every frame.
 func (a *actor) Update() {}
+
+// Destroy the actor.
+func (a *actor) Destroy() {
+	a.context.container.destroyActor(a)
+}
 
 // OnDestroy is called when the actor is destroyed.
 func (a *actor) OnDestroy() {}

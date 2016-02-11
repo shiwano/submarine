@@ -60,6 +60,15 @@ func (c *ActorContainer) getActor(actorID int64) Actor {
 	return c.actors[actorID]
 }
 
-func (c *ActorContainer) removeActor(actorID int64) {
-	delete(c.actors, actorID)
+func (c *ActorContainer) destroyActor(actor Actor) {
+	if _, ok := c.actors[actor.ID()]; !ok {
+		logger.Log.Errorf("User(%v)'s '%v(%v) is already destroyed", actor.UserID(), actor.ActorType().String(), actor.ID())
+		return
+	}
+	delete(c.actors, actor.ID())
+	if actor.ActorType() == battle.ActorType_Submarine {
+		delete(c.submarines, actor.UserID())
+	}
+	actor.OnDestroy()
+	c.context.event.EmitSync(actorDestroyed, actor)
 }
