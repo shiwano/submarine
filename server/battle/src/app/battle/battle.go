@@ -71,5 +71,6 @@ loop:
 		}
 	}
 
-	b.Gateway.finish(true, b.context.now)
+	// TODO: winnerUserID is temporary value.
+	b.Gateway.finish(b.context.userIDs()[0], b.context.now)
 }

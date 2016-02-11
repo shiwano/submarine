@@ -25,10 +25,10 @@ func (g *Gateway) start(startedAt time.Time) {
 	}
 }
 
-func (g *Gateway) finish(hasWon bool, finishedAt time.Time) {
+func (g *Gateway) finish(winnerUserID int64, finishedAt time.Time) {
 	g.Output <- &battle.Finish{
-		HasWon:     hasWon,
-		FinishedAt: currentmillis.ToMilliseconds(finishedAt),
+		WinnerUserId: winnerUserID,
+		FinishedAt:   currentmillis.ToMilliseconds(finishedAt),
 	}
 }
 
