@@ -62,7 +62,7 @@ namespace TyphenApi
         {
             if (IsValue(value, valueType))
             {
-                return valueType.IsEnum ? (long)value : value;
+                return valueType.IsEnum ? (long)((int)value) : value;
             }
             else if (IsList(value))
             {
