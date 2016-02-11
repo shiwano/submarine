@@ -11,8 +11,7 @@ var _ = errors.New
 
 // Start is a kind of TyphenAPI type.
 type Start struct {
-	StartedAt           int64 `codec:"started_at"`
-	ControllableActorId int64 `codec:"controllable_actor_id"`
+	StartedAt int64 `codec:"started_at"`
 }
 
 // Coerce the fields.

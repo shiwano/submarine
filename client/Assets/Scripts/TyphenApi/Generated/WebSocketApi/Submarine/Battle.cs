@@ -89,12 +89,11 @@ namespace TyphenApi.WebSocketApi.Parts.Submarine
             session.Send((int)MessageType.Start, start);
         }
 
-        public void SendStart(long startedAt, long controllableActorId)
+        public void SendStart(long startedAt)
         {
             session.Send((int)MessageType.Start, new TyphenApi.Type.Submarine.Battle.Start()
             {
                 StartedAt = startedAt,
-                ControllableActorId = controllableActorId,
             });
         }
         public void SendFinish(TyphenApi.Type.Submarine.Battle.Finish finish)
@@ -102,11 +101,11 @@ namespace TyphenApi.WebSocketApi.Parts.Submarine
             session.Send((int)MessageType.Finish, finish);
         }
 
-        public void SendFinish(bool hasWon, long finishedAt)
+        public void SendFinish(long winnerUserId, long finishedAt)
         {
             session.Send((int)MessageType.Finish, new TyphenApi.Type.Submarine.Battle.Finish()
             {
-                HasWon = hasWon,
+                WinnerUserId = winnerUserId,
                 FinishedAt = finishedAt,
             });
         }
