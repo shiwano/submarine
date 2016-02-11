@@ -22,7 +22,7 @@ func newActorContainer(context *Context) *ActorContainer {
 	}
 }
 
-func (c *ActorContainer) buildActor(userID int64, actorType battle.ActorType) *actor {
+func (c *ActorContainer) buildActorBase(userID int64, actorType battle.ActorType) *actor {
 	nextActorID := c.nextActorID
 	c.nextActorID++
 	return &actor{
@@ -33,15 +33,21 @@ func (c *ActorContainer) buildActor(userID int64, actorType battle.ActorType) *a
 	}
 }
 
+func (c *ActorContainer) registerActor(actor Actor) {
+	c.actors[actor.ID()] = actor
+	actor.Start()
+	c.context.event.EmitSync(actorCreated, actor)
+}
+
 func (c *ActorContainer) createSubmarine(userID int64) *Submarine {
 	if _, ok := c.submarines[userID]; ok {
 		logger.Log.Errorf("User(%v)'s submarine already exists", userID)
 		return nil
 	}
 	submarine := &Submarine{
-		actor: c.buildActor(userID, battle.ActorType_Submarine),
+		actor: c.buildActorBase(userID, battle.ActorType_Submarine),
 	}
-	c.actors[submarine.ID()] = submarine
+	c.registerActor(submarine)
 	c.submarines[submarine.UserID()] = submarine
 	return submarine
 }
