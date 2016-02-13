@@ -32,6 +32,9 @@ namespace Submarine.Battle
             Container.Bind<RadarView>().ToSingleInstance(radarView);
             Container.Bind<RadarMediator>().ToSingle();
             Container.Bind<IInitializable>().ToSingle<RadarMediator>();
+
+            Container.Bind<ITickable>().ToSingle<ThirdPersonCamera>();
+            Container.Bind<ThirdPersonCamera>().ToSingle<ThirdPersonCamera>();
         }
     }
 }
