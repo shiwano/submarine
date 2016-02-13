@@ -53,6 +53,16 @@ namespace Submarine.Battle
                 {
                     battleModel.Now = CurrentMillis.FromMilliseconds(message.Time);
                 });
+
+                battleService.Api.OnActorReceiveAsObservable().Subscribe(message =>
+                {
+                    battleModel.Actors.Add(message.Id, message);
+                });
+
+                battleService.Api.OnDestructionReceiveAsObservable().Subscribe(message =>
+                {
+                    battleModel.Actors.Remove(message.ActorId);
+                });
             }
         }
     }
