@@ -12,6 +12,7 @@ var _ = errors.New
 // LoggedInUser is a kind of TyphenAPI type.
 type LoggedInUser struct {
 	JoinedRoom *JoinedRoom `codec:"joined_room"`
+	Id         int64       `codec:"id"`
 	Name       string      `codec:"name"`
 }
 

@@ -5,6 +5,7 @@ module TyphenApi::Model::Submarine
     include Virtus.model(:strict => true)
 
     attribute :joined_room, TyphenApi::Model::Submarine::JoinedRoom, :required => false
+    attribute :id, Integer, :required => true
     attribute :name, String, :required => true
   end
 end
