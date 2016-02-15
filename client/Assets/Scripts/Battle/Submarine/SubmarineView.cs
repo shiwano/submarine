@@ -5,15 +5,6 @@ namespace Submarine.Battle
 {
     public class SubmarineView : MonoBehaviour
     {
-        public class Factory : ViewMediatorFactory<SubmarineView, SubmarineMediator>
-        {
-            protected override SubmarineView CreateView()
-            {
-                var prefab = Resources.Load<GameObject>(Constants.SubmarinePrefab);
-                return GameObject.Instantiate(prefab).GetComponent<SubmarineView>();
-            }
-        }
-
         [SerializeField]
         GameObject model;
         [SerializeField]
