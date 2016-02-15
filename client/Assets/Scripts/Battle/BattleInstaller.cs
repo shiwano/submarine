@@ -17,8 +17,8 @@ namespace Submarine.Battle
 
         public override void InstallBindings()
         {
-            Container.Bind<BattleService>().ToSingle();
             Container.Bind<BattleModel>().ToSingle();
+            Container.Bind<BattleService>().ToSingle();
             Container.Bind<IDisposable>().ToSingle<BattleService>();
             Container.Bind<BattleInputService>().ToSingleInstance(battleInputService);
 
@@ -33,8 +33,20 @@ namespace Submarine.Battle
             Container.Bind<RadarMediator>().ToSingle();
             Container.Bind<IInitializable>().ToSingle<RadarMediator>();
 
+            Container.Bind<ThirdPersonCamera>().ToSingle();
             Container.Bind<ITickable>().ToSingle<ThirdPersonCamera>();
-            Container.Bind<ThirdPersonCamera>().ToSingle<ThirdPersonCamera>();
+
+            Container.Bind<ActorContainer>().ToSingle();
+            Container.Bind<ITickable>().ToSingle<ActorContainer>();
+
+            Container.BindFacadeFactory<Type.Battle.Actor, SubmarineFacade, SubmarineFacade.Factory>(InstallSubmarineFacade);
+        }
+
+        void InstallSubmarineFacade(DiContainer subContainer, Type.Battle.Actor actor)
+        {
+            var submarinePrefab = Resources.Load<GameObject>(Constants.SubmarinePrefab);
+            subContainer.Bind<SubmarineView>().ToSinglePrefab(submarinePrefab);
+            subContainer.BindInstance(actor);
         }
     }
 }
