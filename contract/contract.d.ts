@@ -17,6 +17,7 @@ declare module Submarine {
   }
 
   interface User {
+    id: integer;
     name: string;
   }
 
