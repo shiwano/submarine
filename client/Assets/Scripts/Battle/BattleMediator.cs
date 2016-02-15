@@ -70,7 +70,10 @@ namespace Submarine.Battle
                 case Type.Battle.ActorType.Submarine:
                 {
                     var submarine = actorContainer.CreateSubmarine(actor);
-                    thirdPersonCamera.SetTarget(submarine.View.transform);
+                    if (submarine.IsMine)
+                    {
+                        thirdPersonCamera.SetTarget(submarine.View.transform);
+                    }
                     break;
                 }
             }

@@ -9,7 +9,7 @@ namespace Submarine.Battle
         [Inject]
         SubmarineFacade.Factory submarineFactory;
 
-        List<IActor> actors = new List<IActor>();
+        List<IActorFacade> actors = new List<IActorFacade>();
 
         public void Tick()
         {
