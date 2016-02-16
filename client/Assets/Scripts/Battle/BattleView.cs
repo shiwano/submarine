@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
+using System;
 using System.Collections.Generic;
 
 namespace Submarine.Battle
@@ -21,5 +22,17 @@ namespace Submarine.Battle
         public Text DecoyCoolDown;
         public Text PingerCoolDown;
         public Text LookoutCoolDown;
+
+        public TimeSpan ElapsedTime
+        {
+            set
+            {
+                TimerText.text = string.Format(
+                    "{0:00}:{1:00}",
+                    (int)value.TotalMinutes,
+                    (int)value.Seconds
+                );
+            }
+        }
     }
 }

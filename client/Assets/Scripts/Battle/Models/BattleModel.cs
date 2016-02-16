@@ -27,6 +27,11 @@ namespace Submarine.Battle
             set { differenceFromBattleServerTime = value.Subtract(DateTime.Now); }
         }
 
+        public TimeSpan ElapsedTime
+        {
+            get { return Now - StartedAt; }
+        }
+
         public bool IsInBattle
         {
             get { return State.Value == BattleState.InBattle; }

@@ -33,18 +33,8 @@ namespace Submarine.Battle
         {
             if (battleModel.IsInBattle)
             {
-                UpdateTimerText();
+                view.ElapsedTime = battleModel.ElapsedTime;
             }
-        }
-
-        void UpdateTimerText()
-        {
-            var elapsedTime = battleModel.Now - battleModel.StartedAt;
-            view.TimerText.text = string.Format(
-                "{0:00}:{1:00}",
-                (int)elapsedTime.TotalMinutes,
-                (int)elapsedTime.Seconds
-            );
         }
 
         void OnBattlePrepare()
