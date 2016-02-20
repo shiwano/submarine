@@ -25,7 +25,7 @@ func New(timeLimit time.Duration) *Battle {
 		close:     make(chan struct{}, 1),
 	}
 
-	battle.context.event.On(actorCreated, func(actor Actor) {
+	battle.context.event.On(ActorCreated, func(actor Actor) {
 		battle.Gateway.actor(actor)
 	})
 	return battle
