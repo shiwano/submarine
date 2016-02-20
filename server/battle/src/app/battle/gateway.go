@@ -2,6 +2,7 @@ package battle
 
 import (
 	"app/currentmillis"
+	"app/typhenapi/core"
 	"app/typhenapi/type/submarine/battle"
 	"time"
 )
@@ -9,13 +10,13 @@ import (
 // Gateway represents a battle input/output.
 type Gateway struct {
 	Output chan interface{}
-	Input  chan interface{}
+	Input  chan *UserInput
 }
 
 func newGateway() *Gateway {
 	return &Gateway{
 		Output: make(chan interface{}, 256),
-		Input:  make(chan interface{}, 256),
+		Input:  make(chan *UserInput, 256),
 	}
 }
 
@@ -40,4 +41,10 @@ func (g *Gateway) actor(actor Actor) {
 		Type:     actor.ActorType(),
 		Position: &position,
 	}
+}
+
+// UserInput represents a TyphenAPI message with the user id.
+type UserInput struct {
+	UserID  int64
+	Message typhenapi.Type
 }
