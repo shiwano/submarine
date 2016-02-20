@@ -37,6 +37,11 @@ func newSession(info *battle.RoomMember, roomID int64) *Session {
 
 	session.api = api.New(session, serializer, session.onError)
 	session.api.Battle.PingHandler = session.onPingReceive
+	session.api.Battle.AccelerationRequestHandler = session.onAccelerationRequestReceive
+	session.api.Battle.BrakeRequestHandler = session.onBrakeRequestReceive
+	session.api.Battle.TurnRequestHandler = session.onTurnRequestReceive
+	session.api.Battle.TorpedoRequestHandler = session.onTorpedoRequestReceive
+	session.api.Battle.PingerRequestHandler = session.onPingerRequestReceive
 	return session
 }
 
@@ -78,6 +83,32 @@ func (s *Session) onError(err error) {
 func (s *Session) onPingReceive(message *battle.PingObject) {
 	message.Message += " " + message.Message
 	s.api.Battle.SendPing(message)
+}
+
+func (s *Session) onAccelerationRequestReceive(message *battle.AccelerationRequestObject) {
+	s.onBattleMessageReceive(message)
+}
+
+func (s *Session) onBrakeRequestReceive(message *battle.BrakeRequestObject) {
+	s.onBattleMessageReceive(message)
+}
+
+func (s *Session) onTurnRequestReceive(message *battle.TurnRequestObject) {
+	s.onBattleMessageReceive(message)
+}
+
+func (s *Session) onPingerRequestReceive(message *battle.PingerRequestObject) {
+	s.onBattleMessageReceive(message)
+}
+
+func (s *Session) onTorpedoRequestReceive(message *battle.TorpedoRequestObject) {
+	s.onBattleMessageReceive(message)
+}
+
+func (s *Session) onBattleMessageReceive(message typhenapi.Type) {
+	if s.room != nil && !s.room.isClosed {
+		s.room.sendBattleInput(s.id, message)
+	}
 }
 
 func (s *Session) synchronizeTime() {

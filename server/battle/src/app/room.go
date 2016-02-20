@@ -141,6 +141,10 @@ func (r *Room) _close() {
 	}
 }
 
+func (r *Room) sendBattleInput(userID int64, message typhenapi.Type) {
+	r.battle.Gateway.Input <- &battleLogic.UserInput{userID, message}
+}
+
 func (r *Room) onBattleOutputReceive(output typhenapi.Type) {
 	switch message := output.(type) {
 	case *battle.Start:
