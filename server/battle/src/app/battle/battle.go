@@ -80,5 +80,8 @@ func (b *Battle) start() {
 
 func (b *Battle) update(now time.Time) bool {
 	b.context.now = now
+	for _, actor := range b.context.container.actors {
+		actor.Update()
+	}
 	return b.context.now.Before(b.startedAt.Add(b.timeLimit))
 }
