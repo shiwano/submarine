@@ -41,7 +41,7 @@ func (b *Battle) CreateSubmarineUnlessExists(userID int64) {
 // Start the battle.
 func (b *Battle) Start() {
 	if !b.IsStarted {
-		b.IsStarted = true
+		b.start()
 		go b.run()
 	}
 }
@@ -55,15 +55,13 @@ func (b *Battle) Close() {
 
 func (b *Battle) run() {
 	ticker := time.Tick(time.Second / 30)
-	b.startedAt = time.Now()
 	b.Gateway.start(b.startedAt)
 
 loop:
 	for {
 		select {
 		case now := <-ticker:
-			b.context.now = now
-			if b.context.now.After(b.startedAt.Add(b.timeLimit)) {
+			if !b.update(now) {
 				break loop
 			}
 		case <-b.close:
@@ -73,4 +71,14 @@ loop:
 
 	// TODO: winnerUserID is temporary value.
 	b.Gateway.finish(b.context.userIDs()[0], b.context.now)
+}
+
+func (b *Battle) start() {
+	b.IsStarted = true
+	b.startedAt = time.Now()
+}
+
+func (b *Battle) update(now time.Time) bool {
+	b.context.now = now
+	return b.context.now.Before(b.startedAt.Add(b.timeLimit))
 }
