@@ -72,10 +72,10 @@ loop:
 		}
 	}
 
+	r.isClosed = true
 	close(r.join)
 	close(r.leave)
 	close(r.close)
-	r.isClosed = true
 
 	if r.closeHandler != nil {
 		r.closeHandler(r)
