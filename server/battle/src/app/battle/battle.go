@@ -1,6 +1,7 @@
 package battle
 
 import (
+	"app/typhenapi/type/submarine/battle"
 	"time"
 )
 
@@ -64,6 +65,8 @@ loop:
 			if !b.update(now) {
 				break loop
 			}
+		case input := <-b.Gateway.Input:
+			b.onBattleInputReceive(input)
 		case <-b.close:
 			break loop
 		}
@@ -84,4 +87,24 @@ func (b *Battle) update(now time.Time) bool {
 		actor.Update()
 	}
 	return b.context.now.Before(b.startedAt.Add(b.timeLimit))
+}
+
+func (b *Battle) onBattleInputReceive(input *UserInput) {
+	submarine := b.context.container.getSubmarineByUserID(input.UserID)
+	if submarine == nil {
+		return
+	}
+
+	switch message := input.Message.(type) {
+	case *battle.AccelerationRequestObject:
+		submarine.event.EmitSync(AccelerationRequested, message)
+	case *battle.BrakeRequestObject:
+		submarine.event.EmitSync(BrakeRequested, message)
+	case *battle.TurnRequestObject:
+		submarine.event.EmitSync(TurnRequested, message)
+	case *battle.TorpedoRequestObject:
+		submarine.event.EmitSync(TorpedoRequested, message)
+	case *battle.PingerRequestObject:
+		submarine.event.EmitSync(PingerRequested, message)
+	}
 }

@@ -8,4 +8,10 @@ const (
 	ActorCreated EventType = iota
 	ActorMoved
 	ActorDestroyed
+
+	AccelerationRequested
+	BrakeRequested
+	TurnRequested
+	TorpedoRequested
+	PingerRequested
 )
