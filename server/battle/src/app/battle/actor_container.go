@@ -52,6 +52,11 @@ func (c *ActorContainer) createSubmarine(userID int64) *Submarine {
 	return submarine
 }
 
+func (c *ActorContainer) existsActor(actorID int64) bool {
+	_, ok := c.actors[actorID]
+	return ok
+}
+
 func (c *ActorContainer) getSubmarineByUserID(userID int64) *Submarine {
 	return c.submarines[userID]
 }
@@ -61,7 +66,7 @@ func (c *ActorContainer) getActor(actorID int64) Actor {
 }
 
 func (c *ActorContainer) destroyActor(actor Actor) {
-	if _, ok := c.actors[actor.ID()]; !ok {
+	if !c.existsActor(actor.ID()) {
 		logger.Log.Errorf("User(%v)'s '%v(%v) is already destroyed", actor.UserID(), actor.ActorType().String(), actor.ID())
 		return
 	}
