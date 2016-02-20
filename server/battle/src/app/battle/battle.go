@@ -27,7 +27,7 @@ func New(timeLimit time.Duration) *Battle {
 	}
 
 	battle.context.event.On(ActorCreated, func(actor Actor) {
-		battle.Gateway.actor(actor)
+		battle.Gateway.outputActor(actor)
 	})
 	return battle
 }
@@ -56,7 +56,7 @@ func (b *Battle) Close() {
 
 func (b *Battle) run() {
 	ticker := time.Tick(time.Second / 30)
-	b.Gateway.start(b.startedAt)
+	b.Gateway.outputStart(b.startedAt)
 
 loop:
 	for {
@@ -65,15 +65,15 @@ loop:
 			if !b.update(now) {
 				break loop
 			}
-		case input := <-b.Gateway.Input:
-			b.onBattleInputReceive(input)
+		case input := <-b.Gateway.input:
+			b.onInputReceive(input)
 		case <-b.close:
 			break loop
 		}
 	}
 
 	// TODO: winnerUserID is temporary value.
-	b.Gateway.finish(b.context.userIDs()[0], b.context.now)
+	b.Gateway.outputFinish(b.context.userIDs()[0], b.context.now)
 }
 
 func (b *Battle) start() {
@@ -89,7 +89,7 @@ func (b *Battle) update(now time.Time) bool {
 	return b.context.now.Before(b.startedAt.Add(b.timeLimit))
 }
 
-func (b *Battle) onBattleInputReceive(input *UserInput) {
+func (b *Battle) onInputReceive(input *Input) {
 	submarine := b.context.container.getSubmarineByUserID(input.UserID)
 	if submarine == nil {
 		return

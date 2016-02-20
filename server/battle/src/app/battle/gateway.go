@@ -10,30 +10,38 @@ import (
 // Gateway represents a battle input/output.
 type Gateway struct {
 	Output chan typhenapi.Type
-	Input  chan *UserInput
+	input  chan *Input
 }
 
 func newGateway() *Gateway {
 	return &Gateway{
 		Output: make(chan typhenapi.Type, 256),
-		Input:  make(chan *UserInput, 256),
+		input:  make(chan *Input, 256),
 	}
 }
 
-func (g *Gateway) start(startedAt time.Time) {
+// InputMessage sends the user's message to the input channel.
+func (g *Gateway) InputMessage(userID int64, message typhenapi.Type) {
+	g.input <- &Input{
+		UserID:  userID,
+		Message: message,
+	}
+}
+
+func (g *Gateway) outputStart(startedAt time.Time) {
 	g.Output <- &battle.Start{
 		StartedAt: currentmillis.ToMilliseconds(startedAt),
 	}
 }
 
-func (g *Gateway) finish(winnerUserID int64, finishedAt time.Time) {
+func (g *Gateway) outputFinish(winnerUserID int64, finishedAt time.Time) {
 	g.Output <- &battle.Finish{
 		WinnerUserId: winnerUserID,
 		FinishedAt:   currentmillis.ToMilliseconds(finishedAt),
 	}
 }
 
-func (g *Gateway) actor(actor Actor) {
+func (g *Gateway) outputActor(actor Actor) {
 	position := actor.Position()
 	g.Output <- &battle.Actor{
 		Id:       actor.ID(),
@@ -43,8 +51,8 @@ func (g *Gateway) actor(actor Actor) {
 	}
 }
 
-// UserInput represents a TyphenAPI message with the user id.
-type UserInput struct {
+// Input represents a TyphenAPI message with the user id.
+type Input struct {
 	UserID  int64
 	Message typhenapi.Type
 }
