@@ -2,6 +2,7 @@ package battle
 
 import (
 	"app/typhenapi/type/submarine/battle"
+	"github.com/chuckpreslar/emission"
 )
 
 // Actor represents an actor in the battle.
@@ -10,6 +11,7 @@ type Actor interface {
 	UserID() int64
 	ActorType() battle.ActorType
 	Position() battle.Vector
+	Event() *emission.Emitter
 	Start()
 	Update()
 	Destroy()
@@ -21,6 +23,7 @@ type actor struct {
 	userID    int64
 	actorType battle.ActorType
 	context   *Context
+	event     *emission.Emitter
 }
 
 // ID returns the actor id.
@@ -41,6 +44,11 @@ func (a *actor) ActorType() battle.ActorType {
 // Position returns the current actor position.
 func (a *actor) Position() battle.Vector {
 	return battle.Vector{X: 0, Y: 0}
+}
+
+// Event returns the actor event.
+func (a *actor) Event() *emission.Emitter {
+	return a.event
 }
 
 // Start the actor. This function is called first frame.

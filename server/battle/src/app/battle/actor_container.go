@@ -3,6 +3,7 @@ package battle
 import (
 	"app/logger"
 	"app/typhenapi/type/submarine/battle"
+	"github.com/chuckpreslar/emission"
 )
 
 // ActorContainer creates actors, and holds the created.
@@ -30,6 +31,7 @@ func (c *ActorContainer) buildActorBase(userID int64, actorType battle.ActorType
 		userID:    userID,
 		actorType: actorType,
 		context:   c.context,
+		event:     emission.NewEmitter(),
 	}
 }
 
