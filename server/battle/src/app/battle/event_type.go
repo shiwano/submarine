@@ -5,7 +5,7 @@ type EventType int
 
 // EventType constants.
 const (
-	ActorCreated EventType = iota
+	ActorCreated EventType = iota + 1
 	ActorMoved
 	ActorDestroyed
 
