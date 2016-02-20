@@ -3,6 +3,7 @@ package main
 import (
 	battleLogic "app/battle"
 	"app/logger"
+	"app/typhenapi/core"
 	"app/typhenapi/type/submarine"
 	"app/typhenapi/type/submarine/battle"
 	webapi "app/typhenapi/web/submarine"
@@ -140,7 +141,7 @@ func (r *Room) _close() {
 	}
 }
 
-func (r *Room) onBattleOutputReceive(output interface{}) {
+func (r *Room) onBattleOutputReceive(output typhenapi.Type) {
 	switch message := output.(type) {
 	case *battle.Start:
 		logger.Log.Infof("Room(%v)'s battle started", r.id)

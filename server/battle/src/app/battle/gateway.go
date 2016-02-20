@@ -9,13 +9,13 @@ import (
 
 // Gateway represents a battle input/output.
 type Gateway struct {
-	Output chan interface{}
+	Output chan typhenapi.Type
 	Input  chan *UserInput
 }
 
 func newGateway() *Gateway {
 	return &Gateway{
-		Output: make(chan interface{}, 256),
+		Output: make(chan typhenapi.Type, 256),
 		Input:  make(chan *UserInput, 256),
 	}
 }
