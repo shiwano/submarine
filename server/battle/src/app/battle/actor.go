@@ -10,11 +10,12 @@ type Actor interface {
 	ID() int64
 	UserID() int64
 	ActorType() battle.ActorType
-	Position() battle.Vector
 	Event() *emission.Emitter
+	Destroy()
+
+	Position() battle.Vector
 	Start()
 	Update()
-	Destroy()
 	OnDestroy()
 }
 
@@ -41,26 +42,26 @@ func (a *actor) ActorType() battle.ActorType {
 	return a.actorType
 }
 
-// Position returns the current actor position.
-func (a *actor) Position() battle.Vector {
-	return battle.Vector{X: 0, Y: 0}
-}
-
 // Event returns the actor event.
 func (a *actor) Event() *emission.Emitter {
 	return a.event
 }
 
-// Start the actor. This function is called first frame.
-func (a *actor) Start() {}
-
-// Update the actor. This function is called every frame.
-func (a *actor) Update() {}
-
 // Destroy the actor.
 func (a *actor) Destroy() {
 	a.context.container.destroyActor(a)
 }
+
+// Position returns the current actor position.
+func (a *actor) Position() battle.Vector {
+	return battle.Vector{X: 0, Y: 0}
+}
+
+// Start the actor. This method is called when the actor is created.
+func (a *actor) Start() {}
+
+// Update the actor. This method is called every frame.
+func (a *actor) Update() {}
 
 // OnDestroy is called when the actor is destroyed.
 func (a *actor) OnDestroy() {}
