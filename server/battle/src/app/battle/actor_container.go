@@ -1,6 +1,7 @@
 package battle
 
 import (
+	"app/battle/event"
 	"app/logger"
 	"app/typhenapi/type/submarine/battle"
 	"github.com/chuckpreslar/emission"
@@ -38,7 +39,7 @@ func (c *ActorContainer) buildActorBase(userID int64, actorType battle.ActorType
 func (c *ActorContainer) registerActor(actor Actor) {
 	c.actors[actor.ID()] = actor
 	actor.Start()
-	c.context.event.EmitSync(ActorCreated, actor)
+	c.context.event.EmitSync(event.ActorCreated, actor)
 }
 
 func (c *ActorContainer) createSubmarine(userID int64) *Submarine {
@@ -77,5 +78,5 @@ func (c *ActorContainer) destroyActor(actor Actor) {
 		delete(c.submarines, actor.UserID())
 	}
 	actor.OnDestroy()
-	c.context.event.EmitSync(ActorDestroyed, actor)
+	c.context.event.EmitSync(event.ActorDestroyed, actor)
 }

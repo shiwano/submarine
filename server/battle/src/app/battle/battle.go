@@ -1,6 +1,7 @@
 package battle
 
 import (
+	"app/battle/event"
 	"app/typhenapi/type/submarine/battle"
 	"time"
 )
@@ -26,7 +27,7 @@ func New(timeLimit time.Duration) *Battle {
 		close:     make(chan struct{}, 1),
 	}
 
-	battle.context.event.On(ActorCreated, func(actor Actor) {
+	battle.context.event.On(event.ActorCreated, func(actor Actor) {
 		battle.Gateway.outputActor(actor)
 	})
 	return battle
@@ -97,14 +98,14 @@ func (b *Battle) onInputReceive(input *Input) {
 
 	switch message := input.Message.(type) {
 	case *battle.AccelerationRequestObject:
-		submarine.event.EmitSync(AccelerationRequested, message)
+		submarine.event.EmitSync(event.AccelerationRequested, message)
 	case *battle.BrakeRequestObject:
-		submarine.event.EmitSync(BrakeRequested, message)
+		submarine.event.EmitSync(event.BrakeRequested, message)
 	case *battle.TurnRequestObject:
-		submarine.event.EmitSync(TurnRequested, message)
+		submarine.event.EmitSync(event.TurnRequested, message)
 	case *battle.TorpedoRequestObject:
-		submarine.event.EmitSync(TorpedoRequested, message)
+		submarine.event.EmitSync(event.TorpedoRequested, message)
 	case *battle.PingerRequestObject:
-		submarine.event.EmitSync(PingerRequested, message)
+		submarine.event.EmitSync(event.PingerRequested, message)
 	}
 }

@@ -1,6 +1,7 @@
 package battle
 
 import (
+	"app/battle/event"
 	"app/typhenapi/type/submarine/battle"
 	. "github.com/smartystreets/goconvey/convey"
 	"testing"
@@ -20,7 +21,7 @@ func TestActorContainerTest(t *testing.T) {
 
 			Convey("should emit the actorCreated event", func() {
 				var createdActor Actor
-				context.event.On(ActorCreated, func(a Actor) { createdActor = a })
+				context.event.On(event.ActorCreated, func(a Actor) { createdActor = a })
 				submarine := container.createSubmarine(1)
 				So(submarine.ID(), ShouldEqual, createdActor.ID())
 			})
@@ -73,7 +74,7 @@ func TestActorContainerTest(t *testing.T) {
 
 			Convey("should emit the actorDestroyed event", func() {
 				var destroyedActor Actor
-				context.event.On(ActorDestroyed, func(a Actor) { destroyedActor = a })
+				context.event.On(event.ActorDestroyed, func(a Actor) { destroyedActor = a })
 				container.destroyActor(actor)
 				So(actor.ID(), ShouldEqual, destroyedActor.ID())
 			})
