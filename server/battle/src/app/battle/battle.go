@@ -1,6 +1,8 @@
 package battle
 
 import (
+	"app/battle/actor"
+	"app/battle/context"
 	"app/battle/event"
 	"app/typhenapi/type/submarine/battle"
 	"time"
@@ -9,7 +11,7 @@ import (
 // Battle represents a battle.
 type Battle struct {
 	Gateway   *Gateway
-	context   *Context
+	context   *context.Context
 	createdAt time.Time
 	startedAt time.Time
 	timeLimit time.Duration
@@ -19,15 +21,16 @@ type Battle struct {
 
 // New creates a new battle.
 func New(timeLimit time.Duration) *Battle {
+	battleContext := context.NewContext()
 	battle := &Battle{
 		Gateway:   newGateway(),
-		context:   newContext(),
+		context:   battleContext,
 		createdAt: time.Now(),
 		timeLimit: timeLimit,
 		close:     make(chan struct{}, 1),
 	}
 
-	battle.context.event.On(event.ActorCreated, func(actor Actor) {
+	battle.context.Event.On(event.ActorCreated, func(actor context.Actor) {
 		battle.Gateway.outputActor(actor)
 	})
 	return battle
@@ -35,8 +38,8 @@ func New(timeLimit time.Duration) *Battle {
 
 // CreateSubmarineUnlessExists creates the user's submarine unless it exists.
 func (b *Battle) CreateSubmarineUnlessExists(userID int64) {
-	if s := b.context.container.getSubmarineByUserID(userID); s == nil {
-		b.context.container.createSubmarine(userID)
+	if s := b.context.Container.SubmarineByUserID(userID); s == nil {
+		actor.NewSubmarine(b.context, userID)
 	}
 }
 
@@ -74,7 +77,7 @@ loop:
 	}
 
 	// TODO: winnerUserID is temporary value.
-	b.Gateway.outputFinish(b.context.userIDs()[0], b.context.now)
+	b.Gateway.outputFinish(b.context.UserIDs()[0], b.context.Now)
 }
 
 func (b *Battle) start() {
@@ -83,29 +86,27 @@ func (b *Battle) start() {
 }
 
 func (b *Battle) update(now time.Time) bool {
-	b.context.now = now
-	for _, actor := range b.context.container.actors {
-		actor.Update()
-	}
-	return b.context.now.Before(b.startedAt.Add(b.timeLimit))
+	b.context.Now = now
+	b.context.Container.UpdateActors()
+	return b.context.Now.Before(b.startedAt.Add(b.timeLimit))
 }
 
 func (b *Battle) onInputReceive(input *Input) {
-	submarine := b.context.container.getSubmarineByUserID(input.UserID)
+	submarine := b.context.Container.SubmarineByUserID(input.UserID)
 	if submarine == nil {
 		return
 	}
 
 	switch message := input.Message.(type) {
 	case *battle.AccelerationRequestObject:
-		submarine.event.EmitSync(event.AccelerationRequested, message)
+		submarine.Event().EmitSync(event.AccelerationRequested, message)
 	case *battle.BrakeRequestObject:
-		submarine.event.EmitSync(event.BrakeRequested, message)
+		submarine.Event().EmitSync(event.BrakeRequested, message)
 	case *battle.TurnRequestObject:
-		submarine.event.EmitSync(event.TurnRequested, message)
+		submarine.Event().EmitSync(event.TurnRequested, message)
 	case *battle.TorpedoRequestObject:
-		submarine.event.EmitSync(event.TorpedoRequested, message)
+		submarine.Event().EmitSync(event.TorpedoRequested, message)
 	case *battle.PingerRequestObject:
-		submarine.event.EmitSync(event.PingerRequested, message)
+		submarine.Event().EmitSync(event.PingerRequested, message)
 	}
 }

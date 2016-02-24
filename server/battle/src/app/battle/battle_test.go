@@ -14,18 +14,18 @@ func TestBattle(t *testing.T) {
 			Convey("when the submarine does not exist", func() {
 				Convey("should not create the submarine", func() {
 					battle.CreateSubmarineUnlessExists(1)
-					submarine := battle.context.container.getSubmarineByUserID(1)
+					submarine := battle.context.Container.SubmarineByUserID(1)
 					So(submarine, ShouldNotBeNil)
 				})
 			})
 
 			Convey("when the submarine already exists", func() {
 				battle.CreateSubmarineUnlessExists(1)
-				submarine := battle.context.container.getSubmarineByUserID(1)
+				submarine := battle.context.Container.SubmarineByUserID(1)
 
 				Convey("should not replace the existing with new submarine instance", func() {
 					battle.CreateSubmarineUnlessExists(1)
-					So(submarine, ShouldEqual, battle.context.container.getSubmarineByUserID(1))
+					So(submarine, ShouldEqual, battle.context.Container.SubmarineByUserID(1))
 				})
 			})
 		})

@@ -1,6 +1,7 @@
 package battle
 
 import (
+	"app/battle/context"
 	"app/currentmillis"
 	"app/typhenapi/core"
 	"app/typhenapi/type/submarine/battle"
@@ -41,7 +42,7 @@ func (g *Gateway) outputFinish(winnerUserID int64, finishedAt time.Time) {
 	}
 }
 
-func (g *Gateway) outputActor(actor Actor) {
+func (g *Gateway) outputActor(actor context.Actor) {
 	position := actor.Position()
 	g.Output <- &battle.Actor{
 		Id:       actor.ID(),
