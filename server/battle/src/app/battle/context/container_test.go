@@ -11,16 +11,42 @@ func TestContainerTest(t *testing.T) {
 		battleContext := NewContext()
 		container := battleContext.Container
 
-		Convey(".newContainer", func() {
+		Convey("when an actor is created", func() {
 			actor := newSubmarine(battleContext)
 
-			Convey("should add the new actor", func() {
+			Convey("should add the actor", func() {
 				So(container.HasActor(actor.ID()), ShouldBeTrue)
 			})
 
-			Convey("should remove the destroyed actor", func() {
-				actor.Destroy()
+			Convey("should call the actor's Start method", func() {
+				So(actor.isCalledStart, ShouldBeTrue)
+			})
+		})
+
+		Convey("when an actor is destroyed", func() {
+			actor := newSubmarine(battleContext)
+			actor.Destroy()
+
+			Convey("should remove the actor", func() {
 				So(container.HasActor(actor.ID()), ShouldBeFalse)
+			})
+
+			Convey("should call the actor's OnDestroy method", func() {
+				So(actor.isCalledOnDestroy, ShouldBeTrue)
+			})
+		})
+
+		Convey("#UpdateActors", func() {
+			actors := make([]*actor, 3)
+			for i := 0; i < 3; i++ {
+				actors[i] = newSubmarine(battleContext)
+			}
+			container.UpdateActors()
+
+			Convey("should update all actors", func() {
+				for _, actor := range actors {
+					So(actor.isCalledUpdate, ShouldBeTrue)
+				}
 			})
 		})
 

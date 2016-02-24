@@ -8,14 +8,21 @@ import (
 
 type actor struct {
 	id        int64
+	userID    int64
 	actorType battle.ActorType
 	context   *Context
 	event     *emission.Emitter
+
+	isCalledStart     bool
+	isCalledUpdate    bool
+	isCalledOnDestroy bool
 }
 
-func newSubmarine(battleContext *Context) Actor {
+func newSubmarine(battleContext *Context) *actor {
+	id := battleContext.NextActorID()
 	a := &actor{
-		id:        battleContext.NextActorID(),
+		id:        id,
+		userID:    id * 100,
 		actorType: battle.ActorType_Submarine,
 		context:   battleContext,
 		event:     emission.NewEmitter(),
@@ -29,7 +36,7 @@ func (a *actor) ID() int64 {
 }
 
 func (a *actor) UserID() int64 {
-	return 1
+	return a.userID
 }
 
 func (a *actor) ActorType() battle.ActorType {
@@ -44,7 +51,18 @@ func (a *actor) Destroy() {
 	a.context.Event.EmitSync(event.ActorDestroyed, a)
 }
 
-func (a *actor) Position() battle.Vector { return battle.Vector{X: 0, Y: 0} }
-func (a *actor) Start()                  {}
-func (a *actor) Update()                 {}
-func (a *actor) OnDestroy()              {}
+func (a *actor) Position() battle.Vector {
+	return battle.Vector{X: 0, Y: 0}
+}
+
+func (a *actor) Start() {
+	a.isCalledStart = true
+}
+
+func (a *actor) Update() {
+	a.isCalledUpdate = true
+}
+
+func (a *actor) OnDestroy() {
+	a.isCalledOnDestroy = true
+}
