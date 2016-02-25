@@ -18,8 +18,8 @@ func newContainer(battleContext *Context) *Container {
 		submarines: make(map[int64]Actor),
 		context:    battleContext,
 	}
-	c.context.Event.On(event.ActorCreated, c.onActorCreate)
-	c.context.Event.On(event.ActorDestroyed, c.onActorDestroy)
+	c.context.Event.On(event.ActorCreate, c.onActorCreate)
+	c.context.Event.On(event.ActorDestroy, c.onActorDestroy)
 	return c
 }
 
@@ -52,7 +52,7 @@ func (c *Container) onActorCreate(actor Actor) {
 		c.submarines[actor.UserID()] = actor
 	}
 	actor.Start()
-	c.context.Event.EmitSync(event.ActorAdded, actor)
+	c.context.Event.EmitSync(event.ActorAdd, actor)
 }
 
 func (c *Container) onActorDestroy(rawActor Actor) {
@@ -66,5 +66,5 @@ func (c *Container) onActorDestroy(rawActor Actor) {
 		delete(c.submarines, actor.UserID())
 	}
 	actor.OnDestroy()
-	c.context.Event.EmitSync(event.ActorRemoved, actor)
+	c.context.Event.EmitSync(event.ActorRemove, actor)
 }

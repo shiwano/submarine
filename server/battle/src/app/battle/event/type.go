@@ -5,16 +5,16 @@ type Type int
 
 // Type constants.
 const (
-	ActorCreated Type = iota + 1
-	ActorDestroyed
+	ActorCreate Type = iota + 1
+	ActorDestroy
 
-	ActorAdded
-	ActorMoved
-	ActorRemoved
+	ActorAdd
+	ActorMove
+	ActorRemove
 
-	AccelerationRequested
-	BrakeRequested
-	TurnRequested
-	TorpedoRequested
-	PingerRequested
+	AccelerationRequest
+	BrakeRequest
+	TurnRequest
+	TorpedoRequest
+	PingerRequest
 )

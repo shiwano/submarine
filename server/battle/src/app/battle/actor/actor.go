@@ -42,7 +42,7 @@ func (a *actor) Event() *emission.Emitter {
 }
 
 func (a *actor) Destroy() {
-	a.context.Event.EmitSync(event.ActorDestroyed, a)
+	a.context.Event.EmitSync(event.ActorDestroy, a)
 }
 
 // Overridable methods.

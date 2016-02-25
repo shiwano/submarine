@@ -29,7 +29,7 @@ func New(timeLimit time.Duration) *Battle {
 		timeLimit: timeLimit,
 		close:     make(chan struct{}, 1),
 	}
-	b.context.Event.On(event.ActorAdded, b.onActorAdded)
+	b.context.Event.On(event.ActorAdd, b.onActorAdd)
 	return b
 }
 
@@ -96,18 +96,18 @@ func (b *Battle) onInputReceive(input *Input) {
 
 	switch message := input.Message.(type) {
 	case *battle.AccelerationRequestObject:
-		submarine.Event().EmitSync(event.AccelerationRequested, message)
+		submarine.Event().EmitSync(event.AccelerationRequest, message)
 	case *battle.BrakeRequestObject:
-		submarine.Event().EmitSync(event.BrakeRequested, message)
+		submarine.Event().EmitSync(event.BrakeRequest, message)
 	case *battle.TurnRequestObject:
-		submarine.Event().EmitSync(event.TurnRequested, message)
+		submarine.Event().EmitSync(event.TurnRequest, message)
 	case *battle.TorpedoRequestObject:
-		submarine.Event().EmitSync(event.TorpedoRequested, message)
+		submarine.Event().EmitSync(event.TorpedoRequest, message)
 	case *battle.PingerRequestObject:
-		submarine.Event().EmitSync(event.PingerRequested, message)
+		submarine.Event().EmitSync(event.PingerRequest, message)
 	}
 }
 
-func (b *Battle) onActorAdded(actor context.Actor) {
+func (b *Battle) onActorAdd(actor context.Actor) {
 	b.Gateway.outputActor(actor)
 }

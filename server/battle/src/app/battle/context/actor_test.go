@@ -27,7 +27,7 @@ func newSubmarine(battleContext *Context) *actor {
 		context:   battleContext,
 		event:     emission.NewEmitter(),
 	}
-	a.context.Event.EmitSync(event.ActorCreated, a)
+	a.context.Event.EmitSync(event.ActorCreate, a)
 	return a
 }
 
@@ -48,7 +48,7 @@ func (a *actor) Event() *emission.Emitter {
 }
 
 func (a *actor) Destroy() {
-	a.context.Event.EmitSync(event.ActorDestroyed, a)
+	a.context.Event.EmitSync(event.ActorDestroy, a)
 }
 
 func (a *actor) Position() battle.Vector {

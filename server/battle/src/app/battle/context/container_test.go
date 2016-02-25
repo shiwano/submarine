@@ -25,7 +25,7 @@ func TestContainerTest(t *testing.T) {
 
 			Convey("should emit the ActorAdded event", func() {
 				isCalled := false
-				battleContext.Event.On(event.ActorAdded, func(a Actor) { isCalled = true })
+				battleContext.Event.On(event.ActorAdd, func(a Actor) { isCalled = true })
 				newSubmarine(battleContext)
 				So(isCalled, ShouldBeTrue)
 			})
@@ -46,7 +46,7 @@ func TestContainerTest(t *testing.T) {
 
 			Convey("should emit the ActorRemoved event", func() {
 				isCalled := false
-				battleContext.Event.On(event.ActorRemoved, func(a Actor) { isCalled = true })
+				battleContext.Event.On(event.ActorRemove, func(a Actor) { isCalled = true })
 				actor.Destroy()
 				So(isCalled, ShouldBeTrue)
 			})
