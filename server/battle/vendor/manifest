@@ -105,6 +105,12 @@
 			"path": "/convey"
 		},
 		{
+			"importpath": "github.com/spate/vectormath",
+			"repository": "https://github.com/spate/vectormath",
+			"revision": "52af5f17dd73dbd34ddde9b4876ad263dba11294",
+			"branch": "master"
+		},
+		{
 			"importpath": "github.com/stretchr/testify/assert",
 			"repository": "https://github.com/stretchr/testify",
 			"revision": "f3960ab1f9664ecc4e27c78af27cc9063d745a43",
