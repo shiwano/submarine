@@ -11,21 +11,21 @@ import (
 // Gateway represents a battle input/output.
 type Gateway struct {
 	Output chan typhenapi.Type
-	input  chan *Input
+	input  chan *gatewayInput
 }
 
 func newGateway() *Gateway {
 	return &Gateway{
 		Output: make(chan typhenapi.Type, 256),
-		input:  make(chan *Input, 256),
+		input:  make(chan *gatewayInput, 256),
 	}
 }
 
 // InputMessage sends the user's message to the input channel.
 func (g *Gateway) InputMessage(userID int64, message typhenapi.Type) {
-	g.input <- &Input{
-		UserID:  userID,
-		Message: message,
+	g.input <- &gatewayInput{
+		userID:  userID,
+		message: message,
 	}
 }
 
@@ -52,8 +52,7 @@ func (g *Gateway) outputActor(actor context.Actor) {
 	}
 }
 
-// Input represents a TyphenAPI message with the user id.
-type Input struct {
-	UserID  int64
-	Message typhenapi.Type
+type gatewayInput struct {
+	userID  int64
+	message typhenapi.Type
 }

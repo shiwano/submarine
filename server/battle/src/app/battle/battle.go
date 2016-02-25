@@ -88,13 +88,13 @@ func (b *Battle) update(now time.Time) bool {
 	return b.context.Now.Before(b.startedAt.Add(b.timeLimit))
 }
 
-func (b *Battle) onInputReceive(input *Input) {
-	submarine := b.context.Container.SubmarineByUserID(input.UserID)
+func (b *Battle) onInputReceive(input *gatewayInput) {
+	submarine := b.context.Container.SubmarineByUserID(input.userID)
 	if submarine == nil {
 		return
 	}
 
-	switch message := input.Message.(type) {
+	switch message := input.message.(type) {
 	case *battle.AccelerationRequestObject:
 		submarine.Event().Emit(event.AccelerationRequest, message)
 	case *battle.BrakeRequestObject:
