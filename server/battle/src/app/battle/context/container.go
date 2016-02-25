@@ -52,12 +52,19 @@ func (c *Container) onActorCreate(actor Actor) {
 		c.submarines[actor.UserID()] = actor
 	}
 	actor.Start()
+	c.context.Event.EmitSync(event.ActorAdded, actor)
 }
 
-func (c *Container) onActorDestroy(actor Actor) {
+func (c *Container) onActorDestroy(rawActor Actor) {
+	actor := c.Actor(rawActor.ID())
+	if actor == nil {
+		return
+	}
+
 	delete(c.actors, actor.ID())
 	if actor.ActorType() == battle.ActorType_Submarine {
 		delete(c.submarines, actor.UserID())
 	}
 	actor.OnDestroy()
+	c.context.Event.EmitSync(event.ActorRemoved, actor)
 }

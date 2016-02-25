@@ -22,18 +22,15 @@ type Battle struct {
 // New creates a new battle.
 func New(timeLimit time.Duration) *Battle {
 	battleContext := context.NewContext()
-	battle := &Battle{
+	b := &Battle{
 		Gateway:   newGateway(),
 		context:   battleContext,
 		createdAt: time.Now(),
 		timeLimit: timeLimit,
 		close:     make(chan struct{}, 1),
 	}
-
-	battle.context.Event.On(event.ActorCreated, func(actor context.Actor) {
-		battle.Gateway.outputActor(actor)
-	})
-	return battle
+	b.context.Event.On(event.ActorAdded, b.onActorAdded)
+	return b
 }
 
 // CreateSubmarineUnlessExists creates the user's submarine unless it exists.
@@ -109,4 +106,8 @@ func (b *Battle) onInputReceive(input *Input) {
 	case *battle.PingerRequestObject:
 		submarine.Event().EmitSync(event.PingerRequested, message)
 	}
+}
+
+func (b *Battle) onActorAdded(actor context.Actor) {
+	b.Gateway.outputActor(actor)
 }

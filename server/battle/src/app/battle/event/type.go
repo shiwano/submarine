@@ -6,8 +6,11 @@ type Type int
 // Type constants.
 const (
 	ActorCreated Type = iota + 1
-	ActorMoved
 	ActorDestroyed
+
+	ActorAdded
+	ActorMoved
+	ActorRemoved
 
 	AccelerationRequested
 	BrakeRequested

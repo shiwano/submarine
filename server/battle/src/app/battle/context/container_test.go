@@ -1,6 +1,7 @@
 package context
 
 import (
+	"app/battle/event"
 	"app/typhenapi/type/submarine/battle"
 	. "github.com/smartystreets/goconvey/convey"
 	"testing"
@@ -12,27 +13,42 @@ func TestContainerTest(t *testing.T) {
 		container := battleContext.Container
 
 		Convey("when an actor is created", func() {
-			actor := newSubmarine(battleContext)
-
 			Convey("should add the actor", func() {
+				actor := newSubmarine(battleContext)
 				So(container.HasActor(actor.ID()), ShouldBeTrue)
 			})
 
 			Convey("should call the actor's Start method", func() {
+				actor := newSubmarine(battleContext)
 				So(actor.isCalledStart, ShouldBeTrue)
+			})
+
+			Convey("should emit the ActorAdded event", func() {
+				isCalled := false
+				battleContext.Event.On(event.ActorAdded, func(a Actor) { isCalled = true })
+				newSubmarine(battleContext)
+				So(isCalled, ShouldBeTrue)
 			})
 		})
 
 		Convey("when an actor is destroyed", func() {
 			actor := newSubmarine(battleContext)
-			actor.Destroy()
 
 			Convey("should remove the actor", func() {
+				actor.Destroy()
 				So(container.HasActor(actor.ID()), ShouldBeFalse)
 			})
 
 			Convey("should call the actor's OnDestroy method", func() {
+				actor.Destroy()
 				So(actor.isCalledOnDestroy, ShouldBeTrue)
+			})
+
+			Convey("should emit the ActorRemoved event", func() {
+				isCalled := false
+				battleContext.Event.On(event.ActorRemoved, func(a Actor) { isCalled = true })
+				actor.Destroy()
+				So(isCalled, ShouldBeTrue)
 			})
 		})
 
