@@ -3,7 +3,6 @@ package context
 import (
 	"app/battle/event"
 	"app/typhenapi/type/submarine/battle"
-	"github.com/chuckpreslar/emission"
 )
 
 type actor struct {
@@ -11,7 +10,7 @@ type actor struct {
 	userID    int64
 	actorType battle.ActorType
 	context   *Context
-	event     *emission.Emitter
+	event     *event.Emitter
 
 	isCalledStart     bool
 	isCalledUpdate    bool
@@ -25,9 +24,9 @@ func newSubmarine(battleContext *Context) *actor {
 		userID:    id * 100,
 		actorType: battle.ActorType_Submarine,
 		context:   battleContext,
-		event:     emission.NewEmitter(),
+		event:     event.New(),
 	}
-	a.context.Event.EmitSync(event.ActorCreate, a)
+	a.context.Event.Emit(event.ActorCreate, a)
 	return a
 }
 
@@ -43,12 +42,12 @@ func (a *actor) ActorType() battle.ActorType {
 	return a.actorType
 }
 
-func (a *actor) Event() *emission.Emitter {
+func (a *actor) Event() *event.Emitter {
 	return a.event
 }
 
 func (a *actor) Destroy() {
-	a.context.Event.EmitSync(event.ActorDestroy, a)
+	a.context.Event.Emit(event.ActorDestroy, a)
 }
 
 func (a *actor) Position() battle.Vector {

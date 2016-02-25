@@ -1,7 +1,7 @@
 package context
 
 import (
-	"github.com/chuckpreslar/emission"
+	"app/battle/event"
 	"time"
 )
 
@@ -9,14 +9,14 @@ import (
 type Context struct {
 	currentActorID int64
 	Now            time.Time
-	Event          *emission.Emitter
+	Event          *event.Emitter
 	Container      *Container
 }
 
 // NewContext creates a contest.
 func NewContext() *Context {
 	c := &Context{
-		Event: emission.NewEmitter(),
+		Event: event.New(),
 	}
 	c.Container = newContainer(c)
 	return c

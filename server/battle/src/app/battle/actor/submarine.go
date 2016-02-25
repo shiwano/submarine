@@ -15,6 +15,6 @@ func NewSubmarine(battleContext *context.Context, userID int64) context.Actor {
 	s := &submarine{
 		actor: newActor(battleContext, userID, battle.ActorType_Submarine),
 	}
-	s.context.Event.EmitSync(event.ActorCreate, s)
+	s.context.Event.Emit(event.ActorCreate, s)
 	return s
 }

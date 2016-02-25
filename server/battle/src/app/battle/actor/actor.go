@@ -4,7 +4,6 @@ import (
 	"app/battle/context"
 	"app/battle/event"
 	"app/typhenapi/type/submarine/battle"
-	"github.com/chuckpreslar/emission"
 )
 
 type actor struct {
@@ -12,7 +11,7 @@ type actor struct {
 	userID    int64
 	actorType battle.ActorType
 	context   *context.Context
-	event     *emission.Emitter
+	event     *event.Emitter
 }
 
 func newActor(battleContext *context.Context, userID int64, actorType battle.ActorType) *actor {
@@ -21,7 +20,7 @@ func newActor(battleContext *context.Context, userID int64, actorType battle.Act
 		userID:    userID,
 		actorType: actorType,
 		context:   battleContext,
-		event:     emission.NewEmitter(),
+		event:     event.New(),
 	}
 }
 
@@ -37,12 +36,12 @@ func (a *actor) ActorType() battle.ActorType {
 	return a.actorType
 }
 
-func (a *actor) Event() *emission.Emitter {
+func (a *actor) Event() *event.Emitter {
 	return a.event
 }
 
 func (a *actor) Destroy() {
-	a.context.Event.EmitSync(event.ActorDestroy, a)
+	a.context.Event.Emit(event.ActorDestroy, a)
 }
 
 // Overridable methods.

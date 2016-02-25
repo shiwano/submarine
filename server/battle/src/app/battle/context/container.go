@@ -52,7 +52,7 @@ func (c *Container) onActorCreate(actor Actor) {
 		c.submarines[actor.UserID()] = actor
 	}
 	actor.Start()
-	c.context.Event.EmitSync(event.ActorAdd, actor)
+	c.context.Event.Emit(event.ActorAdd, actor)
 }
 
 func (c *Container) onActorDestroy(rawActor Actor) {
@@ -66,5 +66,5 @@ func (c *Container) onActorDestroy(rawActor Actor) {
 		delete(c.submarines, actor.UserID())
 	}
 	actor.OnDestroy()
-	c.context.Event.EmitSync(event.ActorRemove, actor)
+	c.context.Event.Emit(event.ActorRemove, actor)
 }

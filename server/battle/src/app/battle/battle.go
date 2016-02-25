@@ -96,15 +96,15 @@ func (b *Battle) onInputReceive(input *Input) {
 
 	switch message := input.Message.(type) {
 	case *battle.AccelerationRequestObject:
-		submarine.Event().EmitSync(event.AccelerationRequest, message)
+		submarine.Event().Emit(event.AccelerationRequest, message)
 	case *battle.BrakeRequestObject:
-		submarine.Event().EmitSync(event.BrakeRequest, message)
+		submarine.Event().Emit(event.BrakeRequest, message)
 	case *battle.TurnRequestObject:
-		submarine.Event().EmitSync(event.TurnRequest, message)
+		submarine.Event().Emit(event.TurnRequest, message)
 	case *battle.TorpedoRequestObject:
-		submarine.Event().EmitSync(event.TorpedoRequest, message)
+		submarine.Event().Emit(event.TorpedoRequest, message)
 	case *battle.PingerRequestObject:
-		submarine.Event().EmitSync(event.PingerRequest, message)
+		submarine.Event().Emit(event.PingerRequest, message)
 	}
 }
 
