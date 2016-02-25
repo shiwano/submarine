@@ -86,6 +86,12 @@
 			"branch": "master"
 		},
 		{
+			"importpath": "github.com/paddycarey/gotween",
+			"repository": "https://github.com/paddycarey/gotween",
+			"revision": "0f8e44486f17add1569cd1f12ed0e959b64192e7",
+			"branch": "master"
+		},
+		{
 			"importpath": "github.com/smartystreets/assertions",
 			"repository": "https://github.com/smartystreets/assertions",
 			"revision": "edb6e295a22c57a2aa353b2f0729b6eff9f9f4b7",
