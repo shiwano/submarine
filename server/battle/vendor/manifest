@@ -8,6 +8,12 @@
 			"branch": "master"
 		},
 		{
+			"importpath": "github.com/barnex/fmath",
+			"repository": "https://github.com/barnex/fmath",
+			"revision": "ec9671f295c249e1b53d5c81d14dc79de6a26774",
+			"branch": "master"
+		},
+		{
 			"importpath": "github.com/bugsnag/bugsnag-go",
 			"repository": "https://github.com/bugsnag/bugsnag-go",
 			"revision": "72ff9e15e8c5ae52e8db1dd5dd1f77a9f2f1a895",
@@ -117,6 +123,12 @@
 			"revision": "2cb41eb350bb803298e42218d78a525daca640a5",
 			"branch": "master",
 			"path": "/codec"
+		},
+		{
+			"importpath": "github.com/ungerik/go3d",
+			"repository": "https://github.com/ungerik/go3d",
+			"revision": "b765e791b61c6db0b9ff62072092d28395aeb106",
+			"branch": "master"
 		},
 		{
 			"importpath": "golang.org/x/net/context",
