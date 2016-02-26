@@ -3,6 +3,7 @@ package context
 import (
 	"app/battle/event"
 	"app/typhenapi/type/submarine/battle"
+	"github.com/ungerik/go3d/float64/vec2"
 )
 
 type actor struct {
@@ -50,8 +51,8 @@ func (a *actor) Destroy() {
 	a.context.Event.Emit(event.ActorDestroy, a)
 }
 
-func (a *actor) Position() battle.Vector {
-	return battle.Vector{X: 0, Y: 0}
+func (a *actor) Position() *vec2.T {
+	return &vec2.Zero
 }
 
 func (a *actor) Start() {

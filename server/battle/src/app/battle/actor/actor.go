@@ -4,6 +4,7 @@ import (
 	"app/battle/context"
 	"app/battle/event"
 	"app/typhenapi/type/submarine/battle"
+	"github.com/ungerik/go3d/float64/vec2"
 )
 
 type actor struct {
@@ -45,7 +46,7 @@ func (a *actor) Destroy() {
 }
 
 // Overridable methods.
-func (a *actor) Position() battle.Vector { return battle.Vector{X: 0, Y: 0} }
-func (a *actor) Start()                  {}
-func (a *actor) Update()                 {}
-func (a *actor) OnDestroy()              {}
+func (a *actor) Position() *vec2.T { return &vec2.Zero }
+func (a *actor) Start()            {}
+func (a *actor) Update()           {}
+func (a *actor) OnDestroy()        {}

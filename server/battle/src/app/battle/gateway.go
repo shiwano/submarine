@@ -48,7 +48,7 @@ func (g *Gateway) outputActor(actor context.Actor) {
 		Id:       actor.ID(),
 		UserId:   actor.UserID(),
 		Type:     actor.ActorType(),
-		Position: &position,
+		Position: &battle.Vector{X: position[0], Y: position[1]},
 	}
 }
 
