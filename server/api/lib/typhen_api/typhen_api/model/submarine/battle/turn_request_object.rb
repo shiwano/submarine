@@ -4,6 +4,6 @@ module TyphenApi::Model::Submarine::Battle
   class TurnRequestObject
     include Virtus.model(:strict => true)
 
-    attribute :direction, TyphenApi::Model::Submarine::Battle::Vector, :required => true
+    attribute :direction, Number, :required => true
   end
 end

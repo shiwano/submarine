@@ -14,7 +14,7 @@ type Actor struct {
 	Id       int64     `codec:"id"`
 	UserId   int64     `codec:"user_id"`
 	Type     ActorType `codec:"type"`
-	Position *Vector   `codec:"position"`
+	Movement *Movement `codec:"movement"`
 }
 
 // Coerce the fields.
@@ -22,8 +22,8 @@ func (t *Actor) Coerce() error {
 	if err := t.Type.Coerce(); err != nil {
 		return err
 	}
-	if t.Position == nil {
-		return errors.New("Position should not be empty")
+	if t.Movement == nil {
+		return errors.New("Movement should not be empty")
 	}
 	return nil
 }

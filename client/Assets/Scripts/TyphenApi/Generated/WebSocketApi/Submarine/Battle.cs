@@ -114,14 +114,14 @@ namespace TyphenApi.WebSocketApi.Parts.Submarine
             session.Send((int)MessageType.Actor, actor);
         }
 
-        public void SendActor(long id, long userId, TyphenApi.Type.Submarine.Battle.ActorType type, TyphenApi.Type.Submarine.Battle.Vector position)
+        public void SendActor(long id, long userId, TyphenApi.Type.Submarine.Battle.ActorType type, TyphenApi.Type.Submarine.Battle.Movement movement)
         {
             session.Send((int)MessageType.Actor, new TyphenApi.Type.Submarine.Battle.Actor()
             {
                 Id = id,
                 UserId = userId,
                 Type = type,
-                Position = position,
+                Movement = movement,
             });
         }
         public void SendMovement(TyphenApi.Type.Submarine.Battle.Movement movement)
@@ -129,13 +129,14 @@ namespace TyphenApi.WebSocketApi.Parts.Submarine
             session.Send((int)MessageType.Movement, movement);
         }
 
-        public void SendMovement(long actorId, TyphenApi.Type.Submarine.Battle.Vector position, TyphenApi.Type.Submarine.Battle.Vector velocity, long movedAt)
+        public void SendMovement(long actorId, TyphenApi.Type.Submarine.Battle.Point position, double direction, TyphenApi.Type.Submarine.Battle.Speed speed, long movedAt)
         {
             session.Send((int)MessageType.Movement, new TyphenApi.Type.Submarine.Battle.Movement()
             {
                 ActorId = actorId,
                 Position = position,
-                Velocity = velocity,
+                Direction = direction,
+                Speed = speed,
                 MovedAt = movedAt,
             });
         }
@@ -178,7 +179,7 @@ namespace TyphenApi.WebSocketApi.Parts.Submarine
             session.Send((int)MessageType.TurnRequest, turnRequest);
         }
 
-        public void SendTurnRequest(TyphenApi.Type.Submarine.Battle.Vector direction)
+        public void SendTurnRequest(double direction)
         {
             session.Send((int)MessageType.TurnRequest, new TyphenApi.Type.Submarine.Battle.TurnRequestObject()
             {

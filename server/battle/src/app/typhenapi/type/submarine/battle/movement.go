@@ -11,19 +11,17 @@ var _ = errors.New
 
 // Movement is a kind of TyphenAPI type.
 type Movement struct {
-	ActorId  int64   `codec:"actor_id"`
-	Position *Vector `codec:"position"`
-	Velocity *Vector `codec:"velocity"`
-	MovedAt  int64   `codec:"moved_at"`
+	ActorId   int64   `codec:"actor_id"`
+	Position  *Point  `codec:"position"`
+	Direction float64 `codec:"direction"`
+	Speed     *Speed  `codec:"speed"`
+	MovedAt   int64   `codec:"moved_at"`
 }
 
 // Coerce the fields.
 func (t *Movement) Coerce() error {
 	if t.Position == nil {
 		return errors.New("Position should not be empty")
-	}
-	if t.Velocity == nil {
-		return errors.New("Velocity should not be empty")
 	}
 	return nil
 }

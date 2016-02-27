@@ -6,7 +6,7 @@ namespace TyphenApi.Type.Submarine.Battle
 {
     public partial class TurnRequestObject : TyphenApi.TypeBase<TurnRequestObject>
     {
-        protected static readonly SerializationInfo<TurnRequestObject, TyphenApi.Type.Submarine.Battle.Vector> direction = new SerializationInfo<TurnRequestObject, TyphenApi.Type.Submarine.Battle.Vector>("direction", false, (x) => x.Direction, (x, v) => x.Direction = v);
-        public TyphenApi.Type.Submarine.Battle.Vector Direction { get; set; }
+        protected static readonly SerializationInfo<TurnRequestObject, double> direction = new SerializationInfo<TurnRequestObject, double>("direction", false, (x) => x.Direction, (x, v) => x.Direction = v);
+        public double Direction { get; set; }
     }
 }

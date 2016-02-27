@@ -8,10 +8,12 @@ namespace TyphenApi.Type.Submarine.Battle
     {
         protected static readonly SerializationInfo<Movement, long> actorId = new SerializationInfo<Movement, long>("actor_id", false, (x) => x.ActorId, (x, v) => x.ActorId = v);
         public long ActorId { get; set; }
-        protected static readonly SerializationInfo<Movement, TyphenApi.Type.Submarine.Battle.Vector> position = new SerializationInfo<Movement, TyphenApi.Type.Submarine.Battle.Vector>("position", false, (x) => x.Position, (x, v) => x.Position = v);
-        public TyphenApi.Type.Submarine.Battle.Vector Position { get; set; }
-        protected static readonly SerializationInfo<Movement, TyphenApi.Type.Submarine.Battle.Vector> velocity = new SerializationInfo<Movement, TyphenApi.Type.Submarine.Battle.Vector>("velocity", false, (x) => x.Velocity, (x, v) => x.Velocity = v);
-        public TyphenApi.Type.Submarine.Battle.Vector Velocity { get; set; }
+        protected static readonly SerializationInfo<Movement, TyphenApi.Type.Submarine.Battle.Point> position = new SerializationInfo<Movement, TyphenApi.Type.Submarine.Battle.Point>("position", false, (x) => x.Position, (x, v) => x.Position = v);
+        public TyphenApi.Type.Submarine.Battle.Point Position { get; set; }
+        protected static readonly SerializationInfo<Movement, double> direction = new SerializationInfo<Movement, double>("direction", false, (x) => x.Direction, (x, v) => x.Direction = v);
+        public double Direction { get; set; }
+        protected static readonly SerializationInfo<Movement, TyphenApi.Type.Submarine.Battle.Speed> speed = new SerializationInfo<Movement, TyphenApi.Type.Submarine.Battle.Speed>("speed", true, (x) => x.Speed, (x, v) => x.Speed = v);
+        public TyphenApi.Type.Submarine.Battle.Speed Speed { get; set; }
         protected static readonly SerializationInfo<Movement, long> movedAt = new SerializationInfo<Movement, long>("moved_at", false, (x) => x.MovedAt, (x, v) => x.MovedAt = v);
         public long MovedAt { get; set; }
     }

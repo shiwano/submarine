@@ -9,18 +9,19 @@ import (
 
 var _ = errors.New
 
-// TurnRequestObject is a kind of TyphenAPI type.
-type TurnRequestObject struct {
-	Direction float64 `codec:"direction"`
+// Point is a kind of TyphenAPI type.
+type Point struct {
+	X float64 `codec:"x"`
+	Y float64 `codec:"y"`
 }
 
 // Coerce the fields.
-func (t *TurnRequestObject) Coerce() error {
+func (t *Point) Coerce() error {
 	return nil
 }
 
 // Bytes creates the byte array.
-func (t *TurnRequestObject) Bytes(serializer typhenapi.Serializer) ([]byte, error) {
+func (t *Point) Bytes(serializer typhenapi.Serializer) ([]byte, error) {
 	if err := t.Coerce(); err != nil {
 		return nil, err
 	}

@@ -9,19 +9,20 @@ import (
 
 var _ = errors.New
 
-// Vector is a kind of TyphenAPI type.
-type Vector struct {
-	X float64 `codec:"x"`
-	Y float64 `codec:"y"`
+// Speed is a kind of TyphenAPI type.
+type Speed struct {
+	Max           float64 `codec:"max"`
+	AcceleratedAt int64   `codec:"accelerated_at"`
+	Duration      int64   `codec:"duration"`
 }
 
 // Coerce the fields.
-func (t *Vector) Coerce() error {
+func (t *Speed) Coerce() error {
 	return nil
 }
 
 // Bytes creates the byte array.
-func (t *Vector) Bytes(serializer typhenapi.Serializer) ([]byte, error) {
+func (t *Speed) Bytes(serializer typhenapi.Serializer) ([]byte, error) {
 	if err := t.Coerce(); err != nil {
 		return nil, err
 	}

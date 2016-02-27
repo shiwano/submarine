@@ -12,7 +12,7 @@ namespace TyphenApi.Type.Submarine.Battle
         public long UserId { get; set; }
         protected static readonly SerializationInfo<Actor, TyphenApi.Type.Submarine.Battle.ActorType> type = new SerializationInfo<Actor, TyphenApi.Type.Submarine.Battle.ActorType>("type", false, (x) => x.Type, (x, v) => x.Type = v);
         public TyphenApi.Type.Submarine.Battle.ActorType Type { get; set; }
-        protected static readonly SerializationInfo<Actor, TyphenApi.Type.Submarine.Battle.Vector> position = new SerializationInfo<Actor, TyphenApi.Type.Submarine.Battle.Vector>("position", false, (x) => x.Position, (x, v) => x.Position = v);
-        public TyphenApi.Type.Submarine.Battle.Vector Position { get; set; }
+        protected static readonly SerializationInfo<Actor, TyphenApi.Type.Submarine.Battle.Movement> movement = new SerializationInfo<Actor, TyphenApi.Type.Submarine.Battle.Movement>("movement", false, (x) => x.Movement, (x, v) => x.Movement = v);
+        public TyphenApi.Type.Submarine.Battle.Movement Movement { get; set; }
     }
 }
