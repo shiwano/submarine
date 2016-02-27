@@ -19,19 +19,19 @@ func Now() int64 {
 	return time.Now().UnixNano() / 1000000
 }
 
-// ToMilliseconds returns the number of the given time milliseconds elapsed since UNIX epoch time.
-func ToMilliseconds(t time.Time) int64 {
+// Milliseconds returns the number of the given time milliseconds elapsed since UNIX epoch time.
+func Milliseconds(t time.Time) int64 {
 	return t.UnixNano() / 1000000
 }
 
-// ToTime returns the local Time corresponding to the given milliseconds,
-func ToTime(ms int64) time.Time {
+// Time returns the local Time corresponding to the given milliseconds,
+func Time(ms int64) time.Time {
 	sec := ms / 1000
 	nsec := (ms % 1000) * 1000000
 	return time.Unix(sec, nsec)
 }
 
-// ToDuration converts the given milliseconds to time.Duration,
-func ToDuration(ms int64) time.Duration {
+// Duration converts the given milliseconds to time.Duration,
+func Duration(ms int64) time.Duration {
 	return time.Duration(ms * 1000000)
 }

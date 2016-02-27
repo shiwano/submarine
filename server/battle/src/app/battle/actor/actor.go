@@ -59,7 +59,7 @@ func (a *actor) Movement() *battle.Movement {
 		Position:  &battle.Point{X: position[0], Y: position[1]},
 		Direction: a.direction,
 		Speed:     a.speed,
-		MovedAt:   currentmillis.ToMilliseconds(a.movedAt),
+		MovedAt:   currentmillis.Milliseconds(a.movedAt),
 	}
 }
 
