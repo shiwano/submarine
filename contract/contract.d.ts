@@ -3,7 +3,9 @@
 interface integer {}
 
 declare module Submarine {
-  type timeStamp = integer; // see http://currentmillis.com/
+  type degrees = number;       // 0-360
+  type timeStamp = integer;    // see http://currentmillis.com/
+  type milliSeconds = integer;
 
   interface Error {
     code: integer;

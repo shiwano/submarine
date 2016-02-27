@@ -8,9 +8,15 @@ declare module Submarine.Battle {
     Lookout,
   }
 
-  interface Vector {
+  interface Point {
     x: number;
     y: number;
+  }
+
+  interface Speed {
+    max: number;
+    acceleratedAt: timeStamp;
+    duration: milliSeconds;
   }
 
   interface Start {
@@ -26,13 +32,14 @@ declare module Submarine.Battle {
     id: integer;
     userId: integer;
     type: ActorType;
-    position: Vector;
+    movement: Movement;
   }
 
   interface Movement {
     actorId: integer;
-    position: Vector;
-    velocity: Vector;
+    position: Point;
+    direction: degrees;
+    speed?: Speed;
     movedAt: timeStamp;
   }
 
@@ -53,7 +60,7 @@ declare module Submarine.Battle {
 
   var accelerationRequest: {};
   var brakeRequest: {};
-  var turnRequest: { direction: Vector; };
+  var turnRequest: { direction: degrees; };
   var pingerRequest: {};
   var torpedoRequest: {};
 }
