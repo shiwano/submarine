@@ -13,6 +13,7 @@ type Actor interface {
 	ActorType() battle.ActorType
 	Event() *event.Emitter
 	Destroy()
+	Movement() *battle.Movement
 
 	Position() *vec2.T
 	Start()

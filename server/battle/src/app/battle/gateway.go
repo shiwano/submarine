@@ -43,12 +43,11 @@ func (g *Gateway) outputFinish(winnerUserID int64, finishedAt time.Time) {
 }
 
 func (g *Gateway) outputActor(actor context.Actor) {
-	position := actor.Position()
 	g.Output <- &battle.Actor{
 		Id:       actor.ID(),
 		UserId:   actor.UserID(),
 		Type:     actor.ActorType(),
-		Position: &battle.Vector{X: position[0], Y: position[1]},
+		Movement: actor.Movement(),
 	}
 }
 

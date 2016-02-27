@@ -51,6 +51,10 @@ func (a *actor) Destroy() {
 	a.context.Event.Emit(event.ActorDestroy, a)
 }
 
+func (a *actor) Movement() *battle.Movement {
+	panic("not implemented yet.")
+}
+
 func (a *actor) Position() *vec2.T {
 	return &vec2.Zero
 }

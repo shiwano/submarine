@@ -3,8 +3,10 @@ package actor
 import (
 	"app/battle/context"
 	"app/battle/event"
+	"app/currentmillis"
 	"app/typhenapi/type/submarine/battle"
 	"github.com/ungerik/go3d/float64/vec2"
+	"time"
 )
 
 type actor struct {
@@ -13,6 +15,10 @@ type actor struct {
 	actorType battle.ActorType
 	context   *context.Context
 	event     *event.Emitter
+
+	direction float64
+	speed     *battle.Speed
+	movedAt   time.Time
 }
 
 func newActor(battleContext *context.Context, userID int64, actorType battle.ActorType) *actor {
@@ -22,6 +28,7 @@ func newActor(battleContext *context.Context, userID int64, actorType battle.Act
 		actorType: actorType,
 		context:   battleContext,
 		event:     event.New(),
+		movedAt:   time.Now(),
 	}
 }
 
@@ -43,6 +50,17 @@ func (a *actor) Event() *event.Emitter {
 
 func (a *actor) Destroy() {
 	a.context.Event.Emit(event.ActorDestroy, a)
+}
+
+func (a *actor) Movement() *battle.Movement {
+	position := a.Position()
+	return &battle.Movement{
+		ActorId:   a.id,
+		Position:  &battle.Point{X: position[0], Y: position[1]},
+		Direction: a.direction,
+		Speed:     a.speed,
+		MovedAt:   currentmillis.ToMilliseconds(a.movedAt),
+	}
 }
 
 // Overridable methods.
