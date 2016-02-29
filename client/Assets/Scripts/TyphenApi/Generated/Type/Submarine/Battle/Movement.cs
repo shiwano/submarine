@@ -12,9 +12,9 @@ namespace TyphenApi.Type.Submarine.Battle
         public TyphenApi.Type.Submarine.Battle.Point Position { get; set; }
         protected static readonly SerializationInfo<Movement, double> direction = new SerializationInfo<Movement, double>("direction", false, (x) => x.Direction, (x, v) => x.Direction = v);
         public double Direction { get; set; }
-        protected static readonly SerializationInfo<Movement, TyphenApi.Type.Submarine.Battle.Speed> speed = new SerializationInfo<Movement, TyphenApi.Type.Submarine.Battle.Speed>("speed", true, (x) => x.Speed, (x, v) => x.Speed = v);
-        public TyphenApi.Type.Submarine.Battle.Speed Speed { get; set; }
         protected static readonly SerializationInfo<Movement, long> movedAt = new SerializationInfo<Movement, long>("moved_at", false, (x) => x.MovedAt, (x, v) => x.MovedAt = v);
         public long MovedAt { get; set; }
+        protected static readonly SerializationInfo<Movement, TyphenApi.Type.Submarine.Battle.Accelerator> accelerator = new SerializationInfo<Movement, TyphenApi.Type.Submarine.Battle.Accelerator>("accelerator", true, (x) => x.Accelerator, (x, v) => x.Accelerator = v);
+        public TyphenApi.Type.Submarine.Battle.Accelerator Accelerator { get; set; }
     }
 }

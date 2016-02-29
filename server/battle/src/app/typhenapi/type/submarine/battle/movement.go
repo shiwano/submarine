@@ -11,11 +11,11 @@ var _ = errors.New
 
 // Movement is a kind of TyphenAPI type.
 type Movement struct {
-	ActorId   int64   `codec:"actor_id"`
-	Position  *Point  `codec:"position"`
-	Direction float64 `codec:"direction"`
-	Speed     *Speed  `codec:"speed"`
-	MovedAt   int64   `codec:"moved_at"`
+	ActorId     int64        `codec:"actor_id"`
+	Position    *Point       `codec:"position"`
+	Direction   float64      `codec:"direction"`
+	MovedAt     int64        `codec:"moved_at"`
+	Accelerator *Accelerator `codec:"accelerator"`
 }
 
 // Coerce the fields.

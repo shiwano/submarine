@@ -129,15 +129,15 @@ namespace TyphenApi.WebSocketApi.Parts.Submarine
             session.Send((int)MessageType.Movement, movement);
         }
 
-        public void SendMovement(long actorId, TyphenApi.Type.Submarine.Battle.Point position, double direction, TyphenApi.Type.Submarine.Battle.Speed speed, long movedAt)
+        public void SendMovement(long actorId, TyphenApi.Type.Submarine.Battle.Point position, double direction, long movedAt, TyphenApi.Type.Submarine.Battle.Accelerator accelerator)
         {
             session.Send((int)MessageType.Movement, new TyphenApi.Type.Submarine.Battle.Movement()
             {
                 ActorId = actorId,
                 Position = position,
                 Direction = direction,
-                Speed = speed,
                 MovedAt = movedAt,
+                Accelerator = accelerator,
             });
         }
         public void SendDestruction(TyphenApi.Type.Submarine.Battle.Destruction destruction)
