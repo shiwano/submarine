@@ -13,10 +13,12 @@ declare module Submarine.Battle {
     y: number;
   }
 
-  interface Speed {
-    max: number;
-    acceleratedAt: timeStamp;
+  interface Accelerator {
+    maxSpeed: number;
     duration: milliSeconds;
+    startRate: number;
+    isAccelerating: boolean;
+    changedAt: timeStamp;
   }
 
   interface Start {
@@ -39,8 +41,8 @@ declare module Submarine.Battle {
     actorId: integer;
     position: Point;
     direction: degrees;
-    speed?: Speed;
     movedAt: timeStamp;
+    accelerator?: Accelerator;
   }
 
   interface Destruction {
