@@ -20,7 +20,6 @@ type actor struct {
 	event     *event.Emitter
 
 	direction float64
-	speed     *battle.Speed
 	movedAt   time.Time
 }
 
@@ -58,11 +57,11 @@ func (a *actor) Destroy() {
 func (a *actor) Movement() *battle.Movement {
 	position := a.Position()
 	return &battle.Movement{
-		ActorId:   a.id,
-		Position:  &battle.Point{X: position[0], Y: position[1]},
-		Direction: a.direction,
-		Speed:     a.speed,
-		MovedAt:   currentmillis.Milliseconds(a.movedAt),
+		ActorId:     a.id,
+		Position:    &battle.Point{X: position[0], Y: position[1]},
+		Direction:   a.direction,
+		MovedAt:     currentmillis.Milliseconds(a.movedAt),
+		Accelerator: nil,
 	}
 }
 
