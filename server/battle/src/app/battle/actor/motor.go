@@ -2,6 +2,8 @@ package actor
 
 import (
 	"app/battle/context"
+	"app/currentmillis"
+	"app/typhenapi/type/submarine/battle"
 	"github.com/ungerik/go3d/float64/vec2"
 	"math"
 	"time"
@@ -35,6 +37,17 @@ func newMotor(context *context.Context, position *vec2.T,
 	}
 	m.turn(position, 0)
 	return m
+}
+
+func (m *motor) toAPIType(actorID int64) *battle.Movement {
+	position := m.position()
+	return &battle.Movement{
+		ActorId:     actorID,
+		Position:    &battle.Point{X: position[0], Y: position[1]},
+		Direction:   m.direction,
+		MovedAt:     currentmillis.Milliseconds(m.changedAt),
+		Accelerator: m.accelerator.toAPIType(),
+	}
 }
 
 func (m *motor) accelerate(position *vec2.T) {
@@ -91,6 +104,19 @@ type accelerator struct {
 	isAccelerating    bool
 	changedAt         time.Time
 	reachedMaxSpeedAt time.Time
+}
+
+func (a *accelerator) toAPIType() *battle.Accelerator {
+	if a.isShutdown {
+		return nil
+	}
+	return &battle.Accelerator{
+		MaxSpeed:       a.maxSpeed,
+		Duration:       currentmillis.MillisecondsDuration(a.duration),
+		StartRate:      a.startRate,
+		IsAccelerating: a.isAccelerating,
+		ChangedAt:      currentmillis.Milliseconds(a.changedAt),
+	}
 }
 
 func (a *accelerator) switchAccelerating(isAccelerating bool) {

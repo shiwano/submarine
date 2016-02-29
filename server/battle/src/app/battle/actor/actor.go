@@ -3,7 +3,6 @@ package actor
 import (
 	"app/battle/context"
 	"app/battle/event"
-	"app/currentmillis"
 	"app/typhenapi/type/submarine/battle"
 	"github.com/k0kubun/pp"
 	"github.com/ungerik/go3d/float64/vec2"
@@ -12,15 +11,18 @@ import (
 
 var p = pp.Println
 
+const (
+	accelerationMaxSpeed = 2
+	accelerationDuration = 3 * time.Second
+)
+
 type actor struct {
 	id        int64
 	userID    int64
 	actorType battle.ActorType
 	context   *context.Context
 	event     *event.Emitter
-
-	direction float64
-	movedAt   time.Time
+	motor     *motor
 }
 
 func newActor(battleContext *context.Context, userID int64, actorType battle.ActorType) *actor {
@@ -30,7 +32,8 @@ func newActor(battleContext *context.Context, userID int64, actorType battle.Act
 		actorType: actorType,
 		context:   battleContext,
 		event:     event.New(),
-		movedAt:   time.Now(),
+		motor: newMotor(battleContext, &vec2.Zero,
+			accelerationMaxSpeed, accelerationDuration),
 	}
 }
 
@@ -55,18 +58,11 @@ func (a *actor) Destroy() {
 }
 
 func (a *actor) Movement() *battle.Movement {
-	position := a.Position()
-	return &battle.Movement{
-		ActorId:     a.id,
-		Position:    &battle.Point{X: position[0], Y: position[1]},
-		Direction:   a.direction,
-		MovedAt:     currentmillis.Milliseconds(a.movedAt),
-		Accelerator: nil,
-	}
+	return a.motor.toAPIType(a.id)
 }
 
 // Overridable methods.
-func (a *actor) Position() *vec2.T { return &vec2.Zero }
+func (a *actor) Position() *vec2.T { return a.motor.position() }
 func (a *actor) Start()            {}
 func (a *actor) Update()           {}
 func (a *actor) OnDestroy()        {}
