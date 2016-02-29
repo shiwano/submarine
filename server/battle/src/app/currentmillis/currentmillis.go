@@ -35,3 +35,8 @@ func Time(ms int64) time.Time {
 func Duration(ms int64) time.Duration {
 	return time.Duration(ms * 1000000)
 }
+
+// MillisecondsDuration converts the given time.Duration to milliseconds,
+func MillisecondsDuration(d time.Duration) int64 {
+	return d.Nanoseconds() / 1000000
+}

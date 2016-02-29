@@ -17,7 +17,7 @@ func TestStubNow(t *testing.T) {
 	}
 }
 
-func TestToMilliseconds(t *testing.T) {
+func TestMilliseconds(t *testing.T) {
 	actual := currentmillis.Milliseconds(time.Date(2016, time.January, 31, 14, 11, 54, 921*1000000, time.UTC))
 	var expected int64 = 1454249514921
 
@@ -26,7 +26,7 @@ func TestToMilliseconds(t *testing.T) {
 	}
 }
 
-func TestToTime(t *testing.T) {
+func TestTime(t *testing.T) {
 	actualTime := currentmillis.Time(1454249514921)
 	actual := actualTime.UTC().String()
 	expected := "2016-01-31 14:11:54.921 +0000 UTC"
@@ -36,11 +36,20 @@ func TestToTime(t *testing.T) {
 	}
 }
 
-func TestToDuration(t *testing.T) {
+func TestDuration(t *testing.T) {
 	actual := currentmillis.Duration(1000)
 	expected := time.Second
 
 	if actual != expected {
 		t.Errorf("Failed converting to time duration: expected=%v, actual=%v", expected, actual)
+	}
+}
+
+func TestMillisecondsDuration(t *testing.T) {
+	actual := currentmillis.MillisecondsDuration(1 * time.Second)
+	var expected int64 = 1000
+
+	if actual != expected {
+		t.Errorf("Failed converting to milliseconds: expected=%v, actual=%v", expected, actual)
 	}
 }
