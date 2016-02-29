@@ -5,9 +5,12 @@ import (
 	"app/battle/event"
 	"app/currentmillis"
 	"app/typhenapi/type/submarine/battle"
+	"github.com/k0kubun/pp"
 	"github.com/ungerik/go3d/float64/vec2"
 	"time"
 )
+
+var p = pp.Println
 
 type actor struct {
 	id        int64
