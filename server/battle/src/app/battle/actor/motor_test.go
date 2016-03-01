@@ -48,7 +48,7 @@ func TestMotor(t *testing.T) {
 			})
 
 			Convey("when the accelerator is accelerating", func() {
-				m.accelerate(&vec2.T{1, 1})
+				m.accelerate()
 
 				Convey("should return the initial position", func() {
 					So(m.position(), ShouldResemble, &vec2.T{1, 1})
@@ -83,9 +83,9 @@ func TestMotor(t *testing.T) {
 			})
 
 			Convey("when the accelerator is stopping", func() {
-				m.accelerate(&vec2.T{1, 1})
+				m.accelerate()
 				c.Now, _ = time.Parse(timeLayout, "00:00:05.000")
-				m.brake(m.position())
+				m.brake()
 
 				Convey("should return the initial position", func() {
 					So(m.position(), ShouldResemble, &vec2.T{8.5, 1})
@@ -120,11 +120,11 @@ func TestMotor(t *testing.T) {
 			})
 
 			Convey("when the accelerator is accelerating from the middle", func() {
-				m.accelerate(&vec2.T{1, 1})
+				m.accelerate()
 				c.Now, _ = time.Parse(timeLayout, "00:00:03.000")
-				m.brake(m.position())
+				m.brake()
 				c.Now, _ = time.Parse(timeLayout, "00:00:05.000")
-				m.accelerate(m.position())
+				m.accelerate()
 
 				Convey("should return the initial position", func() {
 					So(m.position()[0], ShouldAlmostEqual, 6.1)
@@ -151,9 +151,9 @@ func TestMotor(t *testing.T) {
 			})
 
 			Convey("when the accelerator is stopping from the middle", func() {
-				m.accelerate(&vec2.T{1, 1})
+				m.accelerate()
 				c.Now, _ = time.Parse(timeLayout, "00:00:03.000")
-				m.brake(m.position())
+				m.brake()
 
 				Convey("should return the initial position", func() {
 					So(m.position()[0], ShouldAlmostEqual, 3.7)
@@ -180,8 +180,8 @@ func TestMotor(t *testing.T) {
 			})
 
 			Convey("when the direction changed", func() {
-				m.turn(&vec2.T{1, 1}, 90)
-				m.accelerate(&vec2.T{1, 1})
+				m.turn(90)
+				m.accelerate()
 				c.Now, _ = time.Parse(timeLayout, "00:00:01.000")
 
 				Convey("should return the calculated position", func() {

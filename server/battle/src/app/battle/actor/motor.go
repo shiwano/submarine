@@ -27,7 +27,10 @@ type motor struct {
 func newMotor(context *context.Context, position *vec2.T,
 	maxSpeed float64, duration time.Duration) *motor {
 	m := &motor{
-		context: context,
+		context:            context,
+		initialPosition:    position,
+		normalizedVelocity: &vec2.T{1, 0},
+		changedAt:          context.Now,
 		accelerator: &accelerator{
 			context:    context,
 			maxSpeed:   maxSpeed,
@@ -35,7 +38,6 @@ func newMotor(context *context.Context, position *vec2.T,
 			isShutdown: true,
 		},
 	}
-	m.turn(position, 0)
 	return m
 }
 
@@ -50,22 +52,22 @@ func (m *motor) toAPIType(actorID int64) *battle.Movement {
 	}
 }
 
-func (m *motor) accelerate(position *vec2.T) {
-	m.initialPosition = position
+func (m *motor) accelerate() {
+	m.initialPosition = m.position()
 	m.initialSpeed = m.accelerator.speed()
 	m.accelerator.switchAccelerating(true)
 	m.changedAt = m.context.Now
 }
 
-func (m *motor) brake(position *vec2.T) {
-	m.initialPosition = position
+func (m *motor) brake() {
+	m.initialPosition = m.position()
 	m.initialSpeed = m.accelerator.speed()
 	m.accelerator.switchAccelerating(false)
 	m.changedAt = m.context.Now
 }
 
-func (m *motor) turn(position *vec2.T, direction float64) {
-	m.initialPosition = position
+func (m *motor) turn(direction float64) {
+	m.initialPosition = m.position()
 	m.initialSpeed = m.accelerator.speed()
 	m.direction = direction
 	m.normalizedVelocity = &vec2.T{
