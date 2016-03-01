@@ -30,6 +30,7 @@ func New(timeLimit time.Duration) *Battle {
 		close:     make(chan struct{}, 1),
 	}
 	b.context.Event.On(event.ActorAdd, b.onActorAdd)
+	b.context.Event.On(event.ActorMove, b.onActorMove)
 	return b
 }
 
@@ -110,4 +111,8 @@ func (b *Battle) onInputReceive(input *gatewayInput) {
 
 func (b *Battle) onActorAdd(actor context.Actor) {
 	b.Gateway.outputActor(actor)
+}
+
+func (b *Battle) onActorMove(actor context.Actor) {
+	b.Gateway.outputMovement(actor)
 }

@@ -163,5 +163,10 @@ func (r *Room) onBattleOutputReceive(output typhenapi.Type) {
 		for _, s := range r.sessions {
 			s.api.Battle.SendActor(message)
 		}
+	case *battle.Movement:
+		logger.Log.Debugf("Actor(%v) moved", message.ActorId)
+		for _, s := range r.sessions {
+			s.api.Battle.SendMovement(message)
+		}
 	}
 }

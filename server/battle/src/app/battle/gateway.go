@@ -51,6 +51,10 @@ func (g *Gateway) outputActor(actor context.Actor) {
 	}
 }
 
+func (g *Gateway) outputMovement(actor context.Actor) {
+	g.Output <- actor.Movement()
+}
+
 type gatewayInput struct {
 	userID  int64
 	message typhenapi.Type
