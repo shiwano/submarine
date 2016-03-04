@@ -15,71 +15,92 @@ namespace Submarine.Battle
         [SerializeField]
         Button lookoutButton;
 
-        const float clickTimeThreshold = 1.5f;
-        const float sqrClickDragLengthThreshold = 10f * 10f;
+        const float SqrDragLengthThresholdForClick = 10f * 10f;
+        readonly TimeSpan touchTimeThresholdForClick = TimeSpan.FromSeconds(1.5d);
+        readonly float halfScreenWidth = Screen.width / 2f;
 
-        public ReactiveProperty<bool> IsTouched { get; private set; }
-        public ReactiveProperty<Vector3> TouchStartPosition { get; private set; }
-        public ReactiveProperty<DateTime> TouchStartTime { get; private set; }
+        ReactiveProperty<bool> isTouched;
+        Vector3 touchStartPosition;
+        DateTime touchStartTime;
 
-        public bool IsTouchingUI
+        bool IsTouchingUI
         {
-            get { return EventSystem.current != null && EventSystem.current.currentSelectedGameObject != null; }
+            get
+            {
+                return EventSystem.current != null &&
+                    EventSystem.current.currentSelectedGameObject != null;
+            }
         }
 
-        public Vector3 DragAmount
+        TimeSpan TouchTime
         {
-            get { return Input.mousePosition - TouchStartPosition.Value; }
+            get
+            {
+                return isTouched.Value ?
+                    DateTime.Now - touchStartTime :
+                    TimeSpan.Zero;
+            }
         }
 
-        public float TouchTime
+        Vector3 DragAmount
         {
-            get { return (float)(DateTime.Now - TouchStartTime.Value).TotalSeconds; }
+            get
+            {
+                return isTouched.Value ?
+                    Input.mousePosition - touchStartPosition :
+                    Vector3.zero;
+            }
         }
 
-        public IObservable<bool> ClickedAsObservable()
+        public ReactiveProperty<bool> IsAccelerating
         {
-            return IsTouched
+            get { return isTouched; }
+        }
+
+        public float TurningRate
+        {
+            get { return Mathf.Clamp(DragAmount.x / halfScreenWidth, -1f, 1f); }
+        }
+
+        public IObservable<Unit> OnTorpadeShootAsObservable()
+        {
+            return isTouched
                 .Where(b => !b &&
-                    TouchTime < clickTimeThreshold &&
-                    DragAmount.sqrMagnitude < sqrClickDragLengthThreshold)
-                .Select(_ => true);
+                    TouchTime < touchTimeThresholdForClick &&
+                    DragAmount.sqrMagnitude < SqrDragLengthThresholdForClick)
+                .Select(_ => Unit.Default);
         }
 
-        public IObservable<Unit> DecoyButtonClickedAsObservable()
+        public IObservable<Unit> OnDecoyShootAsObservable()
         {
             return decoyButton.OnClickAsObservable();
         }
 
-        public IObservable<Unit> PingerButtonClickedAsObservable()
+        public IObservable<Unit> OnPingerUseAsObservable()
         {
             return pingerButton.OnClickAsObservable();
         }
 
-        public IObservable<Unit> LookoutButtonClickedAsObservable()
+        public IObservable<Unit> OnLookoutShootAsObservable()
         {
             return lookoutButton.OnClickAsObservable();
         }
 
         void Awake()
         {
-            IsTouched = Observable.EveryUpdate()
+            isTouched = Observable.EveryUpdate()
                 .Select(_ => Input.GetMouseButton(0))
                 .Where(_ => !IsTouchingUI)
                 .ToReactiveProperty();
-            IsTouched.AddTo(this);
+            isTouched.AddTo(this);
 
-            TouchStartPosition = IsTouched
-                .Where(b => b)
-                .Select(_ => Input.mousePosition)
-                .ToReactiveProperty();
-            TouchStartPosition.AddTo(this);
+            isTouched.Where(b => b)
+                .Subscribe(_ => touchStartPosition = Input.mousePosition)
+                .AddTo(this);
 
-            TouchStartTime = IsTouched
-                .Where(b => b)
-                .Select(_ => DateTime.Now)
-                .ToReactiveProperty();
-            TouchStartTime.AddTo(this);
+            isTouched.Where(b => b)
+                .Subscribe(_ => touchStartTime = DateTime.Now)
+                .AddTo(this);
         }
     }
 }
