@@ -7,10 +7,10 @@ import (
 
 // Context represents a battle context.
 type Context struct {
-	currentActorID int64
-	Now            time.Time
-	Event          *event.Emitter
-	Container      *Container
+	lastCreatedActorID int64
+	Now                time.Time
+	Event              *event.Emitter
+	Container          *Container
 }
 
 // NewContext creates a contest.
@@ -24,9 +24,8 @@ func NewContext() *Context {
 
 // NextActorID returns the next unique actor id.
 func (c *Context) NextActorID() int64 {
-	nextActorID := c.currentActorID
-	c.currentActorID++
-	return nextActorID
+	c.lastCreatedActorID++
+	return c.lastCreatedActorID
 }
 
 // UserIDs returns user ids in battle.
