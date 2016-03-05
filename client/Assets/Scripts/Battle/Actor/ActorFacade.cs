@@ -3,13 +3,7 @@ using Type = TyphenApi.Type.Submarine;
 
 namespace Submarine.Battle
 {
-    public interface IActorFacade : IFacade
-    {
-        Type.Battle.Actor Actor { get; }
-        bool IsMine { get; }
-    }
-
-    public abstract class ActorFacade : Facade, IActorFacade
+    public abstract class ActorFacade : Facade
     {
         [Inject]
         Type.Battle.Actor actor;
