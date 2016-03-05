@@ -38,7 +38,7 @@ namespace Submarine.Battle
 
         public BattleModel()
         {
-            State = new ReactiveProperty<BattleState>(BattleState.InPreparation);
+            State = new ReactiveProperty<BattleState>(BattleState.NotConnected);
         }
 
         public IObservable<Unit> OnPrepareAsObservable()
