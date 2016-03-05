@@ -19,7 +19,7 @@ namespace Submarine.Battle
         readonly TimeSpan touchTimeThresholdForClick = TimeSpan.FromSeconds(1.5d);
         readonly float halfScreenWidth = Screen.width / 2f;
 
-        ReactiveProperty<bool> isTouched;
+        IReadOnlyReactiveProperty<bool> isTouched;
         Vector3 touchStartPosition;
         DateTime touchStartTime;
 
@@ -52,7 +52,7 @@ namespace Submarine.Battle
             }
         }
 
-        public ReactiveProperty<bool> IsAccelerating
+        public IReadOnlyReactiveProperty<bool> IsAccelerating
         {
             get { return isTouched; }
         }
@@ -91,8 +91,8 @@ namespace Submarine.Battle
             isTouched = Observable.EveryUpdate()
                 .Select(_ => Input.GetMouseButton(0))
                 .Where(_ => !IsTouchingUI)
-                .ToReactiveProperty();
-            isTouched.AddTo(this);
+                .ToReactiveProperty()
+                .AddTo(this);
 
             isTouched.Where(b => b)
                 .Subscribe(_ => touchStartPosition = Input.mousePosition)

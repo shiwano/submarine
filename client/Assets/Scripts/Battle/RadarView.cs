@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using System.Collections;
 
 namespace Submarine.Battle
 {
@@ -20,6 +19,6 @@ namespace Submarine.Battle
         [SerializeField]
         RectTransform pinContainer;
         [SerializeField]
-        Vector2 radarSize = new Vector2(250f, 250f);
+        Vector2 radarSize;
     }
 }

@@ -20,7 +20,7 @@ namespace Submarine.Title
 
         public IObservable<string> NameChangedAsObservable()
         {
-            return nameInputField.OnValueChangeAsObservable();
+            return nameInputField.OnValueChangedAsObservable();
         }
 
         public void Show()
