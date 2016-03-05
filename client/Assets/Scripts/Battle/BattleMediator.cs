@@ -7,6 +7,10 @@ namespace Submarine.Battle
     public class BattleMediator : IInitializable, ITickable
     {
         [Inject]
+        BattleService battleService;
+        [Inject]
+        BattleInputService battleInputService;
+        [Inject]
         BattleModel battleModel;
         [Inject]
         BattleView view;
@@ -45,12 +49,54 @@ namespace Submarine.Battle
         void OnBattleStart()
         {
             Logger.Log("Battle Start");
+
+            battleInputService.IsAccelerating.Subscribe(OnAcceleratingChange).AddTo(view);
+            battleInputService.OnTorpadeShootAsObservable().Subscribe(_ => OnTorpedoShoot()).AddTo(view);
+            battleInputService.OnDecoyShootAsObservable().Subscribe(_ => OnDecoyShoot()).AddTo(view);
+            battleInputService.OnLookoutShootAsObservable().Subscribe(_ => OnLookoutShoot()).AddTo(view);
+            battleInputService.OnPingerUseAsObservable().Subscribe(_ => OnPingerUse()).AddTo(view);
         }
 
         void OnBattleFinish()
         {
             Logger.Log("Battle Finish");
             sceneChangeCommand.Execute(SceneNames.Lobby);
+        }
+
+        void OnAcceleratingChange(bool isAccelerating)
+        {
+            if (isAccelerating)
+            {
+                Logger.Log("Submarine accelerates");
+                battleService.Api.SendAccelerationRequest();
+            }
+            else
+            {
+                Logger.Log("Submarine brakes");
+                battleService.Api.SendBrakeRequest();
+            }
+        }
+
+        void OnTorpedoShoot()
+        {
+            Logger.Log("Submarine shoots a torpedo");
+            battleService.Api.SendTorpedoRequest();
+        }
+
+        void OnDecoyShoot()
+        {
+            Logger.Log("Sumarine shoots a decoy");
+        }
+
+        void OnLookoutShoot()
+        {
+            Logger.Log("Submarine shoots a lookout");
+        }
+
+        void OnPingerUse()
+        {
+            Logger.Log("Submarine uses pinger");
+            battleService.Api.SendPingerRequest();
         }
 
         void OnActorCreated(Type.Battle.Actor actor)
