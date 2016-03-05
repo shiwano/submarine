@@ -28,8 +28,6 @@ namespace Submarine.Battle
             battleModel.OnPrepareAsObservable().Take(1).Subscribe(_ => OnBattlePrepare()).AddTo(view);
             battleModel.OnStartAsObservable().Take(1).Subscribe(_ => OnBattleStart()).AddTo(view);
             battleModel.OnFinishAsObservable().Take(1).Subscribe(_ => OnBattleFinish()).AddTo(view);
-            battleService.Api.OnActorReceiveAsObservable().Subscribe(OnActorCreate).AddTo(view);
-
             initializeBattleCommand.Execute();
         }
 
@@ -44,12 +42,13 @@ namespace Submarine.Battle
         void OnBattlePrepare()
         {
             Logger.Log("Battle Prepare");
+            battleService.Api.OnActorReceiveAsObservable().Subscribe(OnActorCreate).AddTo(view);
+            battleService.Api.OnMovementReceiveAsObservable().Subscribe(OnActorMove).AddTo(view);
         }
 
         void OnBattleStart()
         {
             Logger.Log("Battle Start");
-
             battleInputService.IsAccelerating.Subscribe(OnAcceleratingChange).AddTo(view);
             battleInputService.OnTorpadeShootAsObservable().Subscribe(_ => OnTorpedoShoot()).AddTo(view);
             battleInputService.OnDecoyShootAsObservable().Subscribe(_ => OnDecoyShoot()).AddTo(view);
@@ -112,6 +111,15 @@ namespace Submarine.Battle
                     }
                     break;
                 }
+            }
+        }
+
+        void OnActorMove(Type.Battle.Movement movement)
+        {
+            var actor = actorContainer.Get(movement.ActorId);
+            if (actor != null)
+            {
+                actor.Motor.SetMovement(movement);
             }
         }
     }
