@@ -9,20 +9,27 @@ namespace Submarine.Battle
         [Inject]
         SubmarineFacade.Factory submarineFactory;
 
-        List<ActorFacade> actors = new List<ActorFacade>();
+        Dictionary<long, ActorFacade> actors = new Dictionary<long, ActorFacade>();
 
         public void Tick()
         {
-            foreach (var actor in actors)
+            foreach (var actor in actors.Values)
             {
                 actor.Tick();
             }
         }
 
+        public ActorFacade Get(long actorId)
+        {
+            ActorFacade actor;
+            actors.TryGetValue(actorId, out actor);
+            return actor;
+        }
+
         public SubmarineFacade CreateSubmarine(Type.Battle.Actor actor)
         {
             var submarine = submarineFactory.Create(actor);
-            actors.Add(submarine);
+            actors.Add(actor.Id, submarine);
             return submarine;
         }
     }
