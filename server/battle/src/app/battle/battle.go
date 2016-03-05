@@ -4,6 +4,7 @@ import (
 	"app/battle/actor"
 	"app/battle/context"
 	"app/battle/event"
+	"app/logger"
 	"app/typhenapi/type/submarine/battle"
 	"time"
 )
@@ -90,22 +91,27 @@ func (b *Battle) update(now time.Time) bool {
 }
 
 func (b *Battle) onInputReceive(input *gatewayInput) {
-	submarine := b.context.Container.SubmarineByUserID(input.userID)
-	if submarine == nil {
+	s := b.context.Container.SubmarineByUserID(input.userID)
+	if s == nil {
 		return
 	}
 
-	switch message := input.message.(type) {
+	switch m := input.message.(type) {
 	case *battle.AccelerationRequestObject:
-		submarine.Event().Emit(event.AccelerationRequest, message)
+		logger.Log.Infof("User(%v)'s submarine(%v) accelerates", s.UserID(), s.ID())
+		s.Event().Emit(event.AccelerationRequest, m)
 	case *battle.BrakeRequestObject:
-		submarine.Event().Emit(event.BrakeRequest, message)
+		logger.Log.Infof("User(%v)'s submarine(%v) brakes", s.UserID(), s.ID())
+		s.Event().Emit(event.BrakeRequest, m)
 	case *battle.TurnRequestObject:
-		submarine.Event().Emit(event.TurnRequest, message)
+		logger.Log.Infof("User(%v)'s submarine(%v) turns to %v", s.UserID(), s.ID(), m.Direction)
+		s.Event().Emit(event.TurnRequest, m)
 	case *battle.TorpedoRequestObject:
-		submarine.Event().Emit(event.TorpedoRequest, message)
+		logger.Log.Infof("User(%v)'s submarine(%v) shoots a torpedo", s.UserID(), s.ID())
+		s.Event().Emit(event.TorpedoRequest, m)
 	case *battle.PingerRequestObject:
-		submarine.Event().Emit(event.PingerRequest, message)
+		logger.Log.Infof("User(%v)'s submarine(%v) use pinger", s.UserID(), s.ID())
+		s.Event().Emit(event.PingerRequest, m)
 	}
 }
 
