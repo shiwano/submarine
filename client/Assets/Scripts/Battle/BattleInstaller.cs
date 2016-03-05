@@ -45,6 +45,7 @@ namespace Submarine.Battle
         void InstallSubmarineFacade(DiContainer subContainer, Type.Battle.Actor actor)
         {
             var submarinePrefab = Resources.Load<GameObject>(Constants.SubmarinePrefab);
+            subContainer.Bind<ActorMotor>().ToSingle();
             subContainer.Bind<SubmarineView>().ToSinglePrefab(submarinePrefab);
             subContainer.BindInstance(actor);
         }

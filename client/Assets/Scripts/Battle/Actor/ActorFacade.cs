@@ -8,9 +8,12 @@ namespace Submarine.Battle
         [Inject]
         Type.Battle.Actor actor;
         [Inject]
+        ActorMotor motor;
+        [Inject]
         UserModel userModel;
 
         public Type.Battle.Actor Actor { get { return actor; } }
+        public ActorMotor Motor { get { return motor; } }
 
         public bool IsMine
         {
