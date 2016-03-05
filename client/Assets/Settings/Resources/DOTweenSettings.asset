@@ -19,7 +19,7 @@ MonoBehaviour:
   defaultUpdateType: 0
   defaultTimeScaleIndependent: 0
   defaultEaseType: 6
-  defaultEaseOvershootOrAmplitude: 1.70158005
+  defaultEaseOvershootOrAmplitude: 1.70158
   defaultEasePeriod: 0
   defaultAutoKill: 1
   defaultLoopType: 0
