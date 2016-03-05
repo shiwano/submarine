@@ -4,7 +4,6 @@ using System;
 using System.Collections;
 using System.IO;
 using WebSocketSharp;
-using TyphenApi.Type;
 
 namespace TyphenApi
 {
@@ -108,7 +107,7 @@ namespace TyphenApi
 
         void OnMessage(object sender, MessageEventArgs e)
         {
-            if (e.Type == Opcode.Binary)
+            if (e.IsBinary)
             {
                 var messageTypeBytes = new byte[MessageTypeBytesLength];
                 var messageData = new byte[e.RawData.Length - MessageTypeBytesLength];
