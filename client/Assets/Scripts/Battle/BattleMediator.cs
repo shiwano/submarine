@@ -28,7 +28,7 @@ namespace Submarine.Battle
             battleModel.OnPrepareAsObservable().Take(1).Subscribe(_ => OnBattlePrepare()).AddTo(view);
             battleModel.OnStartAsObservable().Take(1).Subscribe(_ => OnBattleStart()).AddTo(view);
             battleModel.OnFinishAsObservable().Take(1).Subscribe(_ => OnBattleFinish()).AddTo(view);
-            battleModel.Actors.ObserveAdd().Subscribe(e => OnActorCreated(e.Value)).AddTo(view);
+            battleService.Api.OnActorReceiveAsObservable().Subscribe(OnActorCreate).AddTo(view);
 
             initializeBattleCommand.Execute();
         }
@@ -99,7 +99,7 @@ namespace Submarine.Battle
             battleService.Api.SendPingerRequest();
         }
 
-        void OnActorCreated(Type.Battle.Actor actor)
+        void OnActorCreate(Type.Battle.Actor actor)
         {
             switch (actor.Type)
             {

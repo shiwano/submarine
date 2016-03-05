@@ -15,7 +15,6 @@ namespace Submarine.Battle
     public class BattleModel
     {
         public readonly ReactiveProperty<BattleState> State;
-        public readonly ReactiveDictionary<long, Type.Battle.Actor> Actors;
 
         public DateTime StartedAt { get; set; }
         public DateTime FinishedAt { get; set; }
@@ -40,7 +39,6 @@ namespace Submarine.Battle
         public BattleModel()
         {
             State = new ReactiveProperty<BattleState>(BattleState.InPreparation);
-            Actors = new ReactiveDictionary<long, Type.Battle.Actor>();
         }
 
         public IObservable<Unit> OnPrepareAsObservable()
