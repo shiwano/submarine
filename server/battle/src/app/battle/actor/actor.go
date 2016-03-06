@@ -67,17 +67,17 @@ func (a *actor) Position() *vec2.T {
 
 func (a *actor) accelerate() {
 	a.motor.accelerate()
-	a.event.Emit(event.ActorMove, a)
+	a.context.Event.Emit(event.ActorMove, a)
 }
 
 func (a *actor) brake() {
 	a.motor.brake()
-	a.event.Emit(event.ActorMove, a)
+	a.context.Event.Emit(event.ActorMove, a)
 }
 
 func (a *actor) turn(direction float64) {
 	a.motor.turn(direction)
-	a.event.Emit(event.ActorMove, a)
+	a.context.Event.Emit(event.ActorMove, a)
 }
 
 // Overridable methods.
