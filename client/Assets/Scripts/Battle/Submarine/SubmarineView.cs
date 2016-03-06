@@ -3,7 +3,7 @@ using DG.Tweening;
 
 namespace Submarine.Battle
 {
-    public class SubmarineView : MonoBehaviour, IActorView
+    public class SubmarineView : ActorView
     {
         [SerializeField]
         GameObject model;

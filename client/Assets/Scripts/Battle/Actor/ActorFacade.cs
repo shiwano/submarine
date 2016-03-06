@@ -12,11 +12,11 @@ namespace Submarine.Battle
         [Inject]
         ActorMotor motor;
         [Inject]
-        IActorView view;
+        ActorView view;
 
         public Type.Battle.Actor Actor { get { return actor; } }
         public ActorMotor Motor { get { return motor; } }
-        public IActorView View { get { return view; } }
+        public ActorView View { get { return view; } }
 
         public bool IsMine { get { return actor.UserId == userModel.LoggedInUser.Value.Id; } }
     }

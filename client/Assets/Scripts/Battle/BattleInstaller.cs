@@ -47,7 +47,7 @@ namespace Submarine.Battle
             var submarinePrefab = Resources.Load<GameObject>(Constants.SubmarinePrefab);
             subContainer.Bind<ActorMotor>().ToSingle();
             subContainer.Bind<SubmarineView>().ToSinglePrefab(submarinePrefab);
-            subContainer.Bind<IActorView>().ToSinglePrefab(submarinePrefab);
+            subContainer.Bind<ActorView>().ToSinglePrefab(submarinePrefab);
             subContainer.BindInstance(actor);
         }
     }
