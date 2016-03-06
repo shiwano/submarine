@@ -290,7 +290,7 @@ namespace MiniJSON {
             object ParseNumber() {
                 string number = NextWord;
 
-                if (number.IndexOf('.') == -1) {
+                if (number.IndexOf('.') == -1 && number.IndexOf('E') == -1 && number.IndexOf('e') == -1) {
                     long parsedInt;
                     Int64.TryParse(number, out parsedInt);
                     return parsedInt;
