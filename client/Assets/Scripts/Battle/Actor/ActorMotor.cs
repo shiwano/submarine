@@ -79,6 +79,11 @@ namespace Submarine.Battle
             );
         }
 
+        public Quaternion GetCurrentRotation()
+        {
+            return Quaternion.LookRotation(normalizedVelocity);
+        }
+
         public Vector2 GetCurrentPosition()
         {
             if (movement == null) return Vector2.zero;
