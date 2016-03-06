@@ -98,19 +98,19 @@ func (b *Battle) onInputReceive(input *gatewayInput) {
 
 	switch m := input.message.(type) {
 	case *battle.AccelerationRequestObject:
-		logger.Log.Infof("User(%v)'s submarine(%v) accelerates", s.UserID(), s.ID())
+		logger.Log.Debugf("User(%v)'s submarine(%v) accelerates", s.UserID(), s.ID())
 		s.Event().Emit(event.AccelerationRequest, m)
 	case *battle.BrakeRequestObject:
-		logger.Log.Infof("User(%v)'s submarine(%v) brakes", s.UserID(), s.ID())
+		logger.Log.Debugf("User(%v)'s submarine(%v) brakes", s.UserID(), s.ID())
 		s.Event().Emit(event.BrakeRequest, m)
 	case *battle.TurnRequestObject:
-		logger.Log.Infof("User(%v)'s submarine(%v) turns to %v", s.UserID(), s.ID(), m.Direction)
+		logger.Log.Debugf("User(%v)'s submarine(%v) turns to %v", s.UserID(), s.ID(), m.Direction)
 		s.Event().Emit(event.TurnRequest, m)
 	case *battle.TorpedoRequestObject:
-		logger.Log.Infof("User(%v)'s submarine(%v) shoots a torpedo", s.UserID(), s.ID())
+		logger.Log.Debugf("User(%v)'s submarine(%v) shoots a torpedo", s.UserID(), s.ID())
 		s.Event().Emit(event.TorpedoRequest, m)
 	case *battle.PingerRequestObject:
-		logger.Log.Infof("User(%v)'s submarine(%v) use pinger", s.UserID(), s.ID())
+		logger.Log.Debugf("User(%v)'s submarine(%v) use pinger", s.UserID(), s.ID())
 		s.Event().Emit(event.PingerRequest, m)
 	}
 }
