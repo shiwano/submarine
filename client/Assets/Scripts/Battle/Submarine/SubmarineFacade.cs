@@ -9,7 +9,5 @@ namespace Submarine.Battle
 
         [Inject]
         SubmarineView view;
-
-        public SubmarineView View { get { return view; } }
     }
 }
