@@ -92,7 +92,7 @@ namespace Submarine.Battle
             double s1, s2 = 0d;
             if (battleModel.Now > accelerator.ReachedMaxSpeedAt)
             {
-                s1 = (accelerator.ReachedMaxSpeedAt - accelerator.ChangedAt).TotalSeconds;
+                s1 = (accelerator.ReachedMaxSpeedAt - ChangedAt).TotalSeconds;
                 s2 = (battleModel.Now - accelerator.ReachedMaxSpeedAt).TotalSeconds;
             }
             else
