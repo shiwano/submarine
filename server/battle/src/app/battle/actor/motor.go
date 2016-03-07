@@ -80,7 +80,7 @@ func (m *motor) turn(direction float64) {
 func (m *motor) position() *vec2.T {
 	var s1, s2 float64
 	if m.context.Now.After(m.accelerator.reachedMaxSpeedAt) {
-		s1 = m.accelerator.reachedMaxSpeedAt.Sub(m.accelerator.changedAt).Seconds()
+		s1 = m.accelerator.reachedMaxSpeedAt.Sub(m.changedAt).Seconds()
 		s2 = m.context.Now.Sub(m.accelerator.reachedMaxSpeedAt).Seconds()
 	} else {
 		s1 = m.context.Now.Sub(m.changedAt).Seconds()

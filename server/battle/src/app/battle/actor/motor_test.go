@@ -188,6 +188,16 @@ func TestMotor(t *testing.T) {
 					So(m.position()[0], ShouldAlmostEqual, 1)
 					So(m.position()[1], ShouldAlmostEqual, 1.3)
 				})
+
+				Convey("and the direction changed once more", func() {
+					m.turn(0)
+					c.Now, _ = time.Parse(timeLayout, "00:00:06.000")
+
+					Convey("should return the calculated position", func() {
+						So(m.position()[0], ShouldAlmostEqual, 11.2)
+						So(m.position()[1], ShouldAlmostEqual, 1.3)
+					})
+				})
 			})
 		})
 	})
