@@ -17,6 +17,8 @@ namespace Submarine.Battle
 
         public override void InstallBindings()
         {
+            Container.Bind<BattleEvents.PlayerSubmarineCreate>().ToSingle();
+
             Container.Bind<BattleModel>().ToSingle();
             Container.Bind<BattleService>().ToSingle();
             Container.Bind<IDisposable>().ToSingle<BattleService>();
