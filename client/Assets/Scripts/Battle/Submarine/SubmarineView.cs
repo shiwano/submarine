@@ -37,6 +37,13 @@ namespace Submarine.Battle
             }
         }
 
+        public void Turn(float rate)
+        {
+            var degree = transform.eulerAngles.y + rate * 1.5f;
+            transform.localEulerAngles = new Vector3(0f, degree, 0f);
+            model.transform.localRotation = Quaternion.Euler(new Vector3(0f, 0f, -rate * 25f));
+        }
+
         void Start()
         {
             model.transform.DOLocalMoveY(-0.25f, 3f)

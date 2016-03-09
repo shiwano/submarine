@@ -9,5 +9,10 @@ namespace Submarine.Battle
 
         [Inject]
         SubmarineView view;
+
+        public void Turn(float rate)
+        {
+            view.Turn(rate);
+        }
     }
 }
