@@ -6,7 +6,7 @@ namespace Submarine.Title
     public class SignUpMediator : IInitializable
     {
         [Inject]
-        TitleEvent events;
+        TitleEvent.SignUpStart signUpStartEvent;
         [Inject]
         SignUpCommand signUpCommand;
         [Inject]
@@ -14,7 +14,7 @@ namespace Submarine.Title
 
         public void Initialize()
         {
-            events.SignUpStarted.AddListener(OnSignUpStart);
+            signUpStartEvent.AsObservable().Subscribe(_ => OnSignUpStart()).AddTo(view);
             view.SignUpButtonClickedAsObservable().Subscribe(_ => OnSignUpButtonClick()).AddTo(view);
             view.Hide();
         }

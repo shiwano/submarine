@@ -2,8 +2,8 @@
 
 namespace Submarine.Title
 {
-    public class TitleEvent
+    public static class TitleEvent
     {
-        public readonly UnityEvent SignUpStarted = new UnityEvent();
+        public class SignUpStart : UnityEvent { }
     }
 }

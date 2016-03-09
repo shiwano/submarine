@@ -6,7 +6,7 @@ namespace Submarine.Title
     public class TitleMediator : IInitializable
     {
         [Inject]
-        TitleEvent events;
+        TitleEvent.SignUpStart signUpStartEvent;
         [Inject]
         UserModel userModel;
         [Inject]
@@ -35,7 +35,7 @@ namespace Submarine.Title
             }
             else
             {
-                events.SignUpStarted.Invoke();
+                signUpStartEvent.Invoke();
             }
         }
 
