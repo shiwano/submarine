@@ -55,20 +55,21 @@ func (m *motor) toAPIType(actorID int64) *battle.Movement {
 func (m *motor) accelerate() {
 	m.initialPosition = m.position()
 	m.initialSpeed = m.accelerator.speed()
-	m.accelerator.switchAccelerating(true)
+	m.accelerator.refreshAccelerating(true)
 	m.changedAt = m.context.Now
 }
 
 func (m *motor) brake() {
 	m.initialPosition = m.position()
 	m.initialSpeed = m.accelerator.speed()
-	m.accelerator.switchAccelerating(false)
+	m.accelerator.refreshAccelerating(false)
 	m.changedAt = m.context.Now
 }
 
 func (m *motor) turn(direction float64) {
 	m.initialPosition = m.position()
 	m.initialSpeed = m.accelerator.speed()
+	m.accelerator.refreshAccelerating(m.accelerator.isAccelerating)
 	m.direction = direction
 	m.normalizedVelocity = &vec2.T{
 		math.Cos(direction * deg2Rad),
@@ -121,7 +122,7 @@ func (a *accelerator) toAPIType() *battle.Accelerator {
 	}
 }
 
-func (a *accelerator) switchAccelerating(isAccelerating bool) {
+func (a *accelerator) refreshAccelerating(isAccelerating bool) {
 	a.startRate = a.rate()
 	a.isShutdown = false
 	a.isAccelerating = isAccelerating
