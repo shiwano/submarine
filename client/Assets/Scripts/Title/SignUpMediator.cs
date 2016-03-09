@@ -6,7 +6,7 @@ namespace Submarine.Title
     public class SignUpMediator : IInitializable
     {
         [Inject]
-        TitleEvents events;
+        TitleEvent events;
         [Inject]
         SignUpCommand signUpCommand;
         [Inject]

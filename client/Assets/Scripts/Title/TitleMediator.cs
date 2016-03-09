@@ -6,7 +6,7 @@ namespace Submarine.Title
     public class TitleMediator : IInitializable
     {
         [Inject]
-        TitleEvents events;
+        TitleEvent events;
         [Inject]
         UserModel userModel;
         [Inject]

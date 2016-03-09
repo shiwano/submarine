@@ -7,7 +7,7 @@ namespace Submarine.Battle
     public class BattleMediator : IInitializable, ITickable
     {
         [Inject]
-        BattleEvents.PlayerSubmarineCreate playerSubmarineCreateEvent;
+        BattleEvent.PlayerSubmarineCreate playerSubmarineCreateEvent;
         [Inject]
         BattleService battleService;
         [Inject]

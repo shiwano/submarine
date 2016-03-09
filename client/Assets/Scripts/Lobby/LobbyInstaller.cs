@@ -16,7 +16,6 @@ namespace Submarine.Lobby
         {
             Container.Bind<RoomService>().ToSingle();
 
-            Container.Bind<LobbyEvents>().ToSingle();
             Container.BindCommand<CreateRoomCommand>().HandleWithSingle<CreateRoomCommand.Handler>();
             Container.BindCommand<GetRoomsCommand>().HandleWithSingle<GetRoomsCommand.Handler>();
             Container.BindCommand<JoinIntoRoomCommand, Type.Room>().HandleWithSingle<JoinIntoRoomCommand.Handler>();
