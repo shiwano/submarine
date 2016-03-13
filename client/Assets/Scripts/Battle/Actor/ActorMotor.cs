@@ -1,6 +1,5 @@
 ﻿using UnityEngine;
 using System;
-using Zenject;
 using Type = TyphenApi.Type.Submarine;
 
 namespace Submarine.Battle
@@ -51,27 +50,37 @@ namespace Submarine.Battle
             }
         }
 
-        [Inject]
-        BattleModel battleModel;
+        readonly BattleModel battleModel;
 
         Type.Battle.Movement movement;
         Accelerator accelerator;
+
+        readonly TimeSpan convergenceTime = TimeSpan.FromSeconds(1f);
+        DateTime convergenceFinishesAt;
+        Vector2 convergenceStartPosition;
+        Vector2 convergenceFinishPosition;
 
         DateTime ChangedAt
         {
             get { return CurrentMillis.FromMilliseconds(movement.MovedAt); }
         }
 
-        public ActorMotor(Type.Battle.Actor actor)
+        public ActorMotor(BattleModel battleModel, Type.Battle.Actor actor)
         {
+            this.battleModel = battleModel;
             SetMovement(actor.Movement);
         }
 
-        public void SetMovement(Type.Battle.Movement movement)
+        public void SetMovement(Type.Battle.Movement newMovement)
         {
-            this.movement = movement;
+            convergenceStartPosition = GetPosition();
+
+            movement = newMovement;
             accelerator = movement.Accelerator == null ?
                 null : new Accelerator(movement.Accelerator);
+
+            convergenceFinishesAt = battleModel.Now + convergenceTime;
+            convergenceFinishPosition = GetPosition(convergenceFinishesAt);
         }
 
         public Quaternion GetCurrentRotation()
@@ -83,18 +92,37 @@ namespace Submarine.Battle
 
         public Vector2 GetCurrentPosition()
         {
+            return battleModel.Now < convergenceFinishesAt ?
+                GetConvergencePosition() :
+                GetPosition();
+        }
+
+        Vector2 GetConvergencePosition()
+        {
+            var t = (convergenceFinishesAt - battleModel.Now).TotalSeconds;
+            var rate = 1f - (float)(t / convergenceTime.TotalSeconds);
+            return (convergenceFinishPosition - convergenceStartPosition) * rate + convergenceStartPosition;
+        }
+
+        Vector2 GetPosition()
+        {
+            return GetPosition(battleModel.Now);
+        }
+
+        Vector2 GetPosition(DateTime now)
+        {
             if (movement == null) return Vector2.zero;
             if (accelerator == null) return movement.Position.ToVector2();
 
             double t1, t2 = 0d;
-            if (battleModel.Now > accelerator.ReachedMaxSpeedAt)
+            if (now > accelerator.ReachedMaxSpeedAt)
             {
                 t1 = (accelerator.ReachedMaxSpeedAt - ChangedAt).TotalSeconds;
-                t2 = (battleModel.Now - accelerator.ReachedMaxSpeedAt).TotalSeconds;
+                t2 = (now - accelerator.ReachedMaxSpeedAt).TotalSeconds;
             }
             else
             {
-                t1 = (battleModel.Now - ChangedAt).TotalSeconds;
+                t1 = (now - ChangedAt).TotalSeconds;
             }
 
             var p = movement.Position.ToVector2();
