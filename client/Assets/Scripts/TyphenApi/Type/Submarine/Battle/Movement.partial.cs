@@ -1,23 +1,27 @@
 ﻿using UnityEngine;
+using System;
 
 namespace TyphenApi.Type.Submarine.Battle
 {
     public partial class Movement
     {
-        Vector2? normalizedVelocity;
+        float directionForNormalizedVelocity;
+        Vector2 normalizedVelocity;
+
         public Vector2 NormalizedVelocity
         {
             get
             {
-                if (!normalizedVelocity.HasValue)
+                var direction = (float)Direction;
+                if (!Mathf.Approximately(direction, directionForNormalizedVelocity))
                 {
-                    var directionForClient = (float)Direction;
+                    directionForNormalizedVelocity = direction;
                     normalizedVelocity = new Vector2(
-                        Mathf.Cos(directionForClient * Mathf.Deg2Rad),
-                        Mathf.Sin(directionForClient * Mathf.Deg2Rad)
+                        Mathf.Cos(direction * Mathf.Deg2Rad),
+                        Mathf.Sin(direction * Mathf.Deg2Rad)
                     );
                 }
-                return normalizedVelocity.Value;
+                return normalizedVelocity;
             }
         }
     }
