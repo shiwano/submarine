@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System;
+using Submarine;
 
 namespace TyphenApi.Type.Submarine.Battle
 {
@@ -23,6 +24,11 @@ namespace TyphenApi.Type.Submarine.Battle
                 }
                 return normalizedVelocity;
             }
+        }
+
+        public DateTime MovedAtAsDateTime
+        {
+            get { return CurrentMillis.FromMilliseconds(MovedAt); }
         }
     }
 }

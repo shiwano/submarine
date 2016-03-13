@@ -60,11 +60,6 @@ namespace Submarine.Battle
         Vector2 convergenceStartPosition;
         Vector2 convergenceFinishPosition;
 
-        DateTime ChangedAt
-        {
-            get { return CurrentMillis.FromMilliseconds(movement.MovedAt); }
-        }
-
         public ActorMotor(BattleModel battleModel, Type.Battle.Actor actor)
         {
             this.battleModel = battleModel;
@@ -117,12 +112,12 @@ namespace Submarine.Battle
             double t1, t2 = 0d;
             if (now > accelerator.ReachedMaxSpeedAt)
             {
-                t1 = (accelerator.ReachedMaxSpeedAt - ChangedAt).TotalSeconds;
+                t1 = (accelerator.ReachedMaxSpeedAt - movement.MovedAtAsDateTime).TotalSeconds;
                 t2 = (now - accelerator.ReachedMaxSpeedAt).TotalSeconds;
             }
             else
             {
-                t1 = (now - ChangedAt).TotalSeconds;
+                t1 = (now - movement.MovedAtAsDateTime).TotalSeconds;
             }
 
             var p = movement.Position.ToVector2();
