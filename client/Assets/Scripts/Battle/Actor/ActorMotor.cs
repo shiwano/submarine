@@ -72,10 +72,13 @@ namespace Submarine.Battle
         {
             this.movement = movement;
             accelerator = movement.Accelerator == null ?
-                null : new Accelerator(movement.Accelerator);
+                null :
+                new Accelerator(movement.Accelerator);
+
+            var directionForClient = (float)movement.Direction;
             normalizedVelocity = new Vector2(
-                Mathf.Cos((float)movement.Direction * Mathf.Deg2Rad),
-                Mathf.Sin((float)movement.Direction * Mathf.Deg2Rad)
+                Mathf.Cos(directionForClient * Mathf.Deg2Rad),
+                Mathf.Sin(directionForClient * Mathf.Deg2Rad)
             );
         }
 
