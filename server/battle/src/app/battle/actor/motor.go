@@ -118,7 +118,6 @@ func (a *accelerator) toAPIType() *battle.Accelerator {
 		Duration:       currentmillis.MillisecondsDuration(a.duration),
 		StartRate:      a.startRate,
 		IsAccelerating: a.isAccelerating,
-		ChangedAt:      currentmillis.Milliseconds(a.changedAt),
 	}
 }
 
