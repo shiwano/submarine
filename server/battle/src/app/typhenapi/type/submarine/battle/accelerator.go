@@ -15,7 +15,6 @@ type Accelerator struct {
 	Duration       int64   `codec:"duration"`
 	StartRate      float64 `codec:"start_rate"`
 	IsAccelerating bool    `codec:"is_accelerating"`
-	ChangedAt      int64   `codec:"changed_at"`
 }
 
 // Coerce the fields.

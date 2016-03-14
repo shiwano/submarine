@@ -8,6 +8,5 @@ module TyphenApi::Model::Submarine::Battle
     attribute :duration, Integer, :required => true
     attribute :start_rate, Number, :required => true
     attribute :is_accelerating, Boolean, :required => true
-    attribute :changed_at, Integer, :required => true
   end
 end

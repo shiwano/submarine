@@ -14,7 +14,5 @@ namespace TyphenApi.Type.Submarine.Battle
         public double StartRate { get; set; }
         protected static readonly SerializationInfo<Accelerator, bool> isAccelerating = new SerializationInfo<Accelerator, bool>("is_accelerating", false, (x) => x.IsAccelerating, (x, v) => x.IsAccelerating = v);
         public bool IsAccelerating { get; set; }
-        protected static readonly SerializationInfo<Accelerator, long> changedAt = new SerializationInfo<Accelerator, long>("changed_at", false, (x) => x.ChangedAt, (x, v) => x.ChangedAt = v);
-        public long ChangedAt { get; set; }
     }
 }
