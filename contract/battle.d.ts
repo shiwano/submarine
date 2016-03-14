@@ -18,7 +18,6 @@ declare module Submarine.Battle {
     duration: milliSeconds;
     startRate: number;
     isAccelerating: boolean;
-    changedAt: timeStamp;
   }
 
   interface Start {
