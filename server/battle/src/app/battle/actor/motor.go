@@ -79,20 +79,20 @@ func (m *motor) turn(direction float64) {
 }
 
 func (m *motor) position() *vec2.T {
-	var s1, s2 float64
+	var t1, t2 float64
 	if m.context.Now.After(m.accelerator.reachedMaxSpeedAt) {
-		s1 = m.accelerator.reachedMaxSpeedAt.Sub(m.changedAt).Seconds()
-		s2 = m.context.Now.Sub(m.accelerator.reachedMaxSpeedAt).Seconds()
+		t1 = m.accelerator.reachedMaxSpeedAt.Sub(m.changedAt).Seconds()
+		t2 = m.context.Now.Sub(m.accelerator.reachedMaxSpeedAt).Seconds()
 	} else {
-		s1 = m.context.Now.Sub(m.changedAt).Seconds()
+		t1 = m.context.Now.Sub(m.changedAt).Seconds()
 	}
 
 	p := *m.initialPosition
-	v := m.initialSpeed * s1
-	a := m.accelerator.acceleration() * math.Pow(s1, 2) / 2
+	v := m.initialSpeed * t1
+	a := m.accelerator.acceleration() * math.Pow(t1, 2) / 2
 	d1 := m.normalizedVelocity.Scaled(v + a)
 	if m.accelerator.isAccelerating {
-		d2 := m.normalizedVelocity.Scaled(m.accelerator.maxSpeed * s2)
+		d2 := m.normalizedVelocity.Scaled(m.accelerator.maxSpeed * t2)
 		return p.Add(&d1).Add(&d2)
 	}
 	return p.Add(&d1)
