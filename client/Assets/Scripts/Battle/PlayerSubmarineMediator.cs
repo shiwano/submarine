@@ -74,15 +74,21 @@ namespace Submarine.Battle
 
         void OnAcceleratingChange(bool isAccelerating)
         {
+            var direction = submarine.Direction;
+
             if (isAccelerating)
             {
                 Logger.Log("Submarine accelerates");
-                battleService.Api.SendAccelerationRequest();
+                battleService.Api.SendAccelerationRequest(direction);
+                lastSentDirection = direction;
+                lastSentDirectionAt = battleModel.Now;
             }
             else
             {
                 Logger.Log("Submarine brakes");
-                battleService.Api.SendBrakeRequest();
+                battleService.Api.SendBrakeRequest(direction);
+                lastSentDirection = direction;
+                lastSentDirectionAt = battleModel.Now;
             }
         }
 
