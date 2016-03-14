@@ -30,8 +30,6 @@ func New(timeLimit time.Duration) *Battle {
 		timeLimit: timeLimit,
 		close:     make(chan struct{}, 1),
 	}
-	b.context.Event.On(event.ActorAdd, b.onActorAdd)
-	b.context.Event.On(event.ActorMove, b.onActorMove)
 	return b
 }
 
@@ -60,6 +58,8 @@ func (b *Battle) Close() {
 func (b *Battle) run() {
 	ticker := time.Tick(time.Second / 30)
 	b.Gateway.outputStart(b.startedAt)
+	b.context.Event.On(event.ActorAdd, b.onActorAdd)
+	b.context.Event.On(event.ActorMove, b.onActorMove)
 
 loop:
 	for {
