@@ -39,14 +39,14 @@ namespace Submarine.Battle
                 }
             }
 
-            public Accelerator(Type.Battle.Accelerator accelerator)
+            public Accelerator(Type.Battle.Accelerator accelerator, DateTime changedAt)
             {
                 IsAccelerating = accelerator.IsAccelerating;
                 StartRate = accelerator.StartRate;
                 MaxSpeed = accelerator.MaxSpeed;
                 Duration = TimeSpan.FromMilliseconds(accelerator.Duration);
-                ChangedAt = CurrentMillis.FromMilliseconds(accelerator.ChangedAt);
                 StartSpeed = MaxSpeed * StartRate;
+                ChangedAt = changedAt;
             }
         }
 
@@ -72,7 +72,7 @@ namespace Submarine.Battle
 
             movement = newMovement;
             accelerator = movement.Accelerator == null ?
-                null : new Accelerator(movement.Accelerator);
+                null : new Accelerator(movement.Accelerator, movement.MovedAtAsDateTime);
 
             convergenceFinishesAt = battleModel.Now + convergenceTime;
             convergenceFinishPosition = GetPosition(convergenceFinishesAt);
