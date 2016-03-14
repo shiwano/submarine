@@ -11,6 +11,7 @@ var _ = errors.New
 
 // AccelerationRequestObject is a kind of TyphenAPI type.
 type AccelerationRequestObject struct {
+	Direction float64 `codec:"direction"`
 }
 
 // Coerce the fields.

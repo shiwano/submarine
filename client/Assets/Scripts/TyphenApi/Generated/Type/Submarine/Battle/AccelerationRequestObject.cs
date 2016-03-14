@@ -6,5 +6,7 @@ namespace TyphenApi.Type.Submarine.Battle
 {
     public partial class AccelerationRequestObject : TyphenApi.TypeBase<AccelerationRequestObject>
     {
+        protected static readonly SerializationInfo<AccelerationRequestObject, double> direction = new SerializationInfo<AccelerationRequestObject, double>("direction", false, (x) => x.Direction, (x, v) => x.Direction = v);
+        public double Direction { get; set; }
     }
 }

@@ -11,6 +11,7 @@ var _ = errors.New
 
 // BrakeRequestObject is a kind of TyphenAPI type.
 type BrakeRequestObject struct {
+	Direction float64 `codec:"direction"`
 }
 
 // Coerce the fields.

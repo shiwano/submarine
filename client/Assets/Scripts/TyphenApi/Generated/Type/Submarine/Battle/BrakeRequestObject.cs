@@ -6,5 +6,7 @@ namespace TyphenApi.Type.Submarine.Battle
 {
     public partial class BrakeRequestObject : TyphenApi.TypeBase<BrakeRequestObject>
     {
+        protected static readonly SerializationInfo<BrakeRequestObject, double> direction = new SerializationInfo<BrakeRequestObject, double>("direction", false, (x) => x.Direction, (x, v) => x.Direction = v);
+        public double Direction { get; set; }
     }
 }

@@ -157,10 +157,11 @@ namespace TyphenApi.WebSocketApi.Parts.Submarine
             session.Send((int)MessageType.AccelerationRequest, accelerationRequest);
         }
 
-        public void SendAccelerationRequest()
+        public void SendAccelerationRequest(double direction)
         {
             session.Send((int)MessageType.AccelerationRequest, new TyphenApi.Type.Submarine.Battle.AccelerationRequestObject()
             {
+                Direction = direction,
             });
         }
         public void SendBrakeRequest(TyphenApi.Type.Submarine.Battle.BrakeRequestObject brakeRequest)
@@ -168,10 +169,11 @@ namespace TyphenApi.WebSocketApi.Parts.Submarine
             session.Send((int)MessageType.BrakeRequest, brakeRequest);
         }
 
-        public void SendBrakeRequest()
+        public void SendBrakeRequest(double direction)
         {
             session.Send((int)MessageType.BrakeRequest, new TyphenApi.Type.Submarine.Battle.BrakeRequestObject()
             {
+                Direction = direction,
             });
         }
         public void SendTurnRequest(TyphenApi.Type.Submarine.Battle.TurnRequestObject turnRequest)
