@@ -59,8 +59,8 @@ declare module Submarine.Battle {
   var movement: Movement;
   var destruction: Destruction;
 
-  var accelerationRequest: {};
-  var brakeRequest: {};
+  var accelerationRequest: { direction: degrees; };
+  var brakeRequest: { direction: degrees; };
   var turnRequest: { direction: degrees; };
   var pingerRequest: {};
   var torpedoRequest: {};
