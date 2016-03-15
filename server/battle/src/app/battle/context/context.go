@@ -26,8 +26,7 @@ func NewContext() *Context {
 
 // NextActorID returns the next unique actor id.
 func (c *Context) NextActorID() int64 {
-	c.lastCreatedActorID++
-	return c.lastCreatedActorID
+	return c.container.nextActorID()
 }
 
 // SubmarineByUserID returns the submarine which has the given actor id.

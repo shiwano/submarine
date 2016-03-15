@@ -5,6 +5,7 @@ import (
 )
 
 type container struct {
+	lastActorID        int64
 	actors             []Actor
 	actorsByID         map[int64]Actor
 	submarinesByUserID map[int64]Actor
@@ -17,6 +18,11 @@ func newContainer() *container {
 		submarinesByUserID: make(map[int64]Actor),
 	}
 	return c
+}
+
+func (c *container) nextActorID() int64 {
+	c.lastActorID++
+	return c.lastActorID
 }
 
 func (c *container) addActor(actor Actor) {
