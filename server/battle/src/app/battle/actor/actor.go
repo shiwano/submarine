@@ -65,13 +65,15 @@ func (a *actor) Position() *vec2.T {
 	return a.motor.position()
 }
 
-func (a *actor) accelerate() {
+func (a *actor) accelerate(direction float64) {
 	a.motor.accelerate()
+	a.motor.turn(direction)
 	a.context.Event.Emit(event.ActorMove, a)
 }
 
-func (a *actor) brake() {
+func (a *actor) brake(direction float64) {
 	a.motor.brake()
+	a.motor.turn(direction)
 	a.context.Event.Emit(event.ActorMove, a)
 }
 

@@ -23,11 +23,11 @@ func NewSubmarine(battleContext *context.Context, userID int64) context.Actor {
 }
 
 func (s *submarine) onAccelerationRequest(message *battle.AccelerationRequestObject) {
-	s.accelerate()
+	s.accelerate(message.Direction)
 }
 
 func (s *submarine) onBrakeRequest(message *battle.BrakeRequestObject) {
-	s.brake()
+	s.brake(message.Direction)
 }
 
 func (s *submarine) onTurnRequest(message *battle.TurnRequestObject) {
