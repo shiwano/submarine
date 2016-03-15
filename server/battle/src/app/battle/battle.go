@@ -35,7 +35,7 @@ func New(timeLimit time.Duration) *Battle {
 
 // CreateSubmarineUnlessExists creates the user's submarine unless it exists.
 func (b *Battle) CreateSubmarineUnlessExists(userID int64) {
-	if s := b.context.Container.SubmarineByUserID(userID); s == nil {
+	if s := b.context.SubmarineByUserID(userID); s == nil {
 		actor.NewSubmarine(b.context, userID)
 	}
 }
@@ -86,12 +86,14 @@ func (b *Battle) start() {
 
 func (b *Battle) update(now time.Time) bool {
 	b.context.Now = now
-	b.context.Container.UpdateActors()
+	for _, actor := range b.context.Actors() {
+		actor.Update()
+	}
 	return b.context.Now.Before(b.startedAt.Add(b.timeLimit))
 }
 
 func (b *Battle) onInputReceive(input *gatewayInput) {
-	s := b.context.Container.SubmarineByUserID(input.userID)
+	s := b.context.SubmarineByUserID(input.userID)
 	if s == nil {
 		return
 	}

@@ -7,15 +7,14 @@ import (
 	"testing"
 )
 
-func TestContainerTest(t *testing.T) {
-	Convey("Container", t, func() {
+func TestContextTest(t *testing.T) {
+	Convey("Context", t, func() {
 		battleContext := NewContext()
-		container := battleContext.Container
 
 		Convey("when an actor is created", func() {
 			Convey("should add the actor", func() {
 				actor := newSubmarine(battleContext)
-				So(container.HasActor(actor.ID()), ShouldBeTrue)
+				So(battleContext.HasActor(actor.ID()), ShouldBeTrue)
 			})
 
 			Convey("should call the actor's Start method", func() {
@@ -36,7 +35,7 @@ func TestContainerTest(t *testing.T) {
 
 			Convey("should remove the actor", func() {
 				actor.Destroy()
-				So(container.HasActor(actor.ID()), ShouldBeFalse)
+				So(battleContext.HasActor(actor.ID()), ShouldBeFalse)
 			})
 
 			Convey("should call the actor's OnDestroy method", func() {
@@ -52,33 +51,19 @@ func TestContainerTest(t *testing.T) {
 			})
 		})
 
-		Convey("#UpdateActors", func() {
-			actors := make([]*actor, 3)
-			for i := 0; i < 3; i++ {
-				actors[i] = newSubmarine(battleContext)
-			}
-			container.UpdateActors()
-
-			Convey("should update all actors", func() {
-				for _, actor := range actors {
-					So(actor.isCalledUpdate, ShouldBeTrue)
-				}
-			})
-		})
-
 		Convey("#Actor", func() {
 			actorID := newSubmarine(battleContext).ID()
 
 			Convey("with valid actor id", func() {
 				Convey("should return the actor", func() {
-					actor := container.Actor(actorID)
+					actor := battleContext.Actor(actorID)
 					So(actor.ID(), ShouldEqual, actorID)
 				})
 			})
 
 			Convey("with invalid user id", func() {
 				Convey("should return nil", func() {
-					actor := container.Actor(actorID + 1)
+					actor := battleContext.Actor(actorID + 1)
 					So(actor, ShouldBeNil)
 				})
 			})
@@ -89,7 +74,7 @@ func TestContainerTest(t *testing.T) {
 
 			Convey("with valid user id", func() {
 				Convey("should return the user's submarine", func() {
-					submarine := container.SubmarineByUserID(userID)
+					submarine := battleContext.SubmarineByUserID(userID)
 					So(submarine.UserID(), ShouldEqual, userID)
 					So(submarine.ActorType(), ShouldEqual, battle.ActorType_Submarine)
 				})
@@ -97,7 +82,7 @@ func TestContainerTest(t *testing.T) {
 
 			Convey("with invalid user id", func() {
 				Convey("should return nil", func() {
-					submarine := container.SubmarineByUserID(userID + 1)
+					submarine := battleContext.SubmarineByUserID(userID + 1)
 					So(submarine, ShouldBeNil)
 				})
 			})
