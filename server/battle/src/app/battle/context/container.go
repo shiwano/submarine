@@ -1,44 +1,36 @@
 package context
 
 import (
-	"app/battle/event"
 	"app/typhenapi/type/submarine/battle"
 )
 
-// Container holds the actors.
-type Container struct {
+type container struct {
 	actors             []Actor
 	actorsByID         map[int64]Actor
 	submarinesByUserID map[int64]Actor
-	context            *Context
 }
 
-func newContainer(battleContext *Context) *Container {
-	c := &Container{
+func newContainer() *container {
+	c := &container{
 		actors:             make([]Actor, 0),
 		actorsByID:         make(map[int64]Actor),
 		submarinesByUserID: make(map[int64]Actor),
-		context:            battleContext,
 	}
-	c.context.Event.On(event.ActorCreate, c.onActorCreate)
-	c.context.Event.On(event.ActorDestroy, c.onActorDestroy)
 	return c
 }
 
-func (c *Container) onActorCreate(actor Actor) {
+func (c *container) addActor(actor Actor) {
 	c.actorsByID[actor.ID()] = actor
 	c.actors = append(c.actors, actor)
 	if actor.ActorType() == battle.ActorType_Submarine {
 		c.submarinesByUserID[actor.UserID()] = actor
 	}
-	actor.Start()
-	c.context.Event.Emit(event.ActorAdd, actor)
 }
 
-func (c *Container) onActorDestroy(rawActor Actor) {
+func (c *container) removeActor(rawActor Actor) Actor {
 	actor := c.actorsByID[rawActor.ID()]
 	if actor == nil {
-		return
+		return nil
 	}
 
 	delete(c.actorsByID, actor.ID())
@@ -51,6 +43,5 @@ func (c *Container) onActorDestroy(rawActor Actor) {
 	if actor.ActorType() == battle.ActorType_Submarine {
 		delete(c.submarinesByUserID, actor.UserID())
 	}
-	actor.OnDestroy()
-	c.context.Event.Emit(event.ActorRemove, actor)
+	return actor
 }

@@ -10,15 +10,17 @@ type Context struct {
 	lastCreatedActorID int64
 	Now                time.Time
 	Event              *event.Emitter
-	container          *Container
+	container          *container
 }
 
 // NewContext creates a contest.
 func NewContext() *Context {
 	c := &Context{
-		Event: event.New(),
+		Event:     event.New(),
+		container: newContainer(),
 	}
-	c.container = newContainer(c)
+	c.Event.On(event.ActorCreate, c.onActorCreate)
+	c.Event.On(event.ActorDestroy, c.onActorDestroy)
 	return c
 }
 
@@ -58,4 +60,18 @@ func (c *Context) UserIDs() []int64 {
 		i++
 	}
 	return keys
+}
+
+func (c *Context) onActorCreate(actor Actor) {
+	c.container.addActor(actor)
+	actor.Start()
+	c.Event.Emit(event.ActorAdd, actor)
+}
+
+func (c *Context) onActorDestroy(actor Actor) {
+	removedActor := c.container.removeActor(actor)
+	if removedActor != nil {
+		removedActor.OnDestroy()
+		c.Event.Emit(event.ActorRemove, removedActor)
+	}
 }
