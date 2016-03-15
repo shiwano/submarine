@@ -7,10 +7,9 @@ import (
 
 // Context represents a battle context.
 type Context struct {
-	lastCreatedActorID int64
-	Now                time.Time
-	Event              *event.Emitter
-	container          *container
+	Now       time.Time
+	Event     *event.Emitter
+	container *container
 }
 
 // NewContext creates a contest.
