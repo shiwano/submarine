@@ -51,6 +51,14 @@ func TestContextTest(t *testing.T) {
 			})
 		})
 
+		Convey("#NextActorID", func() {
+			Convey("should return the next unique actor id", func() {
+				So(battleContext.NextActorID(), ShouldEqual, 1)
+				So(battleContext.NextActorID(), ShouldEqual, 2)
+				So(battleContext.NextActorID(), ShouldEqual, 3)
+			})
+		})
+
 		Convey("#Actor", func() {
 			actorID := newSubmarine(battleContext).ID()
 
