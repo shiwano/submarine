@@ -145,28 +145,44 @@ func (r *Room) sendBattleInput(userID int64, message typhenapi.Type) {
 	r.battle.Gateway.InputMessage(userID, message)
 }
 
-func (r *Room) onBattleOutputReceive(output typhenapi.Type) {
-	switch message := output.(type) {
+func (r *Room) onBattleOutputReceive(output *battleLogic.GatewayOutput) {
+	switch message := output.Message.(type) {
 	case *battle.Start:
 		logger.Log.Infof("Room(%v)'s battle started", r.id)
-		for _, s := range r.sessions {
+		r.eachSessions(output.UserIDs, func(s *Session) {
 			s.api.Battle.SendStart(message)
-		}
+		})
 	case *battle.Finish:
 		logger.Log.Infof("Room(%v)'s battle finished", r.id)
-		for _, s := range r.sessions {
+		r.eachSessions(output.UserIDs, func(s *Session) {
 			s.api.Battle.SendFinish(message)
-		}
+		})
 		go func() { r.close <- struct{}{} }()
 	case *battle.Actor:
 		logger.Log.Debugf("User(%v)'s %v(%v) is created", message.UserId, message.Type.String(), message.Id)
-		for _, s := range r.sessions {
+		r.eachSessions(output.UserIDs, func(s *Session) {
 			s.api.Battle.SendActor(message)
-		}
+		})
 	case *battle.Movement:
 		logger.Log.Debugf("Actor(%v) moved", message.ActorId)
-		for _, s := range r.sessions {
+		r.eachSessions(output.UserIDs, func(s *Session) {
 			s.api.Battle.SendMovement(message)
+		})
+	}
+}
+
+func (r *Room) eachSessions(userIDs []int64, callback func(*Session)) {
+	if userIDs == nil {
+		for _, s := range r.sessions {
+			callback(s)
+		}
+	} else {
+		for _, s := range r.sessions {
+			for _, userID := range userIDs {
+				if s.id == userID {
+					callback(s)
+				}
+			}
 		}
 	}
 }
