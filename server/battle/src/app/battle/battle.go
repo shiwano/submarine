@@ -43,7 +43,7 @@ func (b *Battle) CreateSubmarineUnlessExists(userID int64) {
 // Start the battle.
 func (b *Battle) Start() {
 	if !b.IsStarted {
-		b.start()
+		b.IsStarted = true
 		go b.run()
 	}
 }
@@ -56,11 +56,8 @@ func (b *Battle) Close() {
 }
 
 func (b *Battle) run() {
+	b.start()
 	ticker := time.Tick(time.Second / 30)
-	b.Gateway.outputStart(b.startedAt)
-	b.context.Event.On(event.ActorAdd, b.onActorAdd)
-	b.context.Event.On(event.ActorMove, b.onActorMove)
-
 loop:
 	for {
 		select {
@@ -74,14 +71,17 @@ loop:
 			break loop
 		}
 	}
-
-	// TODO: winnerUserID is temporary value.
-	b.Gateway.outputFinish(b.context.UserIDs()[0], b.context.Now)
+	b.finish()
 }
 
 func (b *Battle) start() {
-	b.IsStarted = true
 	b.startedAt = time.Now()
+	b.Gateway.outputStart(b.startedAt)
+	for _, actor := range b.context.Actors() {
+		b.Gateway.outputActor(actor)
+	}
+	b.context.Event.On(event.ActorAdd, b.onActorAdd)
+	b.context.Event.On(event.ActorMove, b.onActorMove)
 }
 
 func (b *Battle) update(now time.Time) bool {
@@ -92,12 +92,16 @@ func (b *Battle) update(now time.Time) bool {
 	return b.context.Now.Before(b.startedAt.Add(b.timeLimit))
 }
 
+func (b *Battle) finish() {
+	// TODO: winnerUserID is temporary value.
+	b.Gateway.outputFinish(b.context.UserIDs()[0], b.context.Now)
+}
+
 func (b *Battle) onInputReceive(input *gatewayInput) {
 	s := b.context.SubmarineByUserID(input.userID)
 	if s == nil {
 		return
 	}
-
 	switch m := input.message.(type) {
 	case *battle.AccelerationRequestObject:
 		logger.Log.Debugf("User(%v)'s submarine(%v) accelerates", s.UserID(), s.ID())
