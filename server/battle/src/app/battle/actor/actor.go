@@ -45,7 +45,7 @@ func (a *actor) UserID() int64 {
 	return a.userID
 }
 
-func (a *actor) ActorType() battle.ActorType {
+func (a *actor) Type() battle.ActorType {
 	return a.actorType
 }
 

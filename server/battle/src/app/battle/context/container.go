@@ -28,7 +28,7 @@ func (c *container) nextActorID() int64 {
 func (c *container) addActor(actor Actor) {
 	c.actorsByID[actor.ID()] = actor
 	c.actors = append(c.actors, actor)
-	if actor.ActorType() == battle.ActorType_Submarine {
+	if actor.Type() == battle.ActorType_Submarine {
 		c.submarinesByUserID[actor.UserID()] = actor
 	}
 }
@@ -46,7 +46,7 @@ func (c *container) removeActor(rawActor Actor) Actor {
 			c.actors = append(c.actors, a)
 		}
 	}
-	if actor.ActorType() == battle.ActorType_Submarine {
+	if actor.Type() == battle.ActorType_Submarine {
 		delete(c.submarinesByUserID, actor.UserID())
 	}
 	return actor

@@ -10,7 +10,7 @@ import (
 type Actor interface {
 	ID() int64
 	UserID() int64
-	ActorType() battle.ActorType
+	Type() battle.ActorType
 	Event() *event.Emitter
 	Destroy()
 	Movement() *battle.Movement

@@ -46,7 +46,7 @@ func (g *Gateway) outputActor(actor context.Actor) {
 	g.Output <- &battle.Actor{
 		Id:       actor.ID(),
 		UserId:   actor.UserID(),
-		Type:     actor.ActorType(),
+		Type:     actor.Type(),
 		Movement: actor.Movement(),
 	}
 }
