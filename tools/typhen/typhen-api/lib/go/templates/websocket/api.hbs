@@ -10,6 +10,9 @@ import (
 	{{#each (requiredModules this false)}}
 	{{alias}} "{{@importBasePath}}/type/{{path}}"
 	{{/each}}
+	{{#if variables}}
+	"fmt"
+	{{/if}}
 )
 
 {{#if variables}}
@@ -46,6 +49,29 @@ func New(session typhenapi.Session, serializer typhenapi.Serializer, errorHandle
 	return api
 }
 
+{{#if variables}}
+// Send sends a message.
+func (api *WebSocketAPI) Send(body typhenapi.Type) (message *typhenapi.Message, err error) {
+	switch messageBody := body.(type) {
+	{{#each variables}}
+	case {{typeName type null false true}}:
+		message, err = typhenapi.NewMessage(api.serializer, MessageType_{{upperCamelCase name}}, messageBody)
+	{{/each}}
+	default:
+		err = fmt.Errorf("Unsupported TyphenAPI type is given: %v", messageBody)
+	}
+
+	if err == nil {
+    err = api.session.Send(message.Bytes())
+	}
+
+  if err != nil && api.errorHandler != nil {
+    api.errorHandler(err)
+  }
+  return
+}
+{{/if}}
+
 {{#each variables}}
 // Send{{upperCamelCase name}} sends a {{lowerCamelCase name}} message.
 func (api *WebSocketAPI) Send{{upperCamelCase name}}({{lowerCamelCase name}} {{typeName type null false true}}) error {
@@ -59,6 +85,9 @@ func (api *WebSocketAPI) Send{{upperCamelCase name}}({{lowerCamelCase name}} {{t
 	}
 
 	if err := api.session.Send(message.Bytes()); err != nil {
+    if api.errorHandler != nil {
+      api.errorHandler(err)
+    }
 		return err
 	}
 	return nil
