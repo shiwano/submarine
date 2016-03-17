@@ -71,6 +71,6 @@ func (s *Server) roomsGET(c *gin.Context) {
 		return
 	}
 
-	room.join <- session
+	room.joinCh <- session
 	logger.Log.Infof("Session(%v) is created", session.id)
 }

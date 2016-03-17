@@ -11,26 +11,26 @@ import (
 
 // Battle represents a battle.
 type Battle struct {
-	Gateway     *Gateway
-	context     *context.Context
-	createdAt   time.Time
-	startedAt   time.Time
-	timeLimit   time.Duration
-	IsStarted   bool
-	reenterUser chan int64
-	close       chan struct{}
+	Gateway       *Gateway
+	context       *context.Context
+	createdAt     time.Time
+	startedAt     time.Time
+	timeLimit     time.Duration
+	IsStarted     bool
+	reenterUserCh chan int64
+	closeCh       chan struct{}
 }
 
 // New creates a new battle.
 func New(timeLimit time.Duration) *Battle {
 	battleContext := context.NewContext()
 	b := &Battle{
-		Gateway:     newGateway(),
-		context:     battleContext,
-		createdAt:   time.Now(),
-		timeLimit:   timeLimit,
-		reenterUser: make(chan int64, 4),
-		close:       make(chan struct{}, 1),
+		Gateway:       newGateway(),
+		context:       battleContext,
+		createdAt:     time.Now(),
+		timeLimit:     timeLimit,
+		reenterUserCh: make(chan int64, 4),
+		closeCh:       make(chan struct{}, 1),
 	}
 	return b
 }
@@ -38,7 +38,7 @@ func New(timeLimit time.Duration) *Battle {
 // EnterUser an user to the battle.
 func (b *Battle) EnterUser(userID int64) {
 	if b.IsStarted {
-		b.reenterUser <- userID
+		b.reenterUserCh <- userID
 	} else {
 		if s := b.context.SubmarineByUserID(userID); s == nil {
 			actor.NewSubmarine(b.context, userID)
@@ -57,7 +57,7 @@ func (b *Battle) Start() {
 // Close the battle.
 func (b *Battle) Close() {
 	if b.IsStarted {
-		b.close <- struct{}{}
+		b.closeCh <- struct{}{}
 	}
 }
 
@@ -73,9 +73,9 @@ loop:
 			}
 		case input := <-b.Gateway.input:
 			b.onInputReceive(input)
-		case userID := <-b.reenterUser:
-			b._reenterUser(userID)
-		case <-b.close:
+		case userID := <-b.reenterUserCh:
+			b.reenterUser(userID)
+		case <-b.closeCh:
 			break loop
 		}
 	}
@@ -105,7 +105,7 @@ func (b *Battle) finish() {
 	b.Gateway.outputFinish(b.context.UserIDs()[0], b.context.Now)
 }
 
-func (b *Battle) _reenterUser(userID int64) {
+func (b *Battle) reenterUser(userID int64) {
 	userIDs := []int64{userID}
 	for _, actor := range b.context.Actors() {
 		b.Gateway.outputActor(userIDs, actor)

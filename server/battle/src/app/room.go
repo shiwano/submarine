@@ -20,9 +20,9 @@ type Room struct {
 	sessions     map[int64]*Session
 	battle       *battleLogic.Battle
 	closeHandler func(*Room)
-	join         chan *Session
-	leave        chan *Session
-	close        chan struct{}
+	joinCh       chan *Session
+	leaveCh      chan *Session
+	closeCh      chan struct{}
 	isClosed     bool
 }
 
@@ -44,9 +44,9 @@ func newRoom(id int64) (*Room, error) {
 		info:     res.Room,
 		sessions: make(map[int64]*Session),
 		battle:   battleLogic.New(time.Second * 60),
-		join:     make(chan *Session, 4),
-		leave:    make(chan *Session, 4),
-		close:    make(chan struct{}, 1),
+		joinCh:   make(chan *Session, 4),
+		leaveCh:  make(chan *Session, 4),
+		closeCh:  make(chan struct{}, 1),
 	}
 
 	go room.run()
@@ -59,15 +59,15 @@ func (r *Room) run() {
 loop:
 	for {
 		select {
-		case session := <-r.join:
-			r._join(session)
+		case session := <-r.joinCh:
+			r.join(session)
 			r.broadcastRoom()
 			session.synchronizeTime()
-		case session := <-r.leave:
-			r._leave(session)
+		case session := <-r.leaveCh:
+			r.leave(session)
 			r.broadcastRoom()
-		case <-r.close:
-			r._close()
+		case <-r.closeCh:
+			r.close()
 			break loop
 		case output := <-r.battle.Gateway.Output:
 			r.onBattleOutputReceive(output)
@@ -75,9 +75,9 @@ loop:
 	}
 
 	r.isClosed = true
-	close(r.join)
-	close(r.leave)
-	close(r.close)
+	close(r.joinCh)
+	close(r.leaveCh)
+	close(r.closeCh)
 
 	if r.closeHandler != nil {
 		r.closeHandler(r)
@@ -101,12 +101,12 @@ func (r *Room) broadcastRoom() {
 	}
 }
 
-func (r *Room) _join(session *Session) {
+func (r *Room) join(session *Session) {
 	logger.Log.Infof("Session(%v) joined into Room(%v)", session.id, r.id)
 	r.sessions[session.id] = session
 	session.room = r
 	session.disconnectHandler = func(session *Session) {
-		r.leave <- session
+		r.leaveCh <- session
 	}
 	r.battle.EnterUser(session.id)
 
@@ -116,14 +116,14 @@ func (r *Room) _join(session *Session) {
 	}
 }
 
-func (r *Room) _leave(session *Session) {
+func (r *Room) leave(session *Session) {
 	logger.Log.Infof("Session(%v) leaved from Room(%v)", session.id, r.id)
 	session.disconnectHandler = nil
 	session.room = nil
 	delete(r.sessions, session.id)
 }
 
-func (r *Room) _close() {
+func (r *Room) close() {
 	for c := 1; true; c++ {
 		if _, err := r.webAPI.Battle.CloseRoom(r.id); err != nil {
 			logger.Log.Errorf("Room(%v) failed %v times to use closeRoom API: %v", r.id, c, err)
@@ -135,7 +135,7 @@ func (r *Room) _close() {
 	logger.Log.Infof("Room(%v) closed", r.id)
 	r.battle.Close()
 	for _, session := range r.sessions {
-		r._leave(session)
+		r.leave(session)
 		session.close()
 	}
 }
@@ -160,6 +160,6 @@ func (r *Room) onBattleOutputReceive(output *battleLogic.GatewayOutput) {
 		}
 	}
 	if message.Type == websocketapi.MessageType_Finish {
-		go func() { r.close <- struct{}{} }()
+		go func() { r.closeCh <- struct{}{} }()
 	}
 }
