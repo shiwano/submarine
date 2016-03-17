@@ -84,7 +84,7 @@ loop:
 
 func (b *Battle) start() {
 	b.startedAt = time.Now()
-	b.Gateway.outputStart(b.startedAt)
+	b.Gateway.outputStart(nil, b.startedAt)
 	for _, actor := range b.context.Actors() {
 		b.Gateway.outputActor(nil, actor)
 	}
@@ -107,6 +107,7 @@ func (b *Battle) finish() {
 
 func (b *Battle) reenterUser(userID int64) {
 	userIDs := []int64{userID}
+	b.Gateway.outputStart(userIDs, b.startedAt)
 	for _, actor := range b.context.Actors() {
 		b.Gateway.outputActor(userIDs, actor)
 	}

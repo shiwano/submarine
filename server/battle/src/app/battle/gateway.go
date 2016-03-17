@@ -36,8 +36,8 @@ func (g *Gateway) outputMessage(userIDs []int64, message typhenapi.Type) {
 	}
 }
 
-func (g *Gateway) outputStart(startedAt time.Time) {
-	g.outputMessage(nil, &battle.Start{
+func (g *Gateway) outputStart(userIDs []int64, startedAt time.Time) {
+	g.outputMessage(userIDs, &battle.Start{
 		StartedAt: currentmillis.Milliseconds(startedAt),
 	})
 }
