@@ -49,8 +49,8 @@ func (g *Gateway) outputFinish(winnerUserID int64, finishedAt time.Time) {
 	})
 }
 
-func (g *Gateway) outputActor(actor context.Actor) {
-	g.outputMessage(nil, &battle.Actor{
+func (g *Gateway) outputActor(userIDs []int64, actor context.Actor) {
+	g.outputMessage(userIDs, &battle.Actor{
 		Id:       actor.ID(),
 		UserId:   actor.UserID(),
 		Type:     actor.Type(),

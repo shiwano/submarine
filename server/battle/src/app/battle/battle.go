@@ -11,32 +11,38 @@ import (
 
 // Battle represents a battle.
 type Battle struct {
-	Gateway   *Gateway
-	context   *context.Context
-	createdAt time.Time
-	startedAt time.Time
-	timeLimit time.Duration
-	IsStarted bool
-	close     chan struct{}
+	Gateway     *Gateway
+	context     *context.Context
+	createdAt   time.Time
+	startedAt   time.Time
+	timeLimit   time.Duration
+	IsStarted   bool
+	reenterUser chan int64
+	close       chan struct{}
 }
 
 // New creates a new battle.
 func New(timeLimit time.Duration) *Battle {
 	battleContext := context.NewContext()
 	b := &Battle{
-		Gateway:   newGateway(),
-		context:   battleContext,
-		createdAt: time.Now(),
-		timeLimit: timeLimit,
-		close:     make(chan struct{}, 1),
+		Gateway:     newGateway(),
+		context:     battleContext,
+		createdAt:   time.Now(),
+		timeLimit:   timeLimit,
+		reenterUser: make(chan int64, 4),
+		close:       make(chan struct{}, 1),
 	}
 	return b
 }
 
 // EnterUser an user to the battle.
 func (b *Battle) EnterUser(userID int64) {
-	if s := b.context.SubmarineByUserID(userID); s == nil {
-		actor.NewSubmarine(b.context, userID)
+	if b.IsStarted {
+		b.reenterUser <- userID
+	} else {
+		if s := b.context.SubmarineByUserID(userID); s == nil {
+			actor.NewSubmarine(b.context, userID)
+		}
 	}
 }
 
@@ -67,6 +73,8 @@ loop:
 			}
 		case input := <-b.Gateway.input:
 			b.onInputReceive(input)
+		case userID := <-b.reenterUser:
+			b._reenterUser(userID)
 		case <-b.close:
 			break loop
 		}
@@ -78,7 +86,7 @@ func (b *Battle) start() {
 	b.startedAt = time.Now()
 	b.Gateway.outputStart(b.startedAt)
 	for _, actor := range b.context.Actors() {
-		b.Gateway.outputActor(actor)
+		b.Gateway.outputActor(nil, actor)
 	}
 	b.context.Event.On(event.ActorAdd, b.onActorAdd)
 	b.context.Event.On(event.ActorMove, b.onActorMove)
@@ -95,6 +103,13 @@ func (b *Battle) update(now time.Time) bool {
 func (b *Battle) finish() {
 	// TODO: winnerUserID is temporary value.
 	b.Gateway.outputFinish(b.context.UserIDs()[0], b.context.Now)
+}
+
+func (b *Battle) _reenterUser(userID int64) {
+	userIDs := []int64{userID}
+	for _, actor := range b.context.Actors() {
+		b.Gateway.outputActor(userIDs, actor)
+	}
 }
 
 func (b *Battle) onInputReceive(input *gatewayInput) {
@@ -122,7 +137,7 @@ func (b *Battle) onInputReceive(input *gatewayInput) {
 }
 
 func (b *Battle) onActorAdd(actor context.Actor) {
-	b.Gateway.outputActor(actor)
+	b.Gateway.outputActor(nil, actor)
 }
 
 func (b *Battle) onActorMove(actor context.Actor) {
