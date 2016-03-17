@@ -33,8 +33,8 @@ func New(timeLimit time.Duration) *Battle {
 	return b
 }
 
-// CreateSubmarineUnlessExists creates the user's submarine unless it exists.
-func (b *Battle) CreateSubmarineUnlessExists(userID int64) {
+// EnterUser an user to the battle.
+func (b *Battle) EnterUser(userID int64) {
 	if s := b.context.SubmarineByUserID(userID); s == nil {
 		actor.NewSubmarine(b.context, userID)
 	}
