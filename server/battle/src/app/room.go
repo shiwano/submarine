@@ -7,6 +7,7 @@ import (
 	"app/typhenapi/type/submarine"
 	"app/typhenapi/type/submarine/battle"
 	webapi "app/typhenapi/web/submarine"
+	websocketapi "app/typhenapi/websocket/submarine/battle"
 	"fmt"
 	"time"
 )
@@ -146,43 +147,21 @@ func (r *Room) sendBattleInput(userID int64, message typhenapi.Type) {
 }
 
 func (r *Room) onBattleOutputReceive(output *battleLogic.GatewayOutput) {
-	switch message := output.Message.(type) {
-	case *battle.Start:
-		logger.Log.Infof("Room(%v)'s battle started", r.id)
-		r.eachSessions(output.UserIDs, func(s *Session) {
-			s.api.Battle.SendStart(message)
-		})
-	case *battle.Finish:
-		logger.Log.Infof("Room(%v)'s battle finished", r.id)
-		r.eachSessions(output.UserIDs, func(s *Session) {
-			s.api.Battle.SendFinish(message)
-		})
-		go func() { r.close <- struct{}{} }()
-	case *battle.Actor:
-		logger.Log.Debugf("User(%v)'s %v(%v) is created", message.UserId, message.Type.String(), message.Id)
-		r.eachSessions(output.UserIDs, func(s *Session) {
-			s.api.Battle.SendActor(message)
-		})
-	case *battle.Movement:
-		logger.Log.Debugf("Actor(%v) moved", message.ActorId)
-		r.eachSessions(output.UserIDs, func(s *Session) {
-			s.api.Battle.SendMovement(message)
-		})
-	}
-}
-
-func (r *Room) eachSessions(userIDs []int64, callback func(*Session)) {
-	if userIDs == nil {
+	var message *typhenapi.Message
+	if output.UserIDs == nil {
 		for _, s := range r.sessions {
-			callback(s)
+			message, _ = s.api.Battle.Send(output.Message)
 		}
 	} else {
 		for _, s := range r.sessions {
-			for _, userID := range userIDs {
+			for _, userID := range output.UserIDs {
 				if s.id == userID {
-					callback(s)
+					message, _ = s.api.Battle.Send(output.Message)
 				}
 			}
 		}
+	}
+	if message.Type == websocketapi.MessageType_Finish {
+		go func() { r.close <- struct{}{} }()
 	}
 }
