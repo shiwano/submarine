@@ -43,7 +43,7 @@ func New(timeLimit time.Duration) *Battle {
 // StartIfPossible starts the battle that is startable.
 func (b *Battle) StartIfPossible() {
 	// TODO: Relevant users counting.
-	if !b.isStarted && len(b.context.UserIDs()) > 1 {
+	if !b.isStarted && len(b.context.UserIDs()) > 0 {
 		b.isStarted = true
 		go b.run()
 	}
