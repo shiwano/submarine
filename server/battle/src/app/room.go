@@ -111,7 +111,7 @@ func (r *Room) join(session *Session) {
 	r.battle.EnterUser(session.id)
 
 	// TODO: Add relevant room members counting.
-	if len(r.sessions) >= 1 {
+	if !r.battle.IsStarted && len(r.sessions) >= 1 {
 		r.battle.Start()
 	}
 }

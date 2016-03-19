@@ -1,6 +1,7 @@
 package battle
 
 import (
+	"app/atomicbool"
 	"app/battle/actor"
 	"app/battle/context"
 	"app/battle/event"
@@ -12,11 +13,12 @@ import (
 // Battle represents a battle.
 type Battle struct {
 	Gateway       *Gateway
+	IsStarted     bool
 	context       *context.Context
 	createdAt     time.Time
 	startedAt     time.Time
 	timeLimit     time.Duration
-	IsStarted     bool
+	isFighting    *atomicbool.T
 	reenterUserCh chan int64
 	leaveUserCh   chan int64
 	closeCh       chan struct{}
@@ -30,29 +32,12 @@ func New(timeLimit time.Duration) *Battle {
 		context:       battleContext,
 		createdAt:     time.Now(),
 		timeLimit:     timeLimit,
+		isFighting:    atomicbool.New(false),
 		reenterUserCh: make(chan int64, 4),
 		leaveUserCh:   make(chan int64, 4),
 		closeCh:       make(chan struct{}, 1),
 	}
 	return b
-}
-
-// EnterUser enters an user to the battle.
-func (b *Battle) EnterUser(userID int64) {
-	if b.IsStarted {
-		b.reenterUserCh <- userID
-	} else {
-		if s := b.context.SubmarineByUserID(userID); s == nil {
-			actor.NewSubmarine(b.context, userID)
-		}
-	}
-}
-
-// LeaveUser leaves an user from the battle.
-func (b *Battle) LeaveUser(userID int64) {
-	if b.IsStarted {
-		b.leaveUserCh <- userID
-	}
 }
 
 // Start the battle.
@@ -65,8 +50,26 @@ func (b *Battle) Start() {
 
 // Close the battle.
 func (b *Battle) Close() {
-	if b.IsStarted {
+	if b.IsStarted && b.isFighting.Value() {
 		b.closeCh <- struct{}{}
+	}
+}
+
+// EnterUser enters an user to the battle.
+func (b *Battle) EnterUser(userID int64) {
+	if b.isFighting.Value() {
+		b.reenterUserCh <- userID
+	} else {
+		if s := b.context.SubmarineByUserID(userID); s == nil {
+			actor.NewSubmarine(b.context, userID)
+		}
+	}
+}
+
+// LeaveUser leaves an user from the battle.
+func (b *Battle) LeaveUser(userID int64) {
+	if b.isFighting.Value() {
+		b.leaveUserCh <- userID
 	}
 }
 
@@ -95,6 +98,7 @@ loop:
 }
 
 func (b *Battle) start() {
+	b.isFighting.Set(true)
 	b.startedAt = time.Now()
 	b.Gateway.outputStart(nil, b.startedAt)
 	for _, actor := range b.context.Actors() {
@@ -113,6 +117,7 @@ func (b *Battle) update(now time.Time) bool {
 }
 
 func (b *Battle) finish() {
+	b.isFighting.Set(false)
 	// TODO: winnerUserID is temporary value.
 	b.Gateway.outputFinish(b.context.UserIDs()[0], b.context.Now)
 }
