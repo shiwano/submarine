@@ -17,4 +17,6 @@ const (
 	TurnRequest
 	TorpedoRequest
 	PingerRequest
+
+	UserLeave
 )

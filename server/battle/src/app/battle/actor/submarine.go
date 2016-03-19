@@ -18,6 +18,7 @@ func NewSubmarine(battleContext *context.Context, userID int64) context.Actor {
 	s.event.On(event.AccelerationRequest, s.onAccelerationRequest)
 	s.event.On(event.BrakeRequest, s.onBrakeRequest)
 	s.event.On(event.TurnRequest, s.onTurnRequest)
+	s.event.On(event.UserLeave, s.onUserLeave)
 	s.context.Event.Emit(event.ActorCreate, s)
 	return s
 }
@@ -32,4 +33,8 @@ func (s *submarine) onBrakeRequest(message *battle.BrakeRequestObject) {
 
 func (s *submarine) onTurnRequest(message *battle.TurnRequestObject) {
 	s.turn(message.Direction)
+}
+
+func (s *submarine) onUserLeave() {
+	s.brake(s.motor.direction)
 }

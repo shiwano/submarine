@@ -121,6 +121,7 @@ func (r *Room) leave(session *Session) {
 	session.disconnectHandler = nil
 	session.room = nil
 	delete(r.sessions, session.id)
+	r.battle.LeaveUser(session.id)
 }
 
 func (r *Room) close() {
@@ -159,7 +160,7 @@ func (r *Room) onBattleOutputReceive(output *battleLogic.GatewayOutput) {
 			}
 		}
 	}
-	if message.Type == websocketapi.MessageType_Finish {
+	if message != nil && message.Type == websocketapi.MessageType_Finish {
 		go func() { r.closeCh <- struct{}{} }()
 	}
 }

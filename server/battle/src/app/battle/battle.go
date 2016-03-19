@@ -18,6 +18,7 @@ type Battle struct {
 	timeLimit     time.Duration
 	IsStarted     bool
 	reenterUserCh chan int64
+	leaveUserCh   chan int64
 	closeCh       chan struct{}
 }
 
@@ -30,6 +31,7 @@ func New(timeLimit time.Duration) *Battle {
 		createdAt:     time.Now(),
 		timeLimit:     timeLimit,
 		reenterUserCh: make(chan int64, 4),
+		leaveUserCh:   make(chan int64, 4),
 		closeCh:       make(chan struct{}, 1),
 	}
 	return b
@@ -43,6 +45,13 @@ func (b *Battle) EnterUser(userID int64) {
 		if s := b.context.SubmarineByUserID(userID); s == nil {
 			actor.NewSubmarine(b.context, userID)
 		}
+	}
+}
+
+// LeaveUser leaves an user from the battle.
+func (b *Battle) LeaveUser(userID int64) {
+	if b.IsStarted {
+		b.leaveUserCh <- userID
 	}
 }
 
@@ -76,6 +85,8 @@ loop:
 			b.onInputReceive(input)
 		case userID := <-b.reenterUserCh:
 			b.reenterUser(userID)
+		case userID := <-b.leaveUserCh:
+			b.leaveUser(userID)
 		case <-b.closeCh:
 			break loop
 		}
@@ -111,6 +122,13 @@ func (b *Battle) reenterUser(userID int64) {
 	b.Gateway.outputStart(userIDs, b.startedAt)
 	for _, actor := range b.context.Actors() {
 		b.Gateway.outputActor(userIDs, actor)
+	}
+}
+
+func (b *Battle) leaveUser(userID int64) {
+	s := b.context.SubmarineByUserID(userID)
+	if s != nil {
+		s.Event().Emit(event.UserLeave)
 	}
 }
 
