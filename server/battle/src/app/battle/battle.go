@@ -35,7 +35,7 @@ func New(timeLimit time.Duration) *Battle {
 	return b
 }
 
-// EnterUser an user to the battle.
+// EnterUser enters an user to the battle.
 func (b *Battle) EnterUser(userID int64) {
 	if b.IsStarted {
 		b.reenterUserCh <- userID
