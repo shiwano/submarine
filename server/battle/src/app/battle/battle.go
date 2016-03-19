@@ -63,11 +63,12 @@ func (b *Battle) Close() {
 
 func (b *Battle) run() {
 	b.start()
-	ticker := time.Tick(time.Second / 30)
+	ticker := time.NewTicker(time.Second / 30)
+	defer ticker.Stop()
 loop:
 	for {
 		select {
-		case now := <-ticker:
+		case now := <-ticker.C:
 			if !b.update(now) {
 				break loop
 			}
