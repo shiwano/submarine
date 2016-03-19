@@ -28,6 +28,7 @@ func TestBattle(t *testing.T) {
 			})
 
 			Convey("when the battle already is running", func() {
+				battle.isStarted = true
 				battle.start()
 
 				Convey("should send to reenterUserCh", func() {

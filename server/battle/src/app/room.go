@@ -109,11 +109,7 @@ func (r *Room) join(session *Session) {
 		r.leaveCh <- session
 	}
 	r.battle.EnterUser(session.id)
-
-	// TODO: Add relevant room members counting.
-	if !r.battle.IsStarted && len(r.sessions) >= 1 {
-		r.battle.Start()
-	}
+	r.battle.StartIfPossible()
 }
 
 func (r *Room) leave(session *Session) {
@@ -134,7 +130,7 @@ func (r *Room) close() {
 		break
 	}
 	logger.Log.Infof("Room(%v) closed", r.id)
-	r.battle.Close()
+	r.battle.CloseIfPossible()
 	for _, session := range r.sessions {
 		r.leave(session)
 		session.close()

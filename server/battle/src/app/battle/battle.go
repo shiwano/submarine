@@ -13,11 +13,11 @@ import (
 // Battle represents a battle.
 type Battle struct {
 	Gateway       *Gateway
-	IsStarted     bool
 	context       *context.Context
 	createdAt     time.Time
 	startedAt     time.Time
 	timeLimit     time.Duration
+	isStarted     bool
 	isFighting    *atomicbool.T
 	reenterUserCh chan int64
 	leaveUserCh   chan int64
@@ -40,29 +40,30 @@ func New(timeLimit time.Duration) *Battle {
 	return b
 }
 
-// Start the battle.
-func (b *Battle) Start() {
-	if !b.IsStarted {
-		b.IsStarted = true
+// StartIfPossible starts the battle that is startable.
+func (b *Battle) StartIfPossible() {
+	// TODO: Relevant users counting.
+	if !b.isStarted && len(b.context.UserIDs()) > 1 {
+		b.isStarted = true
 		go b.run()
 	}
 }
 
-// Close the battle.
-func (b *Battle) Close() {
-	if b.IsStarted && b.isFighting.Value() {
+// CloseIfPossible closes the battle that is running.
+func (b *Battle) CloseIfPossible() {
+	if b.isStarted && b.isFighting.Value() {
 		b.closeCh <- struct{}{}
 	}
 }
 
 // EnterUser enters an user to the battle.
 func (b *Battle) EnterUser(userID int64) {
-	if b.isFighting.Value() {
-		b.reenterUserCh <- userID
-	} else {
+	if !b.isStarted {
 		if s := b.context.SubmarineByUserID(userID); s == nil {
 			actor.NewSubmarine(b.context, userID)
 		}
+	} else if b.isFighting.Value() {
+		b.reenterUserCh <- userID
 	}
 }
 
