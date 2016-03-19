@@ -43,14 +43,14 @@ func (s *Server) roomsGET(c *gin.Context) {
 	room, err := s.roomManager.fetchRoom(roomID)
 	if err != nil {
 		logger.Log.Error(err)
-		c.String(http.StatusForbidden, "Failed to get or create the room")
+		c.String(http.StatusForbidden, "Failed getting the room")
 		return
 	}
 
 	res, err := s.webAPI.Battle.FindRoomMember(c.Query("room_key"))
 	if err != nil {
 		logger.Log.Error(err)
-		c.String(http.StatusInternalServerError, "Failed to authenticate the room key")
+		c.String(http.StatusInternalServerError, "Failed authenticating the room key")
 		return
 	}
 	if res.RoomMember == nil {
@@ -61,7 +61,7 @@ func (s *Server) roomsGET(c *gin.Context) {
 	session := newSession(res.RoomMember, roomID)
 	if err := session.Connect(c.Writer, c.Request); err != nil {
 		logger.Log.Error(err)
-		c.String(http.StatusForbidden, "Failed to upgrade the request to web socket protocol")
+		c.String(http.StatusForbidden, "Failed upgrading the connection to the Web Socket Protocol")
 		return
 	}
 
