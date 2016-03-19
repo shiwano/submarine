@@ -32,7 +32,7 @@ func (m *RoomManager) run() {
 	}
 }
 
-func (m *RoomManager) tryGetRoom(roomID int64) (*Room, error) {
+func (m *RoomManager) fetchRoom(roomID int64) (*Room, error) {
 	respondable := resp.New(roomID)
 	m.getOrCreateRoomCh <- respondable
 	res, err := respondable.Receive()

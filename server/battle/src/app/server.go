@@ -40,7 +40,7 @@ func (s *Server) roomsGET(c *gin.Context) {
 		return
 	}
 
-	room, err := s.roomManager.tryGetRoom(roomID)
+	room, err := s.roomManager.fetchRoom(roomID)
 	if err != nil {
 		logger.Log.Error(err)
 		c.String(http.StatusForbidden, "Failed to get or create the room")
