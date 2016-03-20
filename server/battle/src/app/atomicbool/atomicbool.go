@@ -1,32 +1,41 @@
 package atomicbool
 
 import (
-	"sync/atomic"
+	"sync"
 )
 
 // T represents an atomic bool.
 type T struct {
-	value int32
+	mutex *sync.Mutex
+	value bool
 }
 
 // New creates an atomic bool.
 func New(value bool) *T {
-	return &T{value: toInt32(value)}
-}
-
-func toInt32(value bool) int32 {
-	if value {
-		return 1
+	return &T{
+		mutex: new(sync.Mutex),
+		value: value,
 	}
-	return 0
-}
-
-// Set sets the value.
-func (t *T) Set(value bool) {
-	atomic.StoreInt32(&(t.value), int32(toInt32(value)))
 }
 
 // Value returns the value.
 func (t *T) Value() bool {
-	return atomic.LoadInt32(&(t.value)) == 1
+	t.mutex.Lock()
+	value := t.value
+	t.mutex.Unlock()
+	return value
+}
+
+// Set the value.
+func (t *T) Set(value bool) {
+	t.mutex.Lock()
+	t.value = value
+	t.mutex.Unlock()
+}
+
+// Toggle the value.
+func (t *T) Toggle() {
+	t.mutex.Lock()
+	t.value = !t.value
+	t.mutex.Unlock()
 }
