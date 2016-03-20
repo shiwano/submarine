@@ -21,21 +21,20 @@ func New(value bool) *T {
 // Value returns the value.
 func (t *T) Value() bool {
 	t.mutex.Lock()
-	value := t.value
-	t.mutex.Unlock()
-	return value
+	defer t.mutex.Unlock()
+	return t.value
 }
 
 // Set the value.
 func (t *T) Set(value bool) {
 	t.mutex.Lock()
+	defer t.mutex.Unlock()
 	t.value = value
-	t.mutex.Unlock()
 }
 
 // Toggle the value.
 func (t *T) Toggle() {
 	t.mutex.Lock()
+	defer t.mutex.Unlock()
 	t.value = !t.value
-	t.mutex.Unlock()
 }
