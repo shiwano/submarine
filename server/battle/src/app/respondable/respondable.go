@@ -15,17 +15,17 @@ func New(value interface{}) *T {
 }
 
 // Respond a value to the channel.
-func (r *T) Respond(result interface{}, err error) {
-	r.done <- response{
+func (t *T) Respond(result interface{}, err error) {
+	t.done <- response{
 		value: result,
 		err:   err,
 	}
 }
 
 // Receive a value from the channel.
-func (r *T) Receive() (interface{}, error) {
-	response := <-r.done
-	close(r.done)
+func (t *T) Receive() (interface{}, error) {
+	response := <-t.done
+	close(t.done)
 	return response.value, response.err
 }
 
