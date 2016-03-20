@@ -47,7 +47,7 @@ func (m *motor) toAPIType(actorID int64) *battle.Movement {
 		ActorId:     actorID,
 		Position:    &battle.Point{X: position[0], Y: position[1]},
 		Direction:   m.direction,
-		MovedAt:     currentmillis.Milliseconds(m.changedAt),
+		MovedAt:     currentmillis.Millis(m.changedAt),
 		Accelerator: m.accelerator.toAPIType(),
 	}
 }
@@ -115,7 +115,7 @@ func (a *accelerator) toAPIType() *battle.Accelerator {
 	}
 	return &battle.Accelerator{
 		MaxSpeed:       a.maxSpeed,
-		Duration:       currentmillis.MillisecondsDuration(a.duration),
+		Duration:       currentmillis.DurationMillis(a.duration),
 		StartRate:      a.startRate,
 		IsAccelerating: a.isAccelerating,
 	}

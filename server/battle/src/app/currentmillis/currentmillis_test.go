@@ -17,8 +17,8 @@ func TestStubNow(t *testing.T) {
 	}
 }
 
-func TestMilliseconds(t *testing.T) {
-	actual := currentmillis.Milliseconds(time.Date(2016, time.January, 31, 14, 11, 54, 921*1000000, time.UTC))
+func TestMillis(t *testing.T) {
+	actual := currentmillis.Millis(time.Date(2016, time.January, 31, 14, 11, 54, 921*1000000, time.UTC))
 	var expected int64 = 1454249514921
 
 	if actual != expected {
@@ -45,8 +45,8 @@ func TestDuration(t *testing.T) {
 	}
 }
 
-func TestMillisecondsDuration(t *testing.T) {
-	actual := currentmillis.MillisecondsDuration(1 * time.Second)
+func TestDurationMillis(t *testing.T) {
+	actual := currentmillis.DurationMillis(1 * time.Second)
 	var expected int64 = 1000
 
 	if actual != expected {

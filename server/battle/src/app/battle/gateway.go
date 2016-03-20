@@ -38,14 +38,14 @@ func (g *Gateway) outputMessage(userIDs []int64, message typhenapi.Type) {
 
 func (g *Gateway) outputStart(userIDs []int64, startedAt time.Time) {
 	g.outputMessage(userIDs, &battle.Start{
-		StartedAt: currentmillis.Milliseconds(startedAt),
+		StartedAt: currentmillis.Millis(startedAt),
 	})
 }
 
 func (g *Gateway) outputFinish(winnerUserID int64, finishedAt time.Time) {
 	g.outputMessage(nil, &battle.Finish{
 		WinnerUserId: winnerUserID,
-		FinishedAt:   currentmillis.Milliseconds(finishedAt),
+		FinishedAt:   currentmillis.Millis(finishedAt),
 	})
 }
 
