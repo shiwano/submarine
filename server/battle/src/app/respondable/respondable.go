@@ -1,4 +1,4 @@
-package resp
+package respondable
 
 // Respondable is the general-purpose respondable type for channels.
 type Respondable struct {
