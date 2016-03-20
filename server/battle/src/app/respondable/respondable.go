@@ -1,30 +1,35 @@
 package respondable
 
-// Respondable is the general-purpose respondable type for channels.
-type Respondable struct {
-	Value    interface{}
-	response interface{}
-	done     chan interface{}
-	err      error
+// T represents the general-purpose respondable type with thread safe.
+type T struct {
+	Value interface{}
+	done  chan response
 }
 
 // New Respondable.
-func New(value interface{}) *Respondable {
-	return &Respondable{
+func New(value interface{}) *T {
+	return &T{
 		Value: value,
-		done:  make(chan interface{}, 1),
+		done:  make(chan response, 1),
 	}
 }
 
 // Respond a value to the channel.
-func (r *Respondable) Respond(response interface{}, err error) {
-	r.err = err
-	r.done <- response
+func (r *T) Respond(result interface{}, err error) {
+	r.done <- response{
+		value: result,
+		err:   err,
+	}
 }
 
 // Receive a value from the channel.
-func (r *Respondable) Receive() (interface{}, error) {
-	r.response = <-r.done
+func (r *T) Receive() (interface{}, error) {
+	response := <-r.done
 	close(r.done)
-	return r.response, r.err
+	return response.value, response.err
+}
+
+type response struct {
+	value interface{}
+	err   error
 }
