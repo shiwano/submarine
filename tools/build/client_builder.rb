@@ -15,6 +15,7 @@ class ClientBuilder
     @workspace = Dir.pwd
     @env = env
     @target = target
+    @unity_path = ENV['UNITY_PATH'] || '/Applications/Unity/Unity.app/Contents/MacOS/Unity'
     @version = ENV['BUILD_VERSION'] || '1.0.0'
     @config = open("tools/build/config.#{@env}.yml") {|f| YAML.load(f) }
   end
@@ -40,7 +41,7 @@ class ClientBuilder
 
   def build_with_unity
     sh <<-EOS
-      /Applications/Unity/Unity.app/Contents/MacOS/Unity \
+      #{@unity_path} \
         -quit \
         -batchmode \
         -executeMethod BuildScript.ExecuteViaCommandLine \
