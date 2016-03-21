@@ -9,20 +9,22 @@ A mobile game that is made with Unity3D and RoR, WebSocket server written in Go.
 Install tools.
 
 ```bash
-$ brew tap shiwano/formulas
-$ brew install robo musta node
+$ brew ruby node
+$ gem install rake
 $ npm install -g typhen
 ```
 
-Make out `build.yml` from `build.example.yml`.
+Make out `tools/build/config.*.yml` from `tools/build/config.example.yml`.
 
 ```bash
-$ cp build.example.yml build.yml
-$ vi build.yml # Edit variables.
+$ cd tools/build
+$ cp config.example.yml config.development.yml
+$ cp config.example.yml config.production.yml
+$ vim -o config.development.yml config.production.yml # Write the build settings.
 ```
 
 Output tasks.
 
 ```bash
-$ robo
+$ rake -T
 ```
