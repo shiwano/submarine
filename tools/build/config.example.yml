@@ -1,0 +1,9 @@
+client_config:
+  version: 1.0.0
+  web_api_server_base_uri: http://localhost:3000/
+build:
+  product_name: Foo
+  bundle_identifier: com.example.foo
+  ios:
+    code_sign_identity: John Doe (HOGEHOGE)
+    provisioning_profile: tools/build/cert/foo.mobileprovision

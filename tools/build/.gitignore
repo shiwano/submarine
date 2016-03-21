@@ -1,1 +1,3 @@
 cert
+config.*.yml
+!config.example.yml

@@ -1,7 +1,0 @@
-gen:
-  summary: Generate code from the contract
-  command: typhen
-
-build:
-  summary: build tasks
-  exec: robo --config build.yml
