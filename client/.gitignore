@@ -20,10 +20,8 @@
 # Unity3D Generated File On Crash Reports
 sysinfo.txt
 
-Assets/Settings/Resources/PhotonServerSettings.asset
-Assets/Settings/Resources/PhotonServerSettings.asset.meta
-Assets/Resources/Config/Config.production.json
-Assets/Resources/Config/Config.production.json.meta
+Assets/Resources/Config/Config.json
+Assets/Resources/Config/Config.json.meta
 
 build.log
 iOSXCodeProject

@@ -33,7 +33,7 @@ class ClientBuilder
   end
 
   def make_client_config
-    open("client/Assets/Resources/Config/Config.#{@env}.json", 'w') do |file|
+    open("client/Assets/Resources/Config/Config.json", 'w') do |file|
       @config['client_config']['version'] = @version
       JSON.dump(@config['client_config'], file)
     end
