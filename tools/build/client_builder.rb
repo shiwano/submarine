@@ -67,7 +67,7 @@ class ClientBuilder
 
       app_path = "build/Release-iphoneos/#{build_config['product_name'].downcase}.app"
       unless File.exist?("#{app_path}/ResourceRules.plist")
-        cp '../../tools/build/ResourceRules.plist', app_path
+        cp "#{@workspace}/tools/build/ResourceRules.plist", app_path
       end
 
       sh <<-EOS
