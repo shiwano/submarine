@@ -15,11 +15,6 @@ module Build
       raise "Unsupported target: #{target}" unless [:ios, :android].include?(target)
       @workspace = Dir.pwd
       @target = target
-      @config = open("config.#{Environment.env}.yml") {|f| YAML.load(f) }
-    end
-
-    def build_config
-      @config['build']
     end
 
     def build
@@ -31,9 +26,9 @@ module Build
     end
 
     def make_client_config
-      open("client/Assets/Resources/Config/Config.json", 'w') do |file|
-        @config['client_config']['version'] = Environment.version
-        JSON.dump(@config['client_config'], file)
+      open('client/Assets/Resources/Config/Config.json', 'w') do |file|
+        Configuration.client['version'] = Environment.version
+        JSON.dump(Configuration.client, file)
       end
     end
 
@@ -47,8 +42,8 @@ module Build
           -logFile #{@workspace}/client/build.log \
           "buildTarget=#{@target}" \
           "bundleVersion=#{Environment.version}" \
-          "bundleIdentifier=#{build_config['bundle_identifier']}" \
-          "productName=#{build_config['product_name']}"
+          "bundleIdentifier=#{Configuration.build['bundle_identifier']}" \
+          "productName=#{Configuration.build['product_name']}"
       EOS
     end
 
@@ -64,16 +59,16 @@ module Build
           xcodebuild clean
 
           xcodebuild -configuration Release -scheme Unity-iPhone \
-            -archivePath "#{build_config['product_name'].downcase}.xcarchive" \
-            PROVISIONING_PROFILE="#{build_config['ios']['provisioning_profile']}" \
-            CODE_SIGN_IDENTITY="iPhone Distribution: #{build_config['ios']['code_sign_identity']}" \
+            -archivePath "#{Configuration.build['product_name'].downcase}.xcarchive" \
+            PROVISIONING_PROFILE="#{Configuration.build_ios['provisioning_profile']}" \
+            CODE_SIGN_IDENTITY="iPhone Distribution: #{Configuration.build_ios['code_sign_identity']}" \
             archive
 
           xcodebuild -exportArchive -exportFormat IPA \
-            -archivePath "#{build_config['product_name'].downcase}.xcarchive" \
+            -archivePath "#{Configuration.build['product_name'].downcase}.xcarchive" \
             -exportPath "#{output_path}" \
-            PROVISIONING_PROFILE="#{build_config['ios']['provisioning_profile']}" \
-            CODE_SIGN_IDENTITY="iPhone Distribution: #{build_config['ios']['code_sign_identity']}"
+            PROVISIONING_PROFILE="#{Configuration.build_ios['provisioning_profile']}" \
+            CODE_SIGN_IDENTITY="iPhone Distribution: #{Configuration.build_ios['code_sign_identity']}"
         EOS
       end
     end
