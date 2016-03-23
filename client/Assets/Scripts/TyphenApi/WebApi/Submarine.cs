@@ -38,7 +38,7 @@ namespace TyphenApi.WebApi
 
         readonly SessionId sessionId = new SessionId();
 
-        public Submarine(Config config) : base(config.WebApiServerBaseUri)
+        public Submarine(Config config) : base(config.ApiServerBaseUri)
         {
             RequestSender = new WebApiRequestSenderWWW();
 
