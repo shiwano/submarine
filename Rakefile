@@ -1,5 +1,4 @@
-require './tools/build/environment'
-require './tools/build/client_builder'
+require './tools/build/build'
 
 desc 'Generate code from the contract'
 task :gen do
