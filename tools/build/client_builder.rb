@@ -15,7 +15,7 @@ module Build
       raise "Unsupported target: #{target}" unless [:ios, :android].include?(target)
       @workspace = Dir.pwd
       @target = target
-      @config = open("tools/build/config.#{Environment.env}.yml") {|f| YAML.load(f) }
+      @config = open("config.#{Environment.env}.yml") {|f| YAML.load(f) }
     end
 
     def build_config
