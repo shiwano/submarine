@@ -28,7 +28,7 @@ class Room < ActiveRecord::Base
     room_members_count >= Room.max_room_members_count
   end
 
-  def renew_battle_server_base_uri
+  def refresh_battle_server_base_uri
     # TODO: battle_server_base_uri is temporary.
     self.battle_server_base_uri = Config.battle_server_base_uri
   end

@@ -29,7 +29,7 @@ class User < ActiveRecord::Base
   def create_room!
     User.transaction do
       newRoom = Room.new
-      newRoom.renew_battle_server_base_uri
+      newRoom.refresh_battle_server_base_uri
       newRoom.save!
       newRoom.join_user!(self)
       newRoom
