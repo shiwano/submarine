@@ -11,8 +11,8 @@ var _ = errors.New
 
 // Config is a kind of TyphenAPI type.
 type Config struct {
-	Version             string `codec:"version"`
-	WebApiServerBaseUri string `codec:"web_api_server_base_uri"`
+	Version          string `codec:"version"`
+	ApiServerBaseUri string `codec:"api_server_base_uri"`
 }
 
 // Coerce the fields.

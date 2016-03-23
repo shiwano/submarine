@@ -5,6 +5,6 @@ module TyphenApi::Model::Submarine
     include Virtus.model(:strict => true)
 
     attribute :version, String, :required => true
-    attribute :web_api_server_base_uri, String, :required => true
+    attribute :api_server_base_uri, String, :required => true
   end
 end
