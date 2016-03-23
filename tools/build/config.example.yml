@@ -6,4 +6,4 @@ build:
   bundle_identifier: com.example.foo
   ios:
     code_sign_identity: John Doe (HOGEHOGE)
-    provisioning_profile: tools/build/cert/foo.mobileprovision
+    provisioning_profile: XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX

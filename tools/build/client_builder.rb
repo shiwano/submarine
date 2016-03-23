@@ -53,6 +53,8 @@ module Build
     end
 
     def build_for_ios
+      output_path = "#{@workspace}/client/build_#{Environment.version}.ipa"
+      rm output_path
       rm_rf 'client/iOSXCodeProject'
       build_with_unity
 
@@ -60,19 +62,18 @@ module Build
         sh <<-EOS
           xcodebuild -version
           xcodebuild clean
-          xcodebuild -sdk iphoneos CODE_SIGN_IDENTITY="iPhone Distribution: #{build_config['ios']['code_sign_identity']}"
-        EOS
 
-        app_path = "build/Release-iphoneos/#{build_config['product_name'].downcase}.app"
-        unless File.exist?("#{app_path}/ResourceRules.plist")
-          cp "#{@workspace}/tools/build/ResourceRules.plist", app_path
-        end
+          xcodebuild -configuration Release -scheme Unity-iPhone \
+            -archivePath "#{build_config['product_name'].downcase}.xcarchive" \
+            PROVISIONING_PROFILE="#{build_config['ios']['provisioning_profile']}" \
+            CODE_SIGN_IDENTITY="iPhone Distribution: #{build_config['ios']['code_sign_identity']}" \
+            archive
 
-        sh <<-EOS
-          xcrun -sdk iphoneos "PackageApplication" "#{app_path}" \
-            -o "#{@workspace}/client/build_#{Environment.version}.ipa" \
-            --sign "#{build_config['ios']['code_sign_identity']}" \
-            --embed "#{@workspace}/#{build_config['ios']['provisioning_profile']}"
+          xcodebuild -exportArchive -exportFormat IPA \
+            -archivePath "#{build_config['product_name'].downcase}.xcarchive" \
+            -exportPath "#{output_path}" \
+            PROVISIONING_PROFILE="#{build_config['ios']['provisioning_profile']}" \
+            CODE_SIGN_IDENTITY="iPhone Distribution: #{build_config['ios']['code_sign_identity']}"
         EOS
       end
     end
