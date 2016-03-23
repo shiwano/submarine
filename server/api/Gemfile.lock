@@ -94,6 +94,7 @@ GEM
       guard (~> 2.1)
       guard-compat (~> 1.1)
       rspec (>= 2.99.0, < 4.0)
+    hashie (3.4.3)
     hirb (0.7.3)
     hirb-unicode (0.0.5)
       hirb (~> 0.5)
@@ -273,6 +274,7 @@ DEPENDENCIES
   factory_girl_rails
   faker
   guard-rspec
+  hashie
   hirb
   hirb-unicode
   jbuilder (~> 2.0)
