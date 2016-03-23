@@ -1,11 +1,9 @@
-require 'json'
-
 class Config
-  open("#{Rails.root}/../../client/Assets/Resources/Config/Config.#{Rails.env}.json") do |file|
-    json_data = JSON.load(file)
-    config = TyphenApi::Model::Submarine::Config.new(json_data)
+  open("#{Rails.root}/../../config.#{Rails.env.test? ? 'example' : Rails.env}.yml") do |file|
+    hash = YAML.load(file)
+    config = Hashie::Mash.new(hash).server
 
-    config.attributes.each_key do |key|
+    config.keys.each do |key|
       define_singleton_method(key) do |*args|
         config.send(key, *args)
       end
