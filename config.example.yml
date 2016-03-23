@@ -1,6 +1,6 @@
 client:
   version: 1.0.0
-  web_api_server_base_uri: http://localhost:3000/
+  api_server_base_uri: http://localhost:3000/
 build:
   product_name: Foo
   bundle_identifier: com.example.foo
