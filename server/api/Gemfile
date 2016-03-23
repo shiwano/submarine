@@ -40,6 +40,7 @@ gem 'rails_config'
 gem 'squeel'
 gem 'rack-merge-cookies'
 gem 'hashie'
+gem 'default_value_for', '~> 3.0.0'
 
 group :development do
   gem 'bullet'
