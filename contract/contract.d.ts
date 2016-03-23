@@ -15,7 +15,7 @@ declare module Submarine {
 
   interface Config {
     version: string;
-    webApiServerBaseUri: string;
+    apiServerBaseUri: string;
   }
 
   interface User {
