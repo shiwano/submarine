@@ -30,7 +30,7 @@ class Room < ActiveRecord::Base
 
   def renew_battle_server_base_uri
     # TODO: battle_server_base_uri is temporary.
-    self.battle_server_base_uri = 'ws://localhost:5000'
+    self.battle_server_base_uri = Config.battle_server_base_uri
   end
 
   def random_room_key
