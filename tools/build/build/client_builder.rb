@@ -1,4 +1,3 @@
-require 'yaml'
 require 'json'
 require 'fileutils'
 include FileUtils
@@ -48,8 +47,8 @@ module Build
     end
 
     def build_for_ios
-      output_path = "#{@workspace}/client/build_#{Environment.version}.ipa"
-      rm output_path
+      export_path = "#{@workspace}/client/build_#{Environment.version}.ipa"
+      rm export_path
       rm_rf 'client/iOSXCodeProject'
       build_with_unity
 
@@ -58,15 +57,19 @@ module Build
           xcodebuild -version
           xcodebuild clean
 
-          xcodebuild -configuration Release -scheme Unity-iPhone \
+          xcodebuild \
+            -configuration Release \
+            -scheme Unity-iPhone \
             -archivePath "#{Configuration.build['product_name'].downcase}.xcarchive" \
             PROVISIONING_PROFILE="#{Configuration.build_ios['provisioning_profile']}" \
             CODE_SIGN_IDENTITY="iPhone Distribution: #{Configuration.build_ios['code_sign_identity']}" \
             archive
 
-          xcodebuild -exportArchive -exportFormat IPA \
+          xcodebuild \
+            -exportArchive\
+            -exportFormat IPA \
             -archivePath "#{Configuration.build['product_name'].downcase}.xcarchive" \
-            -exportPath "#{output_path}" \
+            -exportPath "#{export_path}" \
             PROVISIONING_PROFILE="#{Configuration.build_ios['provisioning_profile']}" \
             CODE_SIGN_IDENTITY="iPhone Distribution: #{Configuration.build_ios['code_sign_identity']}"
         EOS
