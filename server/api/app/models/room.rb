@@ -30,7 +30,7 @@ class Room < ActiveRecord::Base
 
   def refresh_battle_server_base_uri
     # TODO: battle_server_base_uri is temporary.
-    self.battle_server_base_uri = Config.battle_server_base_uri
+    self.battle_server_base_uri = GameConfig.battle_server_base_uri
   end
 
   def random_room_key

@@ -1,4 +1,4 @@
-class Config
+class GameConfig
   open("#{Rails.root}/../../config.#{Rails.env.test? ? 'example' : Rails.env}.yml") do |file|
     hash = YAML.load(file)
     config = Hashie::Mash.new(hash).server

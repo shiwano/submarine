@@ -1,7 +1,7 @@
 require 'rails_helper'
 
-RSpec.describe Config, type: :model do
-  subject { Config }
+RSpec.describe GameConfig, type: :model do
+  subject { GameConfig }
 
   its(:battle_server_base_uri) { is_expected.to be_a_kind_of String }
 end
