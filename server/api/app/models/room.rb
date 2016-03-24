@@ -14,23 +14,27 @@
 #
 
 class Room < ActiveRecord::Base
+  default_value_for(:battle_server_base_uri) { retrieve_battle_server_base_uri }
+
   has_many :room_members, dependent: :delete_all
   has_many :users, through: :room_members
 
   validates :battle_server_base_uri, presence: true
   scope :joinable, -> { where { room_members_count < my { max_room_members_count } } }
 
-  def self.max_room_members_count
-    4
+  class << self
+    def max_room_members_count
+      4
+    end
+
+    def retrieve_battle_server_base_uri
+      # TODO: battle_server_base_uri is temporary.
+      GameConfig.battle_server_base_uri
+    end
   end
 
   def full?
     room_members_count >= Room.max_room_members_count
-  end
-
-  def refresh_battle_server_base_uri
-    # TODO: battle_server_base_uri is temporary.
-    self.battle_server_base_uri = GameConfig.battle_server_base_uri
   end
 
   def random_room_key

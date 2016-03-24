@@ -27,10 +27,8 @@ class User < ActiveRecord::Base
   validates :name, format: { with: /\A[A-Z\d\-_.]+\z/i }
 
   def create_room!
-    User.transaction do
-      newRoom = Room.new
-      newRoom.refresh_battle_server_base_uri
-      newRoom.save!
+    transaction do
+      newRoom = Room.create!
       newRoom.join_user!(self)
       newRoom
     end
