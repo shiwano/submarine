@@ -35,7 +35,7 @@ RSpec.describe Room, type: :model do
         room.join_user!(user)
       end
       it 'should raise error' do
-        expect { subject }.to raise_error ApplicationError::RoomAlreadyJoined
+        expect { subject }.to raise_error GameError::RoomAlreadyJoined
       end
     end
 
@@ -47,7 +47,7 @@ RSpec.describe Room, type: :model do
         end
       end
       it 'should raise error' do
-        expect { subject }.to raise_error ApplicationError::RoomIsFull
+        expect { subject }.to raise_error GameError::RoomIsFull
       end
     end
   end

@@ -36,7 +36,7 @@ RSpec.describe 'Login', type: :request do
       let(:params) { { name: user.name, password: 'incorrect' } }
 
       it 'should raise login error' do
-        expect { post(login_path, params) }.to raise_error(ApplicationError::LoginFailed)
+        expect { post(login_path, params) }.to raise_error(GameError::LoginFailed)
       end
     end
 
@@ -44,7 +44,7 @@ RSpec.describe 'Login', type: :request do
       let(:params) { { name: 'unknown', password: 'secret' } }
 
       it 'should raise login error' do
-        expect { post(login_path, params) }.to raise_error(ApplicationError::LoginFailed)
+        expect { post(login_path, params) }.to raise_error(GameError::LoginFailed)
       end
     end
   end

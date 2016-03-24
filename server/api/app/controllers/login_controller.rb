@@ -4,7 +4,7 @@ class LoginController < ApplicationController
 
   def service
     if logged_in_user.blank?
-      raise ApplicationError::LoginFailed.new('The user name or password is incorrect')
+      raise GameError::LoginFailed.new('The user name or password is incorrect')
     end
 
     render_response(user: logged_in_user.as_logged_in_user_api_type)

@@ -4,7 +4,7 @@ class Battle::CloseRoomController < ApplicationController
 
   def service
     if room.blank?
-      raise ApplicationError::RoomNotFound.new("room(#{params.room_id}) not found")
+      raise GameError::RoomNotFound.new("room(#{params.room_id}) not found")
     end
 
     room.destroy!

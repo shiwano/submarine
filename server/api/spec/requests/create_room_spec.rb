@@ -19,7 +19,7 @@ RSpec.describe 'CreateRoom', type: :request do
       let(:current_user) { create(:user, :with_stupid_password, :with_room) }
 
       it 'should not work' do
-        expect { post create_room_path }.to raise_error ApplicationError::RoomAlreadyJoined
+        expect { post create_room_path }.to raise_error GameError::RoomAlreadyJoined
       end
     end
   end

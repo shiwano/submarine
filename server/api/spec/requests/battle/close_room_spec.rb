@@ -25,7 +25,7 @@ RSpec.describe "Battle::CloseRoom", type: :request do
       let(:params) { { room_id: -1 } }
 
       it 'should not work' do
-        expect { post(battle_close_room_path, params) }.to raise_error ApplicationError::RoomNotFound
+        expect { post(battle_close_room_path, params) }.to raise_error GameError::RoomNotFound
       end
     end
   end

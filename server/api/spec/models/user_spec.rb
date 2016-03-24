@@ -29,7 +29,7 @@ RSpec.describe User, type: :model do
       let(:user) { create(:user, :with_room) }
 
       it 'should raise error' do
-        expect { subject }.to raise_error ApplicationError::RoomAlreadyJoined
+        expect { subject }.to raise_error GameError::RoomAlreadyJoined
       end
     end
   end

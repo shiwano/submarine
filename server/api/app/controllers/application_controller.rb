@@ -11,7 +11,7 @@ class ApplicationController < ActionController::Base
   end
 
   def not_authenticated
-    raise ApplicationError::NotAuthenticated.new('Not authenticated')
+    raise GameError::NotAuthenticated.new('Not authenticated')
   end
 
   def render_500(e)
