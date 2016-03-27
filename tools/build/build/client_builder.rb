@@ -48,7 +48,7 @@ module Build
 
     def build_for_ios
       export_path = "#{@workspace}/client/build_#{Environment.version}.ipa"
-      rm export_path
+      rm_f export_path
       rm_rf 'client/iOSXCodeProject'
       build_with_unity
 
