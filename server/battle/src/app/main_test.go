@@ -9,7 +9,6 @@ import (
 	websocketapi "app/typhenapi/websocket/submarine"
 	"bytes"
 	"errors"
-	"github.com/Sirupsen/logrus"
 	"github.com/gin-gonic/gin"
 	"github.com/k0kubun/pp"
 	"io/ioutil"
@@ -92,7 +91,6 @@ func newWebAPIMock(url string) *webapi.WebAPI {
 }
 
 func newTestServer() *httptest.Server {
-	logger.Log.Level = logrus.PanicLevel
 	main.WebAPIRoundTripper = &webAPITransporter{typhenapi.NewJSONSerializer()}
 	gin.SetMode(gin.TestMode)
 	server := httptest.NewServer(main.NewServer())
