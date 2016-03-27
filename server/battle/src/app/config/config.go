@@ -4,6 +4,7 @@ import (
 	"gopkg.in/yaml.v2"
 	"io/ioutil"
 	"path/filepath"
+	"runtime"
 )
 
 // Config is the loaded server config.
@@ -16,7 +17,8 @@ type ServerConfig struct {
 }
 
 func newServerConfig() *ServerConfig {
-	dir, err := filepath.Abs("../../../../../")
+	_, filename, _, _ := runtime.Caller(1)
+	dir, err := filepath.Abs(filepath.Dir(filename) + "/../../../../../")
 	if err != nil {
 		panic(err)
 	}
