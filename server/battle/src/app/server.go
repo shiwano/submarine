@@ -1,6 +1,7 @@
 package main
 
 import (
+	"app/config"
 	"app/logger"
 	webapi "app/typhenapi/web/submarine"
 	"github.com/gin-gonic/gin"
@@ -73,4 +74,13 @@ func (s *Server) roomsGET(c *gin.Context) {
 
 	room.joinCh <- session
 	logger.Log.Infof("Session(%v) is created", session.id)
+}
+
+func init() {
+	switch config.Env {
+	case "test":
+		gin.SetMode(gin.TestMode)
+	case "development":
+		gin.SetMode(gin.DebugMode)
+	}
 }
