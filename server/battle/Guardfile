@@ -1,0 +1,6 @@
+guard 'shell' do
+  watch(/(.*).go/) do |m|
+    package_name = Pathname.new(m[0]).dirname.to_s.gsub('src/', '')
+    `SUBMARINE_ENV=test gb test -v #{package_name}`
+  end
+end
