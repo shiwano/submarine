@@ -18,7 +18,8 @@ type ServerConfig struct {
 
 func newServerConfig() *ServerConfig {
 	_, filename, _, _ := runtime.Caller(1)
-	dir, err := filepath.Abs(filepath.Dir(filename) + "/../../../../../")
+	dir := filepath.Join(filepath.Dir(filename), "../../../../../")
+	dir, err := filepath.Abs(dir)
 	if err != nil {
 		panic(err)
 	}
