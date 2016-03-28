@@ -62,7 +62,7 @@ module Build
             -scheme Unity-iPhone \
             -archivePath "#{Configuration.build['product_name'].downcase}.xcarchive" \
             PROVISIONING_PROFILE="#{Configuration.build_ios['provisioning_profile']}" \
-            CODE_SIGN_IDENTITY="iPhone Distribution: #{Configuration.build_ios['code_sign_identity']}" \
+            CODE_SIGN_IDENTITY="#{Configuration.build_ios['code_sign_identity']}" \
             archive
 
           xcodebuild \
@@ -71,7 +71,7 @@ module Build
             -archivePath "#{Configuration.build['product_name'].downcase}.xcarchive" \
             -exportPath "#{export_path}" \
             PROVISIONING_PROFILE="#{Configuration.build_ios['provisioning_profile']}" \
-            CODE_SIGN_IDENTITY="iPhone Distribution: #{Configuration.build_ios['code_sign_identity']}"
+            CODE_SIGN_IDENTITY="#{Configuration.build_ios['code_sign_identity']}"
         EOS
       end
     end
