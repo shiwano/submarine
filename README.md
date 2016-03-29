@@ -9,8 +9,8 @@ A mobile game that is made with Unity3D and RoR, WebSocket server written in Go.
 Install tools.
 
 ```bash
-$ brew ruby node
-$ gem install rake
+$ brew install ruby node
+$ gem install rake plist
 $ npm install -g typhen
 ```
 
