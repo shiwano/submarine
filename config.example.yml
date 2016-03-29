@@ -8,5 +8,7 @@ build:
   product_name: Foo
   bundle_identifier: com.example.foo
   ios:
-    code_sign_identity: "iPhone Developer: John Doe (XXXXXXXXXX)"
+    code_sign_identity: "iPhone Distribution: John Doe (XXXXXXXXXX)"
     provisioning_profile: XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX
+    export_options: # See xcodebuild -h
+      method: ad-hoc

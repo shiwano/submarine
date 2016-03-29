@@ -1,5 +1,6 @@
 require 'json'
 require 'fileutils'
+require 'plist'
 include FileUtils
 
 module Build
@@ -47,33 +48,34 @@ module Build
     end
 
     def build_for_ios
-      export_path = "#{@workspace}/client/build_#{Environment.version}.ipa"
-      rm_f export_path
+      rm_f "client/build_#{Environment.version}.ipa"
       rm_rf 'client/iOSXCodeProject'
       build_with_unity
 
+      open("#{@workspace}/client/iOSXCodeProject/exportOptions.plist", 'w') do |file|
+        file.write Configuration.build_ios['export_options'].to_plist
+      end
+
       cd 'client/iOSXCodeProject' do
         sh <<-EOS
+          export CODE_SIGN_IDENTITY="#{Configuration.build_ios['code_sign_identity']}"
+          export PROVISIONING_PROFILE="#{Configuration.build_ios['provisioning_profile']}"
           xcodebuild -version
           xcodebuild clean
-
           xcodebuild \
             -configuration Release \
             -scheme Unity-iPhone \
             -archivePath "#{Configuration.build['product_name'].downcase}.xcarchive" \
-            PROVISIONING_PROFILE="#{Configuration.build_ios['provisioning_profile']}" \
-            CODE_SIGN_IDENTITY="#{Configuration.build_ios['code_sign_identity']}" \
             archive
-
           xcodebuild \
-            -exportArchive\
-            -exportFormat IPA \
+            -exportArchive \
             -archivePath "#{Configuration.build['product_name'].downcase}.xcarchive" \
-            -exportPath "#{export_path}" \
-            PROVISIONING_PROFILE="#{Configuration.build_ios['provisioning_profile']}" \
-            CODE_SIGN_IDENTITY="#{Configuration.build_ios['code_sign_identity']}"
+            -exportPath "#{@workspace}/client" \
+            -exportOptionsPlist "#{@workspace}/client/iOSXCodeProject/exportOptions.plist"
         EOS
       end
+
+      mv 'client/Unity-iPhone.ipa', "client/build_#{Environment.version}.ipa"
     end
 
     def build_for_android
