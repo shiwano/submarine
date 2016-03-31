@@ -23,6 +23,11 @@ namespace Submarine.Battle
         {
             base.Tick();
             view.ActorPosition = motor.GetCurrentPosition();
+
+            if (!IsMine)
+            {
+                view.ActorDirection = motor.GetCurrentDirection();
+            }
         }
     }
 }

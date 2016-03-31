@@ -78,11 +78,11 @@ namespace Submarine.Battle
             convergenceFinishPosition = GetPosition(convergenceFinishesAt);
         }
 
-        public Quaternion GetCurrentRotation()
+        public float GetCurrentDirection()
         {
-            return movement == null ?
-                Quaternion.identity :
-                Quaternion.LookRotation(movement.NormalizedVelocity);
+            var direction = movement == null ? 0f : (float)movement.Direction;
+            direction = 360f - direction - 90f;
+            return direction > 360f ? direction - 360f : direction;
         }
 
         public Vector2 GetCurrentPosition()
