@@ -23,25 +23,16 @@ namespace Submarine.Battle
         public Quaternion DecoyLaunchSiteRotation { get { return decoyLaunchSite.rotation; } }
         public Vector3 LookoutLaunchSitePosition { get { return lookoutLaunchSite.position; } }
 
-        bool isMine;
-        public bool IsMine
-        {
-            get { return isMine; }
-            set
-            {
-                isMine = value;
-                if (!IsMine)
-                {
-                    model.GetComponent<MeshRenderer>().material = enemySubmarineMaterial;
-                }
-            }
-        }
-
         public void Turn(float rate)
         {
             var degree = transform.eulerAngles.y + rate * 1.5f;
             transform.localEulerAngles = new Vector3(0f, degree, 0f);
             model.transform.localRotation = Quaternion.Euler(new Vector3(0f, 0f, -rate * 25f));
+        }
+
+        public void ChangeToEnemyColor()
+        {
+            model.GetComponent<MeshRenderer>().material = enemySubmarineMaterial;
         }
 
         void Start()
