@@ -17,14 +17,11 @@ type meshData struct {
 	Triangles [][3]int     `json:"triangles"`
 }
 
-// Edge repsents a edge on the mesh.
-type Edge [2]*vec2.T
-
 // Mesh represents a navmesh.
 type Mesh struct {
 	Vertices          []*vec2.T
 	Triangles         []*Triangle
-	outerEdges        [][2]*vec2.T
+	outerEdges        []Edge
 	trianglesByVertex map[*vec2.T][]*Triangle
 	adjoiningVertices map[*vec2.T][]*vec2.T
 	distancesByVertex map[*vec2.T]map[*vec2.T]float64
@@ -79,10 +76,10 @@ func LoadMeshFromJSONFile(jsonPath string) (*Mesh, error) {
 			}
 		}
 	}
-	m.outerEdges = make([][2]*vec2.T, 0)
+	m.outerEdges = make([]Edge, 0)
 	for key, value := range rawEdges {
 		if value == 2 {
-			m.outerEdges = append(m.outerEdges, [2]*vec2.T{
+			m.outerEdges = append(m.outerEdges, Edge{
 				m.Vertices[key[0]],
 				m.Vertices[key[1]],
 			})
@@ -101,7 +98,7 @@ func LoadMeshFromJSONFile(jsonPath string) (*Mesh, error) {
 		m.adjoiningVertices[v] = m.findAdjoiningVertices(v)
 	}
 
-	// Distances
+	// DistancesByVertex
 	m.distancesByVertex = make(map[*vec2.T]map[*vec2.T]float64)
 	for _, v1 := range m.Vertices {
 		m.distancesByVertex[v1] = make(map[*vec2.T]float64)
@@ -167,15 +164,8 @@ func (m *Mesh) getOrCalculateDistance(from, to *vec2.T) float64 {
 
 func (m Mesh) intersectOuterEdges(p1, p2 *vec2.T) bool {
 	for _, edge := range m.outerEdges {
-		v1 := edge[0]
-		v2 := edge[1]
-
-		if ((p1[0]-p2[0])*(v1[1]-p1[1])+(p1[1]-p2[1])*(p1[0]-v1[0]))*
-			((p1[0]-p2[0])*(v2[1]-p1[1])+(p1[1]-p2[1])*(p1[0]-v2[0])) < 0 {
-			if ((v1[0]-v2[0])*(p1[1]-v1[1])+(v1[1]-v2[1])*(v1[0]-p1[0]))*
-				((v1[0]-v2[0])*(p2[1]-v1[1])+(v1[1]-v2[1])*(v1[0]-p2[0])) < 0 {
-				return true
-			}
+		if edge.intersect(p1, p2) {
+			return true
 		}
 	}
 	return false
