@@ -26,7 +26,7 @@ func (n *NavMesh) FindPath(start *vec2.T, goal *vec2.T) []vec2.T {
 	if startTriangle == nil || goalTriangle == nil {
 		return []vec2.T{}
 	}
-	if startTriangle == goalTriangle || !n.Mesh.intersectOuterEdges(start, goal) {
+	if startTriangle == goalTriangle || !n.Mesh.intersect(start, goal) {
 		return []vec2.T{*start, *goal}
 	}
 

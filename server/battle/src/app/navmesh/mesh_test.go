@@ -61,12 +61,12 @@ func TestMesh(t *testing.T) {
 			})
 		})
 
-		Convey("#intersectOuterEdges", func() {
+		Convey("#intersect", func() {
 			Convey("with intersected points", func() {
 				Convey("should return true", func() {
 					p1 := &vec2.T{0, 0}
 					p2 := &vec2.T{10, 0}
-					So(m.intersectOuterEdges(p1, p2), ShouldBeTrue)
+					So(m.intersect(p1, p2), ShouldBeTrue)
 				})
 			})
 
@@ -74,11 +74,11 @@ func TestMesh(t *testing.T) {
 				Convey("should return false", func() {
 					p1 := &vec2.T{0, 0}
 					p2 := &vec2.T{5, 0}
-					So(m.intersectOuterEdges(p1, p2), ShouldBeFalse)
+					So(m.intersect(p1, p2), ShouldBeFalse)
 
 					p1 = &vec2.T{3, 2}
 					p2 = &vec2.T{2, -10}
-					So(m.intersectOuterEdges(p1, p2), ShouldBeFalse)
+					So(m.intersect(p1, p2), ShouldBeFalse)
 				})
 			})
 		})

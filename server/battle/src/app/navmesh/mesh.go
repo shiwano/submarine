@@ -162,7 +162,7 @@ func (m *Mesh) getOrCalculateDistance(from, to *vec2.T) float64 {
 	return diff.Length()
 }
 
-func (m Mesh) intersectOuterEdges(p1, p2 *vec2.T) bool {
+func (m Mesh) intersect(p1, p2 *vec2.T) bool {
 	for _, edge := range m.outerEdges {
 		if edge.intersect(p1, p2) {
 			return true
