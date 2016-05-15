@@ -5,7 +5,7 @@ namespace Submarine.Battle
 {
     public abstract class ActorView : MonoBehaviour
     {
-        const float PositionY = 20f;
+        const float PositionY = 30f;
         const float DirectionTweenDuration = 3f;
 
         public Vector2 ActorPosition
