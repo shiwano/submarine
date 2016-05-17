@@ -8,6 +8,11 @@ declare module Submarine.Battle {
     Lookout,
   }
 
+  interface MeshData {
+    vertices: Point[];
+    triangles: integer[];
+  }
+
   interface Point {
     x: number;
     y: number;
