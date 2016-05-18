@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using UnityEditor;
+using System.Linq;
 using System.IO;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -39,10 +40,16 @@ public class NavMeshPostprocessor : AssetPostprocessor
 
         builder.Append("],\"triangles\":[");
 
-        for (var i = 0; i < mesh.triangles.Length; i++)
+        var triangles = mesh.triangles
+            .Select((v, i) => new { Index = i, Value = v })
+            .GroupBy(p => p.Index / 3)
+            .Select(g => g.Select(p => p.Value).ToArray())
+            .ToArray();
+        for (var i = 0; i < triangles.Length; i++)
         {
-            builder.Append(mesh.triangles[i].ToString());
-            if (i < mesh.triangles.Length - 1)
+            var triangle = triangles[i];
+            builder.Append(string.Format("[{0},{1},{2}]", triangle[0], triangle[1], triangle[2]));
+            if (i < triangles.Length - 1)
             {
                 builder.Append(",");
             }
