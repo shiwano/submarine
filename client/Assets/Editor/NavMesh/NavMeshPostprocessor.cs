@@ -1,9 +1,8 @@
 ﻿using UnityEngine;
 using UnityEditor;
-using System.Linq;
 using System.IO;
+using System.Text;
 using System.Text.RegularExpressions;
-using Type = TyphenApi.Type.Submarine;
 
 public class NavMeshPostprocessor : AssetPostprocessor
 {
@@ -19,18 +18,38 @@ public class NavMeshPostprocessor : AssetPostprocessor
         if (!IsTargetAsset) return;
 
         var mesh = go.GetComponent<MeshFilter>().sharedMesh;
-        var meshData = ExtractMeshData(mesh);
+        var meshData = ConvertMeshToJSON(mesh);
         var outputPath = Regex.Replace(assetPath, "NavMesh.fbx", "NavMesh.json");
-        WriteTextToFile(outputPath, meshData.ToJSON());
+        WriteTextToFile(outputPath, meshData);
     }
 
-    Type.Battle.MeshData ExtractMeshData(Mesh mesh)
+    string ConvertMeshToJSON(Mesh mesh)
     {
-        return new Type.Battle.MeshData()
+        var builder = new StringBuilder("{\"vertices\":[");
+
+        for (var i = 0; i < mesh.vertices.Length; i++)
         {
-            Vertices = mesh.vertices.Select(v => new Type.Battle.Point() { X = v.x, Y = v.z }).ToList(),
-            Triangles = mesh.triangles.Select(i => (long)i).ToList(),
-        };
+            var vertex = mesh.vertices[i];
+            builder.Append(string.Format("{{\"x\":{0},\"y\":{1}}}", vertex.x, vertex.z));
+            if (i < mesh.vertices.Length - 1)
+            {
+                builder.Append(",");
+            }
+        }
+
+        builder.Append("],\"triangles\":[");
+
+        for (var i = 0; i < mesh.triangles.Length; i++)
+        {
+            builder.Append(mesh.triangles[i].ToString());
+            if (i < mesh.triangles.Length - 1)
+            {
+                builder.Append(",");
+            }
+        }
+
+        builder.Append("]}");
+        return builder.ToString();
     }
 
     void WriteTextToFile(string outputPath, string contents)
