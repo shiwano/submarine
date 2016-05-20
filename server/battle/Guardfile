@@ -1,4 +1,4 @@
-guard 'shell' do
+guard :shell, run_all: 'SUBMARINE_ENV=test gb test -v' do
   watch(/^src\/(.*).go/) do |m|
     package_name = Pathname.new(m[0]).dirname.to_s.gsub('src/', '')
     `SUBMARINE_ENV=test gb test -v #{package_name}`
