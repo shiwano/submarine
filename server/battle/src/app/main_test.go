@@ -2,7 +2,6 @@ package main_test
 
 import (
 	"app"
-	"app/conn"
 	"app/logger"
 	"app/typhenapi/core"
 	webapi "app/typhenapi/web/submarine"
@@ -12,6 +11,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/k0kubun/pp"
 	"io/ioutil"
+	"lib/conn"
 	"net/http"
 	"net/http/httptest"
 	"strings"

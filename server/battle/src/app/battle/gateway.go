@@ -2,9 +2,9 @@ package battle
 
 import (
 	"app/battle/context"
-	"app/currentmillis"
 	"app/typhenapi/core"
 	"app/typhenapi/type/submarine/battle"
+	"lib/currentmillis"
 	"time"
 )
 

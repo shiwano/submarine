@@ -1,12 +1,12 @@
 package battle
 
 import (
-	"app/atomicbool"
 	"app/battle/actor"
 	"app/battle/context"
 	"app/battle/event"
 	"app/logger"
 	"app/typhenapi/type/submarine/battle"
+	"lib/atomicbool"
 	"time"
 )
 

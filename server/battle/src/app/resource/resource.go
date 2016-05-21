@@ -2,7 +2,7 @@ package resource
 
 import (
 	"app/config"
-	"app/navmesh"
+	"lib/navmesh"
 	"path"
 	"runtime"
 )

@@ -1,8 +1,8 @@
 package resource
 
 import (
-	"app/navmesh"
 	"fmt"
+	"lib/navmesh"
 	"path"
 	"sync"
 )

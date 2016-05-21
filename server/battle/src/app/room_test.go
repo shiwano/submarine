@@ -1,10 +1,10 @@
 package main_test
 
 import (
-	"app/currentmillis"
 	"app/typhenapi/type/submarine"
 	"app/typhenapi/type/submarine/battle"
 	. "github.com/smartystreets/goconvey/convey"
+	"lib/currentmillis"
 	"testing"
 )
 

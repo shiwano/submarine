@@ -1,14 +1,14 @@
 package main
 
 import (
-	"app/conn"
-	"app/currentmillis"
 	"app/logger"
 	"app/typhenapi/core"
 	"app/typhenapi/type/submarine"
 	"app/typhenapi/type/submarine/battle"
 	api "app/typhenapi/websocket/submarine"
 	"github.com/gorilla/websocket"
+	"lib/conn"
+	"lib/currentmillis"
 	"net/http"
 )
 
