@@ -1,15 +1,14 @@
-package currentmillis_test
+package currentmillis
 
 import (
-	"app/currentmillis"
 	"testing"
 	"time"
 )
 
 func TestStubNow(t *testing.T) {
-	currentmillis.StubNow = func() int64 { return 1 }
-	actual := currentmillis.Now()
-	currentmillis.StubNow = nil
+	StubNow = func() int64 { return 1 }
+	actual := Now()
+	StubNow = nil
 
 	if actual != 1 {
 		t.Error("Failed to set stub")
@@ -18,7 +17,7 @@ func TestStubNow(t *testing.T) {
 }
 
 func TestMillis(t *testing.T) {
-	actual := currentmillis.Millis(time.Date(2016, time.January, 31, 14, 11, 54, 921*1000000, time.UTC))
+	actual := Millis(time.Date(2016, time.January, 31, 14, 11, 54, 921*1000000, time.UTC))
 	var expected int64 = 1454249514921
 
 	if actual != expected {
@@ -27,7 +26,7 @@ func TestMillis(t *testing.T) {
 }
 
 func TestTime(t *testing.T) {
-	actualTime := currentmillis.Time(1454249514921)
+	actualTime := Time(1454249514921)
 	actual := actualTime.UTC().String()
 	expected := "2016-01-31 14:11:54.921 +0000 UTC"
 
@@ -37,7 +36,7 @@ func TestTime(t *testing.T) {
 }
 
 func TestDuration(t *testing.T) {
-	actual := currentmillis.Duration(1000)
+	actual := Duration(1000)
 	expected := time.Second
 
 	if actual != expected {
@@ -46,7 +45,7 @@ func TestDuration(t *testing.T) {
 }
 
 func TestDurationMillis(t *testing.T) {
-	actual := currentmillis.DurationMillis(1 * time.Second)
+	actual := DurationMillis(1 * time.Second)
 	var expected int64 = 1000
 
 	if actual != expected {
