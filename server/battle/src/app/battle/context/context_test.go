@@ -2,6 +2,7 @@ package context
 
 import (
 	"app/battle/event"
+	"app/resource"
 	"app/typhenapi/type/submarine/battle"
 	. "github.com/smartystreets/goconvey/convey"
 	"testing"
@@ -9,7 +10,8 @@ import (
 
 func TestContextTest(t *testing.T) {
 	Convey("Context", t, func() {
-		battleContext := NewContext()
+		stageMesh, _ := resource.Loader.LoadStageMesh(1)
+		battleContext := NewContext(stageMesh)
 
 		Convey("when an actor is created", func() {
 			Convey("should add the actor", func() {

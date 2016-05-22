@@ -3,6 +3,7 @@ package main
 import (
 	battleLogic "app/battle"
 	"app/logger"
+	"app/resource"
 	"app/typhenapi/core"
 	"app/typhenapi/type/submarine"
 	"app/typhenapi/type/submarine/battle"
@@ -38,12 +39,18 @@ func newRoom(id int64) (*Room, error) {
 		return nil, fmt.Errorf("No room(%v) found", id)
 	}
 
+	// TODO: Specify relevant stage code.
+	stageMesh, err := resource.Loader.LoadStageMesh(1)
+	if err != nil {
+		return nil, err
+	}
+
 	room := &Room{
 		id:       id,
 		webAPI:   webAPI,
 		info:     res.Room,
 		sessions: make(map[int64]*Session),
-		battle:   battleLogic.New(time.Second * 60),
+		battle:   battleLogic.New(time.Second*60, stageMesh),
 		joinCh:   make(chan *Session, 4),
 		leaveCh:  make(chan *Session, 4),
 		closeCh:  make(chan struct{}, 1),

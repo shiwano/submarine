@@ -2,6 +2,7 @@ package context
 
 import (
 	"app/battle/event"
+	"lib/navmesh"
 	"time"
 )
 
@@ -9,13 +10,15 @@ import (
 type Context struct {
 	Now       time.Time
 	Event     *event.Emitter
+	Stage     *navmesh.NavMesh
 	container *container
 }
 
 // NewContext creates a contest.
-func NewContext() *Context {
+func NewContext(stageMesh *navmesh.Mesh) *Context {
 	c := &Context{
 		Event:     event.New(),
+		Stage:     navmesh.New(stageMesh),
 		container: newContainer(),
 	}
 	c.Event.On(event.ActorCreate, c.onActorCreate)

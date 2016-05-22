@@ -7,6 +7,7 @@ import (
 	"app/logger"
 	"app/typhenapi/type/submarine/battle"
 	"lib/atomicbool"
+	"lib/navmesh"
 	"time"
 )
 
@@ -25,11 +26,10 @@ type Battle struct {
 }
 
 // New creates a new battle.
-func New(timeLimit time.Duration) *Battle {
-	battleContext := context.NewContext()
-	b := &Battle{
+func New(timeLimit time.Duration, stageMesh *navmesh.Mesh) *Battle {
+	return &Battle{
 		Gateway:       newGateway(),
-		context:       battleContext,
+		context:       context.NewContext(stageMesh),
 		createdAt:     time.Now(),
 		timeLimit:     timeLimit,
 		isFighting:    atomicbool.New(false),
@@ -37,7 +37,6 @@ func New(timeLimit time.Duration) *Battle {
 		leaveUserCh:   make(chan int64, 4),
 		closeCh:       make(chan struct{}, 1),
 	}
-	return b
 }
 
 // StartIfPossible starts the battle that is startable.

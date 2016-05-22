@@ -1,6 +1,7 @@
 package battle
 
 import (
+	"app/resource"
 	. "github.com/smartystreets/goconvey/convey"
 	"testing"
 	"time"
@@ -8,7 +9,8 @@ import (
 
 func TestBattle(t *testing.T) {
 	Convey("Battle", t, func() {
-		battle := New(60 * time.Second)
+		stageMesh, _ := resource.Loader.LoadStageMesh(1)
+		battle := New(60*time.Second, stageMesh)
 
 		Convey("#EnterUser", func() {
 			Convey("should create the submarine", func() {
