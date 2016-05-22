@@ -11,35 +11,23 @@ import (
 var Loader = newLoader()
 
 type loader struct {
-	battleMapMeshes      map[int64]*navmesh.Mesh
-	battleMapMeshesMutex *sync.Mutex
+	stageMeshes       map[int64]*navmesh.Mesh
+	stagesMeshesMutex *sync.Mutex
 }
 
 func newLoader() *loader {
 	return &loader{
-		battleMapMeshes:      make(map[int64]*navmesh.Mesh),
-		battleMapMeshesMutex: new(sync.Mutex),
+		stageMeshes:       make(map[int64]*navmesh.Mesh),
+		stagesMeshesMutex: new(sync.Mutex),
 	}
 }
 
-// LoadBattleMap loads the specified battle map.
-func (l *loader) LoadBattleMap(code int64) (*BattleMap, error) {
-	mesh, err := l.getOrLoadBattleMapMesh(code)
-	if err != nil {
-		return nil, err
-	}
-	battleMap := &BattleMap{
-		Code:    code,
-		NavMesh: navmesh.New(mesh),
-	}
-	return battleMap, nil
-}
+// LoadStageMesh loads the specified stage mesh.
+func (l *loader) LoadStageMesh(code int64) (*navmesh.Mesh, error) {
+	l.stagesMeshesMutex.Lock()
+	defer l.stagesMeshesMutex.Unlock()
 
-func (l *loader) getOrLoadBattleMapMesh(code int64) (*navmesh.Mesh, error) {
-	l.battleMapMeshesMutex.Lock()
-	defer l.battleMapMeshesMutex.Unlock()
-
-	if mesh, ok := l.battleMapMeshes[code]; ok {
+	if mesh, ok := l.stageMeshes[code]; ok {
 		return mesh, nil
 	}
 
@@ -48,6 +36,6 @@ func (l *loader) getOrLoadBattleMapMesh(code int64) (*navmesh.Mesh, error) {
 	if err != nil {
 		return nil, err
 	}
-	l.battleMapMeshes[code] = mesh
+	l.stageMeshes[code] = mesh
 	return mesh, nil
 }

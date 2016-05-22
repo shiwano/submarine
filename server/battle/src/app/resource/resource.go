@@ -2,18 +2,11 @@ package resource
 
 import (
 	"app/config"
-	"lib/navmesh"
 	"path"
 	"runtime"
 )
 
 var clientAssetDir string
-
-// BattleMap represents a battle map resource.
-type BattleMap struct {
-	Code    int64
-	NavMesh *navmesh.NavMesh
-}
 
 func init() {
 	_, filename, _, _ := runtime.Caller(1)
