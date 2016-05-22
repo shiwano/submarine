@@ -12,7 +12,7 @@ import (
 var p = pp.Println
 
 const (
-	accelerationMaxSpeed = 2
+	accelerationMaxSpeed = 6
 	accelerationDuration = 3 * time.Second
 )
 
