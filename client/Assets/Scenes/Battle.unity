@@ -1134,8 +1134,8 @@ Transform:
   m_Children:
   - {fileID: 1473723661}
   - {fileID: 1474870746}
-  - {fileID: 606471102}
   - {fileID: 2056954965}
+  - {fileID: 606471102}
   m_Father: {fileID: 1262540244}
   m_RootOrder: 0
 --- !u!114 &918348794
@@ -2801,7 +2801,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 2056954965}
   m_Layer: 0
-  m_Name: Map
+  m_Name: Stage
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2819,7 +2819,7 @@ Transform:
   m_Children:
   - {fileID: 1079031237}
   m_Father: {fileID: 918348793}
-  m_RootOrder: 3
+  m_RootOrder: 2
 --- !u!1 &2104265935
 GameObject:
   m_ObjectHideFlags: 0
