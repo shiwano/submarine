@@ -6,8 +6,10 @@ import (
 
 // NavMesh represents a navmesh.
 type NavMesh struct {
-	Mesh          *Mesh
-	HeuristicFunc func(from, to *vec2.T) float64
+	Mesh                *Mesh
+	HeuristicFunc       func(from, to *vec2.T) float64
+	Objects             map[int64]Object
+	lastCreatedObjectID int64
 }
 
 // New creates a nevmesh.
@@ -15,7 +17,26 @@ func New(mesh *Mesh) *NavMesh {
 	return &NavMesh{
 		Mesh:          mesh,
 		HeuristicFunc: calculateOctileDistance,
+		Objects:       make(map[int64]Object),
 	}
+}
+
+// CreateAgent creates an agent.
+func (n *NavMesh) CreateAgent(size float64, position *vec2.T) *Agent {
+	n.lastCreatedObjectID++
+	agent := &Agent{
+		id:       n.lastCreatedObjectID,
+		navMesh:  n,
+		size:     size,
+		position: position,
+	}
+	n.Objects[agent.id] = agent
+	return agent
+}
+
+// DestroyObject destroys the specified object.
+func (n *NavMesh) DestroyObject(objectID int64) {
+	delete(n.Objects, objectID)
 }
 
 // FindPath finds a path on the navmesh.

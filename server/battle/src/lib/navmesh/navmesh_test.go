@@ -11,7 +11,23 @@ func TestNavMesh(t *testing.T) {
 		mesh, _ := LoadMeshFromJSONFile("fixtures/mesh.json")
 		navmesh := New(mesh)
 
-		Convey("#findPath", func() {
+		Convey("#CreateAgent", func() {
+			Convey("should creates an agent", func() {
+				agent := navmesh.CreateAgent(1, &vec2.Zero)
+				So(agent.ID(), ShouldEqual, 1)
+				So(navmesh.Objects[1], ShouldEqual, agent)
+			})
+		})
+
+		Convey("#DestoryObject", func() {
+			Convey("should destroys the specified object", func() {
+				agent := navmesh.CreateAgent(1, &vec2.Zero)
+				navmesh.DestroyObject(agent.ID())
+				So(navmesh.Objects, ShouldNotContainKey, (int64)(1))
+			})
+		})
+
+		Convey("#FindPath", func() {
 			Convey("with points that are inside the same triangle", func() {
 				Convey("should return the path", func() {
 					start := &vec2.T{-7, 3.5}
