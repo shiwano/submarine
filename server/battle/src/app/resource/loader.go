@@ -31,7 +31,7 @@ func (l *loader) LoadStageMesh(code int64) (*navmesh.Mesh, error) {
 		return mesh, nil
 	}
 
-	assetPath := fmt.Sprintf("Art/Maps/%03d/NavMesh.json", code)
+	assetPath := fmt.Sprintf("Art/Stages/%03d/NavMesh.json", code)
 	mesh, err := navmesh.LoadMeshFromJSONFile(path.Join(clientAssetDir, assetPath))
 	if err != nil {
 		return nil, err
