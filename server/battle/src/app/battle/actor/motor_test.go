@@ -201,6 +201,37 @@ func TestMotor(t *testing.T) {
 					})
 				})
 			})
+
+			Convey("when the accelerator is idling", func() {
+				m.accelerate()
+				c.Now, _ = time.Parse(timeLayout, "00:00:01.000")
+				m.idle(m.position())
+
+				Convey("should return the idling position", func() {
+					So(m.position()[0], ShouldAlmostEqual, 1+0.3)
+					So(m.position()[1], ShouldAlmostEqual, 1)
+				})
+
+				Convey("some seconds later", func() {
+					c.Now, _ = time.Parse(timeLayout, "00:00:05.000")
+
+					Convey("should return the idling position", func() {
+						So(m.position()[0], ShouldAlmostEqual, 1+0.3)
+						So(m.position()[1], ShouldAlmostEqual, 1)
+					})
+				})
+
+				Convey("when the motor stop idling", func() {
+					c.Now, _ = time.Parse(timeLayout, "00:00:05.000")
+					m.accelerate()
+					c.Now, _ = time.Parse(timeLayout, "00:00:06.000")
+
+					Convey("should keep accelerating", func() {
+						So(m.position()[0], ShouldAlmostEqual, 1+0.3+3)
+						So(m.position()[1], ShouldAlmostEqual, 1)
+					})
+				})
+			})
 		})
 	})
 }

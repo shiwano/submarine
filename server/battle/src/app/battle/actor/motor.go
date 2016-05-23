@@ -55,21 +55,21 @@ func (m *motor) toAPIType(actorID int64) *battle.Movement {
 func (m *motor) accelerate() {
 	m.initialPosition = m.position()
 	m.initialSpeed = m.accelerator.speed()
-	m.accelerator.refreshAccelerating(true)
+	m.accelerator.refresh(true, false)
 	m.changedAt = m.context.Now
 }
 
 func (m *motor) brake() {
 	m.initialPosition = m.position()
 	m.initialSpeed = m.accelerator.speed()
-	m.accelerator.refreshAccelerating(false)
+	m.accelerator.refresh(false, false)
 	m.changedAt = m.context.Now
 }
 
 func (m *motor) turn(direction float64) {
 	m.initialPosition = m.position()
 	m.initialSpeed = m.accelerator.speed()
-	m.accelerator.refreshAccelerating(m.accelerator.isAccelerating)
+	m.accelerator.refresh(m.accelerator.isAccelerating, false)
 	m.direction = direction
 	m.normalizedVelocity = &vec2.T{
 		math.Cos(direction * deg2Rad),
@@ -78,7 +78,18 @@ func (m *motor) turn(direction float64) {
 	m.changedAt = m.context.Now
 }
 
+func (m *motor) idle(idlingPosition *vec2.T) {
+	m.initialPosition = idlingPosition
+	m.initialSpeed = m.accelerator.speed()
+	m.accelerator.refresh(m.accelerator.isAccelerating, true)
+	m.changedAt = m.context.Now
+}
+
 func (m *motor) position() *vec2.T {
+	if m.accelerator.isIdling || m.accelerator.isShutdown {
+		return &(*m.initialPosition)
+	}
+
 	var t1, t2 float64
 	if m.context.Now.After(m.accelerator.reachedMaxSpeedAt) {
 		t1 = m.accelerator.reachedMaxSpeedAt.Sub(m.changedAt).Seconds()
@@ -104,13 +115,14 @@ type accelerator struct {
 	duration          time.Duration
 	startRate         float64
 	isShutdown        bool
+	isIdling          bool
 	isAccelerating    bool
 	changedAt         time.Time
 	reachedMaxSpeedAt time.Time
 }
 
 func (a *accelerator) toAPIType() *battle.Accelerator {
-	if a.isShutdown {
+	if a.isIdling || a.isShutdown {
 		return nil
 	}
 	return &battle.Accelerator{
@@ -121,9 +133,10 @@ func (a *accelerator) toAPIType() *battle.Accelerator {
 	}
 }
 
-func (a *accelerator) refreshAccelerating(isAccelerating bool) {
+func (a *accelerator) refresh(isAccelerating bool, isIdling bool) {
 	a.startRate = a.rate()
 	a.isShutdown = false
+	a.isIdling = isIdling
 	a.isAccelerating = isAccelerating
 	a.changedAt = a.context.Now
 	remainingRate := a.startRate
