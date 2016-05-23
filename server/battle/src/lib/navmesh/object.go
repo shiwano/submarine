@@ -8,6 +8,6 @@ import (
 type Object interface {
 	ID() int64
 	Position() *vec2.T
-	Size() float64
+	SizeRadius() float64
 	Destroy()
 }

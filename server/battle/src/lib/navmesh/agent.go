@@ -10,7 +10,7 @@ type Agent struct {
 	navMesh         *NavMesh
 	currentTriangle *Triangle
 	position        *vec2.T
-	size            float64
+	sizeRadius      float64
 }
 
 // ID returns the object ID.
@@ -23,9 +23,9 @@ func (a *Agent) Position() *vec2.T {
 	return a.position
 }
 
-// Size returns the agent size.
-func (a *Agent) Size() float64 {
-	return a.size
+// SizeRadius returns the agent size radius.
+func (a *Agent) SizeRadius() float64 {
+	return a.sizeRadius
 }
 
 // Destroy destroys self.
