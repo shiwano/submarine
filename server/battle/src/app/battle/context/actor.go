@@ -17,6 +17,7 @@ type Actor interface {
 
 	Position() *vec2.T
 	Start()
+	BeforeUpdate()
 	Update()
 	OnDestroy()
 }

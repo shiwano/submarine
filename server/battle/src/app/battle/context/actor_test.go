@@ -59,6 +59,9 @@ func (a *actor) Position() *vec2.T {
 	return &vec2.Zero
 }
 
+func (a *actor) BeforeUpdate() {
+}
+
 func (a *actor) Start() {
 	a.isCalledStart = true
 }

@@ -6,6 +6,7 @@ import (
 	"app/typhenapi/type/submarine/battle"
 	"github.com/k0kubun/pp"
 	"github.com/ungerik/go3d/float64/vec2"
+	"lib/navmesh"
 	"time"
 )
 
@@ -17,23 +18,24 @@ const (
 )
 
 type actor struct {
-	id        int64
-	userID    int64
-	actorType battle.ActorType
-	context   *context.Context
-	event     *event.Emitter
-	motor     *motor
+	id         int64
+	userID     int64
+	actorType  battle.ActorType
+	context    *context.Context
+	event      *event.Emitter
+	motor      *motor
+	stageAgent *navmesh.Agent
 }
 
 func newActor(battleContext *context.Context, userID int64, actorType battle.ActorType) *actor {
 	return &actor{
-		id:        battleContext.NextActorID(),
-		userID:    userID,
-		actorType: actorType,
-		context:   battleContext,
-		event:     event.New(),
-		motor: newMotor(battleContext, &vec2.Zero,
-			accelerationMaxSpeed, accelerationDuration),
+		id:         battleContext.NextActorID(),
+		userID:     userID,
+		actorType:  actorType,
+		context:    battleContext,
+		event:      event.New(),
+		motor:      newMotor(battleContext, &vec2.Zero, accelerationMaxSpeed, accelerationDuration),
+		stageAgent: battleContext.Stage.CreateAgent(1, &vec2.Zero),
 	}
 }
 
@@ -54,6 +56,7 @@ func (a *actor) Event() *event.Emitter {
 }
 
 func (a *actor) Destroy() {
+	a.stageAgent.Destroy()
 	a.context.Event.Emit(event.ActorDestroy, a)
 }
 
@@ -62,7 +65,15 @@ func (a *actor) Movement() *battle.Movement {
 }
 
 func (a *actor) Position() *vec2.T {
-	return a.motor.position()
+	return a.stageAgent.Position()
+}
+
+func (a *actor) BeforeUpdate() {
+	position := a.motor.position()
+	if !a.stageAgent.Move(position) {
+		a.motor.idle(a.stageAgent.Position())
+		a.context.Event.Emit(event.ActorMove, a)
+	}
 }
 
 func (a *actor) accelerate(direction float64) {
