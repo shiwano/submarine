@@ -35,7 +35,7 @@ func newActor(battleContext *context.Context, userID int64, actorType battle.Act
 		context:    battleContext,
 		event:      event.New(),
 		motor:      newMotor(battleContext, &vec2.Zero, accelerationMaxSpeed, accelerationDuration),
-		stageAgent: battleContext.Stage.CreateAgent(1, &vec2.Zero),
+		stageAgent: battleContext.Stage.CreateAgent(21, &vec2.Zero),
 	}
 }
 
