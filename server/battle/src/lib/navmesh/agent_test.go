@@ -10,7 +10,7 @@ func TestAgent(t *testing.T) {
 	Convey("Agent", t, func() {
 		mesh, _ := LoadMeshFromJSONFile("fixtures/mesh.json")
 		navmesh := New(mesh)
-		agent := navmesh.CreateAgent(1, &vec2.Zero)
+		agent := navmesh.CreateAgent(6, &vec2.Zero)
 
 		Convey("should implement Object interface", func() {
 			So(agent, ShouldImplement, (*Object)(nil))
@@ -28,6 +28,10 @@ func TestAgent(t *testing.T) {
 			Convey("with the position which is out of the mesh", func() {
 				Convey("should not set the position", func() {
 					agent.Move(&vec2.T{9999, 9999})
+					So(agent.Position()[0], ShouldEqual, 0)
+					So(agent.Position()[1], ShouldEqual, 0)
+
+					agent.Move(&vec2.T{-8, 0})
 					So(agent.Position()[0], ShouldEqual, 0)
 					So(agent.Position()[1], ShouldEqual, 0)
 				})
