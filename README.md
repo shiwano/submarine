@@ -10,7 +10,8 @@ Install tools.
 
 ```bash
 $ brew install ruby node
-$ gem install rake plist
+$ gem install bundler
+$ bundle install
 $ npm install -g typhen
 ```
 
@@ -24,5 +25,5 @@ $ vi config.development.yml # Write the build settings.
 Output tasks.
 
 ```bash
-$ rake -T
+$ bundle exec rake -T
 ```
