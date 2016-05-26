@@ -4,7 +4,7 @@ import (
 	"github.com/ungerik/go3d/float64/vec2"
 )
 
-// Edge repsents a edge on the mesh.
+// Edge represents a edge on the mesh.
 type Edge [2]*vec2.T
 
 func (e Edge) vector() vec2.T {
