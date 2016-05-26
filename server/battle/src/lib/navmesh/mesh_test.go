@@ -66,7 +66,7 @@ func TestMesh(t *testing.T) {
 				Convey("should return the intersection point", func() {
 					p1 := &vec2.T{0, 0}
 					p2 := &vec2.T{10, 0}
-					So(m.intersect(p1, p2), ShouldNotBeNil)
+					So(m.intersectWithLine(p1, p2), ShouldNotBeNil)
 				})
 			})
 
@@ -74,11 +74,11 @@ func TestMesh(t *testing.T) {
 				Convey("should return nil", func() {
 					p1 := &vec2.T{0.00000000001, 0}
 					p2 := &vec2.T{5, 0}
-					So(m.intersect(p1, p2), ShouldBeNil)
+					So(m.intersectWithLine(p1, p2), ShouldBeNil)
 
 					p1 = &vec2.T{3, 2}
 					p2 = &vec2.T{2, -10}
-					So(m.intersect(p1, p2), ShouldBeNil)
+					So(m.intersectWithLine(p1, p2), ShouldBeNil)
 				})
 			})
 		})

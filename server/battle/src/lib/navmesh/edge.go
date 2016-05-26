@@ -15,7 +15,7 @@ func (e Edge) cross(a, b *vec2.T) float64 {
 	return a[1]*b[0] - a[0]*b[1]
 }
 
-func (e Edge) intersect(p1, p2 *vec2.T) *vec2.T {
+func (e Edge) intersectWithLine(p1, p2 *vec2.T) *vec2.T {
 	v1 := e.vector()
 	v2 := vec2.Sub(p2, p1)
 
