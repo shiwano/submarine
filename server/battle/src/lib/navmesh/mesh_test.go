@@ -63,22 +63,22 @@ func TestMesh(t *testing.T) {
 
 		Convey("#intersect", func() {
 			Convey("with intersected points", func() {
-				Convey("should return true", func() {
+				Convey("should return the intersection point", func() {
 					p1 := &vec2.T{0, 0}
 					p2 := &vec2.T{10, 0}
-					So(m.intersect(p1, p2), ShouldBeTrue)
+					So(m.intersect(p1, p2), ShouldNotBeNil)
 				})
 			})
 
 			Convey("with no-intersected points", func() {
-				Convey("should return false", func() {
+				Convey("should return nil", func() {
 					p1 := &vec2.T{0.00000000001, 0}
 					p2 := &vec2.T{5, 0}
-					So(m.intersect(p1, p2), ShouldBeFalse)
+					So(m.intersect(p1, p2), ShouldBeNil)
 
 					p1 = &vec2.T{3, 2}
 					p2 = &vec2.T{2, -10}
-					So(m.intersect(p1, p2), ShouldBeFalse)
+					So(m.intersect(p1, p2), ShouldBeNil)
 				})
 			})
 		})
