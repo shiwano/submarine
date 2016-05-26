@@ -1,0 +1,11 @@
+GEM
+  specs:
+    plist (3.2.0)
+    rake (10.4.2)
+
+PLATFORMS
+  ruby
+
+DEPENDENCIES
+  plist
+  rake
