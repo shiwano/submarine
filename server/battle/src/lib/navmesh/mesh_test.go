@@ -61,6 +61,24 @@ func TestMesh(t *testing.T) {
 			})
 		})
 
+		Convey("#isIntersectWithLine", func() {
+			Convey("with intersected points", func() {
+				Convey("should return true", func() {
+					p1 := &vec2.T{1, 0}
+					p2 := &vec2.T{1, 10}
+					So(m.isIntersectedWithLine(p1, p2), ShouldBeTrue)
+				})
+			})
+
+			Convey("with no-intersected points", func() {
+				Convey("should return false", func() {
+					p1 := &vec2.T{999, 999}
+					p2 := &vec2.T{1000, 1000}
+					So(m.isIntersectedWithLine(p1, p2), ShouldBeFalse)
+				})
+			})
+		})
+
 		Convey("#intersectWithLine", func() {
 			Convey("with intersected points", func() {
 				Convey("should return the intersection point", func() {
