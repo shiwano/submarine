@@ -61,12 +61,24 @@ func TestMesh(t *testing.T) {
 			})
 		})
 
-		Convey("#intersect", func() {
+		Convey("#intersectWithLine", func() {
 			Convey("with intersected points", func() {
 				Convey("should return the intersection point", func() {
-					p1 := &vec2.T{0, 0}
+					p1 := &vec2.T{1, 0}
 					p2 := &vec2.T{10, 0}
-					So(m.intersectWithLine(p1, p2), ShouldNotBeNil)
+					result := m.intersectWithLine(p1, p2)
+					So(result[0], ShouldEqual, 8.875)
+					So(result[1], ShouldEqual, 0)
+				})
+			})
+
+			Convey("with intersected points which has multi intersection points", func() {
+				Convey("should return the most neaby intersection point", func() {
+					p1 := &vec2.T{-7, 3.5}
+					p2 := &vec2.T{-1, -11}
+					result := m.intersectWithLine(p1, p2)
+					So(result[0], ShouldEqual, -5.551724137931035)
+					So(result[1], ShouldEqual, 0)
 				})
 			})
 
