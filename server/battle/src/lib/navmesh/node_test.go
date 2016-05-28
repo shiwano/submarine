@@ -1,6 +1,7 @@
 package navmesh
 
 import (
+	"container/heap"
 	. "github.com/smartystreets/goconvey/convey"
 	"testing"
 )
@@ -11,6 +12,10 @@ func TestNodeHeap(t *testing.T) {
 			&node{fScore: 10},
 			&node{fScore: 3},
 			&node{fScore: 5},
+		})
+
+		Convey("should implement heap interface", func() {
+			So(nodeHeap, ShouldImplement, (*heap.Interface)(nil))
 		})
 
 		Convey(".pushNode", func() {
