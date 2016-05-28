@@ -162,21 +162,20 @@ func (m *Mesh) getOrCalculateDistance(from, to *vec2.T) float64 {
 	return diff.Length()
 }
 
-func (m Mesh) isIntersectedWithLine(p1, p2 *vec2.T) bool {
+func (m Mesh) isIntersectedWithLine(lineOrigin *vec2.T, lineVector vec2.T) bool {
 	for _, edge := range m.outerEdges {
-		if point := edge.intersectWithLine(p1, p2); point != nil {
+		if point := edge.intersectWithLine(lineOrigin, lineVector); point != nil {
 			return true
 		}
 	}
 	return false
 }
 
-func (m Mesh) intersectWithLine(p1, p2 *vec2.T) *vec2.T {
+func (m Mesh) intersectWithLine(lineOrigin *vec2.T, lineVector vec2.T) *vec2.T {
 	var result *vec2.T
 	for _, edge := range m.outerEdges {
-		if point := edge.intersectWithLine(p1, p2); point != nil {
+		if point := edge.intersectWithLine(lineOrigin, lineVector); point != nil {
 			if result == nil || point.LengthSqr() < result.LengthSqr() {
-
 				result = point
 			}
 		}

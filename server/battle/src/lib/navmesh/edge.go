@@ -15,16 +15,16 @@ func (e Edge) cross(a, b *vec2.T) float64 {
 	return a[1]*b[0] - a[0]*b[1]
 }
 
-func (e Edge) intersectWithLine(p1, p2 *vec2.T) *vec2.T {
+func (e Edge) intersectWithLine(lineOrigin *vec2.T, lineVector vec2.T) *vec2.T {
 	v1 := e.vector()
-	v2 := vec2.Sub(p2, p1)
+	v2 := lineVector
 
 	crossV1andV2 := e.cross(&v1, &v2)
 	if crossV1andV2 == 0 {
 		return nil
 	}
 
-	v := vec2.Sub(p1, e[0])
+	v := vec2.Sub(lineOrigin, e[0])
 	crossVandV1 := e.cross(&v, &v1)
 	t2 := crossVandV1 / crossV1andV2
 	if t2 < 0 || t2 > 1 {
