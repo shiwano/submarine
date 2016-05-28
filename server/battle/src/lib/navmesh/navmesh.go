@@ -25,10 +25,12 @@ func New(mesh *Mesh) *NavMesh {
 func (n *NavMesh) CreateAgent(size float64, position *vec2.T) *Agent {
 	n.lastCreatedObjectID++
 	agent := &Agent{
-		id:         n.lastCreatedObjectID,
-		navMesh:    n,
-		position:   position,
-		sizeRadius: size / 2,
+		object: &object{
+			id:         n.lastCreatedObjectID,
+			navMesh:    n,
+			position:   position,
+			sizeRadius: size / 2,
+		},
 	}
 	n.Objects[agent.id] = agent
 	return agent
