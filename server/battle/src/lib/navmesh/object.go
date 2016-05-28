@@ -44,9 +44,9 @@ func (o *object) Destroy() {
 // IntersectWithLine returns the intersection point with the given line.
 func (o *object) IntersectWithLine(lineOrigin *vec2.T, lineVector vec2.T) *vec2.T {
 	lineOriginFromObject := vec2.Sub(lineOrigin, o.position)
-	normalizedLineVector := lineVector.Normalize()
+	normalizedLineVector := lineVector.Normalized()
 
-	dotLOandLV := vec2.Dot(&lineOriginFromObject, normalizedLineVector)
+	dotLOandLV := vec2.Dot(&lineOriginFromObject, &normalizedLineVector)
 	dotLOAndLO := vec2.Dot(&lineOriginFromObject, &lineOriginFromObject)
 
 	s := dotLOandLV*dotLOandLV - dotLOAndLO + o.sizeRadius*o.sizeRadius
