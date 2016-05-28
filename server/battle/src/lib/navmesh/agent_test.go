@@ -19,7 +19,7 @@ func TestAgent(t *testing.T) {
 		Convey("#Move", func() {
 			Convey("with the position which is in of the mesh", func() {
 				Convey("should set the position", func() {
-					agent.Move(&vec2.T{2, 3})
+					agent.MoveWithValidation(&vec2.T{2, 3})
 					So(agent.Position()[0], ShouldEqual, 2)
 					So(agent.Position()[1], ShouldEqual, 3)
 				})
@@ -27,7 +27,7 @@ func TestAgent(t *testing.T) {
 
 			Convey("with the position which is out of the mesh", func() {
 				Convey("should set the intersection point", func() {
-					agent.Move(&vec2.T{1, 9999})
+					agent.MoveWithValidation(&vec2.T{1, 9999})
 					So(agent.Position()[0], ShouldEqual, 1)
 					So(agent.Position()[1], ShouldEqual, 7-3)
 				})

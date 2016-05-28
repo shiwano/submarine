@@ -70,7 +70,7 @@ func (a *actor) Position() *vec2.T {
 
 func (a *actor) BeforeUpdate() {
 	position := a.motor.position()
-	if !a.stageAgent.Move(position) {
+	if !a.stageAgent.MoveWithValidation(position) {
 		a.motor.idle(a.stageAgent.Position())
 		a.context.Event.Emit(event.ActorMove, a)
 	}
