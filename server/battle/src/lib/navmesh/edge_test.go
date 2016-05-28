@@ -17,21 +17,21 @@ func TestEdge(t *testing.T) {
 			Convey("with an intersected points", func() {
 				Convey("should return the intersection point", func() {
 					result := edge.intersectWithLine(
-						&vec2.T{-1, 1},
-						vec2.Sub(&vec2.T{1, 1}, &vec2.T{-1, 1}),
-					)
-					So(result, ShouldBeNil)
-				})
-			})
-
-			Convey("with an no-intersected points", func() {
-				Convey("should return the intersection point", func() {
-					result := edge.intersectWithLine(
 						&vec2.T{0, 5},
 						vec2.Sub(&vec2.T{0, -5}, &vec2.T{0, 5}),
 					)
 					So(result[0], ShouldEqual, 0)
 					So(result[1], ShouldEqual, 0)
+				})
+			})
+
+			Convey("with an no-intersected points", func() {
+				Convey("should return nil", func() {
+					result := edge.intersectWithLine(
+						&vec2.T{-1, 1},
+						vec2.Sub(&vec2.T{1, 1}, &vec2.T{-1, 1}),
+					)
+					So(result, ShouldBeNil)
 				})
 			})
 		})
