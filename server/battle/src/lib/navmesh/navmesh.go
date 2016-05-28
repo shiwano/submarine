@@ -42,7 +42,7 @@ func (n *NavMesh) DestroyObject(objectID int64) {
 }
 
 // Raycast casts a ray on the navmesh.
-func (n *NavMesh) Raycast(origin *vec2.T, vector vec2.T) (Object, *vec2.T) {
+func (n *NavMesh) Raycast(origin, vector *vec2.T) (Object, *vec2.T) {
 	var intersectionObj Object
 	intersectionPoint := n.Mesh.intersectWithLine(origin, vector)
 	for _, obj := range n.Objects {
@@ -64,8 +64,10 @@ func (n *NavMesh) FindPath(start *vec2.T, goal *vec2.T) []vec2.T {
 	if startTriangle == nil || goalTriangle == nil {
 		return []vec2.T{}
 	}
+
+	goalVector := vec2.Sub(goal, start)
 	if startTriangle == goalTriangle ||
-		!n.Mesh.isIntersectedWithLine(start, vec2.Sub(goal, start)) {
+		!n.Mesh.isIntersectedWithLine(start, &goalVector) {
 		return []vec2.T{*start, *goal}
 	}
 

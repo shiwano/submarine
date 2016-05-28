@@ -11,7 +11,7 @@ type Object interface {
 	Position() *vec2.T
 	SizeRadius() float64
 	Destroy()
-	IntersectWithLine(lineOrigin *vec2.T, lineVector vec2.T) *vec2.T
+	IntersectWithLine(lineOrigin, lineVector *vec2.T) *vec2.T
 }
 
 type object struct {
@@ -42,7 +42,7 @@ func (o *object) Destroy() {
 }
 
 // IntersectWithLine returns the intersection point with the given line.
-func (o *object) IntersectWithLine(lineOrigin *vec2.T, lineVector vec2.T) *vec2.T {
+func (o *object) IntersectWithLine(lineOrigin, lineVector *vec2.T) *vec2.T {
 	lineOriginFromObject := vec2.Sub(lineOrigin, o.position)
 	normalizedLineVector := lineVector.Normalized()
 

@@ -32,7 +32,7 @@ func TestNavMesh(t *testing.T) {
 				Convey("should return the intersection point", func() {
 					obj, point := navmesh.Raycast(
 						&vec2.T{1, 0},
-						vec2.Sub(&vec2.T{1, 100}, &vec2.T{1, 0}),
+						(&vec2.T{1, 100}).Sub(&vec2.T{1, 0}),
 					)
 					So(obj, ShouldBeNil)
 					So(point[0], ShouldEqual, 1)
@@ -45,7 +45,7 @@ func TestNavMesh(t *testing.T) {
 					agent := navmesh.CreateAgent(2, &vec2.T{1, 3})
 					obj, point := navmesh.Raycast(
 						&vec2.T{1, 0},
-						vec2.Sub(&vec2.T{1, 100}, &vec2.T{1, 0}),
+						(&vec2.T{1, 100}).Sub(&vec2.T{1, 0}),
 					)
 					So(obj.ID(), ShouldEqual, agent.ID())
 					So(point[0], ShouldEqual, 1)
@@ -57,7 +57,7 @@ func TestNavMesh(t *testing.T) {
 				Convey("should return nil", func() {
 					obj, point := navmesh.Raycast(
 						&vec2.T{1, 100},
-						vec2.Sub(&vec2.T{1, 200}, &vec2.T{1, 100}),
+						(&vec2.T{1, 200}).Sub(&vec2.T{1, 100}),
 					)
 					So(obj, ShouldBeNil)
 					So(point, ShouldBeNil)
