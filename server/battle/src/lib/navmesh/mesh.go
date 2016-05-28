@@ -164,7 +164,7 @@ func (m *Mesh) getOrCalculateDistance(from, to *vec2.T) float64 {
 
 func (m Mesh) isIntersectedWithLine(lineOrigin *vec2.T, lineVector vec2.T) bool {
 	for _, edge := range m.outerEdges {
-		if point := edge.intersectWithLine(lineOrigin, lineVector); point != nil {
+		if edge.intersectWithLine(lineOrigin, lineVector) != nil {
 			return true
 		}
 	}
