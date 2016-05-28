@@ -40,6 +40,12 @@ func TestObject(t *testing.T) {
 						vec2.Sub(&vec2.T{7, 1}, &vec2.T{5, 1}),
 					)
 					So(result, ShouldBeNil)
+
+					result = object.IntersectWithLine(
+						&vec2.T{1, 1},
+						vec2.Sub(&vec2.T{7, 1}, &vec2.T{1, 1}),
+					)
+					So(result, ShouldBeNil)
 				})
 			})
 		})
