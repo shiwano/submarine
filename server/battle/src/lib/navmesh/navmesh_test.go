@@ -27,6 +27,44 @@ func TestNavMesh(t *testing.T) {
 			})
 		})
 
+		Convey("#Raycast", func() {
+			Convey("with ray parameters which intersected with the mesh", func() {
+				Convey("should return the intersection point", func() {
+					obj, point := navmesh.Raycast(
+						&vec2.T{1, 0},
+						vec2.Sub(&vec2.T{1, 100}, &vec2.T{1, 0}),
+					)
+					So(obj, ShouldBeNil)
+					So(point[0], ShouldEqual, 1)
+					So(point[1], ShouldEqual, 7)
+				})
+			})
+
+			Convey("with ray parameters which intersected with an object", func() {
+				Convey("should return the intersection object and point", func() {
+					agent := navmesh.CreateAgent(2, &vec2.T{1, 3})
+					obj, point := navmesh.Raycast(
+						&vec2.T{1, 0},
+						vec2.Sub(&vec2.T{1, 100}, &vec2.T{1, 0}),
+					)
+					So(obj.ID(), ShouldEqual, agent.ID())
+					So(point[0], ShouldEqual, 1)
+					So(point[1], ShouldEqual, 2)
+				})
+			})
+
+			Convey("with ray parameters which does not intersected", func() {
+				Convey("should return nil", func() {
+					obj, point := navmesh.Raycast(
+						&vec2.T{1, 100},
+						vec2.Sub(&vec2.T{1, 200}, &vec2.T{1, 100}),
+					)
+					So(obj, ShouldBeNil)
+					So(point, ShouldBeNil)
+				})
+			})
+		})
+
 		Convey("#FindPath", func() {
 			Convey("with points that are inside the same triangle", func() {
 				Convey("should return the path", func() {
