@@ -24,14 +24,18 @@ func TestMesh(t *testing.T) {
 
 			Convey("should initialize outerEdges", func() {
 				So(m.outerEdges, ShouldHaveLength, 8)
-				So(m.outerEdges, ShouldContain, Edge{m.Vertices[0], m.Vertices[1]})
-				So(m.outerEdges, ShouldContain, Edge{m.Vertices[1], m.Vertices[2]})
-				So(m.outerEdges, ShouldContain, Edge{m.Vertices[2], m.Vertices[3]})
-				So(m.outerEdges, ShouldContain, Edge{m.Vertices[3], m.Vertices[4]})
-				So(m.outerEdges, ShouldContain, Edge{m.Vertices[0], m.Vertices[5]})
-				So(m.outerEdges, ShouldContain, Edge{m.Vertices[4], m.Vertices[7]})
-				So(m.outerEdges, ShouldContain, Edge{m.Vertices[5], m.Vertices[6]})
-				So(m.outerEdges, ShouldContain, Edge{m.Vertices[6], m.Vertices[7]})
+				var edgePointsList [][2]*vec2.T
+				for _, e := range m.outerEdges {
+					edgePointsList = append(edgePointsList, e.points)
+				}
+				So(edgePointsList, ShouldContain, [2]*vec2.T{m.Vertices[0], m.Vertices[1]})
+				So(edgePointsList, ShouldContain, [2]*vec2.T{m.Vertices[1], m.Vertices[2]})
+				So(edgePointsList, ShouldContain, [2]*vec2.T{m.Vertices[2], m.Vertices[3]})
+				So(edgePointsList, ShouldContain, [2]*vec2.T{m.Vertices[3], m.Vertices[4]})
+				So(edgePointsList, ShouldContain, [2]*vec2.T{m.Vertices[0], m.Vertices[5]})
+				So(edgePointsList, ShouldContain, [2]*vec2.T{m.Vertices[4], m.Vertices[7]})
+				So(edgePointsList, ShouldContain, [2]*vec2.T{m.Vertices[5], m.Vertices[6]})
+				So(edgePointsList, ShouldContain, [2]*vec2.T{m.Vertices[6], m.Vertices[7]})
 			})
 
 			Convey("should initialize trianglesByVertex", func() {

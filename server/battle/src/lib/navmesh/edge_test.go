@@ -8,10 +8,10 @@ import (
 
 func TestEdge(t *testing.T) {
 	Convey("Edge", t, func() {
-		edge := &Edge{
+		edge := newEdge(
 			&vec2.T{5, 0},
 			&vec2.T{-5, 0},
-		}
+		)
 
 		Convey("#intersect", func() {
 			Convey("with an intersected points", func() {

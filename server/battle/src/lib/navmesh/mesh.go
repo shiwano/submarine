@@ -21,7 +21,7 @@ type meshData struct {
 type Mesh struct {
 	Vertices          []*vec2.T
 	Triangles         []*Triangle
-	outerEdges        []Edge
+	outerEdges        []*edge
 	trianglesByVertex map[*vec2.T][]*Triangle
 	adjoiningVertices map[*vec2.T][]*vec2.T
 	distancesByVertex map[*vec2.T]map[*vec2.T]float64
@@ -76,13 +76,13 @@ func LoadMeshFromJSONFile(jsonPath string) (*Mesh, error) {
 			}
 		}
 	}
-	m.outerEdges = make([]Edge, 0)
+	m.outerEdges = make([]*edge, 0)
 	for key, value := range rawEdges {
 		if value == 2 {
-			m.outerEdges = append(m.outerEdges, Edge{
+			m.outerEdges = append(m.outerEdges, newEdge(
 				m.Vertices[key[0]],
 				m.Vertices[key[1]],
-			})
+			))
 		}
 	}
 

@@ -4,41 +4,43 @@ import (
 	"github.com/ungerik/go3d/float64/vec2"
 )
 
-// Edge represents a edge on the mesh.
-type Edge [2]*vec2.T
-
-func (e Edge) vector() *vec2.T {
-	v := vec2.Sub(e[1], e[0])
-	return &v
+type edge struct {
+	points [2]*vec2.T
+	vector *vec2.T
 }
 
-func (e Edge) cross(a, b *vec2.T) float64 {
+func newEdge(a, b *vec2.T) *edge {
+	vector := vec2.Sub(b, a)
+	return &edge{
+		points: [2]*vec2.T{a, b},
+		vector: &vector,
+	}
+}
+
+func (e *edge) cross(a, b *vec2.T) float64 {
 	return a[1]*b[0] - a[0]*b[1]
 }
 
-func (e Edge) intersectWithLine(lineOrigin, lineVector *vec2.T) *vec2.T {
-	v1 := e.vector()
-	v2 := lineVector
-
-	crossV1andV2 := e.cross(v1, v2)
-	if crossV1andV2 == 0 {
+func (e *edge) intersectWithLine(lineOrigin, lineVector *vec2.T) *vec2.T {
+	crossEVandLV := e.cross(e.vector, lineVector)
+	if crossEVandLV == 0 {
 		return nil
 	}
 
-	v := vec2.Sub(lineOrigin, e[0])
-	crossVandV1 := e.cross(&v, v1)
-	t2 := crossVandV1 / crossV1andV2
+	v := vec2.Sub(lineOrigin, e.points[0])
+	crossVandEV := e.cross(&v, e.vector)
+	t2 := crossVandEV / crossEVandLV
 	if t2 < 0 || t2 > 1 {
 		return nil
 	}
 
-	crossVandV2 := e.cross(&v, v2)
-	t1 := crossVandV2 / crossV1andV2
+	crossVandLV := e.cross(&v, lineVector)
+	t1 := crossVandLV / crossEVandLV
 	if t1 < 0 || t1 > 1 {
 		return nil
 	}
 
-	intersectionPoint := v1.Scaled(t1)
-	intersectionPoint.Add(e[0])
+	intersectionPoint := e.vector.Scaled(t1)
+	intersectionPoint.Add(e.points[0])
 	return &intersectionPoint
 }
