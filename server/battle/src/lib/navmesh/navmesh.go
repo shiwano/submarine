@@ -45,8 +45,10 @@ func (n *NavMesh) DestroyObject(objectID int64) {
 func (n *NavMesh) Raycast(origin, vector *vec2.T) (Object, *vec2.T) {
 	var intersectionObj Object
 	intersectionPoint := n.Mesh.intersectWithLine(origin, vector)
+
+	normalizedVector := vector.Normalized()
 	for _, obj := range n.Objects {
-		if p := obj.IntersectWithLine(origin, vector); p != nil {
+		if p := obj.IntersectWithLine(origin, &normalizedVector, vector); p != nil {
 			if intersectionPoint == nil || p.LengthSqr() < intersectionPoint.LengthSqr() {
 				intersectionObj = obj
 				intersectionPoint = p

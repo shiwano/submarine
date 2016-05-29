@@ -26,6 +26,7 @@ func TestObject(t *testing.T) {
 				Convey("should return the intersection point", func() {
 					result := object.IntersectWithLine(
 						&vec2.T{5, 1},
+						(&vec2.T{0, 1}).Sub(&vec2.T{5, 1}).Normalize(),
 						(&vec2.T{0, 1}).Sub(&vec2.T{5, 1}),
 					)
 					So(result[0], ShouldEqual, 4)
@@ -37,12 +38,14 @@ func TestObject(t *testing.T) {
 				Convey("should return nil", func() {
 					result := object.IntersectWithLine(
 						&vec2.T{5, 1},
+						(&vec2.T{7, 1}).Sub(&vec2.T{5, 1}).Normalize(),
 						(&vec2.T{7, 1}).Sub(&vec2.T{5, 1}),
 					)
 					So(result, ShouldBeNil)
 
 					result = object.IntersectWithLine(
 						&vec2.T{1, 1},
+						(&vec2.T{7, 1}).Sub(&vec2.T{1, 1}).Normalize(),
 						(&vec2.T{7, 1}).Sub(&vec2.T{1, 1}),
 					)
 					So(result, ShouldBeNil)
