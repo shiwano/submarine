@@ -59,6 +59,7 @@ declare module Submarine.Battle {
   var movement: Movement;
   var destruction: Destruction;
 
+  var startRequest: {};
   var accelerationRequest: { direction: degrees; };
   var brakeRequest: { direction: degrees; };
   var turnRequest: { direction: degrees; };
