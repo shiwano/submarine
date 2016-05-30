@@ -14,17 +14,21 @@ namespace Submarine.Battle
         BattleView battleView;
         [SerializeField]
         RadarView radarView;
+        [SerializeField]
+        RoomView roomView;
 
         public override void InstallBindings()
         {
             Container.Bind<BattleEvent.PlayerSubmarineCreate>().ToSingle();
 
             Container.Bind<BattleModel>().ToSingle();
+            Container.Bind<RoomModel>().ToSingle();
             Container.Bind<BattleService>().ToSingle();
             Container.Bind<IDisposable>().ToSingle<BattleService>();
             Container.Bind<BattleInputService>().ToSingleInstance(battleInputService);
 
             Container.BindCommand<InitializeBattleCommand>().HandleWithSingle<InitializeBattleCommand.Handler>();
+            Container.BindCommand<StartBattleCommand>().HandleWithSingle<StartBattleCommand.Handler>();
 
             Container.Bind<BattleView>().ToSingleInstance(battleView);
             Container.Bind<BattleMediator>().ToSingle();
@@ -45,6 +49,10 @@ namespace Submarine.Battle
 
             Container.Bind<ActorContainer>().ToSingle();
             Container.Bind<ITickable>().ToSingle<ActorContainer>();
+
+            Container.Bind<RoomView>().ToSingleInstance(roomView);
+            Container.Bind<RoomMediator>().ToSingle();
+            Container.Bind<IInitializable>().ToSingle<RoomMediator>();
 
             Container.BindFacadeFactory<Type.Battle.Actor, SubmarineFacade, SubmarineFacade.Factory>(InstallSubmarineFacade);
         }
