@@ -14,6 +14,8 @@ namespace Submarine.Battle
             [Inject]
             BattleModel battleModel;
             [Inject]
+            RoomModel roomModel;
+            [Inject]
             LobbyModel lobbyModel;
 
             public void Execute()
@@ -35,6 +37,11 @@ namespace Submarine.Battle
             void OnBattleConnect()
             {
                 battleModel.State.Value = BattleState.InPreparation;
+
+                battleService.Api.OnRoomReceiveAsObservable().Take(1).Subscribe(message =>
+                {
+                    roomModel.Room.Value = message;
+                });
 
                 battleService.Api.OnStartReceiveAsObservable().Take(1).Subscribe(message =>
                 {
