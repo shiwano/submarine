@@ -115,7 +115,7 @@ func (r *Room) broadcastRoom() {
 func (r *Room) startBattle(session *Session) {
 	// TODO: Validate that can the session starts the battle.
 	if r.battle.StartIfPossible() {
-		logger.Log.Infof("Room(%v)s battle started", r.id)
+		logger.Log.Infof("Room(%v)'s battle started", r.id)
 	}
 }
 
