@@ -18,6 +18,7 @@ const (
 	MessageType_Actor               int32 = -1257891252
 	MessageType_Movement            int32 = 1298310360
 	MessageType_Destruction         int32 = -1118469016
+	MessageType_StartRequest        int32 = 504335322
 	MessageType_AccelerationRequest int32 = -710337400
 	MessageType_BrakeRequest        int32 = 1492486768
 	MessageType_TurnRequest         int32 = 698416554
@@ -39,6 +40,7 @@ type WebSocketAPI struct {
 	ActorHandler               func(message *submarine_battle.Actor)
 	MovementHandler            func(message *submarine_battle.Movement)
 	DestructionHandler         func(message *submarine_battle.Destruction)
+	StartRequestHandler        func(message *submarine_battle.StartRequestObject)
 	AccelerationRequestHandler func(message *submarine_battle.AccelerationRequestObject)
 	BrakeRequestHandler        func(message *submarine_battle.BrakeRequestObject)
 	TurnRequestHandler         func(message *submarine_battle.TurnRequestObject)
@@ -74,6 +76,8 @@ func (api *WebSocketAPI) Send(body typhenapi.Type) (message *typhenapi.Message, 
 		message, err = typhenapi.NewMessage(api.serializer, MessageType_Movement, messageBody)
 	case *submarine_battle.Destruction:
 		message, err = typhenapi.NewMessage(api.serializer, MessageType_Destruction, messageBody)
+	case *submarine_battle.StartRequestObject:
+		message, err = typhenapi.NewMessage(api.serializer, MessageType_StartRequest, messageBody)
 	case *submarine_battle.AccelerationRequestObject:
 		message, err = typhenapi.NewMessage(api.serializer, MessageType_AccelerationRequest, messageBody)
 	case *submarine_battle.BrakeRequestObject:
@@ -241,6 +245,26 @@ func (api *WebSocketAPI) SendMovement(movement *submarine_battle.Movement) error
 // SendDestruction sends a destruction message.
 func (api *WebSocketAPI) SendDestruction(destruction *submarine_battle.Destruction) error {
 	message, err := typhenapi.NewMessage(api.serializer, MessageType_Destruction, destruction)
+
+	if err != nil {
+		if api.errorHandler != nil {
+			api.errorHandler(err)
+		}
+		return err
+	}
+
+	if err := api.session.Send(message.Bytes()); err != nil {
+		if api.errorHandler != nil {
+			api.errorHandler(err)
+		}
+		return err
+	}
+	return nil
+}
+
+// SendStartRequest sends a startRequest message.
+func (api *WebSocketAPI) SendStartRequest(startRequest *submarine_battle.StartRequestObject) error {
+	message, err := typhenapi.NewMessage(api.serializer, MessageType_StartRequest, startRequest)
 
 	if err != nil {
 		if api.errorHandler != nil {
@@ -522,6 +546,25 @@ func (api *WebSocketAPI) DispatchMessageEvent(data []byte) error {
 
 		if api.DestructionHandler != nil {
 			api.DestructionHandler(typhenType)
+		}
+	case MessageType_StartRequest:
+		typhenType := new(submarine_battle.StartRequestObject)
+		if err := api.serializer.Deserialize(message.Body, typhenType); err != nil {
+			if api.errorHandler != nil {
+				api.errorHandler(err)
+			}
+			return err
+		}
+
+		if err := typhenType.Coerce(); err != nil {
+			if api.errorHandler != nil {
+				api.errorHandler(err)
+			}
+			return err
+		}
+
+		if api.StartRequestHandler != nil {
+			api.StartRequestHandler(typhenType)
 		}
 	case MessageType_AccelerationRequest:
 		typhenType := new(submarine_battle.AccelerationRequestObject)

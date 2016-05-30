@@ -17,6 +17,7 @@ namespace TyphenApi.WebSocketApi.Parts.Submarine
             Actor = -1257891252,
             Movement = 1298310360,
             Destruction = -1118469016,
+            StartRequest = 504335322,
             AccelerationRequest = -710337400,
             BrakeRequest = 1492486768,
             TurnRequest = 698416554,
@@ -34,6 +35,7 @@ namespace TyphenApi.WebSocketApi.Parts.Submarine
         public event Action<TyphenApi.Type.Submarine.Battle.Actor> OnActorReceive;
         public event Action<TyphenApi.Type.Submarine.Battle.Movement> OnMovementReceive;
         public event Action<TyphenApi.Type.Submarine.Battle.Destruction> OnDestructionReceive;
+        public event Action<TyphenApi.Type.Submarine.Battle.StartRequestObject> OnStartRequestReceive;
         public event Action<TyphenApi.Type.Submarine.Battle.AccelerationRequestObject> OnAccelerationRequestReceive;
         public event Action<TyphenApi.Type.Submarine.Battle.BrakeRequestObject> OnBrakeRequestReceive;
         public event Action<TyphenApi.Type.Submarine.Battle.TurnRequestObject> OnTurnRequestReceive;
@@ -150,6 +152,17 @@ namespace TyphenApi.WebSocketApi.Parts.Submarine
             session.Send((int)MessageType.Destruction, new TyphenApi.Type.Submarine.Battle.Destruction()
             {
                 ActorId = actorId,
+            });
+        }
+        public void SendStartRequest(TyphenApi.Type.Submarine.Battle.StartRequestObject startRequest)
+        {
+            session.Send((int)MessageType.StartRequest, startRequest);
+        }
+
+        public void SendStartRequest()
+        {
+            session.Send((int)MessageType.StartRequest, new TyphenApi.Type.Submarine.Battle.StartRequestObject()
+            {
             });
         }
         public void SendAccelerationRequest(TyphenApi.Type.Submarine.Battle.AccelerationRequestObject accelerationRequest)
@@ -299,6 +312,17 @@ namespace TyphenApi.WebSocketApi.Parts.Submarine
                     if (OnDestructionReceive != null)
                     {
                         OnDestructionReceive(message);
+                    }
+
+                    return message;
+                }
+                case MessageType.StartRequest:
+                {
+                    var message = session.MessageDeserializer.Deserialize<TyphenApi.Type.Submarine.Battle.StartRequestObject>(messageData);
+
+                    if (OnStartRequestReceive != null)
+                    {
+                        OnStartRequestReceive(message);
                     }
 
                     return message;
