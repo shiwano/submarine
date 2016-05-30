@@ -37,6 +37,7 @@ func newSession(info *battle.RoomMember, roomID int64) *Session {
 
 	session.api = api.New(session, serializer, session.onError)
 	session.api.Battle.PingHandler = session.onPingReceive
+	session.api.Battle.StartRequestHandler = session.onStartRequestReceive
 	session.api.Battle.AccelerationRequestHandler = session.onAccelerationRequestReceive
 	session.api.Battle.BrakeRequestHandler = session.onBrakeRequestReceive
 	session.api.Battle.TurnRequestHandler = session.onTurnRequestReceive
@@ -83,6 +84,10 @@ func (s *Session) onError(err error) {
 func (s *Session) onPingReceive(message *battle.PingObject) {
 	message.Message += " " + message.Message
 	s.api.Battle.SendPing(message)
+}
+
+func (s *Session) onStartRequestReceive(message *battle.StartRequestObject) {
+	s.room.startBattleCh <- s
 }
 
 func (s *Session) onAccelerationRequestReceive(message *battle.AccelerationRequestObject) {

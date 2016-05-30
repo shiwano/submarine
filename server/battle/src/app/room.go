@@ -15,16 +15,17 @@ import (
 
 // Room represents a network group for battle.
 type Room struct {
-	id           int64
-	webAPI       *webapi.WebAPI
-	info         *battle.Room
-	sessions     map[int64]*Session
-	battle       *battleLogic.Battle
-	closeHandler func(*Room)
-	joinCh       chan *Session
-	leaveCh      chan *Session
-	closeCh      chan struct{}
-	isClosed     bool
+	id            int64
+	webAPI        *webapi.WebAPI
+	info          *battle.Room
+	sessions      map[int64]*Session
+	battle        *battleLogic.Battle
+	closeHandler  func(*Room)
+	startBattleCh chan *Session
+	joinCh        chan *Session
+	leaveCh       chan *Session
+	closeCh       chan struct{}
+	isClosed      bool
 }
 
 func newRoom(id int64) (*Room, error) {
@@ -46,14 +47,15 @@ func newRoom(id int64) (*Room, error) {
 	}
 
 	room := &Room{
-		id:       id,
-		webAPI:   webAPI,
-		info:     res.Room,
-		sessions: make(map[int64]*Session),
-		battle:   battleLogic.New(time.Second*60, stageMesh),
-		joinCh:   make(chan *Session, 4),
-		leaveCh:  make(chan *Session, 4),
-		closeCh:  make(chan struct{}, 1),
+		id:            id,
+		webAPI:        webAPI,
+		info:          res.Room,
+		sessions:      make(map[int64]*Session),
+		battle:        battleLogic.New(time.Second*60, stageMesh),
+		startBattleCh: make(chan *Session, 1),
+		joinCh:        make(chan *Session, 4),
+		leaveCh:       make(chan *Session, 4),
+		closeCh:       make(chan struct{}, 1),
 	}
 
 	go room.run()
@@ -66,6 +68,8 @@ func (r *Room) run() {
 loop:
 	for {
 		select {
+		case session := <-r.startBattleCh:
+			r.startBattle(session)
 		case session := <-r.joinCh:
 			r.join(session)
 			r.broadcastRoom()
@@ -108,6 +112,13 @@ func (r *Room) broadcastRoom() {
 	}
 }
 
+func (r *Room) startBattle(session *Session) {
+	// TODO: Validate that can the session starts the battle.
+	if r.battle.StartIfPossible() {
+		logger.Log.Infof("Room(%v)s battle started", r.id)
+	}
+}
+
 func (r *Room) join(session *Session) {
 	logger.Log.Infof("Session(%v) joined into Room(%v)", session.id, r.id)
 	r.sessions[session.id] = session
@@ -116,7 +127,6 @@ func (r *Room) join(session *Session) {
 		r.leaveCh <- session
 	}
 	r.battle.EnterUser(session.id)
-	r.battle.StartIfPossible()
 }
 
 func (r *Room) leave(session *Session) {
