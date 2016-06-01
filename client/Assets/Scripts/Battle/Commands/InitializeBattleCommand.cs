@@ -38,7 +38,7 @@ namespace Submarine.Battle
             {
                 battleModel.State.Value = BattleState.InPreparation;
 
-                battleService.Api.OnRoomReceiveAsObservable().Take(1).Subscribe(message =>
+                battleService.Api.OnRoomReceiveAsObservable().Subscribe(message =>
                 {
                     roomModel.Room.Value = message;
                 });
