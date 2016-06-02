@@ -8,6 +8,8 @@ namespace Submarine.Battle
         const float PositionY = 30f;
         const float DirectionTweenDuration = 3f;
 
+        public abstract void ChangeToEnemyColor();
+
         public Vector2 ActorPosition
         {
             get { return new Vector2(transform.position.x, transform.position.z); }

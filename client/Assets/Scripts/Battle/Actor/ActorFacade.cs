@@ -19,6 +19,16 @@ namespace Submarine.Battle
         public ActorView View { get { return view; } }
         public bool IsMine { get { return actor.UserId == userModel.LoggedInUser.Value.Id; } }
 
+        public override void Initialize()
+        {
+            base.Initialize();
+
+            if (!IsMine)
+            {
+                view.ChangeToEnemyColor();
+            }
+        }
+
         public override void Tick()
         {
             base.Tick();
