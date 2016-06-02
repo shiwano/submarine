@@ -14,8 +14,6 @@ namespace Submarine.Battle
             [Inject]
             BattleModel battleModel;
             [Inject]
-            RoomModel roomModel;
-            [Inject]
             LobbyModel lobbyModel;
 
             public void Execute()
@@ -40,7 +38,9 @@ namespace Submarine.Battle
 
                 battleService.Api.OnRoomReceiveAsObservable().Subscribe(message =>
                 {
-                    roomModel.Room.Value = message;
+                    var room = lobbyModel.JoinedRoom.Value;
+                    room.Members = message.Members;
+                    lobbyModel.JoinedRoom.SetValueAndForceNotify(room);
                 });
 
                 battleService.Api.OnStartReceiveAsObservable().Take(1).Subscribe(message =>

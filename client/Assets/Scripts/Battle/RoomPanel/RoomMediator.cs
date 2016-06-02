@@ -9,7 +9,7 @@ namespace Submarine.Battle
         [Inject]
         BattleModel battleModel;
         [Inject]
-        RoomModel roomModel;
+        LobbyModel lobbyModel;
         [Inject]
         StartBattleCommand startBattleCommand;
         [Inject]
@@ -18,7 +18,7 @@ namespace Submarine.Battle
         public void Initialize()
         {
             battleModel.OnStartAsObservable().Take(1).Subscribe(_ => OnBattleStart()).AddTo(view);
-            roomModel.Room.Where(r => r != null).Subscribe(OnRoomChange).AddTo(view);
+            lobbyModel.JoinedRoom.Where(r => r != null).Subscribe(OnRoomChange).AddTo(view);
             view.BattleStartButtonClickedAsObservable().Subscribe(_ => OnBattleStartButtonClick()).AddTo(view);
 
             view.gameObject.SetActive(true);

@@ -22,7 +22,6 @@ namespace Submarine.Battle
             Container.Bind<BattleEvent.PlayerSubmarineCreate>().ToSingle();
 
             Container.Bind<BattleModel>().ToSingle();
-            Container.Bind<RoomModel>().ToSingle();
             Container.Bind<BattleService>().ToSingle();
             Container.Bind<IDisposable>().ToSingle<BattleService>();
             Container.Bind<BattleInputService>().ToSingleInstance(battleInputService);
