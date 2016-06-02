@@ -7,7 +7,11 @@ namespace Submarine.Battle
     public class ActorContainer : ITickable
     {
         [Inject]
+        BattleEvent.PlayerSubmarineCreate playerSubmarineCreateEvent;
+        [Inject]
         SubmarineFacade.Factory submarineFactory;
+        [Inject]
+        TorpedoFacade.Factory torpedoFactory;
 
         Dictionary<long, ActorFacade> actors = new Dictionary<long, ActorFacade>();
 
@@ -26,11 +30,34 @@ namespace Submarine.Battle
             return actor;
         }
 
-        public SubmarineFacade CreateSubmarine(Type.Battle.Actor actor)
+        public void CreateActor(Type.Battle.Actor actor)
+        {
+            switch (actor.Type)
+            {
+                case Type.Battle.ActorType.Submarine:
+                    CreateSubmarine(actor);
+                    break;
+                case Type.Battle.ActorType.Torpedo:
+                    CreateTorpedo(actor);
+                    break;
+            }
+        }
+
+        void CreateSubmarine(Type.Battle.Actor actor)
         {
             var submarine = submarineFactory.Create(actor);
             actors.Add(actor.Id, submarine);
-            return submarine;
+
+            if (submarine.IsMine)
+            {
+                playerSubmarineCreateEvent.Invoke(submarine);
+            }
+        }
+
+        void CreateTorpedo(Type.Battle.Actor actor)
+        {
+            var torpedo = torpedoFactory.Create(actor);
+            actors.Add(actor.Id, torpedo);
         }
     }
 }
