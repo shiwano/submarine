@@ -54,6 +54,7 @@ namespace Submarine.Battle
             Container.Bind<IInitializable>().ToSingle<RoomMediator>();
 
             Container.BindFacadeFactory<Type.Battle.Actor, SubmarineFacade, SubmarineFacade.Factory>(InstallSubmarineFacade);
+            Container.BindFacadeFactory<Type.Battle.Actor, TorpedoFacade, TorpedoFacade.Factory>(InstallTorpedoFacade);
         }
 
         void InstallSubmarineFacade(DiContainer subContainer, Type.Battle.Actor actor)
@@ -62,6 +63,15 @@ namespace Submarine.Battle
             subContainer.Bind<ActorMotor>().ToSingle();
             subContainer.Bind<SubmarineView>().ToSinglePrefab(submarinePrefab);
             subContainer.Bind<ActorView>().ToSinglePrefab(submarinePrefab);
+            subContainer.BindInstance(actor);
+        }
+
+        void InstallTorpedoFacade(DiContainer subContainer, Type.Battle.Actor actor)
+        {
+            var torpedoPrefab = Resources.Load<GameObject>(Constants.TorpedoPrefab);
+            subContainer.Bind<ActorMotor>().ToSingle();
+            subContainer.Bind<TorpedoView>().ToSinglePrefab(torpedoPrefab);
+            subContainer.Bind<ActorView>().ToSinglePrefab(torpedoPrefab);
             subContainer.BindInstance(actor);
         }
     }
