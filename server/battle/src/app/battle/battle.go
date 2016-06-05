@@ -42,7 +42,7 @@ func New(timeLimit time.Duration, stageMesh *navmesh.Mesh) *Battle {
 // StartIfPossible starts the battle that is startable.
 func (b *Battle) StartIfPossible() bool {
 	// TODO: Relevant users counting.
-	if !b.isStarted && len(b.context.UserIDs()) > 0 {
+	if !b.isStarted && len(b.context.Users()) > 0 {
 		b.isStarted = true
 		go b.run()
 		return true
@@ -122,7 +122,7 @@ func (b *Battle) update(now time.Time) bool {
 func (b *Battle) finish() {
 	b.isFighting.Set(false)
 	// TODO: winnerUserID is temporary value.
-	b.Gateway.outputFinish(b.context.UserIDs()[0], b.context.Now)
+	b.Gateway.outputFinish(b.context.Users()[0].ID, b.context.Now)
 }
 
 func (b *Battle) reenterUser(userID int64) {

@@ -52,15 +52,9 @@ func (c *Context) HasActor(actorID int64) bool {
 	return ok
 }
 
-// UserIDs returns user ids in battle.
-func (c *Context) UserIDs() []int64 {
-	keys := make([]int64, len(c.container.submarinesByUserID))
-	i := 0
-	for k := range c.container.submarinesByUserID {
-		keys[i] = k
-		i++
-	}
-	return keys
+// Users returns users in the battle.
+func (c *Context) Users() []*User {
+	return c.container.users
 }
 
 func (c *Context) onActorCreate(actor Actor) {
