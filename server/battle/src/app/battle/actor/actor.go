@@ -27,15 +27,15 @@ type actor struct {
 	stageAgent *navmesh.Agent
 }
 
-func newActor(battleContext *context.Context, user *context.User, actorType battle.ActorType) *actor {
+func newActor(battleContext *context.Context, user *context.User, actorType battle.ActorType, startPos *vec2.T) *actor {
 	return &actor{
 		id:         battleContext.NextActorID(),
 		user:       user,
 		actorType:  actorType,
 		context:    battleContext,
 		event:      event.New(),
-		motor:      newMotor(battleContext, &vec2.Zero, accelerationMaxSpeed, accelerationDuration),
-		stageAgent: battleContext.Stage.CreateAgent(21, &vec2.Zero),
+		motor:      newMotor(battleContext, user.StartPosition, accelerationMaxSpeed, accelerationDuration),
+		stageAgent: battleContext.Stage.CreateAgent(21, startPos),
 	}
 }
 

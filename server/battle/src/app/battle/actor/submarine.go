@@ -13,7 +13,7 @@ type submarine struct {
 // NewSubmarine creates a submarine.
 func NewSubmarine(battleContext *context.Context, user *context.User) context.Actor {
 	s := &submarine{
-		actor: newActor(battleContext, user, battle.ActorType_Submarine),
+		actor: newActor(battleContext, user, battle.ActorType_Submarine, user.StartPosition),
 	}
 	s.event.On(event.AccelerationRequest, s.onAccelerationRequest)
 	s.event.On(event.BrakeRequest, s.onBrakeRequest)

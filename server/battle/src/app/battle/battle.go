@@ -6,6 +6,7 @@ import (
 	"app/battle/event"
 	"app/logger"
 	"app/typhenapi/type/submarine/battle"
+	"github.com/ungerik/go3d/float64/vec2"
 	"lib/atomicbool"
 	"lib/navmesh"
 	"time"
@@ -61,7 +62,12 @@ func (b *Battle) CloseIfPossible() {
 func (b *Battle) EnterUser(userID int64) {
 	if !b.isStarted {
 		if s := b.context.SubmarineByUserID(userID); s == nil {
-			actor.NewSubmarine(b.context, &context.User{ID: userID})
+			index := float64(len(b.context.Users()))
+			startPos := &vec2.T{-20 * index, 20 * index}
+			actor.NewSubmarine(b.context, &context.User{
+				ID:            userID,
+				StartPosition: startPos,
+			})
 		}
 	} else if b.isFighting.Value() {
 		b.reenterUserCh <- userID
