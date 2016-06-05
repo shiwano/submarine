@@ -19,7 +19,7 @@ const (
 
 type actor struct {
 	id         int64
-	userID     int64
+	user       *context.User
 	actorType  battle.ActorType
 	context    *context.Context
 	event      *event.Emitter
@@ -27,10 +27,10 @@ type actor struct {
 	stageAgent *navmesh.Agent
 }
 
-func newActor(battleContext *context.Context, userID int64, actorType battle.ActorType) *actor {
+func newActor(battleContext *context.Context, user *context.User, actorType battle.ActorType) *actor {
 	return &actor{
 		id:         battleContext.NextActorID(),
-		userID:     userID,
+		user:       user,
 		actorType:  actorType,
 		context:    battleContext,
 		event:      event.New(),
@@ -43,8 +43,8 @@ func (a *actor) ID() int64 {
 	return a.id
 }
 
-func (a *actor) UserID() int64 {
-	return a.userID
+func (a *actor) User() *context.User {
+	return a.user
 }
 
 func (a *actor) Type() battle.ActorType {

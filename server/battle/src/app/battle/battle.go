@@ -61,7 +61,7 @@ func (b *Battle) CloseIfPossible() {
 func (b *Battle) EnterUser(userID int64) {
 	if !b.isStarted {
 		if s := b.context.SubmarineByUserID(userID); s == nil {
-			actor.NewSubmarine(b.context, userID)
+			actor.NewSubmarine(b.context, &context.User{ID: userID})
 		}
 	} else if b.isFighting.Value() {
 		b.reenterUserCh <- userID
@@ -147,19 +147,19 @@ func (b *Battle) onInputReceive(input *gatewayInput) {
 	}
 	switch m := input.message.(type) {
 	case *battle.AccelerationRequestObject:
-		logger.Log.Debugf("User(%v)'s submarine(%v) accelerates", s.UserID(), s.ID())
+		logger.Log.Debugf("User(%v)'s submarine(%v) accelerates", s.User().ID, s.ID())
 		s.Event().Emit(event.AccelerationRequest, m)
 	case *battle.BrakeRequestObject:
-		logger.Log.Debugf("User(%v)'s submarine(%v) brakes", s.UserID(), s.ID())
+		logger.Log.Debugf("User(%v)'s submarine(%v) brakes", s.User().ID, s.ID())
 		s.Event().Emit(event.BrakeRequest, m)
 	case *battle.TurnRequestObject:
-		logger.Log.Debugf("User(%v)'s submarine(%v) turns to %v", s.UserID(), s.ID(), m.Direction)
+		logger.Log.Debugf("User(%v)'s submarine(%v) turns to %v", s.User().ID, s.ID(), m.Direction)
 		s.Event().Emit(event.TurnRequest, m)
 	case *battle.TorpedoRequestObject:
-		logger.Log.Debugf("User(%v)'s submarine(%v) shoots a torpedo", s.UserID(), s.ID())
+		logger.Log.Debugf("User(%v)'s submarine(%v) shoots a torpedo", s.User().ID, s.ID())
 		s.Event().Emit(event.TorpedoRequest, m)
 	case *battle.PingerRequestObject:
-		logger.Log.Debugf("User(%v)'s submarine(%v) use pinger", s.UserID(), s.ID())
+		logger.Log.Debugf("User(%v)'s submarine(%v) use pinger", s.User().ID, s.ID())
 		s.Event().Emit(event.PingerRequest, m)
 	}
 }

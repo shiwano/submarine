@@ -29,7 +29,7 @@ func (c *container) addActor(actor Actor) {
 	c.actorsByID[actor.ID()] = actor
 	c.actors = append(c.actors, actor)
 	if actor.Type() == battle.ActorType_Submarine {
-		c.submarinesByUserID[actor.UserID()] = actor
+		c.submarinesByUserID[actor.User().ID] = actor
 	}
 }
 
@@ -47,7 +47,7 @@ func (c *container) removeActor(rawActor Actor) Actor {
 		}
 	}
 	if actor.Type() == battle.ActorType_Submarine {
-		delete(c.submarinesByUserID, actor.UserID())
+		delete(c.submarinesByUserID, actor.User().ID)
 	}
 	return actor
 }

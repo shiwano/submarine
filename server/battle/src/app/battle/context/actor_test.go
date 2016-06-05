@@ -8,7 +8,7 @@ import (
 
 type actor struct {
 	id        int64
-	userID    int64
+	user      *User
 	actorType battle.ActorType
 	context   *Context
 	event     *event.Emitter
@@ -20,9 +20,10 @@ type actor struct {
 
 func newSubmarine(battleContext *Context) *actor {
 	id := battleContext.NextActorID()
+	user := &User{ID: id * 100, StartPosition: &vec2.Zero}
 	a := &actor{
 		id:        id,
-		userID:    id * 100,
+		user:      user,
 		actorType: battle.ActorType_Submarine,
 		context:   battleContext,
 		event:     event.New(),
@@ -35,8 +36,8 @@ func (a *actor) ID() int64 {
 	return a.id
 }
 
-func (a *actor) UserID() int64 {
-	return a.userID
+func (a *actor) User() *User {
+	return a.user
 }
 
 func (a *actor) Type() battle.ActorType {

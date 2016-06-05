@@ -52,7 +52,7 @@ func (g *Gateway) outputFinish(winnerUserID int64, finishedAt time.Time) {
 func (g *Gateway) outputActor(userIDs []int64, actor context.Actor) {
 	g.outputMessage(userIDs, &battle.Actor{
 		Id:       actor.ID(),
-		UserId:   actor.UserID(),
+		UserId:   actor.User().ID,
 		Type:     actor.Type(),
 		Movement: actor.Movement(),
 	})

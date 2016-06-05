@@ -9,7 +9,7 @@ import (
 // Actor represents an actor in the battle.
 type Actor interface {
 	ID() int64
-	UserID() int64
+	User() *User
 	Type() battle.ActorType
 	Event() *event.Emitter
 	Destroy()

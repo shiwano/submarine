@@ -80,12 +80,12 @@ func TestContextTest(t *testing.T) {
 		})
 
 		Convey("#SubmarineByUserID", func() {
-			userID := newSubmarine(battleContext).UserID()
+			userID := newSubmarine(battleContext).User().ID
 
 			Convey("with valid user id", func() {
 				Convey("should return the user's submarine", func() {
 					submarine := battleContext.SubmarineByUserID(userID)
-					So(submarine.UserID(), ShouldEqual, userID)
+					So(submarine.User().ID, ShouldEqual, userID)
 					So(submarine.Type(), ShouldEqual, battle.ActorType_Submarine)
 				})
 			})

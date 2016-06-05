@@ -11,9 +11,9 @@ type submarine struct {
 }
 
 // NewSubmarine creates a submarine.
-func NewSubmarine(battleContext *context.Context, userID int64) context.Actor {
+func NewSubmarine(battleContext *context.Context, user *context.User) context.Actor {
 	s := &submarine{
-		actor: newActor(battleContext, userID, battle.ActorType_Submarine),
+		actor: newActor(battleContext, user, battle.ActorType_Submarine),
 	}
 	s.event.On(event.AccelerationRequest, s.onAccelerationRequest)
 	s.event.On(event.BrakeRequest, s.onBrakeRequest)
