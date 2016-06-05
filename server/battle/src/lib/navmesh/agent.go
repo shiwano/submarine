@@ -16,9 +16,9 @@ func (a *Agent) MoveWithValidation(position *vec2.T) bool {
 	sizeRadiusVector.Scale(a.sizeRadius)
 	vector.Add(&sizeRadiusVector)
 
-	_, intersectionPoint := a.navMesh.Raycast(a.position, &vector)
-	if intersectionPoint != nil {
-		a.position = intersectionPoint.Sub(&sizeRadiusVector)
+	if _, intersectionPoint, ok := a.navMesh.Raycast(a.position, &vector); ok {
+		a.position = &intersectionPoint
+		a.position.Sub(&sizeRadiusVector)
 		return false
 	}
 	a.position = position

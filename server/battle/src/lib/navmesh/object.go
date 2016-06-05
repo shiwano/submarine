@@ -11,7 +11,7 @@ type Object interface {
 	Position() *vec2.T
 	SizeRadius() float64
 	Destroy()
-	IntersectWithLine(lineOrigin, lineDir, lineVector *vec2.T) *vec2.T
+	IntersectWithLine(lineOrigin, lineDir, lineVector *vec2.T) (vec2.T, bool)
 }
 
 type object struct {
@@ -42,7 +42,7 @@ func (o *object) Destroy() {
 }
 
 // IntersectWithLine returns the intersection point with the given line.
-func (o *object) IntersectWithLine(lineOrigin, lineDir, lineVector *vec2.T) *vec2.T {
+func (o *object) IntersectWithLine(lineOrigin, lineDir, lineVector *vec2.T) (vec2.T, bool) {
 	lineOriginFromObject := vec2.Sub(lineOrigin, o.position)
 	normalizedLineVector := lineDir.Normalized()
 
@@ -51,17 +51,17 @@ func (o *object) IntersectWithLine(lineOrigin, lineDir, lineVector *vec2.T) *vec
 
 	s := dotLOandLV*dotLOandLV - dotLOAndLO + o.sizeRadius*o.sizeRadius
 	if s < 0 {
-		return nil
+		return vec2.Zero, false
 	}
 
 	sq := math.Sqrt(s)
 	t1 := -dotLOandLV - sq
 	t2 := -dotLOandLV + sq
 	if t1 < 0 || t2 < 0 || t1*t1 > lineVector.LengthSqr() {
-		return nil
+		return vec2.Zero, false
 	}
 
-	result := *lineOrigin
-	resultVector := normalizedLineVector.Scaled(t1)
-	return result.Add(&resultVector)
+	resultPoint := normalizedLineVector.Scaled(t1)
+	resultPoint.Add(lineOrigin)
+	return resultPoint, true
 }

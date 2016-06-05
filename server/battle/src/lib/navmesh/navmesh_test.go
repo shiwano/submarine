@@ -30,37 +30,38 @@ func TestNavMesh(t *testing.T) {
 		Convey("#Raycast", func() {
 			Convey("with ray parameters which intersected with the mesh", func() {
 				Convey("should return the intersection point", func() {
-					obj, point := navmesh.Raycast(
+					obj, p, ok := navmesh.Raycast(
 						&vec2.T{1, 0},
 						(&vec2.T{1, 100}).Sub(&vec2.T{1, 0}),
 					)
+					So(ok, ShouldBeTrue)
 					So(obj, ShouldBeNil)
-					So(point[0], ShouldEqual, 1)
-					So(point[1], ShouldEqual, 7)
+					So(p[0], ShouldEqual, 1)
+					So(p[1], ShouldEqual, 7)
 				})
 			})
 
 			Convey("with ray parameters which intersected with an object", func() {
 				Convey("should return the intersection object and point", func() {
 					agent := navmesh.CreateAgent(2, &vec2.T{1, 3})
-					obj, point := navmesh.Raycast(
+					obj, p, ok := navmesh.Raycast(
 						&vec2.T{1, 0},
 						(&vec2.T{1, 100}).Sub(&vec2.T{1, 0}),
 					)
+					So(ok, ShouldBeTrue)
 					So(obj.ID(), ShouldEqual, agent.ID())
-					So(point[0], ShouldEqual, 1)
-					So(point[1], ShouldEqual, 2)
+					So(p[0], ShouldEqual, 1)
+					So(p[1], ShouldEqual, 2)
 				})
 			})
 
 			Convey("with ray parameters which does not intersected", func() {
 				Convey("should return nil", func() {
-					obj, point := navmesh.Raycast(
+					_, _, ok := navmesh.Raycast(
 						&vec2.T{1, 100},
 						(&vec2.T{1, 200}).Sub(&vec2.T{1, 100}),
 					)
-					So(obj, ShouldBeNil)
-					So(point, ShouldBeNil)
+					So(ok, ShouldBeFalse)
 				})
 			})
 		})

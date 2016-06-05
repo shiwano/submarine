@@ -21,26 +21,26 @@ func (e *edge) cross(a, b *vec2.T) float64 {
 	return a[1]*b[0] - a[0]*b[1]
 }
 
-func (e *edge) intersectWithLine(lineOrigin, lineVector *vec2.T) *vec2.T {
+func (e *edge) intersectWithLine(lineOrigin, lineVector *vec2.T) (vec2.T, bool) {
 	crossEVandLV := e.cross(e.vector, lineVector)
 	if crossEVandLV == 0 {
-		return nil
+		return vec2.Zero, false
 	}
 
 	v := vec2.Sub(lineOrigin, e.points[0])
 	crossVandEV := e.cross(&v, e.vector)
 	t2 := crossVandEV / crossEVandLV
 	if t2 < 0 || t2 > 1 {
-		return nil
+		return vec2.Zero, false
 	}
 
 	crossVandLV := e.cross(&v, lineVector)
 	t1 := crossVandLV / crossEVandLV
 	if t1 < 0 || t1 > 1 {
-		return nil
+		return vec2.Zero, false
 	}
 
-	intersectionPoint := e.vector.Scaled(t1)
-	intersectionPoint.Add(e.points[0])
-	return &intersectionPoint
+	resultPoint := e.vector.Scaled(t1)
+	resultPoint.Add(e.points[0])
+	return resultPoint, true
 }

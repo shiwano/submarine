@@ -42,20 +42,23 @@ func (n *NavMesh) DestroyObject(objectID int64) {
 }
 
 // Raycast casts a ray on the navmesh.
-func (n *NavMesh) Raycast(origin, vector *vec2.T) (Object, *vec2.T) {
-	var intersectionObj Object
-	intersectionPoint := n.Mesh.intersectWithLine(origin, vector)
+func (n *NavMesh) Raycast(origin, vector *vec2.T) (resultObj Object, resultPoint vec2.T, result bool) {
+	if p, ok := n.Mesh.intersectWithLine(origin, vector); ok {
+		resultPoint = p
+		result = true
+	}
 
 	dir := vector.Normalized()
 	for _, obj := range n.Objects {
-		if p := obj.IntersectWithLine(origin, &dir, vector); p != nil {
-			if intersectionPoint == nil || p.LengthSqr() < intersectionPoint.LengthSqr() {
-				intersectionObj = obj
-				intersectionPoint = p
+		if p, ok := obj.IntersectWithLine(origin, &dir, vector); ok {
+			if !result || p.LengthSqr() < resultPoint.LengthSqr() {
+				resultObj = obj
+				resultPoint = p
+				result = true
 			}
 		}
 	}
-	return intersectionObj, intersectionPoint
+	return
 }
 
 // FindPath finds a path on the navmesh.

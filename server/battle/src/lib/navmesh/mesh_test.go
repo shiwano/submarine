@@ -88,9 +88,11 @@ func TestMesh(t *testing.T) {
 				Convey("should return the intersection point", func() {
 					p1 := &vec2.T{1, 0}
 					p2 := &vec2.T{10, 0}
-					result := m.intersectWithLine(p1, p2.Sub(p1))
-					So(result[0], ShouldEqual, 8.875)
-					So(result[1], ShouldEqual, 0)
+
+					p, ok := m.intersectWithLine(p1, p2.Sub(p1))
+					So(ok, ShouldBeTrue)
+					So(p[0], ShouldEqual, 8.875)
+					So(p[1], ShouldEqual, 0)
 				})
 			})
 
@@ -98,9 +100,11 @@ func TestMesh(t *testing.T) {
 				Convey("should return the most neaby intersection point", func() {
 					p1 := &vec2.T{-7, 3.5}
 					p2 := &vec2.T{-1, -11}
-					result := m.intersectWithLine(p1, p2.Sub(p1))
-					So(result[0], ShouldEqual, -5.551724137931035)
-					So(result[1], ShouldEqual, 0)
+
+					p, ok := m.intersectWithLine(p1, p2.Sub(p1))
+					So(ok, ShouldBeTrue)
+					So(p[0], ShouldEqual, -5.551724137931035)
+					So(p[1], ShouldEqual, 0)
 				})
 			})
 
@@ -108,11 +112,13 @@ func TestMesh(t *testing.T) {
 				Convey("should return nil", func() {
 					p1 := &vec2.T{0.00000000001, 0}
 					p2 := &vec2.T{5, 0}
-					So(m.intersectWithLine(p1, p2.Sub(p1)), ShouldBeNil)
+					_, ok := m.intersectWithLine(p1, p2.Sub(p1))
+					So(ok, ShouldBeFalse)
 
 					p1 = &vec2.T{3, 2}
 					p2 = &vec2.T{2, -10}
-					So(m.intersectWithLine(p1, p2.Sub(p1)), ShouldBeNil)
+					_, ok = m.intersectWithLine(p1, p2.Sub(p1))
+					So(ok, ShouldBeFalse)
 				})
 			})
 		})
