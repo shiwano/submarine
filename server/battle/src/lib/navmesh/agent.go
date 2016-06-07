@@ -9,8 +9,8 @@ type Agent struct {
 	*object
 }
 
-// MoveWithValidation sets the specified position to the agent if the position is out of the mesh.
-func (a *Agent) MoveWithValidation(position *vec2.T) bool {
+// Move sets the specified position to the agent if the position is out of the mesh.
+func (a *Agent) Move(position *vec2.T) bool {
 	vector := vec2.Sub(position, a.position)
 	sizeRadiusVector := vector.Normalized()
 	sizeRadiusVector.Scale(a.sizeRadius)
