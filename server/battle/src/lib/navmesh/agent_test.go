@@ -71,6 +71,19 @@ func TestAgent(t *testing.T) {
 					agent.Move(&vec2.T{1, 3})
 					So(called, ShouldBeTrue)
 				})
+
+				Convey("should call the other object's collide handler", func() {
+					called := false
+					otherObj.SetCollideHandler(func(a, b Object, point vec2.T) {
+						So(a, ShouldEqual, otherObj)
+						So(b, ShouldEqual, agent)
+						So(point[0], ShouldEqual, 1)
+						So(point[1], ShouldEqual, 6-3-1)
+						called = true
+					})
+					agent.Move(&vec2.T{1, 3})
+					So(called, ShouldBeTrue)
+				})
 			})
 		})
 	})
