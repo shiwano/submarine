@@ -6,8 +6,8 @@ import (
 	"app/battle/event"
 	"app/logger"
 	"app/typhenapi/type/submarine/battle"
+	"github.com/tevino/abool"
 	"github.com/ungerik/go3d/float64/vec2"
-	"lib/atomicbool"
 	"lib/navmesh"
 	"time"
 )
@@ -20,7 +20,7 @@ type Battle struct {
 	startedAt     time.Time
 	timeLimit     time.Duration
 	isStarted     bool
-	isFighting    *atomicbool.T
+	isFighting    *abool.AtomicBool
 	reenterUserCh chan int64
 	leaveUserCh   chan int64
 	closeCh       chan struct{}
@@ -33,7 +33,7 @@ func New(timeLimit time.Duration, stageMesh *navmesh.Mesh) *Battle {
 		context:       context.NewContext(stageMesh),
 		createdAt:     time.Now(),
 		timeLimit:     timeLimit,
-		isFighting:    atomicbool.New(false),
+		isFighting:    abool.New(),
 		reenterUserCh: make(chan int64, 4),
 		leaveUserCh:   make(chan int64, 4),
 		closeCh:       make(chan struct{}, 1),
@@ -53,7 +53,7 @@ func (b *Battle) StartIfPossible() bool {
 
 // CloseIfPossible closes the battle that is running.
 func (b *Battle) CloseIfPossible() {
-	if b.isStarted && b.isFighting.Value() {
+	if b.isStarted && b.isFighting.IsSet() {
 		b.closeCh <- struct{}{}
 	}
 }
@@ -69,14 +69,14 @@ func (b *Battle) EnterUser(userID int64) {
 				StartPosition: startPos,
 			})
 		}
-	} else if b.isFighting.Value() {
+	} else if b.isFighting.IsSet() {
 		b.reenterUserCh <- userID
 	}
 }
 
 // LeaveUser leaves an user from the battle.
 func (b *Battle) LeaveUser(userID int64) {
-	if b.isFighting.Value() {
+	if b.isFighting.IsSet() {
 		b.leaveUserCh <- userID
 	}
 }
@@ -106,7 +106,7 @@ loop:
 }
 
 func (b *Battle) start() {
-	b.isFighting.Set(true)
+	b.isFighting.SetTo(true)
 	b.startedAt = time.Now()
 	b.Gateway.outputStart(nil, b.startedAt)
 	for _, actor := range b.context.Actors() {
@@ -126,7 +126,7 @@ func (b *Battle) update(now time.Time) bool {
 }
 
 func (b *Battle) finish() {
-	b.isFighting.Set(false)
+	b.isFighting.SetTo(false)
 	// TODO: winnerUserID is temporary value.
 	b.Gateway.outputFinish(b.context.Users()[0].ID, b.context.Now)
 }
