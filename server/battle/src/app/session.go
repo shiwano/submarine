@@ -111,7 +111,7 @@ func (s *Session) onTorpedoRequestReceive(message *battle.TorpedoRequestObject) 
 }
 
 func (s *Session) onBattleMessageReceive(message typhenapi.Type) {
-	if s.room != nil && !s.room.isClosed {
+	if s.room != nil && !s.room.isClosed.IsSet() {
 		s.room.sendBattleInput(s.id, message)
 	}
 }

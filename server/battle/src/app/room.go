@@ -10,6 +10,7 @@ import (
 	webapi "app/typhenapi/web/submarine"
 	websocketapi "app/typhenapi/websocket/submarine/battle"
 	"fmt"
+	"github.com/tevino/abool"
 	"time"
 )
 
@@ -25,7 +26,7 @@ type Room struct {
 	joinCh        chan *Session
 	leaveCh       chan *Session
 	closeCh       chan struct{}
-	isClosed      bool
+	isClosed      *abool.AtomicBool
 }
 
 func newRoom(id int64) (*Room, error) {
@@ -56,6 +57,7 @@ func newRoom(id int64) (*Room, error) {
 		joinCh:        make(chan *Session, 4),
 		leaveCh:       make(chan *Session, 4),
 		closeCh:       make(chan struct{}, 1),
+		isClosed:      abool.New(),
 	}
 
 	go room.run()
@@ -85,7 +87,7 @@ loop:
 		}
 	}
 
-	r.isClosed = true
+	r.isClosed.SetTo(true)
 	close(r.joinCh)
 	close(r.leaveCh)
 	close(r.closeCh)

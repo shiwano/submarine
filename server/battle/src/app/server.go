@@ -66,7 +66,7 @@ func (s *Server) roomsGET(c *gin.Context) {
 		return
 	}
 
-	if room.isClosed {
+	if room.isClosed.IsSet() {
 		logger.Log.Infof("Room(%v) is already closed", session.id)
 		session.close()
 		return
