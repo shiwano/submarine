@@ -118,6 +118,12 @@
 			"path": "/assert"
 		},
 		{
+			"importpath": "github.com/tevino/abool",
+			"repository": "https://github.com/tevino/abool",
+			"revision": "6662858d9357f2684573721476a9bb7d9cddeaae",
+			"branch": "master"
+		},
+		{
 			"importpath": "github.com/ugorji/go/codec",
 			"repository": "https://github.com/ugorji/go",
 			"revision": "2cb41eb350bb803298e42218d78a525daca640a5",
