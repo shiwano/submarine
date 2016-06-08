@@ -11,37 +11,47 @@ type Object interface {
 	Position() *vec2.T
 	SizeRadius() float64
 	Destroy()
+
+	callCollideHandler(a, b Object, point vec2.T)
+	SetCollideHandler(handler func(a, b Object, point vec2.T))
+
 	IntersectWithLine(lineOrigin, lineDir, lineVector *vec2.T) (vec2.T, bool)
 }
 
 type object struct {
-	id         int64
-	navMesh    *NavMesh
-	position   *vec2.T
-	sizeRadius float64
+	id             int64
+	navMesh        *NavMesh
+	position       *vec2.T
+	sizeRadius     float64
+	collideHandler func(a, b Object, point vec2.T)
 }
 
-// ID returns the object ID.
 func (o *object) ID() int64 {
 	return o.id
 }
 
-// Position returns the current position.
 func (o *object) Position() *vec2.T {
 	return o.position
 }
 
-// SizeRadius returns the agent size radius.
 func (o *object) SizeRadius() float64 {
 	return o.sizeRadius
 }
 
-// Destroy destroys self.
 func (o *object) Destroy() {
 	o.navMesh.DestroyObject(o.id)
 }
 
-// IntersectWithLine returns the intersection point with the given line.
+func (o *object) callCollideHandler(a, b Object, point vec2.T) {
+	if o.collideHandler != nil {
+		o.collideHandler(a, b, point)
+	}
+}
+
+func (o *object) SetCollideHandler(handler func(a, b Object, point vec2.T)) {
+	o.collideHandler = handler
+}
+
 func (o *object) IntersectWithLine(lineOrigin, lineDir, lineVector *vec2.T) (vec2.T, bool) {
 	lineOriginFromObject := vec2.Sub(lineOrigin, o.position)
 	normalizedLineVector := lineDir.Normalized()

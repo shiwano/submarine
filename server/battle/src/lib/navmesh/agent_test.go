@@ -19,7 +19,8 @@ func TestAgent(t *testing.T) {
 		Convey("#Move", func() {
 			Convey("with the position which is in of the mesh", func() {
 				Convey("should set the position", func() {
-					agent.Move(&vec2.T{2, 3})
+					result := agent.Move(&vec2.T{2, 3})
+					So(result, ShouldBeTrue)
 					So(agent.Position()[0], ShouldEqual, 2)
 					So(agent.Position()[1], ShouldEqual, 3)
 				})
@@ -27,9 +28,48 @@ func TestAgent(t *testing.T) {
 
 			Convey("with the position which is out of the mesh", func() {
 				Convey("should set the intersection point", func() {
-					agent.Move(&vec2.T{1, 9999})
+					result := agent.Move(&vec2.T{1, 9999})
+					So(result, ShouldBeFalse)
 					So(agent.Position()[0], ShouldEqual, 1)
 					So(agent.Position()[1], ShouldEqual, 7-3)
+				})
+
+				Convey("should call the collide handler", func() {
+					called := false
+					agent.SetCollideHandler(func(a, b Object, point vec2.T) {
+						So(a, ShouldEqual, agent)
+						So(b, ShouldBeNil)
+						So(point[0], ShouldEqual, 1)
+						So(point[1], ShouldEqual, 7-3)
+						called = true
+					})
+					agent.Move(&vec2.T{1, 9999})
+					So(called, ShouldBeTrue)
+				})
+			})
+
+			Convey("with the position which collided with other object", func() {
+				otherObj := navmesh.CreateAgent(2, &vec2.T{1, 6})
+
+				Convey("should set the intersection point", func() {
+					result := agent.Move(&vec2.T{1, 3})
+					So(result, ShouldBeFalse)
+					So(agent.Position()[0], ShouldEqual, 1)
+					So(agent.Position()[1], ShouldEqual, 6-3-1)
+					So(otherObj, ShouldNotBeNil)
+				})
+
+				Convey("should call the collide handler", func() {
+					called := false
+					agent.SetCollideHandler(func(a, b Object, point vec2.T) {
+						So(a, ShouldEqual, agent)
+						So(b, ShouldEqual, otherObj)
+						So(point[0], ShouldEqual, 1)
+						So(point[1], ShouldEqual, 6-3-1)
+						called = true
+					})
+					agent.Move(&vec2.T{1, 3})
+					So(called, ShouldBeTrue)
 				})
 			})
 		})
