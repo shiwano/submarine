@@ -35,7 +35,7 @@ func TestObject(t *testing.T) {
 				})
 			})
 
-			Convey("with an no-intersected points", func() {
+			Convey("with a no-intersected points", func() {
 				Convey("should return nil", func() {
 					_, ok := object.IntersectWithLine(
 						&vec2.T{5, 1},
