@@ -20,9 +20,9 @@ func (a *Agent) Move(position *vec2.T) bool {
 		a.position = &intersectionPoint
 		a.position.Sub(&sizeRadiusVector)
 
-		a.callCollideHandler(a, intersectionObj, intersectionPoint)
+		a.callCollideHandler(intersectionObj, intersectionPoint)
 		if intersectionObj != nil {
-			intersectionObj.callCollideHandler(intersectionObj, a, intersectionPoint)
+			intersectionObj.callCollideHandler(a, intersectionPoint)
 		}
 		return false
 	}

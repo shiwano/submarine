@@ -36,9 +36,8 @@ func TestAgent(t *testing.T) {
 
 				Convey("should call the collide handler", func() {
 					called := false
-					agent.SetCollideHandler(func(a, b Object, point vec2.T) {
-						So(a, ShouldEqual, agent)
-						So(b, ShouldBeNil)
+					agent.SetCollideHandler(func(obj Object, point vec2.T) {
+						So(obj, ShouldBeNil)
 						So(point[0], ShouldEqual, 1)
 						So(point[1], ShouldEqual, 7-3)
 						called = true
@@ -61,9 +60,8 @@ func TestAgent(t *testing.T) {
 
 				Convey("should call the collide handler", func() {
 					called := false
-					agent.SetCollideHandler(func(a, b Object, point vec2.T) {
-						So(a, ShouldEqual, agent)
-						So(b, ShouldEqual, otherObj)
+					agent.SetCollideHandler(func(obj Object, point vec2.T) {
+						So(obj, ShouldEqual, otherObj)
 						So(point[0], ShouldEqual, 1)
 						So(point[1], ShouldEqual, 6-3-1)
 						called = true
@@ -74,9 +72,8 @@ func TestAgent(t *testing.T) {
 
 				Convey("should call the other object's collide handler", func() {
 					called := false
-					otherObj.SetCollideHandler(func(a, b Object, point vec2.T) {
-						So(a, ShouldEqual, otherObj)
-						So(b, ShouldEqual, agent)
+					otherObj.SetCollideHandler(func(obj Object, point vec2.T) {
+						So(obj, ShouldEqual, agent)
 						So(point[0], ShouldEqual, 1)
 						So(point[1], ShouldEqual, 6-3-1)
 						called = true
