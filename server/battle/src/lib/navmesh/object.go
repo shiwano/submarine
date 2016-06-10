@@ -12,18 +12,25 @@ type Object interface {
 	SizeRadius() float64
 	Destroy()
 
-	callCollideHandler(obj Object, point vec2.T)
-	SetCollideHandler(handler func(obj Object, point vec2.T))
+	IsTrigger() bool
+	SetIsTrigger(value bool)
+	callTriggerEnterHandler(Object, vec2.T)
+	SetTriggerEnterHandler(handler func(Object, vec2.T))
+
+	callCollideHandler(Object, vec2.T)
+	SetCollideHandler(handler func(Object, vec2.T))
 
 	IntersectWithLine(lineOrigin, lineDir, lineVector *vec2.T) (vec2.T, bool)
 }
 
 type object struct {
-	id             int64
-	navMesh        *NavMesh
-	position       *vec2.T
-	sizeRadius     float64
-	collideHandler func(obj Object, point vec2.T)
+	id                  int64
+	navMesh             *NavMesh
+	position            *vec2.T
+	sizeRadius          float64
+	isTrigger           bool
+	triggerEnterHandler func(Object, vec2.T)
+	collideHandler      func(Object, vec2.T)
 }
 
 func (o *object) ID() int64 {
@@ -42,13 +49,31 @@ func (o *object) Destroy() {
 	o.navMesh.DestroyObject(o.id)
 }
 
+func (o *object) IsTrigger() bool {
+	return o.isTrigger
+}
+
+func (o *object) SetIsTrigger(value bool) {
+	o.isTrigger = value
+}
+
+func (o *object) callTriggerEnterHandler(obj Object, point vec2.T) {
+	if o.triggerEnterHandler != nil {
+		o.triggerEnterHandler(obj, point)
+	}
+}
+
+func (o *object) SetTriggerEnterHandler(handler func(Object, vec2.T)) {
+	o.triggerEnterHandler = handler
+}
+
 func (o *object) callCollideHandler(obj Object, point vec2.T) {
 	if o.collideHandler != nil {
 		o.collideHandler(obj, point)
 	}
 }
 
-func (o *object) SetCollideHandler(handler func(obj Object, point vec2.T)) {
+func (o *object) SetCollideHandler(handler func(Object, vec2.T)) {
 	o.collideHandler = handler
 }
 
