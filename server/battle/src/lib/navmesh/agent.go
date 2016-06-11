@@ -16,7 +16,7 @@ func (a *Agent) Move(position *vec2.T) bool {
 	sizeRadiusVector.Scale(a.sizeRadius)
 	vector.Add(&sizeRadiusVector)
 
-	if intersectionObj, intersectionPoint, ok := a.navMesh.Raycast(a.position, &vector); ok {
+	if intersectionObj, intersectionPoint, ok := a.navMesh.Raycast(a.position, &vector, filterTrigger); ok {
 		a.position = &intersectionPoint
 		a.position.Sub(&sizeRadiusVector)
 

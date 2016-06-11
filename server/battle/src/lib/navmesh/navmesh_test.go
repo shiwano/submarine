@@ -33,6 +33,7 @@ func TestNavMesh(t *testing.T) {
 					obj, p, ok := navmesh.Raycast(
 						&vec2.T{1, 0},
 						(&vec2.T{1, 100}).Sub(&vec2.T{1, 0}),
+						nil,
 					)
 					So(ok, ShouldBeTrue)
 					So(obj, ShouldBeNil)
@@ -47,6 +48,7 @@ func TestNavMesh(t *testing.T) {
 					obj, p, ok := navmesh.Raycast(
 						&vec2.T{1, 0},
 						(&vec2.T{1, 100}).Sub(&vec2.T{1, 0}),
+						nil,
 					)
 					So(ok, ShouldBeTrue)
 					So(obj.ID(), ShouldEqual, agent.ID())
@@ -60,6 +62,7 @@ func TestNavMesh(t *testing.T) {
 					_, _, ok := navmesh.Raycast(
 						&vec2.T{1, 100},
 						(&vec2.T{1, 200}).Sub(&vec2.T{1, 100}),
+						nil,
 					)
 					So(ok, ShouldBeFalse)
 				})

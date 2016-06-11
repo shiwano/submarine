@@ -14,3 +14,7 @@ func calculateOctileDistance(from, to *vec2.T) float64 {
 	dy := math.Abs(from[1] - to[1])
 	return (dx + dy) + (math.Sqrt2-2)*math.Min(dx, dy)
 }
+
+func filterTrigger(obj Object) bool {
+	return !obj.IsTrigger()
+}
