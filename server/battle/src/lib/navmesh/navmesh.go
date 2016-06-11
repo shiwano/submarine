@@ -43,8 +43,11 @@ func (n *NavMesh) DestroyObject(objectID int64) {
 
 // Raycast casts a ray on the navmesh.
 func (n *NavMesh) Raycast(origin, vector *vec2.T, objectFilter func(object Object) bool) (resultObj Object, resultPoint vec2.T, result bool) {
+	var resultLengthSqr float64
+
 	if p, ok := n.Mesh.intersectWithLine(origin, vector); ok {
 		resultPoint = p
+		resultLengthSqr = calculateVectorLengthSqr(origin, &p)
 		result = true
 	}
 
@@ -52,9 +55,12 @@ func (n *NavMesh) Raycast(origin, vector *vec2.T, objectFilter func(object Objec
 	for _, obj := range n.Objects {
 		if objectFilter == nil || objectFilter(obj) {
 			if p, ok := obj.IntersectWithLine(origin, &dir, vector); ok {
-				if !result || p.LengthSqr() < resultPoint.LengthSqr() {
+				lengthSqr := calculateVectorLengthSqr(origin, &p)
+
+				if !result || lengthSqr < resultLengthSqr {
 					resultObj = obj
 					resultPoint = p
+					resultLengthSqr = lengthSqr
 					result = true
 				}
 			}

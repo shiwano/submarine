@@ -172,10 +172,15 @@ func (m Mesh) isIntersectedWithLine(lineOrigin, lineVector *vec2.T) bool {
 }
 
 func (m Mesh) intersectWithLine(lineOrigin, lineVector *vec2.T) (resultPos vec2.T, result bool) {
+	var resultLengthSqr float64
+
 	for _, edge := range m.outerEdges {
 		if p, ok := edge.intersectWithLine(lineOrigin, lineVector); ok {
-			if !result || p.LengthSqr() < resultPos.LengthSqr() {
+			lengthSqr := calculateVectorLengthSqr(lineOrigin, &p)
+
+			if !result || lengthSqr < resultLengthSqr {
 				resultPos = p
+				resultLengthSqr = lengthSqr
 				result = true
 			}
 		}

@@ -15,6 +15,11 @@ func calculateOctileDistance(from, to *vec2.T) float64 {
 	return (dx + dy) + (math.Sqrt2-2)*math.Min(dx, dy)
 }
 
+func calculateVectorLengthSqr(src, dest *vec2.T) float64 {
+	vector := vec2.Sub(dest, src)
+	return vector.LengthSqr()
+}
+
 func filterTrigger(obj Object) bool {
 	return !obj.IsTrigger()
 }
