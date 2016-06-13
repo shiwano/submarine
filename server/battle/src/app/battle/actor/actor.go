@@ -27,7 +27,7 @@ type actor struct {
 }
 
 func newActor(battleContext *context.Context, user *context.User, actorType battle.ActorType, startPos *vec2.T) *actor {
-	return &actor{
+	a := &actor{
 		user:       user,
 		actorType:  actorType,
 		context:    battleContext,
@@ -35,6 +35,8 @@ func newActor(battleContext *context.Context, user *context.User, actorType batt
 		motor:      newMotor(battleContext, user.StartPosition, accelerationMaxSpeed, accelerationDuration),
 		stageAgent: battleContext.Stage.CreateAgent(21, startPos),
 	}
+	a.stageAgent.SetCollideHandler(a.onStageAgentCollide)
+	return a
 }
 
 func (a *actor) ID() int64 {
@@ -68,10 +70,7 @@ func (a *actor) Position() *vec2.T {
 
 func (a *actor) BeforeUpdate() {
 	position := a.motor.position()
-	if !a.stageAgent.Move(position) {
-		a.motor.idle(a.stageAgent.Position())
-		a.context.Event.Emit(event.ActorMove, a)
-	}
+	a.stageAgent.Move(position)
 }
 
 func (a *actor) accelerate(direction float64) {
@@ -89,6 +88,19 @@ func (a *actor) brake(direction float64) {
 func (a *actor) turn(direction float64) {
 	a.motor.turn(direction)
 	a.context.Event.Emit(event.ActorMove, a)
+}
+
+func (a *actor) idle() {
+	a.motor.idle(a.stageAgent.Position())
+	a.context.Event.Emit(event.ActorMove, a)
+}
+
+func (a *actor) onStageAgentCollide(obj navmesh.Object, point vec2.T) {
+	if obj == nil {
+		a.event.Emit(event.ActorCollide, nil, point)
+	} else {
+		a.event.Emit(event.ActorCollide, a.context.Actor(obj.ID()), point)
+	}
 }
 
 // Overridable methods.

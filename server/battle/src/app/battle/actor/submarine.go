@@ -4,6 +4,7 @@ import (
 	"app/battle/context"
 	"app/battle/event"
 	"app/typhenapi/type/submarine/battle"
+	"github.com/ungerik/go3d/float64/vec2"
 )
 
 type submarine struct {
@@ -15,12 +16,17 @@ func NewSubmarine(battleContext *context.Context, user *context.User) context.Ac
 	s := &submarine{
 		actor: newActor(battleContext, user, battle.ActorType_Submarine, user.StartPosition),
 	}
+	s.event.On(event.ActorCollide, s.onCollide)
 	s.event.On(event.AccelerationRequest, s.onAccelerationRequest)
 	s.event.On(event.BrakeRequest, s.onBrakeRequest)
 	s.event.On(event.TurnRequest, s.onTurnRequest)
 	s.event.On(event.UserLeave, s.onUserLeave)
 	s.context.Event.Emit(event.ActorCreate, s)
 	return s
+}
+
+func (s *submarine) onCollide(actor context.Actor, point vec2.T) {
+	s.idle()
 }
 
 func (s *submarine) onAccelerationRequest(message *battle.AccelerationRequestObject) {

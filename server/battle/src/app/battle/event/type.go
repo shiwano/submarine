@@ -12,6 +12,8 @@ const (
 	ActorMove
 	ActorRemove
 
+	ActorCollide
+
 	AccelerationRequest
 	BrakeRequest
 	TurnRequest
