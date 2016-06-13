@@ -10,7 +10,7 @@ type Agent struct {
 }
 
 // Move sets the specified position to the agent if the position is out of the mesh.
-func (a *Agent) Move(position *vec2.T) bool {
+func (a *Agent) Move(position *vec2.T) {
 	vector := vec2.Sub(position, a.position)
 	sizeRadiusVector := vector.Normalized()
 	sizeRadiusVector.Scale(a.sizeRadius)
@@ -24,8 +24,7 @@ func (a *Agent) Move(position *vec2.T) bool {
 		if hitInfo.obj != nil {
 			hitInfo.obj.callCollideHandler(a, hitInfo.point)
 		}
-		return false
+		return
 	}
 	a.position = position
-	return true
 }

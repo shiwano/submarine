@@ -19,8 +19,7 @@ func TestAgent(t *testing.T) {
 		Convey("#Move", func() {
 			Convey("with the position which is in of the mesh", func() {
 				Convey("should set the position", func() {
-					result := agent.Move(&vec2.T{2, 3})
-					So(result, ShouldBeTrue)
+					agent.Move(&vec2.T{2, 3})
 					So(agent.Position()[0], ShouldEqual, 2)
 					So(agent.Position()[1], ShouldEqual, 3)
 				})
@@ -28,8 +27,7 @@ func TestAgent(t *testing.T) {
 
 			Convey("with the position which is out of the mesh", func() {
 				Convey("should set the intersection point", func() {
-					result := agent.Move(&vec2.T{1, 9999})
-					So(result, ShouldBeFalse)
+					agent.Move(&vec2.T{1, 9999})
 					So(agent.Position()[0], ShouldEqual, 1)
 					So(agent.Position()[1], ShouldEqual, 7-3)
 				})
@@ -51,8 +49,7 @@ func TestAgent(t *testing.T) {
 				otherObj := navmesh.CreateAgent(2, &vec2.T{1, 6})
 
 				Convey("should set the intersection point", func() {
-					result := agent.Move(&vec2.T{1, 3})
-					So(result, ShouldBeFalse)
+					agent.Move(&vec2.T{1, 3})
 					So(agent.Position()[0], ShouldEqual, 1)
 					So(agent.Position()[1], ShouldEqual, 6-3-1)
 					So(otherObj, ShouldNotBeNil)
