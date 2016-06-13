@@ -26,11 +26,6 @@ func NewContext(stageMesh *navmesh.Mesh) *Context {
 	return c
 }
 
-// NextActorID returns the next unique actor id.
-func (c *Context) NextActorID() int64 {
-	return c.container.nextActorID()
-}
-
 // SubmarineByUserID returns the submarine which has the given actor id.
 func (c *Context) SubmarineByUserID(userID int64) Actor {
 	return c.container.submarinesByUserID[userID]

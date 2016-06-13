@@ -6,6 +6,8 @@ import (
 	"github.com/ungerik/go3d/float64/vec2"
 )
 
+var lastCreateActorID int64
+
 type actor struct {
 	id        int64
 	user      *User
@@ -19,7 +21,8 @@ type actor struct {
 }
 
 func newSubmarine(battleContext *Context) *actor {
-	id := battleContext.NextActorID()
+	lastCreateActorID++
+	id := lastCreateActorID
 	user := &User{ID: id * 100, StartPosition: &vec2.Zero}
 	a := &actor{
 		id:        id,

@@ -18,7 +18,6 @@ const (
 )
 
 type actor struct {
-	id         int64
 	user       *context.User
 	actorType  battle.ActorType
 	context    *context.Context
@@ -29,7 +28,6 @@ type actor struct {
 
 func newActor(battleContext *context.Context, user *context.User, actorType battle.ActorType, startPos *vec2.T) *actor {
 	return &actor{
-		id:         battleContext.NextActorID(),
 		user:       user,
 		actorType:  actorType,
 		context:    battleContext,
@@ -40,7 +38,7 @@ func newActor(battleContext *context.Context, user *context.User, actorType batt
 }
 
 func (a *actor) ID() int64 {
-	return a.id
+	return a.stageAgent.ID()
 }
 
 func (a *actor) User() *context.User {
@@ -61,7 +59,7 @@ func (a *actor) Destroy() {
 }
 
 func (a *actor) Movement() *battle.Movement {
-	return a.motor.toAPIType(a.id)
+	return a.motor.toAPIType(a.ID())
 }
 
 func (a *actor) Position() *vec2.T {
