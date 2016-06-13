@@ -16,13 +16,13 @@ func (a *Agent) Move(position *vec2.T) bool {
 	sizeRadiusVector.Scale(a.sizeRadius)
 	vector.Add(&sizeRadiusVector)
 
-	if intersectionObj, intersectionPoint, ok := a.navMesh.Raycast(a.position, &vector, filterTrigger); ok {
-		a.position = &intersectionPoint
+	if hitInfo, ok := a.navMesh.Raycast(a.position, &vector, filterTrigger); ok {
+		a.position = &hitInfo.point
 		a.position.Sub(&sizeRadiusVector)
 
-		a.callCollideHandler(intersectionObj, intersectionPoint)
-		if intersectionObj != nil {
-			intersectionObj.callCollideHandler(a, intersectionPoint)
+		a.callCollideHandler(hitInfo.obj, hitInfo.point)
+		if hitInfo.obj != nil {
+			hitInfo.obj.callCollideHandler(a, hitInfo.point)
 		}
 		return false
 	}

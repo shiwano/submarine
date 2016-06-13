@@ -4,6 +4,12 @@ import (
 	"github.com/ungerik/go3d/float64/vec2"
 )
 
+// RaycastHitInfo represents a raycast hit info.
+type RaycastHitInfo struct {
+	obj   Object
+	point vec2.T
+}
+
 // NavMesh represents a navmesh.
 type NavMesh struct {
 	Mesh                *Mesh
@@ -42,11 +48,11 @@ func (n *NavMesh) DestroyObject(objectID int64) {
 }
 
 // Raycast casts a ray on the navmesh.
-func (n *NavMesh) Raycast(origin, vector *vec2.T, objectFilter func(object Object) bool) (resultObj Object, resultPoint vec2.T, result bool) {
+func (n *NavMesh) Raycast(origin, vector *vec2.T, objectFilter func(object Object) bool) (hitInfo RaycastHitInfo, result bool) {
 	var resultLengthSqr float64
 
 	if p, ok := n.Mesh.intersectWithLine(origin, vector); ok {
-		resultPoint = p
+		hitInfo.point = p
 		resultLengthSqr = calculateVectorLengthSqr(origin, &p)
 		result = true
 	}
@@ -58,8 +64,8 @@ func (n *NavMesh) Raycast(origin, vector *vec2.T, objectFilter func(object Objec
 				lengthSqr := calculateVectorLengthSqr(origin, &p)
 
 				if !result || lengthSqr < resultLengthSqr {
-					resultObj = obj
-					resultPoint = p
+					hitInfo.obj = obj
+					hitInfo.point = p
 					resultLengthSqr = lengthSqr
 					result = true
 				}
