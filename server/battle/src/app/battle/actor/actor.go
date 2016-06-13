@@ -32,7 +32,7 @@ func newActor(battleContext *context.Context, user *context.User, actorType batt
 		actorType:  actorType,
 		context:    battleContext,
 		event:      event.New(),
-		motor:      newMotor(battleContext, user.StartPosition, accelerationMaxSpeed, accelerationDuration),
+		motor:      newMotor(battleContext, startPos, accelerationMaxSpeed, accelerationDuration),
 		stageAgent: battleContext.Stage.CreateAgent(21, startPos),
 	}
 	a.stageAgent.SetCollideHandler(a.onStageAgentCollide)
