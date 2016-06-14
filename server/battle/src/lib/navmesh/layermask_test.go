@@ -32,7 +32,7 @@ func TestLayerMask(t *testing.T) {
 			})
 		})
 
-		Convey("#Claer", func() {
+		Convey("#Clear", func() {
 			Convey("should clear bit flag of the specified layer mask", func() {
 				l := Layer2 | Layer6
 				l.Clear(Layer2)
