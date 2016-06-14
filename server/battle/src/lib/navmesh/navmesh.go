@@ -75,18 +75,6 @@ func (n *NavMesh) Raycast(origin, vector *vec2.T, objectFilter func(object Objec
 	return
 }
 
-func (n *NavMesh) raycastForTriggers(origin, vector *vec2.T) (hitInfos []RaycastHitInfo) {
-	dir := vector.Normalized()
-	for _, obj := range n.Objects {
-		if obj.IsTrigger() {
-			if p, ok := obj.IntersectWithLine(origin, &dir, vector); ok {
-				hitInfos = append(hitInfos, RaycastHitInfo{obj: obj, point: p})
-			}
-		}
-	}
-	return
-}
-
 // FindPath finds a path on the navmesh.
 func (n *NavMesh) FindPath(start *vec2.T, goal *vec2.T) []vec2.T {
 	startTriangle := n.Mesh.findTriangleByPoint(start)

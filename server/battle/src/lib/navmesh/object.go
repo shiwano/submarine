@@ -12,11 +12,6 @@ type Object interface {
 	SizeRadius() float64
 	Destroy()
 
-	IsTrigger() bool
-	SetIsTrigger(value bool)
-	callTriggerEnterHandler(Object, vec2.T)
-	SetTriggerEnterHandler(handler func(Object, vec2.T))
-
 	callCollideHandler(Object, vec2.T)
 	SetCollideHandler(handler func(Object, vec2.T))
 
