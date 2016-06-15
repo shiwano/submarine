@@ -47,7 +47,7 @@ func TestAgent(t *testing.T) {
 
 			Convey("with the position which collided with other object", func() {
 				otherObj := navmesh.CreateAgent(2, &vec2.T{1, 6})
-				otherObj.SetLayer(Layer1)
+				otherObj.SetLayer(Layer02)
 
 				Convey("should set the intersection point", func() {
 					agent.Move(&vec2.T{1, 3}, 0)
@@ -85,7 +85,7 @@ func TestAgent(t *testing.T) {
 						otherObj.SetCollideHandler(func(obj Object, point vec2.T) {
 							called = true
 						})
-						agent.Move(&vec2.T{1, 3}, Layer1)
+						agent.Move(&vec2.T{1, 3}, Layer02)
 						So(called, ShouldBeFalse)
 					})
 				})

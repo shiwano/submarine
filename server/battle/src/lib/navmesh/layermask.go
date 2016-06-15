@@ -5,22 +5,22 @@ type LayerMask uint16
 
 // Layer constants.
 const (
-	Layer0 LayerMask = 1 << iota
-	Layer1
-	Layer2
-	Layer3
-	Layer4
-	Layer5
-	Layer6
-	Layer7
-	Layer8
-	Layer9
+	Layer01 LayerMask = 1 << iota
+	Layer02
+	Layer03
+	Layer04
+	Layer05
+	Layer06
+	Layer07
+	Layer08
+	Layer09
 	Layer10
 	Layer11
 	Layer12
 	Layer13
 	Layer14
 	Layer15
+	Layer16
 )
 
 // Has determines whether the layer mask has specified layers.

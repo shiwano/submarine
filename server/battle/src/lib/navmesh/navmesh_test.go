@@ -71,11 +71,11 @@ func TestNavMesh(t *testing.T) {
 			Convey("with an ignoredLayer", func() {
 				Convey("should ignore objects that has the specified layer", func() {
 					agent := navmesh.CreateAgent(2, &vec2.T{1, 3})
-					agent.SetLayer(Layer1)
+					agent.SetLayer(Layer02)
 					hitInfo, ok := navmesh.Raycast(
 						&vec2.T{1, 0},
 						(&vec2.T{1, 100}).Sub(&vec2.T{1, 0}),
-						Layer1,
+						Layer02,
 					)
 					So(ok, ShouldBeTrue)
 					So(hitInfo.obj, ShouldBeNil)
