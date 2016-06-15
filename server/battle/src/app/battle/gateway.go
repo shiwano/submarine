@@ -62,6 +62,10 @@ func (g *Gateway) outputMovement(actor context.Actor) {
 	g.outputMessage(nil, actor.Movement())
 }
 
+func (g *Gateway) outputDestruction(actor context.Actor) {
+	g.outputMessage(nil, &battle.Destruction{ActorId: actor.ID()})
+}
+
 type gatewayInput struct {
 	userID  int64
 	message typhenapi.Type

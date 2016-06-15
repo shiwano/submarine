@@ -114,6 +114,7 @@ func (b *Battle) start() {
 	}
 	b.context.Event.On(event.ActorAdd, b.onActorAdd)
 	b.context.Event.On(event.ActorMove, b.onActorMove)
+	b.context.Event.On(event.ActorDestroy, b.onActorDestroy)
 }
 
 func (b *Battle) update(now time.Time) bool {
@@ -180,4 +181,8 @@ func (b *Battle) onActorAdd(actor context.Actor) {
 
 func (b *Battle) onActorMove(actor context.Actor) {
 	b.Gateway.outputMovement(actor)
+}
+
+func (b *Battle) onActorDestroy(actor context.Actor) {
+	b.Gateway.outputDestruction(actor)
 }
