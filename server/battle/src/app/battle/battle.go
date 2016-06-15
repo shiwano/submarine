@@ -119,8 +119,12 @@ func (b *Battle) start() {
 func (b *Battle) update(now time.Time) bool {
 	b.context.Now = now
 	for _, actor := range b.context.Actors() {
-		actor.BeforeUpdate()
-		actor.Update()
+		if !actor.IsDestroyed() {
+			actor.BeforeUpdate()
+		}
+		if !actor.IsDestroyed() {
+			actor.Update()
+		}
 	}
 	return b.context.Now.Before(b.startedAt.Add(b.timeLimit))
 }

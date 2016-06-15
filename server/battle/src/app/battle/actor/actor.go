@@ -18,12 +18,13 @@ const (
 )
 
 type actor struct {
-	user       *context.User
-	actorType  battle.ActorType
-	context    *context.Context
-	event      *event.Emitter
-	motor      *motor
-	stageAgent *navmesh.Agent
+	user        *context.User
+	actorType   battle.ActorType
+	context     *context.Context
+	event       *event.Emitter
+	isDestroyed bool
+	motor       *motor
+	stageAgent  *navmesh.Agent
 }
 
 func newActor(battleContext *context.Context, user *context.User, actorType battle.ActorType, startPos *vec2.T) *actor {
@@ -56,8 +57,13 @@ func (a *actor) Event() *event.Emitter {
 }
 
 func (a *actor) Destroy() {
+	a.isDestroyed = true
 	a.stageAgent.Destroy()
 	a.context.Event.Emit(event.ActorDestroy, a)
+}
+
+func (a *actor) IsDestroyed() bool {
+	return a.isDestroyed
 }
 
 func (a *actor) Movement() *battle.Movement {
@@ -96,6 +102,9 @@ func (a *actor) idle() {
 }
 
 func (a *actor) onStageAgentCollide(obj navmesh.Object, point vec2.T) {
+	if a.IsDestroyed() {
+		return
+	}
 	if obj == nil {
 		a.event.Emit(event.ActorCollide, nil, point)
 	} else {

@@ -9,11 +9,12 @@ import (
 var lastCreateActorID int64
 
 type actor struct {
-	id        int64
-	user      *User
-	actorType battle.ActorType
-	context   *Context
-	event     *event.Emitter
+	id          int64
+	user        *User
+	actorType   battle.ActorType
+	context     *Context
+	event       *event.Emitter
+	isDestroyed bool
 
 	isCalledStart     bool
 	isCalledUpdate    bool
@@ -52,7 +53,12 @@ func (a *actor) Event() *event.Emitter {
 }
 
 func (a *actor) Destroy() {
+	a.isDestroyed = true
 	a.context.Event.Emit(event.ActorDestroy, a)
+}
+
+func (a *actor) IsDestroyed() bool {
+	return a.isDestroyed
 }
 
 func (a *actor) Movement() *battle.Movement {
