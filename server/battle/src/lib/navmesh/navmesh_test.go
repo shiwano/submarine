@@ -33,7 +33,7 @@ func TestNavMesh(t *testing.T) {
 					hitInfo, ok := navmesh.Raycast(
 						&vec2.T{1, 0},
 						(&vec2.T{1, 100}).Sub(&vec2.T{1, 0}),
-						nil,
+						0,
 					)
 					So(ok, ShouldBeTrue)
 					So(hitInfo.obj, ShouldBeNil)
@@ -48,7 +48,7 @@ func TestNavMesh(t *testing.T) {
 					hitInfo, ok := navmesh.Raycast(
 						&vec2.T{1, 0},
 						(&vec2.T{1, 100}).Sub(&vec2.T{1, 0}),
-						nil,
+						0,
 					)
 					So(ok, ShouldBeTrue)
 					So(hitInfo.obj.ID(), ShouldEqual, agent.ID())
@@ -57,14 +57,28 @@ func TestNavMesh(t *testing.T) {
 				})
 			})
 
-			Convey("with ray parameters which does not intersected", func() {
+			Convey("with ray parameters which did not intersect", func() {
 				Convey("should return nil", func() {
 					_, ok := navmesh.Raycast(
 						&vec2.T{1, 100},
 						(&vec2.T{1, 200}).Sub(&vec2.T{1, 100}),
-						nil,
+						0,
 					)
 					So(ok, ShouldBeFalse)
+				})
+			})
+
+			Convey("with an ignoredLayer", func() {
+				Convey("should ignore objects that has the specified layer", func() {
+					agent := navmesh.CreateAgent(2, &vec2.T{1, 3})
+					agent.SetLayer(Layer1)
+					hitInfo, ok := navmesh.Raycast(
+						&vec2.T{1, 0},
+						(&vec2.T{1, 100}).Sub(&vec2.T{1, 0}),
+						Layer1,
+					)
+					So(ok, ShouldBeTrue)
+					So(hitInfo.obj, ShouldBeNil)
 				})
 			})
 		})

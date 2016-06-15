@@ -16,7 +16,7 @@ func (a *Agent) Move(position *vec2.T) {
 	sizeRadiusVector.Scale(a.sizeRadius)
 	vector.Add(&sizeRadiusVector)
 
-	if hitInfo, ok := a.navMesh.Raycast(a.position, &vector, nil); ok {
+	if hitInfo, ok := a.navMesh.Raycast(a.position, &vector, 0); ok {
 		a.position = &hitInfo.point
 		a.position.Sub(&sizeRadiusVector)
 
