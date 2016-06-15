@@ -12,8 +12,11 @@ type Object interface {
 	SizeRadius() float64
 	Destroy()
 
+	Layer() LayerMask
+	SetLayer(LayerMask)
+
 	callCollideHandler(Object, vec2.T)
-	SetCollideHandler(handler func(Object, vec2.T))
+	SetCollideHandler(func(Object, vec2.T))
 
 	IntersectWithLine(lineOrigin, lineDir, lineVector *vec2.T) (vec2.T, bool)
 }
@@ -23,6 +26,7 @@ type object struct {
 	navMesh        *NavMesh
 	position       *vec2.T
 	sizeRadius     float64
+	layer          LayerMask
 	collideHandler func(Object, vec2.T)
 }
 
@@ -40,6 +44,14 @@ func (o *object) SizeRadius() float64 {
 
 func (o *object) Destroy() {
 	o.navMesh.DestroyObject(o.id)
+}
+
+func (o *object) Layer() LayerMask {
+	return o.layer
+}
+
+func (o *object) SetLayer(layer LayerMask) {
+	o.layer = layer
 }
 
 func (o *object) callCollideHandler(obj Object, point vec2.T) {
