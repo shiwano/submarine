@@ -33,7 +33,9 @@ func (c *Context) SubmarineByUserID(userID int64) Actor {
 
 // Actors returns all actors.
 func (c *Context) Actors() []Actor {
-	return c.container.actors
+	actors := make([]Actor, len(c.container.actors))
+	copy(actors, c.container.actors)
+	return actors
 }
 
 // Actor returns the actor that has the actor id.

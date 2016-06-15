@@ -37,7 +37,7 @@ func (c *container) removeActor(rawActor Actor) Actor {
 	}
 
 	delete(c.actorsByID, actor.ID())
-	c.actors = make([]Actor, len(c.actorsByID))
+	c.actors = make([]Actor, len(c.actors)-1)
 	for _, a := range c.actors {
 		if a != actor {
 			c.actors = append(c.actors, a)
