@@ -19,7 +19,7 @@ func TestAgent(t *testing.T) {
 		Convey("#Move", func() {
 			Convey("with the position which is in of the mesh", func() {
 				Convey("should set the position", func() {
-					agent.Move(&vec2.T{2, 3})
+					agent.Move(&vec2.T{2, 3}, 0)
 					So(agent.Position()[0], ShouldEqual, 2)
 					So(agent.Position()[1], ShouldEqual, 3)
 				})
@@ -27,7 +27,7 @@ func TestAgent(t *testing.T) {
 
 			Convey("with the position which is out of the mesh", func() {
 				Convey("should set the intersection point", func() {
-					agent.Move(&vec2.T{1, 9999})
+					agent.Move(&vec2.T{1, 9999}, 0)
 					So(agent.Position()[0], ShouldEqual, 1)
 					So(agent.Position()[1], ShouldEqual, 7-3)
 				})
@@ -40,19 +40,19 @@ func TestAgent(t *testing.T) {
 						So(point[1], ShouldEqual, 7-3)
 						called = true
 					})
-					agent.Move(&vec2.T{1, 9999})
+					agent.Move(&vec2.T{1, 9999}, 0)
 					So(called, ShouldBeTrue)
 				})
 			})
 
 			Convey("with the position which collided with other object", func() {
 				otherObj := navmesh.CreateAgent(2, &vec2.T{1, 6})
+				otherObj.SetLayer(Layer1)
 
 				Convey("should set the intersection point", func() {
-					agent.Move(&vec2.T{1, 3})
+					agent.Move(&vec2.T{1, 3}, 0)
 					So(agent.Position()[0], ShouldEqual, 1)
 					So(agent.Position()[1], ShouldEqual, 6-3-1)
-					So(otherObj, ShouldNotBeNil)
 				})
 
 				Convey("should call the collide handler", func() {
@@ -63,7 +63,7 @@ func TestAgent(t *testing.T) {
 						So(point[1], ShouldEqual, 6-3-1)
 						called = true
 					})
-					agent.Move(&vec2.T{1, 3})
+					agent.Move(&vec2.T{1, 3}, 0)
 					So(called, ShouldBeTrue)
 				})
 
@@ -75,8 +75,19 @@ func TestAgent(t *testing.T) {
 						So(point[1], ShouldEqual, 6-3-1)
 						called = true
 					})
-					agent.Move(&vec2.T{1, 3})
+					agent.Move(&vec2.T{1, 3}, 0)
 					So(called, ShouldBeTrue)
+				})
+
+				Convey("with the other object's layer as ignoredLayer parameter", func() {
+					Convey("should ignore the other object", func() {
+						called := false
+						otherObj.SetCollideHandler(func(obj Object, point vec2.T) {
+							called = true
+						})
+						agent.Move(&vec2.T{1, 3}, Layer1)
+						So(called, ShouldBeFalse)
+					})
 				})
 			})
 		})

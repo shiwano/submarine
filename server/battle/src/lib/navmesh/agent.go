@@ -10,13 +10,13 @@ type Agent struct {
 }
 
 // Move sets the specified position to the agent if the position is out of the mesh.
-func (a *Agent) Move(position *vec2.T) {
+func (a *Agent) Move(position *vec2.T, ignoredLayer LayerMask) {
 	vector := vec2.Sub(position, a.position)
 	sizeRadiusVector := vector.Normalized()
 	sizeRadiusVector.Scale(a.sizeRadius)
 	vector.Add(&sizeRadiusVector)
 
-	if hitInfo, ok := a.navMesh.Raycast(a.position, &vector, 0); ok {
+	if hitInfo, ok := a.navMesh.Raycast(a.position, &vector, ignoredLayer); ok {
 		a.position = &hitInfo.point
 		a.position.Sub(&sizeRadiusVector)
 

@@ -70,7 +70,7 @@ func (a *actor) Position() *vec2.T {
 
 func (a *actor) BeforeUpdate() {
 	position := a.motor.position()
-	a.stageAgent.Move(position)
+	a.stageAgent.Move(position, 0)
 }
 
 func (a *actor) accelerate(direction float64) {
