@@ -1,9 +1,10 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 using DG.Tweening;
 
 namespace Submarine.Battle
 {
-    public abstract class ActorView : MonoBehaviour
+    public abstract class ActorView : MonoBehaviour, IDisposable
     {
         const float PositionY = 30f;
         const float DirectionTweenDuration = 3f;
@@ -21,5 +22,7 @@ namespace Submarine.Battle
             get { return transform.localEulerAngles.y; }
             set { transform.DOLocalRotate(new Vector3(0f, value, 0f), DirectionTweenDuration).SetEase(Ease.Linear); }
         }
+
+        public virtual void Dispose() { }
     }
 }

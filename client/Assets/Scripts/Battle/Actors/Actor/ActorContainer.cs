@@ -43,6 +43,16 @@ namespace Submarine.Battle
             }
         }
 
+        public void DestroyActor(long actorId)
+        {
+            var actor = Get(actorId);
+            if (actor != null)
+            {
+                actors.Remove(actorId);
+                actor.Dispose();
+            }
+        }
+
         void CreateSubmarine(Type.Battle.Actor actor)
         {
             var submarine = submarineFactory.Create(actor);

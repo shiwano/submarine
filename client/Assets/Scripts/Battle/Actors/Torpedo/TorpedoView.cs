@@ -12,7 +12,7 @@ namespace Submarine.Battle
 
         public override void ChangeToEnemyColor() { }
 
-        void OnDestroy()
+        public override void Dispose()
         {
             Instantiate(explosionEffectPrefab, transform.position, transform.rotation);
         }

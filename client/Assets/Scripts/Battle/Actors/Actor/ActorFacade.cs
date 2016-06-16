@@ -22,6 +22,7 @@ namespace Submarine.Battle
         public override void Initialize()
         {
             base.Initialize();
+            DisposableManager.Add(view);
 
             if (!IsMine)
             {

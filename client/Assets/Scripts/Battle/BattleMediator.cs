@@ -40,6 +40,7 @@ namespace Submarine.Battle
             Logger.Log("Battle Prepare");
             battleService.Api.OnActorReceiveAsObservable().Subscribe(OnActorCreate).AddTo(view);
             battleService.Api.OnMovementReceiveAsObservable().Subscribe(OnActorMove).AddTo(view);
+            battleService.Api.OnDestructionReceiveAsObservable().Subscribe(OnActorDestroy).AddTo(view);
         }
 
         void OnBattleStart()
@@ -65,6 +66,11 @@ namespace Submarine.Battle
             {
                 actor.Motor.SetMovement(movement);
             }
+        }
+
+        void OnActorDestroy(Type.Battle.Destruction destruction)
+        {
+            actorContainer.DestroyActor(destruction.ActorId);
         }
     }
 }
