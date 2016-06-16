@@ -15,6 +15,9 @@ var p = pp.Println
 const (
 	accelerationMaxSpeed = 6
 	accelerationDuration = 3 * time.Second
+
+	submarineLayer = navmesh.Layer01
+	torpedoLayer   = navmesh.Layer02
 )
 
 type actor struct {
@@ -36,6 +39,14 @@ func newActor(battleContext *context.Context, user *context.User, actorType batt
 		motor:      newMotor(battleContext, startPos, accelerationMaxSpeed, accelerationDuration),
 		stageAgent: battleContext.Stage.CreateAgent(21, startPos),
 	}
+
+	switch actorType {
+	case battle.ActorType_Submarine:
+		a.stageAgent.SetLayer(submarineLayer)
+	case battle.ActorType_Torpedo:
+		a.stageAgent.SetLayer(torpedoLayer)
+	}
+
 	a.stageAgent.SetCollideHandler(a.onStageAgentCollide)
 	return a
 }
