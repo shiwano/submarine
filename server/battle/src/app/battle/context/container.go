@@ -37,12 +37,13 @@ func (c *container) removeActor(rawActor Actor) Actor {
 	}
 
 	delete(c.actorsByID, actor.ID())
-	c.actors = make([]Actor, len(c.actors)-1)
+	var actors []Actor
 	for _, a := range c.actors {
 		if a != actor {
-			c.actors = append(c.actors, a)
+			actors = append(actors, a)
 		}
 	}
+	c.actors = actors
 	if actor.Type() == battle.ActorType_Submarine {
 		delete(c.submarinesByUserID, actor.User().ID)
 	}

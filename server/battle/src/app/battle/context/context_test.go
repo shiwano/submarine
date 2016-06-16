@@ -34,10 +34,12 @@ func TestContextTest(t *testing.T) {
 
 		Convey("when an actor is destroyed", func() {
 			actor := newSubmarine(battleContext)
+			newSubmarine(battleContext)
 
 			Convey("should remove the actor", func() {
 				actor.Destroy()
 				So(battleContext.HasActor(actor.ID()), ShouldBeFalse)
+				So(battleContext.Actors(), ShouldHaveLength, 1)
 			})
 
 			Convey("should call the actor's OnDestroy method", func() {
