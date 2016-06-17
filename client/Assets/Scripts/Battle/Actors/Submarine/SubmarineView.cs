@@ -30,6 +30,8 @@ namespace Submarine.Battle
             model.transform.localRotation = Quaternion.Euler(new Vector3(0f, 0f, -rate * 25f));
         }
 
+        public override void Dispose() { }
+
         public override void ChangeToEnemyColor()
         {
             model.GetComponent<MeshRenderer>().material = enemySubmarineMaterial;

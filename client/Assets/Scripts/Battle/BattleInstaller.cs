@@ -63,6 +63,7 @@ namespace Submarine.Battle
             subContainer.Bind<ActorMotor>().ToSingle();
             subContainer.Bind<SubmarineView>().ToSinglePrefab(submarinePrefab);
             subContainer.Bind<ActorView>().ToSinglePrefab(submarinePrefab);
+            subContainer.Bind<IDisposable>().ToSinglePrefab(submarinePrefab);
             subContainer.BindInstance(actor);
         }
 
@@ -72,6 +73,7 @@ namespace Submarine.Battle
             subContainer.Bind<ActorMotor>().ToSingle();
             subContainer.Bind<TorpedoView>().ToSinglePrefab(torpedoPrefab);
             subContainer.Bind<ActorView>().ToSinglePrefab(torpedoPrefab);
+            subContainer.Bind<IDisposable>().ToSinglePrefab(torpedoPrefab);
             subContainer.BindInstance(actor);
         }
     }
