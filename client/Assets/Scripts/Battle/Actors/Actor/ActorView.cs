@@ -9,7 +9,6 @@ namespace Submarine.Battle
         const float PositionY = 30f;
         const float DirectionTweenDuration = 3f;
 
-        public abstract void Dispose();
         public abstract void ChangeToEnemyColor();
 
         public Vector2 ActorPosition
@@ -22,6 +21,11 @@ namespace Submarine.Battle
         {
             get { return transform.localEulerAngles.y; }
             set { transform.DOLocalRotate(new Vector3(0f, value, 0f), DirectionTweenDuration).SetEase(Ease.Linear); }
+        }
+
+        public virtual void Dispose()
+        {
+            Destroy(gameObject);
         }
     }
 }

@@ -14,6 +14,7 @@ namespace Submarine.Battle
 
         public override void Dispose()
         {
+            base.Dispose();
             Instantiate(explosionEffectPrefab, transform.position, transform.rotation);
         }
     }
