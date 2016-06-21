@@ -17,7 +17,7 @@ namespace Submarine.Battle
 
         public IObservable<Unit> BattleStartButtonClickedAsObservable()
         {
-            return battleStartButton.onClickAsObservableWithThrottle();
+            return battleStartButton.OnSingleClickAsObservable();
         }
 
         public void RefreshRoomMembers(IEnumerable<Type.User> users)

@@ -20,7 +20,7 @@ namespace Submarine.Lobby
         {
             roomIdText.text = room.Id.ToString();
             roomMembersText.text = room.Members.Select(m => m.Name).Aggregate((a, b) => a + ", " + b);
-            button.onClickAsObservableWithThrottle().Subscribe(_ => onClick(room)).AddTo(this);
+            button.OnSingleClickAsObservable().Subscribe(_ => onClick(room)).AddTo(this);
         }
     }
 }

@@ -15,7 +15,7 @@ namespace Submarine.Title
 
         public IObservable<Unit> SignUpButtonClickedAsObservable()
         {
-            return signUpButton.onClickAsObservableWithThrottle();
+            return signUpButton.OnSingleClickAsObservable();
         }
 
         public IObservable<string> NameChangedAsObservable()

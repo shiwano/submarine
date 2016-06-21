@@ -8,7 +8,7 @@ namespace Submarine
     {
         static TimeSpan clickThrottleDueTime = TimeSpan.FromSeconds(0.1d);
 
-        public static IObservable<Unit> onClickAsObservableWithThrottle(this Button button, TimeSpan? dueTime = null)
+        public static IObservable<Unit> OnSingleClickAsObservable(this Button button, TimeSpan? dueTime = null)
         {
             return dueTime.HasValue ?
                 button.OnClickAsObservable().ThrottleFirst(dueTime.Value) :

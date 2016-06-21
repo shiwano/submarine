@@ -20,12 +20,12 @@ namespace Submarine.Lobby
 
         public IObservable<Unit> CreateRoomButtonClickedAsObservable()
         {
-            return createRoomButton.onClickAsObservableWithThrottle();
+            return createRoomButton.OnSingleClickAsObservable();
         }
 
         public IObservable<Unit> UpdateRoomsButtonClickedAsObservable()
         {
-            return updateRoomsButton.onClickAsObservableWithThrottle();
+            return updateRoomsButton.OnSingleClickAsObservable();
         }
 
         public void ClearRooms()
