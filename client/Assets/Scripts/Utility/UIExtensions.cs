@@ -6,10 +6,13 @@ namespace Submarine
 {
     public static class UIExtensions
     {
+        static TimeSpan clickThrottleDueTime = TimeSpan.FromSeconds(0.1d);
+
         public static IObservable<Unit> onClickAsObservableWithThrottle(this Button button, TimeSpan? dueTime = null)
         {
-            // TODO: Add ThrottleFirst operator after UniRX updating.
-            return button.OnClickAsObservable();
+            return dueTime.HasValue ?
+                button.OnClickAsObservable().ThrottleFirst(dueTime.Value) :
+                button.OnClickAsObservable().ThrottleFirst(clickThrottleDueTime);
         }
     }
 }
