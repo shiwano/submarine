@@ -6,13 +6,13 @@ namespace Submarine
 {
     public static class UIExtensions
     {
-        static TimeSpan clickThrottleDueTime = TimeSpan.FromSeconds(0.1d);
+        static TimeSpan singleClickThrottleTime = TimeSpan.FromSeconds(0.1d);
 
-        public static IObservable<Unit> OnSingleClickAsObservable(this Button button, TimeSpan? dueTime = null)
+        public static IObservable<Unit> OnSingleClickAsObservable(this Button button, TimeSpan? throttleTime = null)
         {
-            return dueTime.HasValue ?
-                button.OnClickAsObservable().ThrottleFirst(dueTime.Value) :
-                button.OnClickAsObservable().ThrottleFirst(clickThrottleDueTime);
+            return throttleTime.HasValue ?
+                button.OnClickAsObservable().ThrottleFirst(throttleTime.Value) :
+                button.OnClickAsObservable().ThrottleFirst(singleClickThrottleTime);
         }
     }
 }
