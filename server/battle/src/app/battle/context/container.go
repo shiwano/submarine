@@ -37,7 +37,7 @@ func (c *container) removeActor(rawActor Actor) Actor {
 	}
 
 	delete(c.actorsByID, actor.ID())
-	var actors []Actor
+	actors := c.actors[:0]
 	for _, a := range c.actors {
 		if a != actor {
 			actors = append(actors, a)
