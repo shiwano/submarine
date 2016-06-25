@@ -29,41 +29,47 @@ func (g *Gateway) InputMessage(userID int64, message typhenapi.Type) {
 	}
 }
 
-func (g *Gateway) outputMessage(userIDs []int64, message typhenapi.Type) {
+func (g *Gateway) outputStart(userIDs []int64, startedAt time.Time) {
 	g.Output <- &GatewayOutput{
 		UserIDs: userIDs,
-		Message: message,
+		Message: &battle.Start{
+			StartedAt: currentmillis.Millis(startedAt),
+		},
 	}
 }
 
-func (g *Gateway) outputStart(userIDs []int64, startedAt time.Time) {
-	g.outputMessage(userIDs, &battle.Start{
-		StartedAt: currentmillis.Millis(startedAt),
-	})
-}
-
 func (g *Gateway) outputFinish(winnerUserID int64, finishedAt time.Time) {
-	g.outputMessage(nil, &battle.Finish{
-		WinnerUserId: winnerUserID,
-		FinishedAt:   currentmillis.Millis(finishedAt),
-	})
+	g.Output <- &GatewayOutput{
+		Message: &battle.Finish{
+			WinnerUserId: winnerUserID,
+			FinishedAt:   currentmillis.Millis(finishedAt),
+		},
+		IsFinishMessage: true,
+	}
 }
 
 func (g *Gateway) outputActor(userIDs []int64, actor context.Actor) {
-	g.outputMessage(userIDs, &battle.Actor{
-		Id:       actor.ID(),
-		UserId:   actor.User().ID,
-		Type:     actor.Type(),
-		Movement: actor.Movement(),
-	})
+	g.Output <- &GatewayOutput{
+		UserIDs: userIDs,
+		Message: &battle.Actor{
+			Id:       actor.ID(),
+			UserId:   actor.User().ID,
+			Type:     actor.Type(),
+			Movement: actor.Movement(),
+		},
+	}
 }
 
 func (g *Gateway) outputMovement(actor context.Actor) {
-	g.outputMessage(nil, actor.Movement())
+	g.Output <- &GatewayOutput{
+		Message: actor.Movement(),
+	}
 }
 
 func (g *Gateway) outputDestruction(actor context.Actor) {
-	g.outputMessage(nil, &battle.Destruction{ActorId: actor.ID()})
+	g.Output <- &GatewayOutput{
+		Message: &battle.Destruction{ActorId: actor.ID()},
+	}
 }
 
 type gatewayInput struct {
@@ -73,6 +79,7 @@ type gatewayInput struct {
 
 // GatewayOutput represents a battle output.
 type GatewayOutput struct {
-	UserIDs []int64
-	Message typhenapi.Type
+	UserIDs         []int64
+	Message         typhenapi.Type
+	IsFinishMessage bool
 }

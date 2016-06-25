@@ -8,7 +8,6 @@ import (
 	"app/typhenapi/type/submarine"
 	"app/typhenapi/type/submarine/battle"
 	webapi "app/typhenapi/web/submarine"
-	websocketapi "app/typhenapi/websocket/submarine/battle"
 	"fmt"
 	"github.com/tevino/abool"
 	"time"
@@ -161,21 +160,20 @@ func (r *Room) sendBattleInput(userID int64, message typhenapi.Type) {
 }
 
 func (r *Room) onBattleOutputReceive(output *battleLogic.GatewayOutput) {
-	var message *typhenapi.Message
 	if output.UserIDs == nil {
 		for _, s := range r.sessions {
-			message, _ = s.api.Battle.Send(output.Message)
+			s.api.Battle.Send(output.Message)
 		}
 	} else {
 		for _, s := range r.sessions {
 			for _, userID := range output.UserIDs {
 				if s.id == userID {
-					message, _ = s.api.Battle.Send(output.Message)
+					s.api.Battle.Send(output.Message)
 				}
 			}
 		}
 	}
-	if message != nil && message.Type == websocketapi.MessageType_Finish {
+	if output.IsFinishMessage {
 		go func() { r.closeCh <- struct{}{} }()
 	}
 }
