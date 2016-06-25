@@ -19,9 +19,13 @@ namespace Submarine.Battle
         public ActorView View { get { return view; } }
         public bool IsMine { get { return actor.UserId == userModel.LoggedInUser.Value.Id; } }
 
+        public virtual bool WillIgnoreMotorDirection { get { return false; } }
+
         public override void Initialize()
         {
             base.Initialize();
+            Motor.SetMovement(Actor.Movement);
+            UpdatePositionAndDirection();
 
             if (!IsMine)
             {
@@ -32,9 +36,14 @@ namespace Submarine.Battle
         public override void Tick()
         {
             base.Tick();
+            UpdatePositionAndDirection();
+        }
+
+        void UpdatePositionAndDirection()
+        {
             view.ActorPosition = motor.GetCurrentPosition();
 
-            if (!IsMine)
+            if (WillIgnoreMotorDirection)
             {
                 view.ActorDirection = motor.GetCurrentDirection();
             }
