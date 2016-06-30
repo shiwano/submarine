@@ -12,11 +12,7 @@ namespace Submarine.Battle
 
         public double Direction
         {
-            get
-            {
-                var direction = (double)(360f - view.transform.eulerAngles.y + 90f);
-                return direction > 360d ? direction - 360d : direction;
-            }
+            get { return (double)view.ActorDirection; }
         }
 
         public void Turn(float rate)

@@ -80,9 +80,7 @@ namespace Submarine.Battle
 
         public float GetCurrentDirection()
         {
-            var direction = movement == null ? 0f : (float)movement.Direction;
-            direction = 360f - direction - 90f;
-            return direction > 360f ? direction - 360f : direction;
+            return movement == null ? 0f : (float)movement.Direction;
         }
 
         public Vector2 GetCurrentPosition()

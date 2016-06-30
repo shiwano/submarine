@@ -19,8 +19,15 @@ namespace Submarine.Battle
 
         public float ActorDirection
         {
-            get { return transform.localEulerAngles.y; }
-            set { transform.DOLocalRotate(new Vector3(0f, value, 0f), DirectionTweenDuration).SetEase(Ease.Linear); }
+            get
+            {
+                var direction = (360f - transform.eulerAngles.y + 90f);
+                return direction > 360f ? direction - 360f : direction;
+            }
+            set
+            {
+                transform.eulerAngles = new Vector3(0f, 360f - value - 90f, 0f);
+            }
         }
 
         public virtual void Dispose()
