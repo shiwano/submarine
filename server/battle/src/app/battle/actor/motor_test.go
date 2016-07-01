@@ -16,7 +16,7 @@ func TestMotor(t *testing.T) {
 		stageMesh, _ := resource.Loader.LoadStageMesh(1)
 		c := context.NewContext(stageMesh)
 		c.Now, _ = time.Parse(timeLayout, "00:00:00.000")
-		m := newMotor(c, &vec2.T{1, 1}, 3, 5*time.Second)
+		m := newMotor(c, &vec2.T{1, 1}, 0, 3, 5*time.Second)
 
 		Convey("#position", func() {
 			Convey("when the accelerator is shutdown", func() {

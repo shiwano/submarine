@@ -24,13 +24,17 @@ type motor struct {
 	changedAt          time.Time
 }
 
-func newMotor(context *context.Context, position *vec2.T,
+func newMotor(context *context.Context, position *vec2.T, direction float64,
 	maxSpeed float64, duration time.Duration) *motor {
 	m := &motor{
-		context:            context,
-		initialPosition:    position,
-		normalizedVelocity: &vec2.T{1, 0},
-		changedAt:          context.Now,
+		context:         context,
+		initialPosition: position,
+		direction:       direction,
+		normalizedVelocity: &vec2.T{
+			math.Cos(direction * deg2Rad),
+			math.Sin(direction * deg2Rad),
+		},
+		changedAt: context.Now,
 		accelerator: &accelerator{
 			context:    context,
 			maxSpeed:   maxSpeed,

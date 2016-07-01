@@ -14,7 +14,7 @@ type torpedo struct {
 // NewTorpedo creates a torpedo.
 func NewTorpedo(battleContext *context.Context, user *context.User, position *vec2.T, direction float64) context.Actor {
 	t := &torpedo{
-		actor: newActor(battleContext, user, battle.ActorType_Torpedo, position),
+		actor: newActor(battleContext, user, battle.ActorType_Torpedo, position, direction),
 	}
 	t.event.On(event.ActorCollide, t.onCollide)
 	t.context.Event.Emit(event.ActorCreate, t)
