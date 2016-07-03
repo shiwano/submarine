@@ -13,9 +13,6 @@ import (
 var p = pp.Println
 
 const (
-	accelerationMaxSpeed = 6
-	accelerationDuration = 3 * time.Second
-
 	submarineLayer = navmesh.Layer01
 	torpedoLayer   = navmesh.Layer02
 )
@@ -31,7 +28,8 @@ type actor struct {
 }
 
 func newActor(battleContext *context.Context, user *context.User,
-	actorType battle.ActorType, position *vec2.T, direction float64) *actor {
+	actorType battle.ActorType, position *vec2.T, direction float64,
+	accelerationMaxSpeed float64, accelerationDuration time.Duration) *actor {
 	a := &actor{
 		user:       user,
 		actorType:  actorType,
