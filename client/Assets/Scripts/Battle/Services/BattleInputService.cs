@@ -15,7 +15,7 @@ namespace Submarine.Battle
         [SerializeField]
         Button lookoutButton;
 
-        const float SqrDragLengthThresholdForClick = 10f * 10f;
+        const float SqrDragAmountThresholdForClick = 10f * 10f;
         readonly TimeSpan touchTimeThresholdForClick = TimeSpan.FromSeconds(1.5d);
         readonly float halfScreenWidth = Screen.width / 2f;
 
@@ -25,31 +25,12 @@ namespace Submarine.Battle
 
         bool IsTouchingUI
         {
-            get
-            {
-                return EventSystem.current != null &&
-                    EventSystem.current.currentSelectedGameObject != null;
-            }
-        }
-
-        TimeSpan TouchTime
-        {
-            get
-            {
-                return isTouched.Value ?
-                    DateTime.Now - touchStartTime :
-                    TimeSpan.Zero;
-            }
+            get { return EventSystem.current != null && EventSystem.current.currentSelectedGameObject != null; }
         }
 
         Vector3 DragAmount
         {
-            get
-            {
-                return isTouched.Value ?
-                    Input.mousePosition - touchStartPosition :
-                    Vector3.zero;
-            }
+            get { return isTouched.Value ? Input.mousePosition - touchStartPosition : Vector3.zero; }
         }
 
         public IReadOnlyReactiveProperty<bool> IsAccelerating
@@ -64,11 +45,7 @@ namespace Submarine.Battle
 
         public IObservable<Unit> OnTorpadeShootAsObservable()
         {
-            return isTouched
-                .Where(b => !b &&
-                    TouchTime < touchTimeThresholdForClick &&
-                    DragAmount.sqrMagnitude < SqrDragLengthThresholdForClick)
-                .Select(_ => Unit.Default);
+            return onClickAsObservable();
         }
 
         public IObservable<Unit> OnDecoyShootAsObservable()
@@ -101,6 +78,20 @@ namespace Submarine.Battle
             isTouched.Where(b => b)
                 .Subscribe(_ => touchStartTime = DateTime.Now)
                 .AddTo(this);
+        }
+
+        IObservable<Unit> onClickAsObservable()
+        {
+            return isTouched
+                .Where(value =>
+                {
+                    if (value) return false;
+                    var touchTime = DateTime.Now - touchStartTime;
+                    var dragAmount = Input.mousePosition - touchStartPosition;
+                    return touchTime < touchTimeThresholdForClick &&
+                        dragAmount.sqrMagnitude < SqrDragAmountThresholdForClick;
+                })
+                .AsUnitObservable();
         }
     }
 }
