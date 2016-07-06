@@ -116,9 +116,9 @@ func (a *actor) onStageAgentCollide(obj navmesh.Object, point vec2.T) {
 		return
 	}
 	if obj == nil {
-		a.event.Emit(event.ActorCollide, nil, point)
-	} else {
-		a.event.Emit(event.ActorCollide, a.context.Actor(obj.ID()), point)
+		a.event.Emit(event.ActorCollideWithStage, point)
+	} else if other := a.context.Actor(obj.ID()); other != nil {
+		a.event.Emit(event.ActorCollideWithOtherActor, other, point)
 	}
 }
 

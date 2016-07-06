@@ -17,16 +17,19 @@ func NewTorpedo(battleContext *context.Context, user *context.User, position *ve
 		actor: newActor(battleContext, user, battle.ActorType_Torpedo, position, direction,
 			user.TorpedoAccelerationMaxSpeed, user.TorpedoAccelerationDuration),
 	}
-	t.event.On(event.ActorCollide, t.onCollide)
+	t.event.On(event.ActorCollideWithStage, t.onCollideWithStage)
+	t.event.On(event.ActorCollideWithOtherActor, t.onCollideWithOtherActor)
 	t.context.Event.Emit(event.ActorCreate, t)
 	t.accelerate(direction)
 	return t
 }
 
-func (t *torpedo) onCollide(actor context.Actor, point vec2.T) {
-	if actor == nil || actor.User() != t.User() {
-		t.Destroy()
-	} else if actor.User() != t.User() {
+func (t *torpedo) onCollideWithStage(point vec2.T) {
+	t.Destroy()
+}
+
+func (t *torpedo) onCollideWithOtherActor(actor context.Actor, point vec2.T) {
+	if actor.User() != t.User() {
 		t.Destroy()
 
 		if actor.Type() == battle.ActorType_Submarine {

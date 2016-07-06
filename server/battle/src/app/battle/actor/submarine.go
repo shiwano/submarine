@@ -17,7 +17,7 @@ func NewSubmarine(battleContext *context.Context, user *context.User) context.Ac
 		actor: newActor(battleContext, user, battle.ActorType_Submarine, user.StartPosition, 0,
 			user.SubmarineAccelerationMaxSpeed, user.SubmarineAccelerationDuration),
 	}
-	s.event.On(event.ActorCollide, s.onCollide)
+	s.event.On(event.ActorCollideWithOtherActor, s.onCollideWithOtherActor)
 	s.event.On(event.AccelerationRequest, s.onAccelerationRequest)
 	s.event.On(event.BrakeRequest, s.onBrakeRequest)
 	s.event.On(event.TurnRequest, s.onTurnRequest)
@@ -27,8 +27,8 @@ func NewSubmarine(battleContext *context.Context, user *context.User) context.Ac
 	return s
 }
 
-func (s *submarine) onCollide(actor context.Actor, point vec2.T) {
-	if actor == nil || actor.User() != s.User() {
+func (s *submarine) onCollideWithOtherActor(actor context.Actor, point vec2.T) {
+	if actor.User() != s.User() {
 		s.idle()
 	}
 }

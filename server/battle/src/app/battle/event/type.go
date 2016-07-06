@@ -12,7 +12,8 @@ const (
 	ActorMove
 	ActorRemove
 
-	ActorCollide
+	ActorCollideWithStage
+	ActorCollideWithOtherActor
 
 	AccelerationRequest
 	BrakeRequest
