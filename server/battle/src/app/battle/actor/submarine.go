@@ -14,8 +14,7 @@ type submarine struct {
 // NewSubmarine creates a submarine.
 func NewSubmarine(battleContext *context.Context, user *context.User) context.Actor {
 	s := &submarine{
-		actor: newActor(battleContext, user, battle.ActorType_Submarine, user.StartPosition, 0,
-			user.SubmarineAccelerationMaxSpeed, user.SubmarineAccelerationDuration),
+		actor: newActor(battleContext, user, battle.ActorType_Submarine, user.StartPosition, 0, user.SubmarineParams),
 	}
 	s.event.On(event.ActorCollideWithOtherActor, s.onCollideWithOtherActor)
 	s.event.On(event.AccelerationRequest, s.onAccelerationRequest)
@@ -54,7 +53,7 @@ func (s *submarine) onUserLeave() {
 }
 
 func (s *submarine) shootTorpedo() {
-	p := s.motor.normalizedVelocity.Scaled(s.stageAgent.SizeRadius() * s.user.TorpedoStartOffsetLength)
+	p := s.motor.normalizedVelocity.Scaled(s.stageAgent.SizeRadius() * s.user.TorpedoParams.StartOffsetDistance)
 	p.Add(s.Position())
 	NewTorpedo(s.context, s.user, &p, s.motor.direction)
 }

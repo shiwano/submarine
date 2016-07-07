@@ -64,15 +64,8 @@ func (b *Battle) EnterUser(userID int64) {
 		if s := b.context.SubmarineByUserID(userID); s == nil {
 			index := float64(len(b.context.Users()))
 			startPos := &vec2.T{-20 * index, 20 * index}
-			actor.NewSubmarine(b.context, &context.User{
-				ID:                            userID,
-				StartPosition:                 startPos,
-				SubmarineAccelerationMaxSpeed: 6,
-				SubmarineAccelerationDuration: 2 * time.Second,
-				TorpedoStartOffsetLength:      1.2,
-				TorpedoAccelerationMaxSpeed:   10,
-				TorpedoAccelerationDuration:   1 * time.Second,
-			})
+			user := context.NewUser(userID, startPos)
+			actor.NewSubmarine(b.context, user)
 		}
 	} else if b.isFighting.IsSet() {
 		b.reenterUserCh <- userID

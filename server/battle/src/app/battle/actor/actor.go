@@ -7,7 +7,6 @@ import (
 	"github.com/k0kubun/pp"
 	"github.com/ungerik/go3d/float64/vec2"
 	"lib/navmesh"
-	"time"
 )
 
 var p = pp.Println
@@ -27,15 +26,14 @@ type actor struct {
 	stageAgent  *navmesh.Agent
 }
 
-func newActor(battleContext *context.Context, user *context.User,
-	actorType battle.ActorType, position *vec2.T, direction float64,
-	accelerationMaxSpeed float64, accelerationDuration time.Duration) *actor {
+func newActor(battleContext *context.Context, user *context.User, actorType battle.ActorType,
+	position *vec2.T, direction float64, params context.ActorParams) *actor {
 	a := &actor{
 		user:       user,
 		actorType:  actorType,
 		context:    battleContext,
 		event:      event.New(),
-		motor:      newMotor(battleContext, position, direction, accelerationMaxSpeed, accelerationDuration),
+		motor:      newMotor(battleContext, position, direction, params.AccelMaxSpeed(), params.AccelDuration()),
 		stageAgent: battleContext.Stage.CreateAgent(21, position),
 	}
 
@@ -45,7 +43,6 @@ func newActor(battleContext *context.Context, user *context.User,
 	case battle.ActorType_Torpedo:
 		a.stageAgent.SetLayer(torpedoLayer)
 	}
-
 	a.stageAgent.SetCollideHandler(a.onStageAgentCollide)
 	return a
 }
