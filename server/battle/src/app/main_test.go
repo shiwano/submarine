@@ -9,15 +9,12 @@ import (
 	"bytes"
 	"errors"
 	"github.com/gin-gonic/gin"
-	"github.com/k0kubun/pp"
 	"io/ioutil"
 	"lib/conn"
 	"net/http"
 	"net/http/httptest"
 	"strings"
 )
-
-var p = pp.Println
 
 type clientSession struct {
 	conn         *conn.Conn

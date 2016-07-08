@@ -4,12 +4,9 @@ import (
 	"app/battle/context"
 	"app/battle/event"
 	"app/typhenapi/type/submarine/battle"
-	"github.com/k0kubun/pp"
 	"github.com/ungerik/go3d/float64/vec2"
 	"lib/navmesh"
 )
-
-var p = pp.Println
 
 type actor struct {
 	user         *context.User
