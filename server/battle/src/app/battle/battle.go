@@ -62,9 +62,10 @@ func (b *Battle) CloseIfPossible() {
 func (b *Battle) EnterUser(userID int64) {
 	if !b.isStarted {
 		if s := b.context.SubmarineByUserID(userID); s == nil {
-			index := float64(len(b.context.Users()))
-			startPos := &vec2.T{-20 * index, 20 * index}
-			user := context.NewUser(userID, startPos)
+			index := len(b.context.Users())
+			startPos := &vec2.T{-20 * float64(index), 20 * float64(index)}
+			teamLayer := context.GetTeamLayer(index + 1)
+			user := context.NewUser(userID, teamLayer, startPos)
 			actor.NewSubmarine(b.context, user)
 		}
 	} else if b.isFighting.IsSet() {

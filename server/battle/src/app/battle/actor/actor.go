@@ -11,11 +11,6 @@ import (
 
 var p = pp.Println
 
-const (
-	submarineLayer = navmesh.Layer01
-	torpedoLayer   = navmesh.Layer02
-)
-
 type actor struct {
 	user        *context.User
 	actorType   battle.ActorType
@@ -39,10 +34,11 @@ func newActor(battleContext *context.Context, user *context.User, actorType batt
 
 	switch actorType {
 	case battle.ActorType_Submarine:
-		a.stageAgent.SetLayer(submarineLayer)
+		a.stageAgent.SetLayer(context.LayerSubmarine)
 	case battle.ActorType_Torpedo:
-		a.stageAgent.SetLayer(torpedoLayer)
+		a.stageAgent.SetLayer(context.LayerTorpedo)
 	}
+	a.stageAgent.SetLayer(a.User().TeamLayer)
 	a.stageAgent.SetCollideHandler(a.onStageAgentCollide)
 	return a
 }
