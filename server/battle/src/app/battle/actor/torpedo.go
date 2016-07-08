@@ -28,11 +28,9 @@ func (t *torpedo) onCollideWithStage(point vec2.T) {
 }
 
 func (t *torpedo) onCollideWithOtherActor(actor context.Actor, point vec2.T) {
-	if actor.User() != t.User() {
-		t.Destroy()
+	t.Destroy()
 
-		if actor.Type() == battle.ActorType_Submarine {
-			actor.Destroy()
-		}
+	if actor.Type() == battle.ActorType_Submarine {
+		actor.Destroy()
 	}
 }

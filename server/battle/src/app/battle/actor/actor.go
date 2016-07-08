@@ -12,24 +12,26 @@ import (
 var p = pp.Println
 
 type actor struct {
-	user        *context.User
-	actorType   battle.ActorType
-	context     *context.Context
-	event       *event.Emitter
-	isDestroyed bool
-	motor       *motor
-	stageAgent  *navmesh.Agent
+	user         *context.User
+	actorType    battle.ActorType
+	context      *context.Context
+	event        *event.Emitter
+	isDestroyed  bool
+	motor        *motor
+	stageAgent   *navmesh.Agent
+	ignoredLayer navmesh.LayerMask
 }
 
 func newActor(battleContext *context.Context, user *context.User, actorType battle.ActorType,
 	position *vec2.T, direction float64, params context.ActorParams) *actor {
 	a := &actor{
-		user:       user,
-		actorType:  actorType,
-		context:    battleContext,
-		event:      event.New(),
-		motor:      newMotor(battleContext, position, direction, params.AccelMaxSpeed(), params.AccelDuration()),
-		stageAgent: battleContext.Stage.CreateAgent(21, position),
+		user:         user,
+		actorType:    actorType,
+		context:      battleContext,
+		event:        event.New(),
+		motor:        newMotor(battleContext, position, direction, params.AccelMaxSpeed(), params.AccelDuration()),
+		stageAgent:   battleContext.Stage.CreateAgent(21, position),
+		ignoredLayer: user.TeamLayer,
 	}
 
 	switch actorType {
@@ -79,7 +81,7 @@ func (a *actor) Position() *vec2.T {
 
 func (a *actor) BeforeUpdate() {
 	position := a.motor.position()
-	a.stageAgent.Move(position, 0)
+	a.stageAgent.Move(position, a.ignoredLayer)
 }
 
 func (a *actor) accelerate(direction float64) {
