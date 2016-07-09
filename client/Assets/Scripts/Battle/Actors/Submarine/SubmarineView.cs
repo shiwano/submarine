@@ -18,6 +18,8 @@ namespace Submarine.Battle
         [SerializeField]
         Material enemySubmarineMaterial;
 
+        Tweener floatingTweener;
+
         public Vector3 TorpedoLaunchSitePosition { get { return torpedoLaunchSite.position; } }
         public Vector3 DecoyLaunchSitePosition { get { return decoyLaunchSite.position; } }
         public Quaternion DecoyLaunchSiteRotation { get { return decoyLaunchSite.rotation; } }
@@ -35,9 +37,20 @@ namespace Submarine.Battle
             model.GetComponent<MeshRenderer>().material = enemySubmarineMaterial;
         }
 
+        public override void Dispose()
+        {
+            base.Dispose();
+            floatingTweener.Pause();
+            GetComponent<Rigidbody>().useGravity = true;
+            GetComponent<Rigidbody>().constraints = RigidbodyConstraints.None;
+            // Rigidbody.AddForce(shockPower, ForceMode.Impulse);
+            // Rigidbody.AddTorque(shockPower, ForceMode.Impulse);
+            streamEffect.SetActive(true);
+        }
+
         void Start()
         {
-            model.transform.DOLocalMoveY(-0.25f, 3f)
+            floatingTweener = model.transform.DOLocalMoveY(-0.25f, 3f)
                 .SetEase(Ease.InOutQuad)
                 .SetLoops(-1, LoopType.Yoyo);
         }

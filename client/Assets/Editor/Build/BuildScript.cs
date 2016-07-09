@@ -3,6 +3,13 @@ using UnityEditor;
 
 public static class BuildScript
 {
+    [MenuItem("Build/TestApp/StandaloneOSX", false, 0)]
+    public static void BuildTestAppForStandaloneOSX()
+    {
+        var settings = new BuildSettings(BuildTarget.StandaloneOSXUniversal);
+        Execute(settings);
+    }
+
     public static void ExecuteViaCommandLine()
     {
         var args = new CommandLineCustomArgs();
@@ -13,9 +20,9 @@ public static class BuildScript
     static void Execute(BuildSettings settings)
     {
         Debug.Log("BuildTarget: " + settings.BuildTarget);
-        Debug.Log("BundleIdentifier" + settings.BundleIdentifier);
-        Debug.Log("BundleVersion" + settings.BundleVersion);
-        Debug.Log("ProductName" + settings.ProductName);
+        Debug.Log("BundleIdentifier: " + settings.BundleIdentifier);
+        Debug.Log("BundleVersion: " + settings.BundleVersion);
+        Debug.Log("ProductName: " + settings.ProductName);
 
         PlayerSettings.bundleIdentifier = settings.BundleIdentifier;
         PlayerSettings.bundleVersion = settings.BundleVersion;

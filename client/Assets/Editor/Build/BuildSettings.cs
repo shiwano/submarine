@@ -25,6 +25,14 @@ public class BuildSettings
         }
     }
 
+    public BuildSettings(BuildTarget buildTarget)
+    {
+        BundleIdentifier = PlayerSettings.bundleIdentifier;
+        BundleVersion = PlayerSettings.bundleVersion;
+        ProductName = PlayerSettings.productName;
+        BuildTarget = buildTarget;
+    }
+
     public BuildSettings(CommandLineCustomArgs args)
     {
         BundleIdentifier = args.GetArg("bundleIdentifier");
