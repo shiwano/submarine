@@ -25,5 +25,6 @@ Assets/Resources/Config/Config.json.meta
 
 build.log
 iOSXCodeProject
-build_*.ipa
-build_*.apk
+build*.ipa
+build*.apk
+build*.app
