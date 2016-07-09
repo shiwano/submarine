@@ -16,8 +16,6 @@ import (
 type Battle struct {
 	Gateway       *Gateway
 	context       *context.Context
-	createdAt     time.Time
-	startedAt     time.Time
 	timeLimit     time.Duration
 	isStarted     bool
 	isFighting    *abool.AtomicBool
@@ -31,7 +29,6 @@ func New(timeLimit time.Duration, stageMesh *navmesh.Mesh) *Battle {
 	return &Battle{
 		Gateway:       newGateway(),
 		context:       context.NewContext(stageMesh),
-		createdAt:     time.Now(),
 		timeLimit:     timeLimit,
 		isFighting:    abool.New(),
 		reenterUserCh: make(chan int64, 4),
@@ -106,8 +103,8 @@ loop:
 
 func (b *Battle) start() {
 	b.isFighting.SetTo(true)
-	b.startedAt = time.Now()
-	b.Gateway.outputStart(nil, b.startedAt)
+	b.context.StartedAt = time.Now()
+	b.Gateway.outputStart(nil, b.context.StartedAt)
 	for _, actor := range b.context.Actors() {
 		b.Gateway.outputActor(nil, actor)
 	}
@@ -126,7 +123,7 @@ func (b *Battle) update(now time.Time) bool {
 			actor.Update()
 		}
 	}
-	return b.context.Now.Before(b.startedAt.Add(b.timeLimit))
+	return b.context.ElapsedTime() < b.timeLimit
 }
 
 func (b *Battle) finish() {
@@ -137,7 +134,7 @@ func (b *Battle) finish() {
 
 func (b *Battle) reenterUser(userID int64) {
 	userIDs := []int64{userID}
-	b.Gateway.outputStart(userIDs, b.startedAt)
+	b.Gateway.outputStart(userIDs, b.context.StartedAt)
 	for _, actor := range b.context.Actors() {
 		b.Gateway.outputActor(userIDs, actor)
 	}

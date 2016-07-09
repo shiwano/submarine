@@ -6,40 +6,41 @@ import (
 	"app/typhenapi/type/submarine/battle"
 	. "github.com/smartystreets/goconvey/convey"
 	"testing"
+	"time"
 )
 
 func TestContextTest(t *testing.T) {
 	Convey("Context", t, func() {
 		stageMesh, _ := resource.Loader.LoadStageMesh(1)
-		battleContext := NewContext(stageMesh)
+		c := NewContext(stageMesh)
 
 		Convey("when an actor is created", func() {
 			Convey("should add the actor", func() {
-				actor := newSubmarine(battleContext)
-				So(battleContext.HasActor(actor.ID()), ShouldBeTrue)
+				actor := newSubmarine(c)
+				So(c.HasActor(actor.ID()), ShouldBeTrue)
 			})
 
 			Convey("should call the actor's Start method", func() {
-				actor := newSubmarine(battleContext)
+				actor := newSubmarine(c)
 				So(actor.isCalledStart, ShouldBeTrue)
 			})
 
 			Convey("should emit the ActorAdded event", func() {
 				isCalled := false
-				battleContext.Event.On(event.ActorAdd, func(a Actor) { isCalled = true })
-				newSubmarine(battleContext)
+				c.Event.On(event.ActorAdd, func(a Actor) { isCalled = true })
+				newSubmarine(c)
 				So(isCalled, ShouldBeTrue)
 			})
 		})
 
 		Convey("when an actor is destroyed", func() {
-			actor := newSubmarine(battleContext)
-			newSubmarine(battleContext)
+			actor := newSubmarine(c)
+			newSubmarine(c)
 
 			Convey("should remove the actor", func() {
 				actor.Destroy()
-				So(battleContext.HasActor(actor.ID()), ShouldBeFalse)
-				So(battleContext.Actors(), ShouldHaveLength, 1)
+				So(c.HasActor(actor.ID()), ShouldBeFalse)
+				So(c.Actors(), ShouldHaveLength, 1)
 			})
 
 			Convey("should call the actor's OnDestroy method", func() {
@@ -49,36 +50,45 @@ func TestContextTest(t *testing.T) {
 
 			Convey("should emit the ActorRemoved event", func() {
 				isCalled := false
-				battleContext.Event.On(event.ActorRemove, func(a Actor) { isCalled = true })
+				c.Event.On(event.ActorRemove, func(a Actor) { isCalled = true })
 				actor.Destroy()
 				So(isCalled, ShouldBeTrue)
 			})
 		})
 
+		Convey("#ElapsedTime", func() {
+			c.StartedAt, _ = time.Parse(time.RFC3339, "2016-01-01T12:00:00+00:00")
+			c.Now, _ = time.Parse(time.RFC3339, "2016-01-01T12:00:40+00:00")
+
+			Convey("should return the elapsed time since start of battle", func() {
+				So(c.ElapsedTime(), ShouldEqual, time.Second*40)
+			})
+		})
+
 		Convey("#Actor", func() {
-			actorID := newSubmarine(battleContext).ID()
+			actorID := newSubmarine(c).ID()
 
 			Convey("with valid actor id", func() {
 				Convey("should return the actor", func() {
-					actor := battleContext.Actor(actorID)
+					actor := c.Actor(actorID)
 					So(actor.ID(), ShouldEqual, actorID)
 				})
 			})
 
 			Convey("with invalid user id", func() {
 				Convey("should return nil", func() {
-					actor := battleContext.Actor(actorID + 1)
+					actor := c.Actor(actorID + 1)
 					So(actor, ShouldBeNil)
 				})
 			})
 		})
 
 		Convey("#SubmarineByUserID", func() {
-			userID := newSubmarine(battleContext).User().ID
+			userID := newSubmarine(c).User().ID
 
 			Convey("with valid user id", func() {
 				Convey("should return the user's submarine", func() {
-					submarine := battleContext.SubmarineByUserID(userID)
+					submarine := c.SubmarineByUserID(userID)
 					So(submarine.User().ID, ShouldEqual, userID)
 					So(submarine.Type(), ShouldEqual, battle.ActorType_Submarine)
 				})
@@ -86,7 +96,7 @@ func TestContextTest(t *testing.T) {
 
 			Convey("with invalid user id", func() {
 				Convey("should return nil", func() {
-					submarine := battleContext.SubmarineByUserID(userID + 1)
+					submarine := c.SubmarineByUserID(userID + 1)
 					So(submarine, ShouldBeNil)
 				})
 			})
