@@ -1,4 +1,4 @@
-# Submarine Cloud
+# Submarine
 
 A mobile game that is made with Unity3D and RoR, WebSocket server written in Go.
 
