@@ -25,7 +25,7 @@ declare module Submarine.Battle {
   }
 
   interface Finish {
-    winnerUserId: integer;
+    winnerUserId?: integer;
     finishedAt: timeStamp;
   }
 
