@@ -15,4 +15,9 @@ namespace :build do
   task :android do
     Build::ClientBuilder.build(:android)
   end
+
+  desc 'Generate the config file for the client'
+  task :generate_config_for_client do
+    Build::ClientBuilder.generate_config_for_client
+  end
 end

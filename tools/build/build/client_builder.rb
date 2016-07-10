@@ -9,6 +9,13 @@ module Build
       def build(target)
         self.new(target).build
       end
+
+      def generate_config_for_client
+        open('client/Assets/Resources/Config/Config.json', 'w') do |file|
+          Configuration.client['version'] = Environment.version
+          JSON.dump(Configuration.client, file)
+        end
+      end
     end
 
     def initialize(target)
@@ -18,7 +25,7 @@ module Build
     end
 
     def build
-      generate_config_for_client
+      self.class.generate_config_for_client
       case @target
       when :ios     then build_for_ios
       when :android then build_for_android
@@ -26,13 +33,6 @@ module Build
     end
 
     private
-
-    def generate_config_for_client
-      open('client/Assets/Resources/Config/Config.json', 'w') do |file|
-        Configuration.client['version'] = Environment.version
-        JSON.dump(Configuration.client, file)
-      end
-    end
 
     def build_with_unity
       sh <<-EOS
