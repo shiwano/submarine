@@ -46,6 +46,14 @@ func (c *container) removeActor(rawActor Actor) Actor {
 	c.actors = actors
 	if actor.Type() == battle.ActorType_Submarine {
 		delete(c.submarinesByUserID, actor.User().ID)
+
+		users := c.users[:0]
+		for _, u := range c.users {
+			if u != actor.User() {
+				users = append(users, u)
+			}
+		}
+		c.users = users
 	}
 	return actor
 }

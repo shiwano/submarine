@@ -41,6 +41,7 @@ func TestContextTest(t *testing.T) {
 				actor.Destroy()
 				So(c.HasActor(actor.ID()), ShouldBeFalse)
 				So(c.Actors(), ShouldHaveLength, 1)
+				So(c.Users(), ShouldHaveLength, 1)
 			})
 
 			Convey("should call the actor's OnDestroy method", func() {
