@@ -16,7 +16,7 @@ import (
 type Battle struct {
 	Gateway       *Gateway
 	context       *context.Context
-	timeLimit     time.Duration
+	judge         *judge
 	isStarted     bool
 	isFighting    *abool.AtomicBool
 	reenterUserCh chan int64
@@ -26,10 +26,11 @@ type Battle struct {
 
 // New creates a new battle.
 func New(timeLimit time.Duration, stageMesh *navmesh.Mesh) *Battle {
+	battleContext := context.NewContext(stageMesh)
 	return &Battle{
 		Gateway:       newGateway(),
-		context:       context.NewContext(stageMesh),
-		timeLimit:     timeLimit,
+		context:       battleContext,
+		judge:         newJudge(battleContext, timeLimit),
 		isFighting:    abool.New(),
 		reenterUserCh: make(chan int64, 4),
 		leaveUserCh:   make(chan int64, 4),
@@ -85,7 +86,8 @@ loop:
 	for {
 		select {
 		case now := <-ticker.C:
-			if !b.update(now) {
+			b.update(now)
+			if b.judge.isBattleFinished() {
 				break loop
 			}
 		case input := <-b.Gateway.input:
@@ -113,7 +115,7 @@ func (b *Battle) start() {
 	b.context.Event.On(event.ActorDestroy, b.onActorDestroy)
 }
 
-func (b *Battle) update(now time.Time) bool {
+func (b *Battle) update(now time.Time) {
 	b.context.Now = now
 	for _, actor := range b.context.Actors() {
 		if !actor.IsDestroyed() {
@@ -123,13 +125,15 @@ func (b *Battle) update(now time.Time) bool {
 			actor.Update()
 		}
 	}
-	return b.context.ElapsedTime() < b.timeLimit
 }
 
 func (b *Battle) finish() {
 	b.isFighting.SetTo(false)
-	// TODO: winnerUserID is temporary value.
-	b.Gateway.outputFinish(b.context.Users()[0].ID, b.context.Now)
+	if winner := b.judge.winner(); winner != nil {
+		b.Gateway.outputFinish(&winner.ID, b.context.Now)
+	} else {
+		b.Gateway.outputFinish(nil, b.context.Now)
+	}
 }
 
 func (b *Battle) reenterUser(userID int64) {

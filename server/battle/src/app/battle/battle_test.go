@@ -39,23 +39,5 @@ func TestBattle(t *testing.T) {
 				})
 			})
 		})
-
-		Convey("#update", func() {
-			battle.start()
-
-			Convey("when the battle is not finished", func() {
-				Convey("should return true", func() {
-					isFinished := battle.update(time.Now())
-					So(isFinished, ShouldBeTrue)
-				})
-			})
-
-			Convey("when the battle is finished", func() {
-				Convey("should return false", func() {
-					isFinished := battle.update(time.Now().Add(60 * time.Second))
-					So(isFinished, ShouldBeFalse)
-				})
-			})
-		})
 	})
 }

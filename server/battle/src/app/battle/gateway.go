@@ -38,7 +38,7 @@ func (g *Gateway) outputStart(userIDs []int64, startedAt time.Time) {
 	}
 }
 
-func (g *Gateway) outputFinish(winnerUserID int64, finishedAt time.Time) {
+func (g *Gateway) outputFinish(winnerUserID *int64, finishedAt time.Time) {
 	g.Output <- &GatewayOutput{
 		Message: &battle.Finish{
 			WinnerUserId: winnerUserID,
