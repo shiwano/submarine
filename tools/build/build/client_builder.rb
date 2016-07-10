@@ -18,14 +18,16 @@ module Build
     end
 
     def build
-      make_client_config
+      generate_config_for_client
       case @target
       when :ios     then build_for_ios
       when :android then build_for_android
       end
     end
 
-    def make_client_config
+    private
+
+    def generate_config_for_client
       open('client/Assets/Resources/Config/Config.json', 'w') do |file|
         Configuration.client['version'] = Environment.version
         JSON.dump(Configuration.client, file)
