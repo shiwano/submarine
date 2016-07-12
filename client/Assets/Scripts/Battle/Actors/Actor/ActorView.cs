@@ -7,7 +7,7 @@ namespace Submarine.Battle
     public abstract class ActorView : MonoBehaviour, IDisposable
     {
         const float PositionY = 30f;
-        const float DirectionTweenDuration = 3f;
+        const float RotationTweenDuration = 1.5f;
 
         public abstract void ChangeToEnemyColor();
 
@@ -26,7 +26,7 @@ namespace Submarine.Battle
             }
             set
             {
-                transform.eulerAngles = new Vector3(0f, 360f - value - 90f, 0f);
+                transform.DORotate(new Vector3(0f, 360f - value - 90f, 0f), RotationTweenDuration);
             }
         }
 
