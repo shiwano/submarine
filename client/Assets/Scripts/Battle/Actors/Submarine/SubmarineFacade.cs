@@ -10,6 +10,11 @@ namespace Submarine.Battle
         [Inject]
         SubmarineView view;
 
+        public override bool WillIgnoreMotorDirection
+        {
+            get { return IsMine; }
+        }
+
         public double Direction
         {
             get { return (double)view.ActorDirection; }

@@ -43,7 +43,7 @@ namespace Submarine.Battle
         {
             view.ActorPosition = motor.GetCurrentPosition();
 
-            if (WillIgnoreMotorDirection)
+            if (!WillIgnoreMotorDirection)
             {
                 view.ActorDirection = motor.GetCurrentDirection();
             }

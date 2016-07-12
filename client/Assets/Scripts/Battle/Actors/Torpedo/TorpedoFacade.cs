@@ -7,8 +7,6 @@ namespace Submarine.Battle
     {
         public class Factory : FacadeFactory<Type.Battle.Actor, TorpedoFacade> { }
 
-        public override bool WillIgnoreMotorDirection { get { return true; } }
-
         [Inject]
         TorpedoView view;
     }
