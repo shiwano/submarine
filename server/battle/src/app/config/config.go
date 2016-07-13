@@ -8,7 +8,7 @@ import (
 )
 
 // Config is the loaded server config.
-var Config = newServerConfig()
+var Config *ServerConfig
 
 // ServerConfig represents the game server config.
 type ServerConfig struct {
@@ -16,12 +16,12 @@ type ServerConfig struct {
 	BattleServerBaseURI string `yaml:"battle_server_base_uri"`
 }
 
-func newServerConfig() *ServerConfig {
+func newServerConfig() (*ServerConfig, error) {
 	_, filename, _, _ := runtime.Caller(1)
 	dir := filepath.Join(filepath.Dir(filename), "../../../../../")
 	dir, err := filepath.Abs(dir)
 	if err != nil {
-		panic(err)
+		return nil, err
 	}
 
 	var path string
@@ -33,7 +33,7 @@ func newServerConfig() *ServerConfig {
 
 	data, err := ioutil.ReadFile(path)
 	if err != nil {
-		panic(err)
+		return nil, err
 	}
 
 	c := new(struct {
@@ -41,7 +41,15 @@ func newServerConfig() *ServerConfig {
 	})
 	err = yaml.Unmarshal(data, &c)
 	if err != nil {
+		return nil, err
+	}
+	return &c.Server, nil
+}
+
+func init() {
+	serverConfig, err := newServerConfig()
+	if err != nil {
 		panic(err)
 	}
-	return &c.Server
+	Config = serverConfig
 }
