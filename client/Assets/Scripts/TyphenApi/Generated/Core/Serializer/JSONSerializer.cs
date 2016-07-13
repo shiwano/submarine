@@ -64,6 +64,10 @@ namespace TyphenApi
             {
                 return valueType.IsEnum ? (long)((int)value) : value;
             }
+            else if (IsNullableValue(value, valueType))
+            {
+                return Nullable.GetUnderlyingType(valueType).IsEnum ? (long)((int)value) : value;
+            }
             else if (IsList(value))
             {
                 var itemType = valueType.GetGenericArguments().First();
@@ -85,7 +89,14 @@ namespace TyphenApi
                 var value = dict[info.PropertyName];
                 if (value != null)
                 {
-                    info.SetValue(obj, DeserializeValue(value, info.ValueType));
+                    try
+                    {
+                        info.SetValue(obj, DeserializeValue(value, info.ValueType));
+                    }
+                    catch (InvalidCastException e)
+                    {
+                        throw new DeserializeFailedException(string.Format("Failed to deserialize {0} to {1}", value, info.ValueType), e);
+                    }
                 }
                 else if (!info.IsOptional)
                 {
@@ -97,7 +108,7 @@ namespace TyphenApi
 
         object DeserializeValue(object value, System.Type valueType)
         {
-            if (IsValue(value, valueType))
+            if (IsValue(value, valueType) || IsNullableValue(value, valueType))
             {
                 return value;
             }
@@ -126,6 +137,15 @@ namespace TyphenApi
         bool IsValue(object value, System.Type valueType)
         {
             return valueType.IsPrimitive || valueType.IsEnum || value is string;
+        }
+
+        bool IsNullableValue(object value, System.Type valueType)
+        {
+            if (valueType.IsGenericType && valueType.GetGenericTypeDefinition() == typeof(Nullable<>))
+            {
+                return IsValue(value, Nullable.GetUnderlyingType(valueType));
+            }
+            return false;
         }
 
         bool IsList(object value)

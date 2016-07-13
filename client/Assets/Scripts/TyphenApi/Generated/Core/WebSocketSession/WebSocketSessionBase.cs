@@ -124,22 +124,42 @@ namespace TyphenApi
                 }
 
                 var messageType = BitConverter.ToInt32(messageTypeBytes, 0);
-
-                synchronizedFunctionCaller.ReserveCall(() =>
-                {
-                    var message = Api.DispatchMessageEvent(messageType, messageData);
-
-                    if (message is ErrorT)
-                    {
-                        var error = new WebSocketSessionError<ErrorT>((ErrorT)message, null, null);
-                        OnError(error);
-                    }
-                    else if (message != null)
-                    {
-                        OnMessageReceive(message);
-                    }
-                });
+                var func = CreateDispatchMessageFunction(messageType, messageData);
+                synchronizedFunctionCaller.ReserveCall(func);
             }
+        }
+
+        SynchronizedFunctionCaller.Function CreateDispatchMessageFunction(int messageType, byte[] messageData)
+        {
+            return () =>
+            {
+                TypeBase message;
+
+                try
+                {
+                    message = Api.DispatchMessageEvent(messageType, messageData);
+                }
+                catch (SerializationException e)
+                {
+                    OnError(new WebSocketSessionError<ErrorT>(null, e, e.Message));
+                    return;
+                }
+
+                if (message == null)
+                {
+                    return;
+                }
+
+                var messageAsError = message as ErrorT;
+                if (messageAsError != null)
+                {
+                    OnError(new WebSocketSessionError<ErrorT>(messageAsError, null, null));
+                }
+                else
+                {
+                    OnMessageReceive(message);
+                }
+            };
         }
 
         void OnOpen(object sender, EventArgs e)

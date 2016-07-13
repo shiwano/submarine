@@ -20,6 +20,7 @@ namespace TyphenApi
     {
         readonly Func<ClassT, ValueT> getValueFunc;
         readonly Action<ClassT, ValueT> setValueFunc;
+        readonly System.Type underlyingValueType;
 
         public string PropertyName { get; private set; }
         public bool IsOptional { get; private set; }
@@ -33,6 +34,7 @@ namespace TyphenApi
             PropertyName = propertyName;
             IsOptional = isOptional;
             ValueType = typeof(ValueT);
+            underlyingValueType = Nullable.GetUnderlyingType(ValueType) ?? ValueType;
         }
 
         public object GetValue(object obj)
@@ -42,9 +44,20 @@ namespace TyphenApi
 
         public void SetValue(object obj, object rawValue)
         {
-            ValueT value = ValueType.IsEnum ?
-                (ValueT)Convert.ChangeType(rawValue, typeof(int)) :
-                (ValueT)Convert.ChangeType(rawValue, ValueType);
+            ValueT value;
+
+            if (underlyingValueType.IsEnum)
+            {
+                value = (ValueT)Convert.ChangeType(rawValue, typeof(int));
+            }
+            else if (rawValue == null)
+            {
+                value = (ValueT)Convert.ChangeType(rawValue, ValueType);
+            }
+            else
+            {
+                value = (ValueT)Convert.ChangeType(rawValue, underlyingValueType);
+            }
             setValueFunc((ClassT)obj, value);
         }
     }

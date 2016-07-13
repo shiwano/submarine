@@ -6,21 +6,21 @@ namespace TyphenApi
 {
     public abstract class SerializationException : Exception
     {
-        protected SerializationException(string message) : base(message) {}
+        protected SerializationException(string message, Exception innerException = null) : base(message, innerException) {}
     }
 
     public class NoNullAllowedException : SerializationException
     {
-        public NoNullAllowedException(string message) : base(message) {}
+        public NoNullAllowedException(string message, Exception innerException = null) : base(message, innerException) {}
     }
 
     public class SerializeFailedException : SerializationException
     {
-        public SerializeFailedException(string message) : base(message) {}
+        public SerializeFailedException(string message, Exception innerException = null) : base(message, innerException) {}
     }
 
     public class DeserializeFailedException : SerializationException
     {
-        public DeserializeFailedException(string message) : base(message) {}
+        public DeserializeFailedException(string message, Exception innerException = null) : base(message, innerException) {}
     }
 }
