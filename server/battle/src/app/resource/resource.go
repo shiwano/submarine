@@ -17,5 +17,7 @@ func init() {
 		clientAssetDir = path.Join(rootDir, "server/battle/fixtures/Assets")
 	case "development":
 		clientAssetDir = path.Join(rootDir, "client/Assets")
+	default:
+		clientAssetDir = path.Join(rootDir, "client/Assets")
 	}
 }
