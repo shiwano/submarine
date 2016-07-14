@@ -14,7 +14,7 @@
 #
 
 class Room < ApplicationRecord
-  default_value_for(:battle_server_base_uri) { retrieve_battle_server_base_uri }
+  attribute :battle_server_base_uri, :string, default: -> { retrieve_battle_server_base_uri }
 
   has_many :room_members, dependent: :delete_all
   has_many :users, through: :room_members
