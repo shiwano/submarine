@@ -37,7 +37,6 @@ gem 'virtus'
 gem 'sorcery'
 gem 'redis-session-store'
 gem 'rails_config'
-gem 'squeel'
 gem 'rack-merge-cookies'
 gem 'hashie'
 
