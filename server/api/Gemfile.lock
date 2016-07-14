@@ -47,6 +47,8 @@ GEM
       descendants_tracker (~> 0.0.4)
       ice_nine (~> 0.11.0)
       thread_safe (~> 0.3, >= 0.3.1)
+    baby_squeel (0.3.0)
+      activerecord (>= 4.0.0)
     bcrypt (3.1.11)
     builder (3.2.2)
     bullet (5.1.1)
@@ -280,6 +282,7 @@ PLATFORMS
 
 DEPENDENCIES
   annotate (~> 2.6.6)
+  baby_squeel
   bullet
   coffee-rails (~> 4.1.0)
   database_cleaner

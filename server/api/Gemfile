@@ -39,6 +39,7 @@ gem 'redis-session-store'
 gem 'rails_config'
 gem 'rack-merge-cookies'
 gem 'hashie'
+gem 'baby_squeel'
 
 group :development do
   gem 'bullet'
