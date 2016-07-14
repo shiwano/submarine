@@ -16,7 +16,7 @@
 #  index_room_members_on_user_id   (user_id) UNIQUE
 #
 
-class RoomMember < ActiveRecord::Base
+class RoomMember < ApplicationRecord
   belongs_to :user
   belongs_to :room, :counter_cache => true
 

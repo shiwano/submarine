@@ -13,7 +13,7 @@
 #  index_rooms_on_room_members_count  (room_members_count)
 #
 
-class Room < ActiveRecord::Base
+class Room < ApplicationRecord
   default_value_for(:battle_server_base_uri) { retrieve_battle_server_base_uri }
 
   has_many :room_members, dependent: :delete_all

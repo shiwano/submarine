@@ -15,7 +15,7 @@
 #  index_users_on_name  (name) UNIQUE
 #
 
-class User < ActiveRecord::Base
+class User < ApplicationRecord
   authenticates_with_sorcery!
 
   has_one :room_member
