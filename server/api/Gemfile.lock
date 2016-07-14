@@ -152,8 +152,6 @@ GEM
       multi_xml (~> 0.5)
       rack (>= 1.2, < 3)
     pkg-config (1.1.7)
-    polyamorous (1.1.0)
-      activerecord (>= 3.0)
     pry (0.10.4)
       coderay (~> 1.1.0)
       method_source (~> 0.8.1)
@@ -250,10 +248,6 @@ GEM
       actionpack (>= 4.0)
       activesupport (>= 4.0)
       sprockets (>= 3.0.0)
-    squeel (1.2.3)
-      activerecord (>= 3.0)
-      activesupport (>= 3.0)
-      polyamorous (~> 1.1.0)
     tapp (1.5.0)
       thor
     tapp-awesome_print (1.0.1)
@@ -310,7 +304,6 @@ DEPENDENCIES
   shoulda-matchers
   sorcery
   spring
-  squeel
   tapp-awesome_print
   timecop
   turbolinks
