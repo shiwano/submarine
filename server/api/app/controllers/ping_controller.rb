@@ -1,6 +1,6 @@
 class PingController < ApplicationController
-  include TyphenApi::Controller::Submarine::Ping
-  include TyphenApiRespondable
+  prepend TyphenApi::Controller::Submarine::Ping
+  prepend TyphenApiRespondable
 
   def service
     render_response(message: params.message + ' PONG')

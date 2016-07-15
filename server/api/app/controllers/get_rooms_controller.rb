@@ -1,6 +1,6 @@
 class GetRoomsController < ApplicationController
-  include TyphenApi::Controller::Submarine::GetRooms
-  include TyphenApiRespondable
+  prepend TyphenApi::Controller::Submarine::GetRooms
+  prepend TyphenApiRespondable
 
   def service
     rooms = joinable_rooms.map { |r| r.as_room_api_type }

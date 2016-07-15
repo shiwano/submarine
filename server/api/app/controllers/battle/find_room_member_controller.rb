@@ -1,6 +1,6 @@
 class Battle::FindRoomMemberController < ApplicationController
-  include TyphenApi::Controller::Submarine::Battle::FindRoomMember
-  include TyphenApiRespondable
+  prepend TyphenApi::Controller::Submarine::Battle::FindRoomMember
+  prepend TyphenApiRespondable
 
   def service
     render_response(room_member: room_member.try(:as_battle_room_member_api_type))

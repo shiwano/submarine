@@ -1,6 +1,6 @@
 class Battle::CloseRoomController < ApplicationController
-  include TyphenApi::Controller::Submarine::Battle::CloseRoom
-  include TyphenApiRespondable
+  prepend TyphenApi::Controller::Submarine::Battle::CloseRoom
+  prepend TyphenApiRespondable
 
   def service
     if room.blank?

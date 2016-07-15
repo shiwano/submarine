@@ -1,6 +1,6 @@
 class SignUpController < ApplicationController
-  include TyphenApi::Controller::Submarine::SignUp
-  include TyphenApiRespondable
+  prepend TyphenApi::Controller::Submarine::SignUp
+  prepend TyphenApiRespondable
 
   def service
     login(new_user.name, params.password)

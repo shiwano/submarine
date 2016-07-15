@@ -1,6 +1,6 @@
 class LoginController < ApplicationController
-  include TyphenApi::Controller::Submarine::Login
-  include TyphenApiRespondable
+  prepend TyphenApi::Controller::Submarine::Login
+  prepend TyphenApiRespondable
 
   def service
     if logged_in_user.blank?

@@ -1,6 +1,6 @@
 class JoinIntoRoomController < ApplicationController
-  include TyphenApi::Controller::Submarine::JoinIntoRoom
-  include TyphenApiRespondable
+  prepend TyphenApi::Controller::Submarine::JoinIntoRoom
+  prepend TyphenApiRespondable
 
   def service
     if room.blank?

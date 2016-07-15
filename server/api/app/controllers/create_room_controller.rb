@@ -1,6 +1,6 @@
 class CreateRoomController < ApplicationController
-  include TyphenApi::Controller::Submarine::CreateRoom
-  include TyphenApiRespondable
+  prepend TyphenApi::Controller::Submarine::CreateRoom
+  prepend TyphenApiRespondable
 
   def service
     render_response(room: new_room.as_joined_room_api_type(current_user))
