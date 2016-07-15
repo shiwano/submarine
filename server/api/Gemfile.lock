@@ -181,8 +181,6 @@ GEM
       nokogiri (~> 1.6.0)
     rails-html-sanitizer (1.0.3)
       loofah (~> 2.0)
-    rails_config (0.99.0)
-      config (>= 1.0.0.beta1)
     railties (5.0.0)
       actionpack (= 5.0.0)
       activesupport (= 5.0.0)
@@ -285,6 +283,7 @@ DEPENDENCIES
   baby_squeel
   bullet
   coffee-rails (~> 4.1.0)
+  config
   database_cleaner
   factory_girl_rails
   faker
@@ -298,7 +297,6 @@ DEPENDENCIES
   pry-rails
   rack-merge-cookies
   rails (= 5.0.0)
-  rails_config
   redis-session-store
   rspec-its
   rspec-rails (~> 3.0)
