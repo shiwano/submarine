@@ -15,7 +15,7 @@ module SubmarineApi
     config.middleware.insert_before(ActionDispatch::Cookies, Rack::MergeCookies, header_name: 'X-COOKIE')
     config.paths["config/routes.rb"] << "#{Rails.root}/lib/typhen_api/typhen_api/routes.rb"
     config.autoload_paths << "#{Rails.root}/lib/typhen_api"
-    config.assets.enabled = false
+    config.debug_exception_response_format = :api
 
     config.generators do |g|
       g.assets false
