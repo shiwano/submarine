@@ -1,6 +1,6 @@
 class {{controllerName this}}Controller < ApplicationController
-  include TyphenApi::Controller::{{upperCamelCase fullName}}
-  include TyphenApiRespondable
+  prepend TyphenApi::Controller::{{upperCamelCase fullName}}
+  prepend TyphenApiRespondable
 
   def service
     # Implement here.

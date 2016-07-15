@@ -1,37 +1,21 @@
 module TyphenApiRespondable
-  extend ActiveSupport::Concern
-
-  def params_with_validation
+  def params
     @typhen_api_params ||= self.class::RequestType.new(
-      params_without_validation.except(:controller, :action).to_unsafe_h
+      super.except(:controller, :action).to_unsafe_h
     )
   end
 
-  def render_response(response)
-    render :json => response
-  end
-
-  def render_response_with_validation(raw_response)
+  def render_response(raw_response)
     if self.class::ResponseType.present?
       response = self.class::ResponseType.new(raw_response)
-      render_response_without_validation(response)
+      render :json => response
     else
-      render_response_without_validation({})
+      render :json => raw_response
     end
   end
 
-  def render_error(response, status)
-    render :json => response, :status => status
-  end
-
-  def render_error_with_validation(raw_response, status)
+  def render_error(raw_response, status)
     response = self.class::ErrorType.new(raw_response)
-    render_error_without_validation(response, status)
-  end
-
-  included do
-    alias_method_chain(:params, :validation)
-    alias_method_chain(:render_response, :validation) unless Rails.env.production?
-    alias_method_chain(:render_error, :validation) unless Rails.env.production?
+    render :json => response, :status => status
   end
 end
