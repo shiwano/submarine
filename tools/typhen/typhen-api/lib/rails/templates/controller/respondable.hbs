@@ -2,7 +2,9 @@ module TyphenApiRespondable
   extend ActiveSupport::Concern
 
   def params_with_validation
-    @typhen_api_params ||= self.class::RequestType.new(params_without_validation)
+    @typhen_api_params ||= self.class::RequestType.new(
+      params_without_validation.except(:controller, :action).to_unsafe_h
+    )
   end
 
   def render_response(response)
