@@ -9,7 +9,7 @@ RSpec.describe 'Login', type: :request do
     context 'with a valid request' do
       before do
         room.join_user!(user)
-        post(login_path, params)
+        post(login_path, params: params)
       end
 
       it 'should work' do
@@ -36,7 +36,7 @@ RSpec.describe 'Login', type: :request do
       let(:params) { { name: user.name, password: 'incorrect' } }
 
       it 'should raise login error' do
-        expect { post(login_path, params) }.to raise_error(GameError::LoginFailed)
+        expect { post(login_path, params: params) }.to raise_error(GameError::LoginFailed)
       end
     end
 
@@ -44,7 +44,7 @@ RSpec.describe 'Login', type: :request do
       let(:params) { { name: 'unknown', password: 'secret' } }
 
       it 'should raise login error' do
-        expect { post(login_path, params) }.to raise_error(GameError::LoginFailed)
+        expect { post(login_path, params: params) }.to raise_error(GameError::LoginFailed)
       end
     end
   end

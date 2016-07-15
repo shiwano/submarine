@@ -6,7 +6,7 @@ RSpec.describe "Ping", type: :request do
 
     context 'with a valid request' do
       before do
-        post(ping_path, params)
+        post(ping_path, params: params)
       end
 
       it "should work" do

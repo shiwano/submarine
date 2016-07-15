@@ -11,7 +11,7 @@ RSpec.describe 'FindUser', type: :request do
 
     context 'with a valid request' do
       before do
-        post(find_user_path, params)
+        post(find_user_path, params: params)
       end
 
       it 'should work' do
@@ -32,7 +32,7 @@ RSpec.describe 'FindUser', type: :request do
       let(:params) { { name: 'Kaga' } }
 
       it 'should return empty' do
-        post(find_user_path, params)
+        post(find_user_path, params: params)
         expect(response_json[:user]).to be_nil
       end
     end

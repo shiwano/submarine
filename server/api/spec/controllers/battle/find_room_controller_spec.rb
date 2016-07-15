@@ -9,7 +9,7 @@ RSpec.describe Battle::FindRoomController, type: :controller do
       subject { assigns(:room) }
 
       it 'should return a Room' do
-        post :service, params
+        post :service, params: params
         expect(subject).to be_a_kind_of Room
       end
     end

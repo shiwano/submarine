@@ -7,7 +7,7 @@ RSpec.describe 'JoinIntoRoom', type: :request do
 
     context 'with a valid request' do
       before do
-        post(join_into_room_path, params)
+        post(join_into_room_path, params: params)
       end
 
       it 'should work' do
@@ -22,7 +22,7 @@ RSpec.describe 'JoinIntoRoom', type: :request do
       let(:params) { { room_id: -1 } }
 
       it 'should not work' do
-        expect { post(join_into_room_path, params) }.to raise_error GameError::RoomNotFound
+        expect { post(join_into_room_path, params: params) }.to raise_error GameError::RoomNotFound
       end
     end
   end

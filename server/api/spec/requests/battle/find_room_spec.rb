@@ -6,7 +6,7 @@ RSpec.describe "Battle::FindRoom", type: :request do
     let(:params) { { room_id: room.id } }
 
     before do
-      post(battle_find_room_path, params)
+      post(battle_find_room_path, params: params)
     end
 
     context 'with a valid request' do

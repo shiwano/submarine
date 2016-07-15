@@ -6,13 +6,13 @@ RSpec.describe SignUpController, type: :controller do
 
     it 'should call login' do
       expect(@controller).to receive(:login).and_call_original
-      post :service, params
+      post :service, params: params
     end
 
     describe '#new_user' do
       subject { assigns(:new_user) }
       before do
-        post :service, params
+        post :service, params: params
       end
 
       it { should be_a_kind_of(User) }

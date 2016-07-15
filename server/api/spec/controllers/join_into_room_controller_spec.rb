@@ -9,13 +9,13 @@ RSpec.describe JoinIntoRoomController, type: :controller do
       subject { assigns(:room) }
 
       it 'should return a Room' do
-        post :service, params
+        post :service, params: params
         expect(subject).to be_a_kind_of Room
       end
 
       it 'should call Room.joinable' do
         expect(Room).to receive(:joinable).and_call_original
-        post :service, params
+        post :service, params: params
       end
     end
   end

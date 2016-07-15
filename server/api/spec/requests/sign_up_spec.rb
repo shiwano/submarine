@@ -6,7 +6,7 @@ RSpec.describe "SignUp", type: :request do
 
     context 'with a valid request' do
       before do
-        post(sign_up_path, params)
+        post(sign_up_path, params: params)
       end
 
       it "should work" do

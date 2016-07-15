@@ -4,7 +4,7 @@ RSpec.describe FindUserController, type: :controller do
   context 'POST service', with_login: true do
     before do
       create(:user, name: 'Shimakaze')
-      post :service, params
+      post :service, params: params
     end
 
     describe '#user' do

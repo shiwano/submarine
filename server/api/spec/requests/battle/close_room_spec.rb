@@ -7,7 +7,7 @@ RSpec.describe "Battle::CloseRoom", type: :request do
 
     context 'with a valid request' do
       before do
-        post(battle_close_room_path, params)
+        post(battle_close_room_path, params: params)
       end
 
       it 'should work' do
@@ -25,7 +25,7 @@ RSpec.describe "Battle::CloseRoom", type: :request do
       let(:params) { { room_id: -1 } }
 
       it 'should not work' do
-        expect { post(battle_close_room_path, params) }.to raise_error GameError::RoomNotFound
+        expect { post(battle_close_room_path, params: params) }.to raise_error GameError::RoomNotFound
       end
     end
   end

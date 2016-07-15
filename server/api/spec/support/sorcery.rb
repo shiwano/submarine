@@ -1,7 +1,7 @@
 module SorceryHelpers
   module Request
     def login_user(user)
-      post login_path, name: user.name, password: 'secret'
+      post login_path, params: { name: user.name, password: 'secret' }
     end
   end
 end

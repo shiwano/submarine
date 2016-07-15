@@ -9,7 +9,7 @@ RSpec.describe Battle::FindRoomMemberController, type: :controller do
       subject { assigns(:room_member) }
 
       it 'should return the room member' do
-        post :service, params
+        post :service, params: params
         expect(subject).to eq room_member
       end
     end
