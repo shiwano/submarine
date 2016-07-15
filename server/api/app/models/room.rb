@@ -20,7 +20,7 @@ class Room < ApplicationRecord
   has_many :users, through: :room_members
 
   validates :battle_server_base_uri, presence: true
-  scope :joinable, -> { where { room_members_count < my { max_room_members_count } } }
+  scope :joinable, -> { where.has { room_members_count < Room.max_room_members_count } }
 
   class << self
     def max_room_members_count
