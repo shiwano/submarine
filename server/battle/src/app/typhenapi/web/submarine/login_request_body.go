@@ -12,8 +12,7 @@ import (
 var _ = errors.New
 
 type LoginRequestBody struct {
-	Name     string `codec:"name"`
-	Password string `codec:"password"`
+	AuthToken string `codec:"auth_token"`
 }
 
 // Coerce the fields.
@@ -37,6 +36,6 @@ func (t *LoginRequestBody) Bytes(serializer typhenapi.Serializer) ([]byte, error
 
 // QueryString returns the query string.
 func (t *LoginRequestBody) QueryString() string {
-	queryString := fmt.Sprintf("name=%v&password=%v", t.Name, t.Password)
+	queryString := fmt.Sprintf("auth_token=%v", t.AuthToken)
 	return url.QueryEscape(queryString)
 }

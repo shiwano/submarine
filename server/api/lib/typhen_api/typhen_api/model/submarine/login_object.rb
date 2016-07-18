@@ -5,5 +5,6 @@ module TyphenApi::Model::Submarine
     include Virtus.model(:strict => true)
 
     attribute :user, TyphenApi::Model::Submarine::LoggedInUser, :required => true
+    attribute :access_token, String, :required => true
   end
 end

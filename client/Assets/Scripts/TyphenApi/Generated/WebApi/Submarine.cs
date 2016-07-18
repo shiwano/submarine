@@ -33,17 +33,11 @@ namespace TyphenApi.WebApi.Base
 
         class SignUpRequestBody : TyphenApi.TypeBase<SignUpRequestBody>
         {
-            protected static readonly SerializationInfo<SignUpRequestBody, string> name = new SerializationInfo<SignUpRequestBody, string>("name", false, (x) => x.Name, (x, v) => x.Name = v);
-            public string Name { get; set; }
-            protected static readonly SerializationInfo<SignUpRequestBody, string> password = new SerializationInfo<SignUpRequestBody, string>("password", false, (x) => x.Password, (x, v) => x.Password = v);
-            public string Password { get; set; }
         }
 
-        public TyphenApi.WebApiRequest<TyphenApi.Type.Submarine.SignUpObject, TyphenApi.Type.Submarine.Error> SignUp(string name, string password)
+        public TyphenApi.WebApiRequest<TyphenApi.Type.Submarine.SignUpObject, TyphenApi.Type.Submarine.Error> SignUp()
         {
             var requestBody = new SignUpRequestBody();
-            requestBody.Name = name;
-            requestBody.Password = password;
 
             var request = new TyphenApi.WebApiRequest<TyphenApi.Type.Submarine.SignUpObject, TyphenApi.Type.Submarine.Error>(this);
             request.Uri = new Uri(BaseUri, "sign_up");
@@ -55,17 +49,14 @@ namespace TyphenApi.WebApi.Base
 
         class LoginRequestBody : TyphenApi.TypeBase<LoginRequestBody>
         {
-            protected static readonly SerializationInfo<LoginRequestBody, string> name = new SerializationInfo<LoginRequestBody, string>("name", false, (x) => x.Name, (x, v) => x.Name = v);
-            public string Name { get; set; }
-            protected static readonly SerializationInfo<LoginRequestBody, string> password = new SerializationInfo<LoginRequestBody, string>("password", false, (x) => x.Password, (x, v) => x.Password = v);
-            public string Password { get; set; }
+            protected static readonly SerializationInfo<LoginRequestBody, string> authToken = new SerializationInfo<LoginRequestBody, string>("auth_token", false, (x) => x.AuthToken, (x, v) => x.AuthToken = v);
+            public string AuthToken { get; set; }
         }
 
-        public TyphenApi.WebApiRequest<TyphenApi.Type.Submarine.LoginObject, TyphenApi.Type.Submarine.Error> Login(string name, string password)
+        public TyphenApi.WebApiRequest<TyphenApi.Type.Submarine.LoginObject, TyphenApi.Type.Submarine.Error> Login(string auth_token)
         {
             var requestBody = new LoginRequestBody();
-            requestBody.Name = name;
-            requestBody.Password = password;
+            requestBody.AuthToken = auth_token;
 
             var request = new TyphenApi.WebApiRequest<TyphenApi.Type.Submarine.LoginObject, TyphenApi.Type.Submarine.Error>(this);
             request.Uri = new Uri(BaseUri, "login");

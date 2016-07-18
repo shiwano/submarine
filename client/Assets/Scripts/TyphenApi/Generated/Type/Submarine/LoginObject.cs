@@ -8,5 +8,7 @@ namespace TyphenApi.Type.Submarine
     {
         protected static readonly SerializationInfo<LoginObject, TyphenApi.Type.Submarine.LoggedInUser> user = new SerializationInfo<LoginObject, TyphenApi.Type.Submarine.LoggedInUser>("user", false, (x) => x.User, (x, v) => x.User = v);
         public TyphenApi.Type.Submarine.LoggedInUser User { get; set; }
+        protected static readonly SerializationInfo<LoginObject, string> accessToken = new SerializationInfo<LoginObject, string>("access_token", false, (x) => x.AccessToken, (x, v) => x.AccessToken = v);
+        public string AccessToken { get; set; }
     }
 }

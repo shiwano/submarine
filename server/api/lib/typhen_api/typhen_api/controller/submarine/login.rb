@@ -7,8 +7,7 @@ module TyphenApi::Controller::Submarine
     class RequestType
       include Virtus.model(:strict => true)
 
-      attribute :name, String, :required => true
-      attribute :password, String, :required => true
+      attribute :auth_token, String, :required => true
     end
 
     ResponseType = TyphenApi::Model::Submarine::LoginObject

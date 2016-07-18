@@ -68,10 +68,8 @@ func (api *WebAPI) Ping(message string) (*submarine.PingObject, error) {
 }
 
 // SignUp send a signUp request.
-func (api *WebAPI) SignUp(name string, password string) (*submarine.SignUpObject, error) {
+func (api *WebAPI) SignUp() (*submarine.SignUpObject, error) {
 	reqBody := &SignUpRequestBody{}
-	reqBody.Name = name
-	reqBody.Password = password
 
 	reqBodyData, err := reqBody.Bytes(api.serializer)
 	if err != nil {
@@ -102,10 +100,9 @@ func (api *WebAPI) SignUp(name string, password string) (*submarine.SignUpObject
 }
 
 // Login send a login request.
-func (api *WebAPI) Login(name string, password string) (*submarine.LoginObject, error) {
+func (api *WebAPI) Login(authToken string) (*submarine.LoginObject, error) {
 	reqBody := &LoginRequestBody{}
-	reqBody.Name = name
-	reqBody.Password = password
+	reqBody.AuthToken = authToken
 
 	reqBodyData, err := reqBody.Bytes(api.serializer)
 	if err != nil {
