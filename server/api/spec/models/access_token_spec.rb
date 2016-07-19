@@ -15,7 +15,7 @@ RSpec.describe AccessToken, type: :model do
   describe '#generate_token' do
     subject { access_token.generate_token }
 
-    it { is_expected.to match /\A([a-f0-9]{2}){64}\z/i }
+    it { is_expected.to match /\A([a-f0-9]{2}){32}\z/i }
     it 'should renew expires_at' do
       expect { subject }.to change { access_token.expires_at }
     end

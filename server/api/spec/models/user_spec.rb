@@ -67,7 +67,7 @@ RSpec.describe User, type: :model do
 
   describe '#generate_access_token!' do
     subject { user.generate_access_token! }
-    it { is_expected.to match /\A([a-f0-9]{2}){64}\z/i }
+    it { is_expected.to match /\A([a-f0-9]{2}){32}\z/i }
     it 'should save the access token' do
       expect { subject }.to change {
         user.access_token.try(:persisted?) || false

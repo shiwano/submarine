@@ -25,9 +25,9 @@ class AccessToken < ApplicationRecord
   validates :expires_at, presence: true
 
   def generate_token
-    self.token = SecureRandom.hex(64)
+    self.token = SecureRandom.hex(32)
     self.expires_at = Time.now + 1.day
-    self.token
+    token
   end
 
   def expired?
