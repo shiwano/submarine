@@ -2,27 +2,22 @@ require 'rails_helper'
 
 RSpec.describe "SignUp", type: :request do
   describe "POST /sign_up" do
-    let(:params) { { name: 'Kongou', password: 'KantaiCollection' } }
-
     context 'with a valid request' do
       before do
-        post(sign_up_path, params: params)
+        post sign_up_path
       end
 
       it "should work" do
         expect(response).to have_http_status(200)
       end
-      it "should return a reasponse that includes a user" do
-        expect(response_json[:user][:name]).to eq 'Kongou'
+      it "should return the signed up user" do
+        expect(parsed_response.user.name).to eq 'NO NAME'
       end
-      it 'should return a response that includes the session cookie' do
-        expect(response.headers['Set-Cookie']).to include('submarine_api_session')
+      it "should return the valid auth token" do
+        expect(User.find_by_auth_token(parsed_response.auth_token)).to be_a_kind_of User
       end
-    end
-
-    context 'with invalid params' do
-      it "should not work" do
-        expect { post(sign_up_path) }.to raise_error(Virtus::CoercionError)
+      it "should return the valid access token" do
+        expect(User.find_by_access_token(parsed_response.access_token)).to be_a_kind_of User
       end
     end
   end

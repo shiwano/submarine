@@ -3,11 +3,14 @@ class SignUpController < ApplicationController
   prepend TyphenApiRespondable
 
   def service
-    login(new_user.name, params.password)
-    render_response(user: new_user.as_logged_in_user_api_type)
-  end
+    user = User.new(name: 'NO NAME')
+    auth_token = user.generate_auth_token!
+    access_token = user.generate_access_token!
 
-  def new_user
-    @new_user ||= User.create!(name: params.name, password: params.password)
+    render_response({
+      user: user.as_logged_in_user_api_type,
+      auth_token: auth_token,
+      access_token: access_token,
+    })
   end
 end
