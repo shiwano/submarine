@@ -2,17 +2,17 @@
 #
 # Table name: users
 #
-#  id               :integer          not null, primary key
-#  name             :string(255)      not null
-#  crypted_password :string(255)
-#  salt             :string(255)
-#  created_at       :datetime
-#  updated_at       :datetime
-#  lock_version     :integer
+#  id                   :integer          not null, primary key
+#  name                 :string(255)      not null
+#  encrypted_auth_token :string(255)      not null
+#  created_at           :datetime
+#  updated_at           :datetime
+#  lock_version         :integer
 #
 # Indexes
 #
-#  index_users_on_name  (name) UNIQUE
+#  index_users_on_encrypted_auth_token  (encrypted_auth_token) UNIQUE
+#  index_users_on_name                  (name)
 #
 
 class User < ApplicationRecord

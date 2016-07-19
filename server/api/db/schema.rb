@@ -1,4 +1,3 @@
-# encoding: UTF-8
 # This file is auto-generated from the current state of the database. Instead
 # of editing this file, please use the migrations feature of Active Record to
 # incrementally modify your database, and then regenerate this schema definition.
@@ -11,39 +10,36 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160127232715) do
+ActiveRecord::Schema.define(version: 20160719134146) do
 
-  create_table "room_members", force: :cascade do |t|
-    t.integer  "user_id",    limit: 4
-    t.integer  "room_id",    limit: 4
-    t.datetime "created_at",             null: false
-    t.datetime "updated_at",             null: false
-    t.string   "room_key",   limit: 255, null: false
+  create_table "room_members", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+    t.integer  "user_id"
+    t.integer  "room_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.string   "room_key",   null: false
+    t.index ["room_id"], name: "index_room_members_on_room_id", using: :btree
+    t.index ["room_key"], name: "index_room_members_on_room_key", unique: true, using: :btree
+    t.index ["user_id"], name: "index_room_members_on_user_id", unique: true, using: :btree
   end
 
-  add_index "room_members", ["room_id"], name: "index_room_members_on_room_id", using: :btree
-  add_index "room_members", ["room_key"], name: "index_room_members_on_room_key", unique: true, using: :btree
-  add_index "room_members", ["user_id"], name: "index_room_members_on_user_id", unique: true, using: :btree
-
-  create_table "rooms", force: :cascade do |t|
-    t.string   "battle_server_base_uri", limit: 255,             null: false
-    t.datetime "created_at",                                     null: false
-    t.datetime "updated_at",                                     null: false
-    t.integer  "room_members_count",     limit: 4,   default: 0
+  create_table "rooms", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+    t.string   "battle_server_base_uri",             null: false
+    t.datetime "created_at",                         null: false
+    t.datetime "updated_at",                         null: false
+    t.integer  "room_members_count",     default: 0
+    t.index ["room_members_count"], name: "index_rooms_on_room_members_count", using: :btree
   end
 
-  add_index "rooms", ["room_members_count"], name: "index_rooms_on_room_members_count", using: :btree
-
-  create_table "users", force: :cascade do |t|
-    t.string   "name",             limit: 255, null: false
-    t.string   "crypted_password", limit: 255
-    t.string   "salt",             limit: 255
+  create_table "users", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+    t.string   "name",                 null: false
+    t.string   "encrypted_auth_token", null: false
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.integer  "lock_version",     limit: 4
+    t.integer  "lock_version"
+    t.index ["encrypted_auth_token"], name: "index_users_on_encrypted_auth_token", unique: true, using: :btree
+    t.index ["name"], name: "index_users_on_name", using: :btree
   end
-
-  add_index "users", ["name"], name: "index_users_on_name", unique: true, using: :btree
 
   add_foreign_key "room_members", "rooms"
   add_foreign_key "room_members", "users"
