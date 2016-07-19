@@ -22,15 +22,13 @@ class Room < ApplicationRecord
   validates :battle_server_base_uri, presence: true
   scope :joinable, -> { where.has { room_members_count < Room.max_room_members_count } }
 
-  class << self
-    def max_room_members_count
-      4
-    end
+  def self.max_room_members_count
+    4
+  end
 
-    def retrieve_battle_server_base_uri
-      # TODO: battle_server_base_uri is temporary.
-      GameConfig.battle_server_base_uri
-    end
+  def self.retrieve_battle_server_base_uri
+    # TODO: battle_server_base_uri is temporary.
+    GameConfig.battle_server_base_uri
   end
 
   def full?
