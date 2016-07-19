@@ -3,14 +3,12 @@ class LoginController < ApplicationController
   prepend TyphenApiRespondable
 
   def service
-    if logged_in_user.blank?
-      raise GameError::LoginFailed.new('The user name or password is incorrect')
-    end
+    user = User.find_by_auth_token(params.auth_token)
+    raise GameError::LoginFailed.new('The auth token is incorrect') if user.nil?
 
-    render_response(user: logged_in_user.as_logged_in_user_api_type)
-  end
-
-  def logged_in_user
-    @logged_in_user ||= login(params.name, params.password)
+    render_response({
+      user: user.as_logged_in_user_api_type,
+      access_token: user.generate_access_token!,
+    })
   end
 end
