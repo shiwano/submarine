@@ -34,7 +34,6 @@ gem 'sdoc', '~> 0.4.0', group: :doc
 
 gem 'virtus'
 
-gem 'sorcery'
 gem 'redis-session-store'
 gem 'config'
 gem 'rack-merge-cookies'
