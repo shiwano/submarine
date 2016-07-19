@@ -1,7 +1,7 @@
 FactoryGirl.define do
   factory :access_token do
-    user nil
-    token "MyString"
-    expires_at "2016-07-20 00:40:25"
+    user { create(:user) }
+    token { SecureRandom.hex(64) }
+    expires_at '2016-07-20 00:40:25'
   end
 end

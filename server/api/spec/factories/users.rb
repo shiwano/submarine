@@ -2,7 +2,7 @@ FactoryGirl.define do
 
   factory :user do
     name { Faker::Name.first_name }
-    auth_token { SecureRandom.uuid }
+    auth_token { SecureRandom.hex(64) }
     lock_version 1
 
     trait :with_stupid_auth_token do
