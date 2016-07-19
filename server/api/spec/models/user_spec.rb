@@ -4,6 +4,7 @@ RSpec.describe User, type: :model do
   let(:user) { create(:user) }
   subject { user }
 
+  it { should have_one :access_token }
   it { should have_one :room_member }
   it { should have_one :room }
 

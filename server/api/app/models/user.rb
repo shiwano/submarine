@@ -16,6 +16,7 @@
 #
 
 class User < ApplicationRecord
+  has_one :access_token
   has_one :room_member
   has_one :room, through: :room_member
 
