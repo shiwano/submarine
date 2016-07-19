@@ -16,15 +16,30 @@
 #
 
 class User < ApplicationRecord
-  authenticates_with_sorcery!
-
   has_one :room_member
   has_one :room, through: :room_member
 
-  validates :password, length: { minimum: 6 }
+  validates :encrypted_auth_token, presence: true
+  validates :encrypted_auth_token, uniqueness: true
   validates :name, presence: true
-  validates :name, uniqueness: true
-  validates :name, format: { with: /\A[A-Z\d\-_.]+\z/i }
+  validates :name, length: { maximum: 16 }
+
+  def self.salt
+    Rails.application.secrets[:secret_key_base]
+  end
+
+  def self.encrypt_auth_token(auth_token)
+    Digest::SHA512.hexdigest(auth_token + salt)
+  end
+
+  def generate_auth_token
+    self.auth_token = SecureRandom.hex(64)
+  end
+
+  def auth_token=(auth_token)
+    self.encrypted_auth_token = self.class.encrypt_auth_token(auth_token)
+    auth_token
+  end
 
   def create_room!
     transaction do

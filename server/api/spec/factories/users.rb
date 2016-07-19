@@ -1,12 +1,12 @@
 FactoryGirl.define do
 
   factory :user do
-    name { Faker::Internet.user_name(separators: %w(._-)) }
-    password Faker::Internet.password(6, 20)
+    name { Faker::Name.first_name }
+    auth_token { SecureRandom.uuid }
     lock_version 1
 
-    trait :with_stupid_password do
-      password 'secret'
+    trait :with_stupid_auth_token do
+      auth_token 'secret'
     end
 
     trait :with_room do
