@@ -17,4 +17,20 @@
 
 class AccessToken < ApplicationRecord
   belongs_to :user
+
+  validates :user, presence: true
+  validates :user, uniqueness: true
+  validates :token, presence: true
+  validates :token, uniqueness: true
+  validates :expires_at, presence: true
+
+  def generate_token
+    self.token = SecureRandom.hex(64)
+    self.expires_at = Time.now + 1.day
+    self.token
+  end
+
+  def expired?
+    Time.now >= expires_at
+  end
 end
