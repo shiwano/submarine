@@ -33,6 +33,10 @@ class User < ApplicationRecord
     Digest::SHA512.hexdigest(auth_token + salt)
   end
 
+  def self.find_by_auth_token(auth_token)
+    User.find_by(encrypted_auth_token: encrypt_auth_token(auth_token))
+  end
+
   def self.find_by_access_token(access_token)
     User.find_by(id: AccessToken.where(token: access_token).limit(1).pluck(:user_id).first)
   end

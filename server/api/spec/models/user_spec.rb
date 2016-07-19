@@ -27,6 +27,22 @@ RSpec.describe User, type: :model do
     it { is_expected.to eq expected_encrypted_auth_token }
   end
 
+  describe '.find_by_auth_token' do
+    subject { User.find_by_auth_token(auth_token) }
+    before do
+      @user = create(:user, :with_stupid_auth_token)
+    end
+
+    context 'with the valid access token' do
+      let(:auth_token) { 'secret' }
+      it { is_expected.to eq @user }
+    end
+    context 'with the invalid access token' do
+      let(:auth_token) { 'invalid' }
+      it { is_expected.to be nil }
+    end
+  end
+
   describe '.find_by_access_token' do
     subject { User.find_by_access_token(access_token) }
 
