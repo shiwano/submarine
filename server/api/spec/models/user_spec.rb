@@ -27,12 +27,35 @@ RSpec.describe User, type: :model do
     it { is_expected.to eq expected_encrypted_auth_token }
   end
 
+  describe '.find_by_access_token' do
+    subject { User.find_by_access_token(access_token) }
+
+    context 'with the valid access token' do
+      let(:access_token) { user.generate_access_token! }
+      it { is_expected.to eq user }
+    end
+    context 'with the invalid access token' do
+      let(:access_token) { 'invalid' }
+      it { is_expected.to be nil }
+    end
+  end
+
   describe '#generate_auth_token' do
     subject { user.generate_auth_token }
     it { is_expected.to match /\A([a-f0-9]{2}){64}\z/i }
     it 'should set the generated auth token to auth_token' do
       expect(user).to receive(:auth_token=).and_call_original
       subject
+    end
+  end
+
+  describe '#generate_access_token!' do
+    subject { user.generate_access_token! }
+    it { is_expected.to match /\A([a-f0-9]{2}){64}\z/i }
+    it 'should save the access token' do
+      expect { subject }.to change {
+        user.access_token.try(:persisted?) || false
+      }.from(false).to(true)
     end
   end
 

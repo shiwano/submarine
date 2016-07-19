@@ -33,8 +33,19 @@ class User < ApplicationRecord
     Digest::SHA512.hexdigest(auth_token + salt)
   end
 
+  def self.find_by_access_token(access_token)
+    User.find_by(id: AccessToken.where(token: access_token).limit(1).pluck(:user_id).first)
+  end
+
   def generate_auth_token
     self.auth_token = SecureRandom.hex(64)
+  end
+
+  def generate_access_token!
+    build_access_token if access_token.nil?
+    access_token.generate_token
+    access_token.save!
+    access_token.token
   end
 
   def auth_token=(auth_token)
