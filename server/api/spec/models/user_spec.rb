@@ -56,9 +56,13 @@ RSpec.describe User, type: :model do
     end
   end
 
-  describe '#generate_auth_token' do
-    subject { user.generate_auth_token }
+  describe '#generate_auth_token!' do
+    subject { user.generate_auth_token! }
     it { is_expected.to match /\A([a-f0-9]{2}){64}\z/i }
+    it 'should save' do
+      expect(user).to receive(:save!).and_call_original
+      subject
+    end
     it 'should set the generated auth token to auth_token' do
       expect(user).to receive(:auth_token=).and_call_original
       subject

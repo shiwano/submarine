@@ -41,8 +41,11 @@ class User < ApplicationRecord
     User.find_by(id: AccessToken.where(token: access_token).limit(1).pluck(:user_id).first)
   end
 
-  def generate_auth_token
-    self.auth_token = SecureRandom.hex(64)
+  def generate_auth_token!
+    auth_token = SecureRandom.hex(64)
+    self.auth_token = auth_token
+    save!
+    auth_token
   end
 
   def generate_access_token!
