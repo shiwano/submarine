@@ -18,24 +18,25 @@ namespace Submarine.Title
             AuthenticationService auth;
             [Inject]
             PermanentDataStoreService dataStore;
+            [Inject]
+            TyphenApi.WebApi.Submarine webApi;
 
             public void Execute(string userName)
             {
-                if (dataStore.HasLoginData)
+                if (dataStore.HasSignedUp)
                 {
                     throw new InvalidOperationException("Already signed to the API server.");
                 }
 
-                var password = Guid.NewGuid().ToString();
-
-                auth.SignUp(userName, password).Subscribe(loggedInUser =>
+                auth.SignUp(userName).Subscribe(response =>
                 {
-                    dataStore.UserName = userName;
-                    dataStore.Password = password;
+                    dataStore.AuthToken = response.AuthToken;
                     dataStore.Save();
 
-                    lobbyModel.JoinedRoom.Value = loggedInUser.JoinedRoom;
-                    user.LoggedInUser.Value = loggedInUser;
+                    lobbyModel.JoinedRoom.Value = response.User.JoinedRoom;
+                    user.LoggedInUser.Value = response.User;
+
+                    webApi.Authenticate(response.AccessToken);
                     Debug.Log("Succeeded sign up");
                 });
             }

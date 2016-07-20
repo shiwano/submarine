@@ -1,42 +1,14 @@
 using UnityEngine;
 using TyphenApi.Type.Submarine;
 using Game = Submarine;
-using System.Text.RegularExpressions;
 
 namespace TyphenApi.WebApi
 {
     public class Submarine : Base.Submarine
     {
-        class SessionId
-        {
-            const string SessionIdName = "_submarine_api_session";
-            const string SessionIdPattern = SessionIdName + @"=([a-zA-Z0-9]+);";
-            public string Id { get; private set; }
-            public bool IsExists { get { return !string.IsNullOrEmpty(Id); } }
+        string accessToken;
 
-            public string Cookie
-            {
-                get
-                {
-                    return IsExists ?
-                        string.Format("{0}={1};", SessionIdName, Id) :
-                        string.Empty;
-                }
-            }
-
-            public bool Update(string setCookieValue)
-            {
-                var oldId = Id;
-                var match = Regex.Match(setCookieValue, SessionIdPattern, RegexOptions.Multiline);
-                if (match != null)
-                {
-                    Id = match.Groups[1].Value;
-                }
-                return oldId != Id;
-            }
-        }
-
-        readonly SessionId sessionId = new SessionId();
+        public bool IsAuthenticated { get { return !string.IsNullOrEmpty(accessToken); } }
 
         public Submarine(Config config) : base(config.ApiServerBaseUri)
         {
@@ -47,6 +19,11 @@ namespace TyphenApi.WebApi
             ResponseDeserializer = jsonSerializer;
         }
 
+        public void Authenticate(string accessToken)
+        {
+            this.accessToken = accessToken;
+        }
+
         public override void OnBeforeRequestSend(IWebApiRequest request)
         {
             #if UNITY_EDITOR
@@ -54,9 +31,10 @@ namespace TyphenApi.WebApi
             #endif
 
             request.Headers["Content-Type"] = "application/json";
-            if (sessionId.IsExists)
+
+            if (IsAuthenticated)
             {
-                request.Headers["X-Cookie"] = sessionId.Cookie;
+                request.Headers["X-Access-Token"] = accessToken;
             }
         }
 
@@ -79,17 +57,6 @@ namespace TyphenApi.WebApi
             #if UNITY_EDITOR
             Game.Logger.LogWithGreen("[WebAPI] Response: " + request.Uri, response.Body);
             #endif
-
-            string setCookieValue;
-            if (response.Headers.TryGetValue("SET-COOKIE", out setCookieValue))
-            {
-                if (sessionId.Update(setCookieValue))
-                {
-                    #if UNITY_EDITOR
-                    Game.Logger.LogWithPurple("[WebAPI] SessionId: " + sessionId.Id, setCookieValue);
-                    #endif
-                }
-            }
         }
     }
 }

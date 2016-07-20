@@ -4,21 +4,15 @@ namespace Submarine
 {
     public class PermanentDataStoreService
     {
-        public bool HasLoginData
+        public bool HasSignedUp
         {
-            get { return !string.IsNullOrEmpty(UserName) && !string.IsNullOrEmpty(Password); }
+            get { return !string.IsNullOrEmpty(AuthToken); }
         }
 
-        public string UserName
+        public string AuthToken
         {
-            get { return PlayerPrefs.GetString("UserName"); }
-            set { PlayerPrefs.SetString("UserName", value); }
-        }
-
-        public string Password
-        {
-            get { return PlayerPrefs.GetString("Password"); }
-            set { PlayerPrefs.SetString("Password", value); }
+            get { return PlayerPrefs.GetString("AuthToken"); }
+            set { PlayerPrefs.SetString("AuthToken", value); }
         }
 
         public void Save()

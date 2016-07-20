@@ -29,7 +29,7 @@ namespace Submarine.Title
 
         void OnStartButtonClick()
         {
-            if (dataStore.HasLoginData)
+            if (dataStore.HasSignedUp)
             {
                 loginCommand.Execute();
             }

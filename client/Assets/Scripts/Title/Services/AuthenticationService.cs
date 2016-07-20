@@ -9,18 +9,14 @@ namespace Submarine.Title
         [Inject]
         TyphenApi.WebApi.Submarine webApi;
 
-        public IObservable<Type.LoggedInUser> Login(string userName, string passWord)
+        public IObservable<Type.LoginObject> Login(string authToken)
         {
-            return webApi.Login(userName, passWord)
-                .Send()
-                .Select(r => r.Data.User);
+            return webApi.Login(authToken).Send().Select(x => x.Data);
         }
 
-        public IObservable<Type.LoggedInUser> SignUp(string userName, string passWord)
+        public IObservable<Type.SignUpObject> SignUp(string name)
         {
-            return webApi.SignUp(userName, passWord)
-                .Send()
-                .Select(r => r.Data.User);
+            return webApi.SignUp(name).Send().Select(x => x.Data);
         }
     }
 }
