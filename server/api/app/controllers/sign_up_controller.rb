@@ -3,7 +3,7 @@ class SignUpController < ApplicationController
   prepend TyphenApiRespondable
 
   def service
-    user = User.new(name: 'NO NAME')
+    user = User.new(name: params.name)
     auth_token = user.generate_auth_token!
     access_token = user.generate_access_token!
 
