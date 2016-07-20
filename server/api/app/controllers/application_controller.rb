@@ -3,15 +3,18 @@ class ApplicationController < ActionController::Base
   # For APIs, you may want to use :null_session instead.
   # protect_from_forgery with: :exception
 
-  before_action :require_login_for_api
+  before_action :authentication_with_access_token, unless: :no_authentication_required?
   rescue_from StandardError, with: :render_500
 
-  def require_login_for_api
-    require_login unless no_authentication_required?
-  end
+  attr_reader :current_user
 
-  def not_authenticated
-    raise GameError::NotAuthenticated.new('Not authenticated')
+  private
+
+  def authentication_with_access_token
+    access_token = request.headers['X-Access-Token']
+    raise GameError::NotAuthenticated.new('No access token') if access_token.nil?
+    @current_user = User.find_by_access_token(access_token)
+    raise GameError::NotAuthenticated.new('Invalid access token') if current_user.nil?
   end
 
   def render_500(e)
