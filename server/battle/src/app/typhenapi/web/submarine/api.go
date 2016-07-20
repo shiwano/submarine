@@ -68,8 +68,9 @@ func (api *WebAPI) Ping(message string) (*submarine.PingObject, error) {
 }
 
 // SignUp send a signUp request.
-func (api *WebAPI) SignUp() (*submarine.SignUpObject, error) {
+func (api *WebAPI) SignUp(name string) (*submarine.SignUpObject, error) {
 	reqBody := &SignUpRequestBody{}
+	reqBody.Name = name
 
 	reqBodyData, err := reqBody.Bytes(api.serializer)
 	if err != nil {

@@ -33,11 +33,14 @@ namespace TyphenApi.WebApi.Base
 
         class SignUpRequestBody : TyphenApi.TypeBase<SignUpRequestBody>
         {
+            protected static readonly SerializationInfo<SignUpRequestBody, string> name = new SerializationInfo<SignUpRequestBody, string>("name", false, (x) => x.Name, (x, v) => x.Name = v);
+            public string Name { get; set; }
         }
 
-        public TyphenApi.WebApiRequest<TyphenApi.Type.Submarine.SignUpObject, TyphenApi.Type.Submarine.Error> SignUp()
+        public TyphenApi.WebApiRequest<TyphenApi.Type.Submarine.SignUpObject, TyphenApi.Type.Submarine.Error> SignUp(string name)
         {
             var requestBody = new SignUpRequestBody();
+            requestBody.Name = name;
 
             var request = new TyphenApi.WebApiRequest<TyphenApi.Type.Submarine.SignUpObject, TyphenApi.Type.Submarine.Error>(this);
             request.Uri = new Uri(BaseUri, "sign_up");

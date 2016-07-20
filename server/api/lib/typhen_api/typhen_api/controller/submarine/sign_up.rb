@@ -7,6 +7,7 @@ module TyphenApi::Controller::Submarine
     class RequestType
       include Virtus.model(:strict => true)
 
+      attribute :name, String, :required => true
     end
 
     ResponseType = TyphenApi::Model::Submarine::SignUpObject

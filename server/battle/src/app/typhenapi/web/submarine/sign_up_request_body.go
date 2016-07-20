@@ -12,6 +12,7 @@ import (
 var _ = errors.New
 
 type SignUpRequestBody struct {
+	Name string `codec:"name"`
 }
 
 // Coerce the fields.
@@ -35,6 +36,6 @@ func (t *SignUpRequestBody) Bytes(serializer typhenapi.Serializer) ([]byte, erro
 
 // QueryString returns the query string.
 func (t *SignUpRequestBody) QueryString() string {
-	queryString := fmt.Sprintf("")
+	queryString := fmt.Sprintf("name=%v", t.Name)
 	return url.QueryEscape(queryString)
 }
