@@ -3,15 +3,10 @@ class Battle::CloseRoomController < ApplicationController
   prepend TyphenApiRespondable
 
   def service
-    if room.blank?
-      raise GameError::RoomNotFound.new("room(#{params.room_id}) not found")
-    end
+    room = Room.find_by(id: params.room_id)
+    raise GameError::RoomNotFound.new("room(#{params.room_id}) not found") if room.nil?
 
     room.destroy!
     render_response({})
-  end
-
-  def room
-    @room ||= Room.find_by(id: params.room_id)
   end
 end
