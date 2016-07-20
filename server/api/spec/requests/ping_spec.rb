@@ -13,7 +13,7 @@ RSpec.describe "Ping", type: :request do
         expect(response).to have_http_status(200)
       end
       it "should return a message" do
-        expect(response_json[:message]).to eq 'PING PONG'
+        expect(parsed_response.message).to eq 'PING PONG'
       end
     end
 
