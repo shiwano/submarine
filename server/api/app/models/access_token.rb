@@ -24,6 +24,8 @@ class AccessToken < ApplicationRecord
   validates :token, uniqueness: true
   validates :expires_at, presence: true
 
+  scope :no_expired, -> { where.has { expires_at > Time.now } }
+
   def generate_token
     self.token = SecureRandom.hex(32)
     self.expires_at = Time.now + 1.day
@@ -31,6 +33,6 @@ class AccessToken < ApplicationRecord
   end
 
   def expired?
-    Time.now >= expires_at
+    expires_at <= Time.now
   end
 end

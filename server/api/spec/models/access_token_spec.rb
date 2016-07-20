@@ -12,6 +12,18 @@ RSpec.describe AccessToken, type: :model do
   it { should validate_uniqueness_of(:token) }
   it { should validate_presence_of(:expires_at) }
 
+  describe '.no_expired' do
+    subject { AccessToken.no_expired }
+
+    before do
+      @no_expired_access_tokens = [create(:access_token), create(:access_token)]
+      create(:access_token, :expired)
+    end
+    it 'should return no-expired access tokens' do
+      expect(subject).to eq @no_expired_access_tokens
+    end
+  end
+
   describe '#generate_token' do
     subject { access_token.generate_token }
 
