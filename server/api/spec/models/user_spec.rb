@@ -33,11 +33,11 @@ RSpec.describe User, type: :model do
       @user = create(:user, :with_stupid_auth_token)
     end
 
-    context 'with the valid access token' do
+    context 'with a valid access token' do
       let(:auth_token) { 'secret' }
       it { is_expected.to eq @user }
     end
-    context 'with the invalid access token' do
+    context 'with a invalid access token' do
       let(:auth_token) { 'invalid' }
       it { is_expected.to be nil }
     end
@@ -46,12 +46,21 @@ RSpec.describe User, type: :model do
   describe '.find_by_access_token' do
     subject { User.find_by_access_token(access_token) }
 
-    context 'with the valid access token' do
+    context 'with a valid access token' do
       let(:access_token) { user.generate_access_token! }
       it { is_expected.to eq user }
     end
-    context 'with the invalid access token' do
+    context 'with an invalid access token' do
       let(:access_token) { 'invalid' }
+      it { is_expected.to be nil }
+    end
+    context 'with a expired access token' do
+      let(:access_token) { @access_token }
+      before do
+        @access_token = user.generate_access_token!
+        Timecop.freeze(user.access_token.expires_at)
+      end
+      after { Timecop.return }
       it { is_expected.to be nil }
     end
   end
