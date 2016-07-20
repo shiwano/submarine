@@ -8,14 +8,14 @@ RSpec.describe 'GetRooms', type: :request do
           create(:room)
           create(:room)
           create(:room, :full)
-          post(get_rooms_path)
+          post get_rooms_path
         end
 
         it 'should work' do
           expect(response).to have_http_status(200)
         end
         it 'should return joinable rooms' do
-          expect(response_json[:rooms].length).to eq 2
+          expect(parsed_response.rooms.length).to eq 2
         end
       end
 
@@ -25,14 +25,14 @@ RSpec.describe 'GetRooms', type: :request do
           create(:room, :full)
           room = create(:room)
           room.join_user!(current_user)
-          post(get_rooms_path)
+          post get_rooms_path
         end
 
         it 'should work' do
           expect(response).to have_http_status(200)
         end
         it 'should return empty rooms' do
-          expect(response_json[:rooms].length).to eq 0
+          expect(parsed_response.rooms.length).to eq 0
         end
       end
     end

@@ -3,11 +3,11 @@ class GetRoomsController < ApplicationController
   prepend TyphenApiRespondable
 
   def service
-    rooms = joinable_rooms.map { |r| r.as_room_api_type }
-    render_response(rooms: rooms)
-  end
-
-  def joinable_rooms
-    @joinable_rooms ||= current_user.room.present? ? [] : Room.joinable.all
+    if current_user.room.present?
+      rooms = []
+    else
+      rooms = Room.joinable.all
+    end
+    render_response(rooms: rooms.map { |r| r.as_room_api_type })
   end
 end
