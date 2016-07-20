@@ -33,19 +33,12 @@ gem 'sdoc', '~> 0.4.0', group: :doc
 # gem 'capistrano-rails', group: :development
 
 gem 'virtus'
-
-gem 'redis-session-store'
 gem 'config'
-gem 'rack-merge-cookies'
 gem 'hashie'
 gem 'baby_squeel'
 
 group :development do
   gem 'bullet'
-end
-
-group :test do
-  gem 'rails-controller-testing'
 end
 
 group :development, :test do

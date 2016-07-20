@@ -148,7 +148,6 @@ GEM
     pry-rails (0.3.4)
       pry (>= 0.9.10)
     rack (2.0.1)
-    rack-merge-cookies (0.0.1)
     rack-test (0.6.3)
       rack (>= 1.0)
     rails (5.0.0)
@@ -163,10 +162,6 @@ GEM
       bundler (>= 1.3.0, < 2.0)
       railties (= 5.0.0)
       sprockets-rails (>= 2.0.0)
-    rails-controller-testing (0.1.1)
-      actionpack (~> 5.x)
-      actionview (~> 5.x)
-      activesupport (~> 5.x)
     rails-dom-testing (2.0.1)
       activesupport (>= 4.2.0, < 6.0)
       nokogiri (~> 1.6.0)
@@ -184,10 +179,6 @@ GEM
       ffi (>= 0.5.0)
     rdoc (4.2.2)
       json (~> 1.4)
-    redis (3.3.0)
-    redis-session-store (0.9.1)
-      actionpack (>= 3, < 5.1)
-      redis (~> 3)
     rspec (3.5.0)
       rspec-core (~> 3.5.0)
       rspec-expectations (~> 3.5.0)
@@ -282,10 +273,7 @@ DEPENDENCIES
   jquery-rails
   mysql2
   pry-rails
-  rack-merge-cookies
   rails (= 5.0.0)
-  rails-controller-testing
-  redis-session-store
   rspec-its
   rspec-rails (~> 3.0)
   sass-rails (~> 5.0)
