@@ -23,9 +23,10 @@ class RoomMember < ApplicationRecord
   validates :room_key, presence: true
 
   def as_battle_room_member_api_type
-    TyphenApi::Model::Submarine::Battle::RoomMember.new(
+    TyphenApi::Model::Submarine::Battle::RoomMember.new({
       name: user.name,
       id: user.id,
-      room_id: room.id)
+      room_id: room.id,
+    })
   end
 end

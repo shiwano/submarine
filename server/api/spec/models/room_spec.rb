@@ -38,7 +38,6 @@ RSpec.describe Room, type: :model do
         expect { subject }.to raise_error GameError::RoomAlreadyJoined
       end
     end
-
     context 'when the room is full' do
       before do
         Room.max_room_members_count.times do
