@@ -11,12 +11,14 @@ RSpec.describe 'CreateRoom', type: :request do
         expect(response).to have_http_status(200)
       end
       it 'should return a reasponse that includes a user' do
-        expect(response_json[:room][:id]).to eq current_user.reload.room.id
+        expect(parsed_response.room.id).to eq current_user.reload.room.id
       end
     end
 
     context 'with the user has already a room' do
-      let(:current_user) { create(:user, :with_stupid_password, :with_room) }
+      before do
+        current_user.create_room!
+      end
 
       it 'should not work' do
         expect { post create_room_path }.to raise_error GameError::RoomAlreadyJoined
