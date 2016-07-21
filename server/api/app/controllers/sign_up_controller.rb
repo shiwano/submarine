@@ -7,7 +7,7 @@ class SignUpController < ApplicationController
     auth_token = user.generate_auth_token!
     access_token = user.generate_access_token!
 
-    render_response({
+    render({
       user: user.as_logged_in_user_api_type,
       auth_token: auth_token,
       access_token: access_token,

@@ -3,6 +3,6 @@ class PingController < ApplicationController
   prepend TyphenApiRespondable
 
   def service
-    render_response(message: params.message + ' PONG')
+    render(message: params.message + ' PONG')
   end
 end

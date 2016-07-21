@@ -4,6 +4,6 @@ class FindUserController < ApplicationController
 
   def service
     user = User.where(name: params.name).first
-    render_response(user: user.try(:as_user_api_type))
+    render(user: user.try(:as_user_api_type))
   end
 end

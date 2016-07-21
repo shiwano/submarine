@@ -8,6 +8,6 @@ class GetRoomsController < ApplicationController
     else
       rooms = Room.joinable.all
     end
-    render_response(rooms: rooms.map { |r| r.as_room_api_type })
+    render(rooms: rooms.map { |r| r.as_room_api_type })
   end
 end

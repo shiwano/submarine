@@ -4,6 +4,6 @@ class Battle::FindRoomController < ApplicationController
 
   def service
     room = Room.find_by(id: params.room_id)
-    render_response(room: room.try(:as_battle_room_api_type))
+    render(room: room.try(:as_battle_room_api_type))
   end
 end

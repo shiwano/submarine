@@ -1,21 +1,15 @@
 module TyphenApiRespondable
   def params
-    @typhen_api_params ||= self.class::RequestType.new(
-      super.except(:controller, :action).to_unsafe_h
-    )
+    @typhen_api_params ||= self.class::RequestType.new(super.except(:controller, :action).to_unsafe_h)
   end
 
-  def render_response(raw_response)
-    if self.class::ResponseType.present?
-      response = self.class::ResponseType.new(raw_response)
-      render :json => response
+  def render(response_body, error: false)
+    if error
+      super json: self.class::ErrorType.new(raw_response), status: 500
+    elsif self.class::ResponseType.present?
+      super json: self.class::ResponseType.new(response_body)
     else
-      render :json => raw_response
+      super json: response_body
     end
-  end
-
-  def render_error(raw_response, status)
-    response = self.class::ErrorType.new(raw_response)
-    render :json => response, :status => status
   end
 end

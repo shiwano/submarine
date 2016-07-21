@@ -7,6 +7,6 @@ class Battle::CloseRoomController < ApplicationController
     raise GameError::RoomNotFound.new("room(#{params.room_id}) not found") if room.nil?
 
     room.destroy!
-    render_response({})
+    render({})
   end
 end
