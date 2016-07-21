@@ -44,23 +44,17 @@ RSpec.describe User, type: :model do
   end
 
   describe '.find_by_access_token' do
+    let(:access_token) { user.generate_access_token! }
     subject { User.find_by_access_token(access_token) }
 
-    context 'with a valid access token' do
-      let(:access_token) { user.generate_access_token! }
-      it { is_expected.to eq user }
+    it { is_expected.to eq user }
+    it 'should call AccessToken.find_user_id_by_token' do
+      expect(AccessToken).to receive(:find_user_id_by_token).with(access_token)
+      subject
     end
+
     context 'with an invalid access token' do
       let(:access_token) { 'invalid' }
-      it { is_expected.to be nil }
-    end
-    context 'with a expired access token' do
-      let(:access_token) { @access_token }
-      before do
-        @access_token = user.generate_access_token!
-        Timecop.freeze(user.access_token.expires_at)
-      end
-      after { Timecop.return }
       it { is_expected.to be nil }
     end
   end

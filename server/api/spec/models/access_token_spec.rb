@@ -24,6 +24,24 @@ RSpec.describe AccessToken, type: :model do
     end
   end
 
+  describe '.find_user_id_by_token' do
+    subject { AccessToken.find_user_id_by_token(token) }
+
+    context 'with a valid token' do
+      let(:token) { access_token.token }
+      it { is_expected.to eq access_token.user_id }
+    end
+    context 'with a invalid token' do
+      let(:token) { 'invalid' }
+      it { is_expected.to be nil }
+    end
+    context 'when the access token is expired' do
+      let(:access_token) { create(:access_token, :expired) }
+      let(:token) { access_token.token }
+      it { is_expected.to be nil }
+    end
+  end
+
   describe '#generate_token' do
     subject { access_token.generate_token }
 
