@@ -10,15 +10,14 @@ RSpec.describe Room, type: :model do
   it { should validate_presence_of :battle_server_base_uri }
 
   describe '.joinable' do
-    let(:joinable_rooms) { [ create(:room), create(:room) ] }
     subject { Room.joinable }
 
     before do
-      joinable_rooms
+      @joinable_rooms = [ create(:room), create(:room) ]
       create(:room, :full)
     end
     it 'should return joinable rooms' do
-      expect(subject).to eq joinable_rooms
+      expect(subject).to eq @joinable_rooms
     end
   end
 
@@ -41,8 +40,7 @@ RSpec.describe Room, type: :model do
     context 'when the room is full' do
       before do
         Room.max_room_members_count.times do
-          user = create(:user)
-          room.join_user!(user)
+          room.join_user!(create(:user))
         end
       end
       it 'should raise error' do
