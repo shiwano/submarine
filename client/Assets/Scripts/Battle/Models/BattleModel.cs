@@ -19,6 +19,8 @@ namespace Submarine.Battle
         public DateTime StartedAt { get; set; }
         public DateTime FinishedAt { get; set; }
 
+        public Type.User Winner { get; set; }
+
         TimeSpan differenceFromBattleServerTime;
         public DateTime Now
         {

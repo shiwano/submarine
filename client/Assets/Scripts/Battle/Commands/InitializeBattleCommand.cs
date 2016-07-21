@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using Zenject;
 using Zenject.Commands;
 using UniRx;
@@ -51,8 +52,9 @@ namespace Submarine.Battle
 
                 battleService.Api.OnFinishReceiveAsObservable().Take(1).Subscribe(message =>
                 {
-                    lobbyModel.JoinedRoom.Value = null;
+                    battleModel.Winner = lobbyModel.JoinedRoom.Value.Members.FirstOrDefault(m => m.Id == message.WinnerUserId);
                     battleModel.FinishedAt = CurrentMillis.FromMilliseconds(message.FinishedAt);
+                    lobbyModel.JoinedRoom.Value = null;
                     battleModel.State.Value = BattleState.Finish;
                 });
 
