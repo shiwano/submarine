@@ -6,7 +6,7 @@ class GetRoomsController < ApplicationController
     if current_user.room.present?
       rooms = []
     else
-      rooms = Room.joinable.all
+      rooms = Room.joinable.includes(:users).all
     end
     render(rooms: rooms.map { |r| r.as_room_api_type })
   end
