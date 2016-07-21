@@ -5,7 +5,7 @@ module TyphenApiRespondable
 
   def render(response_body, error: false)
     if error
-      super json: self.class::ErrorType.new(raw_response), status: 500
+      super json: self.class::ErrorType.new(response_body), status: 500
     elsif self.class::ResponseType.present?
       super json: self.class::ResponseType.new(response_body)
     else
