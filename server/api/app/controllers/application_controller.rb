@@ -4,6 +4,12 @@ class ApplicationController < ActionController::API
 
   attr_reader :current_user
 
+  protected
+
+  def set_access_token(access_token)
+    response.headers['X-Set-Access-Token'] = access_token
+  end
+
   private
 
   def authentication_with_access_token

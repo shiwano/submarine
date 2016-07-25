@@ -18,8 +18,9 @@ RSpec.describe "SignUp", type: :request do
       it "should return the valid auth token" do
         expect(User.find_by_auth_token(parsed_response.auth_token)).to be_a_kind_of User
       end
-      it "should return the valid access token" do
-        expect(User.find_by_access_token(parsed_response.access_token)).to be_a_kind_of User
+      it "should set a valid access token to response headers" do
+        access_token = response.headers['X-Set-Access-Token']
+        expect(User.find_by_access_token(access_token)).to be_a_kind_of User
       end
     end
 

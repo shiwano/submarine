@@ -19,6 +19,10 @@ RSpec.describe 'Login', type: :request do
       it 'should return the joined room' do
         expect(parsed_response.user.joined_room.id).to eq @user.room.id
       end
+      it "should set a valid access token to response headers" do
+        access_token = response.headers['X-Set-Access-Token']
+        expect(User.find_by_access_token(access_token)).to eq @user
+      end
     end
 
     context 'with invalid params' do
