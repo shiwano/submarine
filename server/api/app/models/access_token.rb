@@ -26,8 +26,8 @@ class AccessToken < ApplicationRecord
 
   scope :no_expired, -> { where.has { expires_at > Time.now } }
 
-  def self.find_user_id_by_token(token)
-    AccessToken.no_expired.where(token: token).limit(1).pluck(:user_id).first
+  def self.find_by_token(token)
+    AccessToken.includes(:user).no_expired.where(token: token).limit(1).first
   end
 
   def generate_token

@@ -48,8 +48,8 @@ RSpec.describe User, type: :model do
     subject { User.find_by_access_token(access_token) }
 
     it { is_expected.to eq user }
-    it 'should call AccessToken.find_user_id_by_token' do
-      expect(AccessToken).to receive(:find_user_id_by_token).with(access_token)
+    it 'should call AccessToken.find_by_token' do
+      expect(AccessToken).to receive(:find_by_token).with(access_token)
       subject
     end
 

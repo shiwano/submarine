@@ -38,7 +38,7 @@ class User < ApplicationRecord
   end
 
   def self.find_by_access_token(access_token)
-    User.find_by(id: AccessToken.find_user_id_by_token(access_token))
+    AccessToken.find_by_token(access_token).try(:user)
   end
 
   def generate_auth_token!
