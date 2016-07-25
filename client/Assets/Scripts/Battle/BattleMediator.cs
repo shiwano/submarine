@@ -15,8 +15,6 @@ namespace Submarine.Battle
         [Inject]
         InitializeBattleCommand initializeBattleCommand;
         [Inject]
-        SceneChangeCommand sceneChangeCommand;
-        [Inject]
         ActorContainer actorContainer;
 
         public void Initialize()
@@ -51,7 +49,6 @@ namespace Submarine.Battle
         void OnBattleFinish()
         {
             Logger.Log("Battle Finish");
-            sceneChangeCommand.Execute(SceneNames.Lobby);
         }
 
         void OnActorCreate(Type.Battle.Actor actor)

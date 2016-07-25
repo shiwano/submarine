@@ -16,9 +16,6 @@ namespace Submarine.Battle
         public Image PingerAlert;
         public Image DangerAlert;
 
-        public Button Victory;
-        public Button Defeat;
-
         public Text DecoyCoolDown;
         public Text PingerCoolDown;
         public Text LookoutCoolDown;

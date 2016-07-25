@@ -16,6 +16,8 @@ namespace Submarine.Battle
         RadarView radarView;
         [SerializeField]
         RoomView roomView;
+        [SerializeField]
+        ResultView resultView;
 
         public override void InstallBindings()
         {
@@ -52,6 +54,10 @@ namespace Submarine.Battle
             Container.Bind<RoomView>().ToSingleInstance(roomView);
             Container.Bind<RoomMediator>().ToSingle();
             Container.Bind<IInitializable>().ToSingle<RoomMediator>();
+
+            Container.Bind<ResultView>().ToSingleInstance(resultView);
+            Container.Bind<ResultMediator>().ToSingle();
+            Container.Bind<IInitializable>().ToSingle<ResultMediator>();
 
             Container.BindFacadeFactory<Type.Battle.Actor, SubmarineFacade, SubmarineFacade.Factory>(InstallSubmarineFacade);
             Container.BindFacadeFactory<Type.Battle.Actor, TorpedoFacade, TorpedoFacade.Factory>(InstallTorpedoFacade);
