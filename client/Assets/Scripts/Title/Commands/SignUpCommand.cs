@@ -18,8 +18,6 @@ namespace Submarine.Title
             AuthenticationService auth;
             [Inject]
             PermanentDataStoreService dataStore;
-            [Inject]
-            TyphenApi.WebApi.Submarine webApi;
 
             public void Execute(string userName)
             {
@@ -35,8 +33,6 @@ namespace Submarine.Title
 
                     lobbyModel.JoinedRoom.Value = response.User.JoinedRoom;
                     user.LoggedInUser.Value = response.User;
-
-                    webApi.Authenticate(response.AccessToken);
                     Debug.Log("Succeeded sign up");
                 });
             }

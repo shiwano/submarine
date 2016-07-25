@@ -19,11 +19,6 @@ namespace TyphenApi.WebApi
             ResponseDeserializer = jsonSerializer;
         }
 
-        public void Authenticate(string accessToken)
-        {
-            this.accessToken = accessToken;
-        }
-
         public override void OnBeforeRequestSend(IWebApiRequest request)
         {
             #if UNITY_EDITOR
@@ -57,6 +52,16 @@ namespace TyphenApi.WebApi
             #if UNITY_EDITOR
             Game.Logger.LogWithGreen("[WebAPI] Response: " + request.Uri, response.Body);
             #endif
+
+            string accessToken;
+            if (response.Headers.TryGetValue("X-SET-ACCESS-TOKEN", out accessToken))
+            {
+                this.accessToken = accessToken;
+
+                #if UNITY_EDITOR
+                Game.Logger.LogWithPurple("[WebAPI] AccessToken: " + accessToken);
+                #endif
+            }
         }
     }
 }
