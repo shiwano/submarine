@@ -40,9 +40,9 @@ declare module Submarine {
   /** @noAuthRequired */
   function ping(message: string): { message: string; };
   /** @noAuthRequired */
-  function signUp(name: string): { user: LoggedInUser; authToken: string; accessToken: string; };
+  function signUp(name: string): { user: LoggedInUser; authToken: string; };
   /** @noAuthRequired */
-  function login(authToken: string): { user: LoggedInUser; accessToken: string; };
+  function login(authToken: string): { user: LoggedInUser; };
 
   function findUser(name: string): { user?: User; };
 
