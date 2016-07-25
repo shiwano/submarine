@@ -11,9 +11,8 @@ var _ = errors.New
 
 // SignUpObject is a kind of TyphenAPI type.
 type SignUpObject struct {
-	User        *LoggedInUser `codec:"user"`
-	AuthToken   string        `codec:"auth_token"`
-	AccessToken string        `codec:"access_token"`
+	User      *LoggedInUser `codec:"user"`
+	AuthToken string        `codec:"auth_token"`
 }
 
 // Coerce the fields.

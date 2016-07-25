@@ -10,7 +10,5 @@ namespace TyphenApi.Type.Submarine
         public TyphenApi.Type.Submarine.LoggedInUser User { get; set; }
         protected static readonly SerializationInfo<SignUpObject, string> authToken = new SerializationInfo<SignUpObject, string>("auth_token", false, (x) => x.AuthToken, (x, v) => x.AuthToken = v);
         public string AuthToken { get; set; }
-        protected static readonly SerializationInfo<SignUpObject, string> accessToken = new SerializationInfo<SignUpObject, string>("access_token", false, (x) => x.AccessToken, (x, v) => x.AccessToken = v);
-        public string AccessToken { get; set; }
     }
 }

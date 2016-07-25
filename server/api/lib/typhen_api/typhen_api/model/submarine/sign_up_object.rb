@@ -6,6 +6,5 @@ module TyphenApi::Model::Submarine
 
     attribute :user, TyphenApi::Model::Submarine::LoggedInUser, :required => true
     attribute :auth_token, String, :required => true
-    attribute :access_token, String, :required => true
   end
 end
