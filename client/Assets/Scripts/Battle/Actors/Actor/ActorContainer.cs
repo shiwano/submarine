@@ -7,7 +7,7 @@ namespace Submarine.Battle
     public class ActorContainer : ITickable
     {
         [Inject]
-        BattleEvent.PlayerSubmarineCreate playerSubmarineCreateEvent;
+        UserModel userModel;
         [Inject]
         SubmarineFacade.Factory submarineFactory;
         [Inject]
@@ -55,13 +55,9 @@ namespace Submarine.Battle
 
         void CreateSubmarine(Type.Battle.Actor actor)
         {
-            var submarine = submarineFactory.Create(actor);
+            var isPlayerSubmarine = actor.UserId == userModel.LoggedInUser.Value.Id;
+            var submarine = submarineFactory.Create(actor, isPlayerSubmarine);
             actors.Add(actor.Id, submarine);
-
-            if (submarine.IsMine)
-            {
-                playerSubmarineCreateEvent.Invoke(submarine);
-            }
         }
 
         void CreateTorpedo(Type.Battle.Actor actor)

@@ -8,8 +8,6 @@ namespace Submarine.Battle
     public class PlayerSubmarineMediator : IInitializable, ITickable, IDisposable
     {
         [Inject]
-        BattleEvent.PlayerSubmarineCreate playerSubmarineCreateEvent;
-        [Inject]
         BattleModel battleModel;
         [Inject]
         BattleService battleService;
@@ -17,9 +15,10 @@ namespace Submarine.Battle
         BattleInputService battleInputService;
         [Inject]
         ThirdPersonCamera thirdPersonCamera;
+        [Inject]
+        SubmarineView submarineView;
 
         readonly CompositeDisposable disposables = new CompositeDisposable();
-        SubmarineFacade submarine;
 
         readonly float minSignificantDirection = 0.05f;
         readonly float directionThresholdForSendingDirection = 10f;
@@ -29,15 +28,40 @@ namespace Submarine.Battle
 
         public void Initialize()
         {
-            playerSubmarineCreateEvent.AsObservable().Subscribe(OnPlayerSubmarineCreate).AddTo(disposables);
+            thirdPersonCamera.SetTarget(submarineView.transform);
+
+            battleInputService.IsAccelerating
+                .Where(_ => battleModel.IsInBattle)
+                .Subscribe(OnAcceleratingChange)
+                .AddTo(disposables);
+
+            battleInputService.OnTorpadeShootAsObservable()
+                .Where(_ => battleModel.IsInBattle)
+                .Subscribe(_ => OnTorpedoShoot())
+                .AddTo(disposables);
+
+            battleInputService.OnDecoyShootAsObservable()
+                .Where(_ => battleModel.IsInBattle)
+                .Subscribe(_ => OnDecoyShoot())
+                .AddTo(disposables);
+
+            battleInputService.OnLookoutShootAsObservable()
+                .Where(_ => battleModel.IsInBattle)
+                .Subscribe(_ => OnLookoutShoot())
+                .AddTo(disposables);
+
+            battleInputService.OnPingerUseAsObservable()
+                .Where(_ => battleModel.IsInBattle)
+                .Subscribe(_ => OnPingerUse())
+                .AddTo(disposables);
         }
 
         public void Tick()
         {
-            if (submarine != null)
+            if (battleModel.IsInBattle)
             {
-                submarine.Turn(battleInputService.TurningRate);
-                SendDirectionIfNeeded(submarine.Direction);
+                submarineView.Turn(battleInputService.TurningRate);
+                SendDirectionIfNeeded(submarineView.ActorDirection);
             }
         }
 
@@ -60,21 +84,9 @@ namespace Submarine.Battle
             }
         }
 
-        void OnPlayerSubmarineCreate(SubmarineFacade submarine)
-        {
-            this.submarine = submarine;
-            thirdPersonCamera.SetTarget(submarine.View.transform);
-
-            battleInputService.IsAccelerating.Subscribe(OnAcceleratingChange).AddTo(disposables);
-            battleInputService.OnTorpadeShootAsObservable().Subscribe(_ => OnTorpedoShoot()).AddTo(disposables);
-            battleInputService.OnDecoyShootAsObservable().Subscribe(_ => OnDecoyShoot()).AddTo(disposables);
-            battleInputService.OnLookoutShootAsObservable().Subscribe(_ => OnLookoutShoot()).AddTo(disposables);
-            battleInputService.OnPingerUseAsObservable().Subscribe(_ => OnPingerUse()).AddTo(disposables);
-        }
-
         void OnAcceleratingChange(bool isAccelerating)
         {
-            var direction = submarine.Direction;
+            var direction = submarineView.ActorDirection;
 
             if (isAccelerating)
             {

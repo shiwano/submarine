@@ -5,7 +5,7 @@ namespace Submarine.Battle
 {
     public class SubmarineFacade : ActorFacade
     {
-        public class Factory : FacadeFactory<Type.Battle.Actor, SubmarineFacade> { }
+        public class Factory : FacadeFactory<Type.Battle.Actor, bool, SubmarineFacade> { }
 
         [Inject]
         SubmarineView view;
@@ -13,16 +13,6 @@ namespace Submarine.Battle
         public override bool WillIgnoreMotorDirection
         {
             get { return IsMine; }
-        }
-
-        public double Direction
-        {
-            get { return (double)view.ActorDirection; }
-        }
-
-        public void Turn(float rate)
-        {
-            view.Turn(rate);
         }
     }
 }

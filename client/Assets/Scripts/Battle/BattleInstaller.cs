@@ -36,11 +36,6 @@ namespace Submarine.Battle
             Container.Bind<IInitializable>().ToSingle<BattleMediator>();
             Container.Bind<ITickable>().ToSingle<BattleMediator>();
 
-            Container.Bind<PlayerSubmarineMediator>().ToSingle();
-            Container.Bind<IInitializable>().ToSingle<PlayerSubmarineMediator>();
-            Container.Bind<ITickable>().ToSingle<PlayerSubmarineMediator>();
-            Container.Bind<IDisposable>().ToSingle<PlayerSubmarineMediator>();
-
             Container.Bind<RadarView>().ToSingleInstance(radarView);
             Container.Bind<RadarMediator>().ToSingle();
             Container.Bind<IInitializable>().ToSingle<RadarMediator>();
@@ -59,11 +54,11 @@ namespace Submarine.Battle
             Container.Bind<ResultMediator>().ToSingle();
             Container.Bind<IInitializable>().ToSingle<ResultMediator>();
 
-            Container.BindFacadeFactory<Type.Battle.Actor, SubmarineFacade, SubmarineFacade.Factory>(InstallSubmarineFacade);
+            Container.BindFacadeFactory<Type.Battle.Actor, bool, SubmarineFacade, SubmarineFacade.Factory>(InstallSubmarineFacade);
             Container.BindFacadeFactory<Type.Battle.Actor, TorpedoFacade, TorpedoFacade.Factory>(InstallTorpedoFacade);
         }
 
-        void InstallSubmarineFacade(DiContainer subContainer, Type.Battle.Actor actor)
+        void InstallSubmarineFacade(DiContainer subContainer, Type.Battle.Actor actor, bool isPlayerSubmarine)
         {
             var submarinePrefab = Resources.Load<GameObject>(Constants.SubmarinePrefab);
             subContainer.Bind<ActorMotor>().ToSingle();
@@ -71,6 +66,14 @@ namespace Submarine.Battle
             subContainer.Bind<ActorView>().ToSinglePrefab(submarinePrefab);
             subContainer.Bind<IDisposable>().ToSinglePrefab(submarinePrefab);
             subContainer.BindInstance(actor);
+
+            if (isPlayerSubmarine)
+            {
+                subContainer.Bind<PlayerSubmarineMediator>().ToSingle();
+                subContainer.Bind<IInitializable>().ToSingle<PlayerSubmarineMediator>();
+                subContainer.Bind<ITickable>().ToSingle<PlayerSubmarineMediator>();
+                subContainer.Bind<IDisposable>().ToSingle<PlayerSubmarineMediator>();
+            }
         }
 
         void InstallTorpedoFacade(DiContainer subContainer, Type.Battle.Actor actor)

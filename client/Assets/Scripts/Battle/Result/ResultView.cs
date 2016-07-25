@@ -18,6 +18,7 @@ namespace Submarine.Battle
             gameObject.SetActive(true);
             victoryEffect.gameObject.SetActive(isVictory);
             defeatEffect.gameObject.SetActive(!isVictory);
+            closeButton.gameObject.SetActive(true);
         }
 
         public IObservable<Unit> OnCloseButtonClickAsObservable()
@@ -29,6 +30,7 @@ namespace Submarine.Battle
         {
             victoryEffect.gameObject.SetActive(false);
             defeatEffect.gameObject.SetActive(false);
+            closeButton.gameObject.SetActive(false);
             gameObject.SetActive(false);
         }
     }
