@@ -24,7 +24,7 @@ RSpec.describe ApplicationController, type: :controller do
 
     describe '#generate_access_token_if_needed' do
       context 'when the current access token will not expires soon' do
-        it 'should generate access token' do
+        it 'should not generate access token' do
           post :service
           expect(response.headers['X-Set-Access-Token']).to be nil
         end
