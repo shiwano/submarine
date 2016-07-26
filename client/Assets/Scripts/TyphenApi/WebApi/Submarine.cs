@@ -12,7 +12,7 @@ namespace TyphenApi.WebApi
 
         public Submarine(Config config) : base(config.ApiServerBaseUri)
         {
-            RequestSender = new WebApiRequestSenderWWW();
+            RequestSender = new WebApiRequestSenderUnity();
 
             var jsonSerializer = new JSONSerializer();
             RequestSerializer = jsonSerializer;
@@ -54,7 +54,7 @@ namespace TyphenApi.WebApi
             #endif
 
             string accessToken;
-            if (response.Headers.TryGetValue("X-SET-ACCESS-TOKEN", out accessToken))
+            if (response.Headers.TryGetValue("X-Set-Access-Token", out accessToken))
             {
                 this.accessToken = accessToken;
 
