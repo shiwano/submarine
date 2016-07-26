@@ -101,7 +101,12 @@ namespace TyphenApi
             {
                 stream.Write(messageTypeBytes, 0, MessageTypeBytesLength);
                 stream.Write(messageData, 0, messageData.Length);
-                connection.Send(stream.GetBuffer());
+                var data = stream.GetBuffer();
+
+                if (connection.IsAlive)
+                {
+                    connection.Send(data);
+                }
             }
         }
 
