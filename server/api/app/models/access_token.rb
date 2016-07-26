@@ -16,6 +16,9 @@
 #
 
 class AccessToken < ApplicationRecord
+  EXPIRATION_TIME = 1.day
+  EXPIRATION_WARNING_TIME = 1.hour
+
   belongs_to :user
 
   validates :user, presence: true
@@ -32,11 +35,15 @@ class AccessToken < ApplicationRecord
 
   def generate_token
     self.token = SecureRandom.hex(32)
-    self.expires_at = Time.now + 1.day
+    self.expires_at = Time.now + EXPIRATION_TIME
     token
   end
 
   def expired?
     expires_at <= Time.now
+  end
+
+  def expires_soon?
+    !expired? && expires_at <= Time.now + EXPIRATION_WARNING_TIME
   end
 end

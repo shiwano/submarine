@@ -66,4 +66,24 @@ RSpec.describe AccessToken, type: :model do
       it { is_expected.to be false }
     end
   end
+
+  describe '#expires_soon?' do
+    let(:expires_at) { Time.now }
+    let(:access_token) { create(:access_token, expires_at: expires_at) }
+    subject { access_token.expires_soon? }
+    after { Timecop.return }
+
+    context 'when current time + warning time is over expires_at' do
+      before { Timecop.freeze(expires_at - AccessToken::EXPIRATION_WARNING_TIME) }
+      it { is_expected.to be true }
+    end
+    context 'when current time + warning time is not over expires_at' do
+      before { Timecop.freeze(expires_at - AccessToken::EXPIRATION_WARNING_TIME * 2) }
+      it { is_expected.to be false }
+    end
+    context 'when current time is over expires_at' do
+      before { Timecop.freeze(expires_at) }
+      it { is_expected.to be false }
+    end
+  end
 end
