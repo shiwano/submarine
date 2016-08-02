@@ -24,6 +24,7 @@ const (
 	MessageType_TurnRequest         int32 = 698416554
 	MessageType_PingerRequest       int32 = 110864488
 	MessageType_TorpedoRequest      int32 = 1327463172
+	MessageType_AddBotRequest       int32 = 1859155646
 )
 
 // WebSocketAPI sends messages, and dispatches message events.
@@ -46,6 +47,7 @@ type WebSocketAPI struct {
 	TurnRequestHandler         func(message *submarine_battle.TurnRequestObject)
 	PingerRequestHandler       func(message *submarine_battle.PingerRequestObject)
 	TorpedoRequestHandler      func(message *submarine_battle.TorpedoRequestObject)
+	AddBotRequestHandler       func(message *submarine_battle.AddBotRequestObject)
 }
 
 // New creates a WebSocketAPI.
@@ -88,6 +90,8 @@ func (api *WebSocketAPI) Send(body typhenapi.Type) (message *typhenapi.Message, 
 		message, err = typhenapi.NewMessage(api.serializer, MessageType_PingerRequest, messageBody)
 	case *submarine_battle.TorpedoRequestObject:
 		message, err = typhenapi.NewMessage(api.serializer, MessageType_TorpedoRequest, messageBody)
+	case *submarine_battle.AddBotRequestObject:
+		message, err = typhenapi.NewMessage(api.serializer, MessageType_AddBotRequest, messageBody)
 	default:
 		err = fmt.Errorf("Unsupported TyphenAPI type is given: %v", messageBody)
 	}
@@ -365,6 +369,26 @@ func (api *WebSocketAPI) SendPingerRequest(pingerRequest *submarine_battle.Pinge
 // SendTorpedoRequest sends a torpedoRequest message.
 func (api *WebSocketAPI) SendTorpedoRequest(torpedoRequest *submarine_battle.TorpedoRequestObject) error {
 	message, err := typhenapi.NewMessage(api.serializer, MessageType_TorpedoRequest, torpedoRequest)
+
+	if err != nil {
+		if api.errorHandler != nil {
+			api.errorHandler(err)
+		}
+		return err
+	}
+
+	if err := api.session.Send(message.Bytes()); err != nil {
+		if api.errorHandler != nil {
+			api.errorHandler(err)
+		}
+		return err
+	}
+	return nil
+}
+
+// SendAddBotRequest sends a addBotRequest message.
+func (api *WebSocketAPI) SendAddBotRequest(addBotRequest *submarine_battle.AddBotRequestObject) error {
+	message, err := typhenapi.NewMessage(api.serializer, MessageType_AddBotRequest, addBotRequest)
 
 	if err != nil {
 		if api.errorHandler != nil {
@@ -660,6 +684,25 @@ func (api *WebSocketAPI) DispatchMessageEvent(data []byte) error {
 
 		if api.TorpedoRequestHandler != nil {
 			api.TorpedoRequestHandler(typhenType)
+		}
+	case MessageType_AddBotRequest:
+		typhenType := new(submarine_battle.AddBotRequestObject)
+		if err := api.serializer.Deserialize(message.Body, typhenType); err != nil {
+			if api.errorHandler != nil {
+				api.errorHandler(err)
+			}
+			return err
+		}
+
+		if err := typhenType.Coerce(); err != nil {
+			if api.errorHandler != nil {
+				api.errorHandler(err)
+			}
+			return err
+		}
+
+		if api.AddBotRequestHandler != nil {
+			api.AddBotRequestHandler(typhenType)
 		}
 	}
 

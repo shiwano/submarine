@@ -23,6 +23,7 @@ namespace TyphenApi.WebSocketApi.Parts.Submarine
             TurnRequest = 698416554,
             PingerRequest = 110864488,
             TorpedoRequest = 1327463172,
+            AddBotRequest = 1859155646,
         }
 
         readonly IWebSocketSession session;
@@ -41,6 +42,7 @@ namespace TyphenApi.WebSocketApi.Parts.Submarine
         public event Action<TyphenApi.Type.Submarine.Battle.TurnRequestObject> OnTurnRequestReceive;
         public event Action<TyphenApi.Type.Submarine.Battle.PingerRequestObject> OnPingerRequestReceive;
         public event Action<TyphenApi.Type.Submarine.Battle.TorpedoRequestObject> OnTorpedoRequestReceive;
+        public event Action<TyphenApi.Type.Submarine.Battle.AddBotRequestObject> OnAddBotRequestReceive;
 
 
         public Battle(IWebSocketSession session)
@@ -223,6 +225,17 @@ namespace TyphenApi.WebSocketApi.Parts.Submarine
             {
             });
         }
+        public void SendAddBotRequest(TyphenApi.Type.Submarine.Battle.AddBotRequestObject addBotRequest)
+        {
+            session.Send((int)MessageType.AddBotRequest, addBotRequest);
+        }
+
+        public void SendAddBotRequest()
+        {
+            session.Send((int)MessageType.AddBotRequest, new TyphenApi.Type.Submarine.Battle.AddBotRequestObject()
+            {
+            });
+        }
 
         public TyphenApi.TypeBase DispatchMessageEvent(int messageType, byte[] messageData)
         {
@@ -378,6 +391,17 @@ namespace TyphenApi.WebSocketApi.Parts.Submarine
                     if (OnTorpedoRequestReceive != null)
                     {
                         OnTorpedoRequestReceive(message);
+                    }
+
+                    return message;
+                }
+                case MessageType.AddBotRequest:
+                {
+                    var message = session.MessageDeserializer.Deserialize<TyphenApi.Type.Submarine.Battle.AddBotRequestObject>(messageData);
+
+                    if (OnAddBotRequestReceive != null)
+                    {
+                        OnAddBotRequestReceive(message);
                     }
 
                     return message;
