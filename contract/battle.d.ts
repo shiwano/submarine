@@ -65,4 +65,6 @@ declare module Submarine.Battle {
   var turnRequest: { direction: degrees; };
   var pingerRequest: {};
   var torpedoRequest: {};
+
+  var addBotRequest: {};
 }
