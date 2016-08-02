@@ -87,9 +87,6 @@ loop:
 	}
 
 	r.isClosed.SetTo(true)
-	close(r.joinCh)
-	close(r.leaveCh)
-	close(r.closeCh)
 
 	if r.closeHandler != nil {
 		r.closeHandler(r)
