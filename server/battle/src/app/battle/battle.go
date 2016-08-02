@@ -61,7 +61,7 @@ func (b *Battle) EnterUser(userID int64) {
 	if !b.isStarted {
 		if s := b.context.SubmarineByUserID(userID); s == nil {
 			index := len(b.context.Users())
-			startPos := &vec2.T{-20 * float64(index), 20 * float64(index)}
+			startPos := b.getStartPosition(index)
 			teamLayer := context.GetTeamLayer(index + 1)
 			user := context.NewUser(userID, teamLayer, startPos)
 			actor.NewSubmarine(b.context, user)
@@ -148,6 +148,19 @@ func (b *Battle) leaveUser(userID int64) {
 	s := b.context.SubmarineByUserID(userID)
 	if s != nil {
 		s.Event().Emit(event.UserLeave)
+	}
+}
+
+func (b *Battle) getStartPosition(index int) *vec2.T {
+	switch index {
+	case 0:
+		return &vec2.T{125, 125}
+	case 1:
+		return &vec2.T{-125, -125}
+	case 2:
+		return &vec2.T{125, -125}
+	default:
+		return &vec2.T{-125, 125}
 	}
 }
 
