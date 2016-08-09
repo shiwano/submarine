@@ -17,7 +17,6 @@ type actor struct {
 	isDestroyed bool
 
 	isCalledStart     bool
-	isCalledUpdate    bool
 	isCalledOnDestroy bool
 }
 
@@ -36,50 +35,23 @@ func newSubmarine(battleContext *Context) *actor {
 	return a
 }
 
-func (a *actor) ID() int64 {
-	return a.id
-}
+func (a *actor) ID() int64              { return a.id }
+func (a *actor) User() *User            { return a.user }
+func (a *actor) Type() battle.ActorType { return a.actorType }
+func (a *actor) Event() *event.Emitter  { return a.event }
 
-func (a *actor) User() *User {
-	return a.user
-}
-
-func (a *actor) Type() battle.ActorType {
-	return a.actorType
-}
-
-func (a *actor) Event() *event.Emitter {
-	return a.event
-}
+func (a *actor) IsDestroyed() bool          { return a.isDestroyed }
+func (a *actor) Movement() *battle.Movement { panic("not implemented yet.") }
+func (a *actor) Position() *vec2.T          { return &vec2.Zero }
+func (a *actor) Direction() float64         { return 0 }
+func (a *actor) IsAccelerating() bool       { return false }
 
 func (a *actor) Destroy() {
 	a.isDestroyed = true
 	a.context.Event.Emit(event.ActorDestroy, a)
 }
 
-func (a *actor) IsDestroyed() bool {
-	return a.isDestroyed
-}
-
-func (a *actor) Movement() *battle.Movement {
-	panic("not implemented yet.")
-}
-
-func (a *actor) Position() *vec2.T {
-	return &vec2.Zero
-}
-
-func (a *actor) BeforeUpdate() {
-}
-
-func (a *actor) Start() {
-	a.isCalledStart = true
-}
-
-func (a *actor) Update() {
-	a.isCalledUpdate = true
-}
-
-func (a *actor) OnDestroy() {
-	a.isCalledOnDestroy = true
-}
+func (a *actor) Start()        { a.isCalledStart = true }
+func (a *actor) BeforeUpdate() {}
+func (a *actor) Update()       {}
+func (a *actor) OnDestroy()    { a.isCalledOnDestroy = true }

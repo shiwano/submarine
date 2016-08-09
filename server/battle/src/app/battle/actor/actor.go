@@ -42,21 +42,16 @@ func newActor(battleContext *context.Context, user *context.User, actorType batt
 	return a
 }
 
-func (a *actor) ID() int64 {
-	return a.stageAgent.ID()
-}
+func (a *actor) ID() int64              { return a.stageAgent.ID() }
+func (a *actor) User() *context.User    { return a.user }
+func (a *actor) Type() battle.ActorType { return a.actorType }
+func (a *actor) Event() *event.Emitter  { return a.event }
 
-func (a *actor) User() *context.User {
-	return a.user
-}
-
-func (a *actor) Type() battle.ActorType {
-	return a.actorType
-}
-
-func (a *actor) Event() *event.Emitter {
-	return a.event
-}
+func (a *actor) IsDestroyed() bool          { return a.isDestroyed }
+func (a *actor) Movement() *battle.Movement { return a.motor.toAPIType(a.ID()) }
+func (a *actor) Position() *vec2.T          { return a.stageAgent.Position() }
+func (a *actor) Direction() float64         { return a.motor.direction }
+func (a *actor) IsAccelerating() bool       { return a.motor.accelerator.isAccelerating }
 
 func (a *actor) Destroy() {
 	a.isDestroyed = true
@@ -64,22 +59,15 @@ func (a *actor) Destroy() {
 	a.context.Event.Emit(event.ActorDestroy, a)
 }
 
-func (a *actor) IsDestroyed() bool {
-	return a.isDestroyed
-}
-
-func (a *actor) Movement() *battle.Movement {
-	return a.motor.toAPIType(a.ID())
-}
-
-func (a *actor) Position() *vec2.T {
-	return a.stageAgent.Position()
-}
-
 func (a *actor) BeforeUpdate() {
 	position := a.motor.position()
 	a.stageAgent.Move(position, a.ignoredLayer)
 }
+
+// Overridable methods.
+func (a *actor) Start()     {}
+func (a *actor) Update()    {}
+func (a *actor) OnDestroy() {}
 
 func (a *actor) accelerate(direction float64) {
 	a.motor.accelerate()
@@ -113,8 +101,3 @@ func (a *actor) onStageAgentCollide(obj navmesh.Object, point vec2.T) {
 		a.event.Emit(event.ActorCollideWithOtherActor, other, point)
 	}
 }
-
-// Overridable methods.
-func (a *actor) Start()     {}
-func (a *actor) Update()    {}
-func (a *actor) OnDestroy() {}

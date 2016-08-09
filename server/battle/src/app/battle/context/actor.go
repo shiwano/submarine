@@ -12,11 +12,15 @@ type Actor interface {
 	User() *User
 	Type() battle.ActorType
 	Event() *event.Emitter
-	Destroy()
+
 	IsDestroyed() bool
 	Movement() *battle.Movement
-
 	Position() *vec2.T
+	Direction() float64
+	IsAccelerating() bool
+
+	Destroy()
+
 	Start()
 	BeforeUpdate()
 	Update()
