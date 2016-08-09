@@ -14,7 +14,7 @@ func TestActorParams(t *testing.T) {
 		Convey("#start", func() {
 			Convey("with a valid path", func() {
 				Convey("should start navigation", func() {
-					path := []*vec2.T{&vec2.T{0, 0}, &vec2.T{1, 1}}
+					path := []vec2.T{vec2.T{0, 0}, vec2.T{1, 1}}
 					n.start(path, &vec2.T{0, 0})
 					So(n.isStarted(), ShouldBeTrue)
 				})
@@ -22,7 +22,7 @@ func TestActorParams(t *testing.T) {
 
 			Convey("with a invalid path that does not have enough length", func() {
 				Convey("should stop navigation", func() {
-					path := []*vec2.T{&vec2.T{0, 0}}
+					path := []vec2.T{vec2.T{0, 0}}
 					n.start(path, &vec2.T{0, 0})
 					So(n.isStarted(), ShouldBeFalse)
 				})
@@ -30,7 +30,7 @@ func TestActorParams(t *testing.T) {
 		})
 
 		Convey("#stop", func() {
-			path := []*vec2.T{&vec2.T{0, 0}, &vec2.T{1, 1}}
+			path := []vec2.T{vec2.T{0, 0}, vec2.T{1, 1}}
 			n.start(path, &vec2.T{0, 0})
 
 			Convey("should stop navigation", func() {
@@ -48,7 +48,7 @@ func TestActorParams(t *testing.T) {
 			})
 
 			Convey("when navigation started", func() {
-				path := []*vec2.T{&vec2.T{0, 0}, &vec2.T{0, 10}, &vec2.T{10, 10}}
+				path := []vec2.T{vec2.T{0, 0}, vec2.T{0, 10}, vec2.T{10, 10}}
 				n.start(path, &vec2.T{0, 0})
 
 				Convey("with a point that does not go through the next point", func() {

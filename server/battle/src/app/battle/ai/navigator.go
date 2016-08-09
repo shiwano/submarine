@@ -9,7 +9,7 @@ const rad2Deg = 180 / math.Pi
 
 type navigator struct {
 	nextPointIndex int
-	path           []*vec2.T
+	path           []vec2.T
 	previousPoint  *vec2.T
 }
 
@@ -17,7 +17,7 @@ func (n *navigator) isStarted() bool {
 	return n.path != nil
 }
 
-func (n *navigator) start(path []*vec2.T, currentPoint *vec2.T) {
+func (n *navigator) start(path []vec2.T, currentPoint *vec2.T) {
 	if len(path) < 2 {
 		n.stop()
 		return
@@ -38,7 +38,7 @@ func (n *navigator) navigate(currentPoint *vec2.T) (bool, float64) {
 		return false, 0
 	}
 
-	nextPoint := n.path[n.nextPointIndex]
+	nextPoint := &n.path[n.nextPointIndex]
 	previousPoint := n.previousPoint
 	n.previousPoint = currentPoint
 
@@ -60,7 +60,7 @@ func (n *navigator) navigate(currentPoint *vec2.T) (bool, float64) {
 		return false, 0
 	}
 	n.nextPointIndex++
-	return true, n.direction(currentPoint, n.path[n.nextPointIndex])
+	return true, n.direction(currentPoint, &n.path[n.nextPointIndex])
 }
 
 func (n *navigator) direction(from, to *vec2.T) float64 {
