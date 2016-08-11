@@ -6,7 +6,11 @@ import (
 )
 
 func equalVectors(v1, v2 *vec2.T) bool {
-	return v1[0] == v2[0] && v1[1] == v2[1]
+	return equalFloats(v1[0], v2[0]) && equalFloats(v1[1], v2[1])
+}
+
+func equalFloats(a, b float64) bool {
+	return math.Abs(a-b) < math.SmallestNonzeroFloat64
 }
 
 func calculateOctileDistance(from, to *vec2.T) float64 {
