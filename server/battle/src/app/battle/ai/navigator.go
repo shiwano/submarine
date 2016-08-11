@@ -1,6 +1,7 @@
 package ai
 
 import (
+	"app/util"
 	"github.com/ungerik/go3d/float64/vec2"
 	"math"
 )
@@ -51,7 +52,7 @@ func (n *navigator) navigate(currentPoint *vec2.T) (bool, float64) {
 		return true, n.direction(currentPoint, nextPoint)
 	}
 	dot := vec2.Dot(&vec, &vecToNextPoint)
-	if math.Abs(dot*dot-vecLengthSqr*vecToNextPointLengthSqr) > 0.00001 {
+	if !util.EqualFloats(dot*dot, vecLengthSqr*vecToNextPointLengthSqr) {
 		return true, n.direction(currentPoint, nextPoint)
 	}
 
