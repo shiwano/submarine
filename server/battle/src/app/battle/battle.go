@@ -38,8 +38,8 @@ func New(timeLimit time.Duration, stageMesh *navmesh.Mesh) *Battle {
 	}
 }
 
-// StartIfPossible starts the battle that is startable.
-func (b *Battle) StartIfPossible() bool {
+// Start starts the battle that is startable.
+func (b *Battle) Start() bool {
 	// TODO: Relevant users counting.
 	if !b.isStarted && len(b.ctx.Users()) > 0 {
 		b.isStarted = true
@@ -49,8 +49,8 @@ func (b *Battle) StartIfPossible() bool {
 	return false
 }
 
-// CloseIfPossible closes the battle that is running.
-func (b *Battle) CloseIfPossible() {
+// Close closes the battle that is running.
+func (b *Battle) Close() {
 	if b.isStarted && b.isFighting.IsSet() {
 		b.closeCh <- struct{}{}
 	}

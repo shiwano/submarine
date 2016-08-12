@@ -112,7 +112,7 @@ func (r *Room) broadcastRoom() {
 
 func (r *Room) startBattle(session *Session) {
 	// TODO: Validate that can the session starts the battle.
-	if r.battle.StartIfPossible() {
+	if r.battle.Start() {
 		logger.Log.Infof("Room(%v)'s battle started", r.id)
 	}
 }
@@ -145,7 +145,7 @@ func (r *Room) close() {
 		break
 	}
 	logger.Log.Infof("Room(%v) closed", r.id)
-	r.battle.CloseIfPossible()
+	r.battle.Close()
 	for _, session := range r.sessions {
 		r.leave(session)
 		session.close()
