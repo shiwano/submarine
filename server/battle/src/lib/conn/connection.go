@@ -4,6 +4,7 @@ import (
 	"errors"
 	"github.com/gorilla/websocket"
 	"net/http"
+	"sync"
 	"time"
 )
 
@@ -27,6 +28,7 @@ type Conn struct {
 	DisconnectHandler    func()
 	ErrorHandler         func(error)
 	envelope             chan *envelope
+	mu                   *sync.Mutex
 }
 
 // New creates a Connection.
@@ -35,6 +37,7 @@ func New() *Conn {
 		Settings: newDefaultSettings(),
 		Dialer:   new(websocket.Dialer),
 		Upgrader: new(websocket.Upgrader),
+		mu:       new(sync.Mutex),
 	}
 	return conn
 }
@@ -103,10 +106,18 @@ func (c *Conn) postEnvelope(e *envelope) error {
 func (c *Conn) writeMessage(e *envelope) error {
 	c.conn.SetWriteDeadline(time.Now().Add(c.Settings.WriteWait))
 	err := c.conn.WriteMessage(e.messageType, e.data)
-	if err != nil && c.ErrorHandler != nil {
-		c.ErrorHandler(err)
+	if err != nil {
+		c.handleError(err)
 	}
 	return err
+}
+
+func (c *Conn) handleError(err error) {
+	if err != nil && c.ErrorHandler != nil {
+		c.mu.Lock()
+		defer c.mu.Unlock()
+		c.ErrorHandler(err)
+	}
 }
 
 func (c *Conn) writePump() {
@@ -147,9 +158,7 @@ func (c *Conn) readPump() {
 	for {
 		messageType, data, err := c.conn.ReadMessage()
 		if err != nil {
-			if c.ErrorHandler != nil {
-				c.ErrorHandler(err)
-			}
+			c.handleError(err)
 			break
 		}
 
