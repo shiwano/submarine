@@ -3,7 +3,7 @@ package battle
 import (
 	"app/battle/context"
 	"app/typhenapi/core"
-	"app/typhenapi/type/submarine/battle"
+	battleAPI "app/typhenapi/type/submarine/battle"
 	"lib/currentmillis"
 	"time"
 )
@@ -32,7 +32,7 @@ func (g *Gateway) InputMessage(userID int64, message typhenapi.Type) {
 func (g *Gateway) outputStart(userIDs []int64, startedAt time.Time) {
 	g.Output <- &GatewayOutput{
 		UserIDs: userIDs,
-		Message: &battle.Start{
+		Message: &battleAPI.Start{
 			StartedAt: currentmillis.Millis(startedAt),
 		},
 	}
@@ -40,7 +40,7 @@ func (g *Gateway) outputStart(userIDs []int64, startedAt time.Time) {
 
 func (g *Gateway) outputFinish(winnerUserID *int64, finishedAt time.Time) {
 	g.Output <- &GatewayOutput{
-		Message: &battle.Finish{
+		Message: &battleAPI.Finish{
 			WinnerUserId: winnerUserID,
 			FinishedAt:   currentmillis.Millis(finishedAt),
 		},
@@ -51,7 +51,7 @@ func (g *Gateway) outputFinish(winnerUserID *int64, finishedAt time.Time) {
 func (g *Gateway) outputActor(userIDs []int64, actor context.Actor) {
 	g.Output <- &GatewayOutput{
 		UserIDs: userIDs,
-		Message: &battle.Actor{
+		Message: &battleAPI.Actor{
 			Id:       actor.ID(),
 			UserId:   actor.User().ID,
 			Type:     actor.Type(),
@@ -68,7 +68,7 @@ func (g *Gateway) outputMovement(actor context.Actor) {
 
 func (g *Gateway) outputDestruction(actor context.Actor) {
 	g.Output <- &GatewayOutput{
-		Message: &battle.Destruction{ActorId: actor.ID()},
+		Message: &battleAPI.Destruction{ActorId: actor.ID()},
 	}
 }
 

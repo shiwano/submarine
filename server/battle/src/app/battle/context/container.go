@@ -1,7 +1,7 @@
 package context
 
 import (
-	"app/typhenapi/type/submarine/battle"
+	battleAPI "app/typhenapi/type/submarine/battle"
 )
 
 type container struct {
@@ -24,7 +24,7 @@ func newContainer() *container {
 func (c *container) addActor(actor Actor) {
 	c.actorsByID[actor.ID()] = actor
 	c.actors = append(c.actors, actor)
-	if actor.Type() == battle.ActorType_Submarine {
+	if actor.Type() == battleAPI.ActorType_Submarine {
 		c.submarinesByUserID[actor.User().ID] = actor
 		c.users = append(c.users, actor.User())
 	}
@@ -44,7 +44,7 @@ func (c *container) removeActor(rawActor Actor) Actor {
 		}
 	}
 	c.actors = actors
-	if actor.Type() == battle.ActorType_Submarine {
+	if actor.Type() == battleAPI.ActorType_Submarine {
 		delete(c.submarinesByUserID, actor.User().ID)
 
 		users := c.users[:0]

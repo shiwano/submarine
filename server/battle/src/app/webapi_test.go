@@ -2,10 +2,10 @@ package main_test
 
 import (
 	"app/typhenapi/core"
-	"app/typhenapi/type/submarine"
-	"app/typhenapi/type/submarine/battle"
-	webapi "app/typhenapi/web/submarine"
-	webapi_battle "app/typhenapi/web/submarine/battle"
+	api "app/typhenapi/type/submarine"
+	battleAPI "app/typhenapi/type/submarine/battle"
+	webAPI "app/typhenapi/web/submarine"
+	webAPI_battle "app/typhenapi/web/submarine/battle"
 	. "github.com/smartystreets/goconvey/convey"
 	"net/http"
 	"testing"
@@ -38,19 +38,19 @@ func TestWebAPI(t *testing.T) {
 func (m *webAPITransporter) Routes(path string, data []byte) (typhenapi.Type, int) {
 	switch path {
 	case "/ping":
-		params := new(webapi.PingRequestBody)
+		params := new(webAPI.PingRequestBody)
 		m.serializer.Deserialize(data, params)
 		return m.Ping(params)
 	case "/battle/find_room":
-		params := new(webapi_battle.FindRoomRequestBody)
+		params := new(webAPI_battle.FindRoomRequestBody)
 		m.serializer.Deserialize(data, params)
 		return m.FindRoom(params)
 	case "/battle/find_room_member":
-		params := new(webapi_battle.FindRoomMemberRequestBody)
+		params := new(webAPI_battle.FindRoomMemberRequestBody)
 		m.serializer.Deserialize(data, params)
 		return m.FindRoomMember(params)
 	case "/battle/close_room":
-		params := new(webapi_battle.CloseRoomRequestBody)
+		params := new(webAPI_battle.CloseRoomRequestBody)
 		m.serializer.Deserialize(data, params)
 		return m.CloseRoom(params)
 	default:
@@ -58,39 +58,39 @@ func (m *webAPITransporter) Routes(path string, data []byte) (typhenapi.Type, in
 	}
 }
 
-func (m *webAPITransporter) Ping(params *webapi.PingRequestBody) (typhenapi.Type, int) {
-	typhenType := &submarine.PingObject{params.Message + " PONG"}
+func (m *webAPITransporter) Ping(params *webAPI.PingRequestBody) (typhenapi.Type, int) {
+	typhenType := &api.PingObject{params.Message + " PONG"}
 	return typhenType, http.StatusOK
 }
 
-func (m *webAPITransporter) FindRoomMember(params *webapi_battle.FindRoomMemberRequestBody) (typhenapi.Type, int) {
-	typhenType := new(battle.FindRoomMemberObject)
+func (m *webAPITransporter) FindRoomMember(params *webAPI_battle.FindRoomMemberRequestBody) (typhenapi.Type, int) {
+	typhenType := new(battleAPI.FindRoomMemberObject)
 
 	switch params.RoomKey {
 	case "key_1":
-		typhenType.RoomMember = &battle.RoomMember{Id: 1, RoomId: 1, Name: "I168"}
+		typhenType.RoomMember = &battleAPI.RoomMember{Id: 1, RoomId: 1, Name: "I168"}
 	case "key_2":
-		typhenType.RoomMember = &battle.RoomMember{Id: 2, RoomId: 1, Name: "I8"}
+		typhenType.RoomMember = &battleAPI.RoomMember{Id: 2, RoomId: 1, Name: "I8"}
 	case "key_3":
-		typhenType.RoomMember = &battle.RoomMember{Id: 3, RoomId: 1, Name: "I19"}
+		typhenType.RoomMember = &battleAPI.RoomMember{Id: 3, RoomId: 1, Name: "I19"}
 	case "key_4":
-		typhenType.RoomMember = &battle.RoomMember{Id: 4, RoomId: 1, Name: "I58"}
+		typhenType.RoomMember = &battleAPI.RoomMember{Id: 4, RoomId: 1, Name: "I58"}
 	}
 	return typhenType, http.StatusOK
 }
 
-func (m *webAPITransporter) FindRoom(params *webapi_battle.FindRoomRequestBody) (typhenapi.Type, int) {
-	typhenType := new(battle.FindRoomObject)
+func (m *webAPITransporter) FindRoom(params *webAPI_battle.FindRoomRequestBody) (typhenapi.Type, int) {
+	typhenType := new(battleAPI.FindRoomObject)
 
 	if params.RoomId == 1 {
-		typhenType.Room = &battle.Room{
+		typhenType.Room = &battleAPI.Room{
 			Id: params.RoomId,
 		}
 	}
 	return typhenType, http.StatusOK
 }
 
-func (m *webAPITransporter) CloseRoom(params *webapi_battle.CloseRoomRequestBody) (typhenapi.Type, int) {
+func (m *webAPITransporter) CloseRoom(params *webAPI_battle.CloseRoomRequestBody) (typhenapi.Type, int) {
 	if params.RoomId <= 0 {
 		return new(typhenapi.Void), http.StatusInternalServerError
 	}

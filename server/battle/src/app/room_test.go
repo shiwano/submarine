@@ -1,8 +1,8 @@
 package main_test
 
 import (
-	"app/typhenapi/type/submarine"
-	"app/typhenapi/type/submarine/battle"
+	api "app/typhenapi/type/submarine"
+	battleAPI "app/typhenapi/type/submarine/battle"
 	. "github.com/smartystreets/goconvey/convey"
 	"lib/currentmillis"
 	"testing"
@@ -16,8 +16,8 @@ func TestRoom(t *testing.T) {
 
 		Convey("when a user join to the room", func() {
 			Convey("should send a room message", func() {
-				done := make(chan *submarine.Room)
-				s.api.Battle.RoomHandler = func(m *submarine.Room) { done <- m }
+				done := make(chan *api.Room)
+				s.api.Battle.RoomHandler = func(m *api.Room) { done <- m }
 				s.connect(server.URL + "/rooms/1?room_key=key_1")
 				m := <-done
 				So(m.Id, ShouldEqual, 1)
@@ -26,8 +26,8 @@ func TestRoom(t *testing.T) {
 
 			Convey("should send a now message", func() {
 				currentmillis.StubNow = func() int64 { return 123456 }
-				done := make(chan *battle.NowObject)
-				s.api.Battle.NowHandler = func(m *battle.NowObject) { done <- m }
+				done := make(chan *battleAPI.NowObject)
+				s.api.Battle.NowHandler = func(m *battleAPI.NowObject) { done <- m }
 				s.connect(server.URL + "/rooms/1?room_key=key_1")
 				m := <-done
 				currentmillis.StubNow = nil
@@ -37,8 +37,8 @@ func TestRoom(t *testing.T) {
 
 		Convey("when a new user join to the room", func() {
 			Convey("should send a room message to other users", func() {
-				done := make(chan *submarine.Room)
-				s.api.Battle.RoomHandler = func(m *submarine.Room) { done <- m }
+				done := make(chan *api.Room)
+				s.api.Battle.RoomHandler = func(m *api.Room) { done <- m }
 				s.connect(server.URL + "/rooms/1?room_key=key_1")
 				s2.connect(server.URL + "/rooms/1?room_key=key_2")
 				<-done

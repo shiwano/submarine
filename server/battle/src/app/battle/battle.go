@@ -5,7 +5,7 @@ import (
 	"app/battle/context"
 	"app/battle/event"
 	"app/logger"
-	"app/typhenapi/type/submarine/battle"
+	battleAPI "app/typhenapi/type/submarine/battle"
 	"github.com/tevino/abool"
 	"github.com/ungerik/go3d/float64/vec2"
 	"lib/navmesh"
@@ -15,7 +15,7 @@ import (
 // Battle represents a battle.
 type Battle struct {
 	Gateway       *Gateway
-	context       *context.Context
+	ctx           *context.Context
 	judge         *judge
 	isStarted     bool
 	isFighting    *abool.AtomicBool
@@ -26,11 +26,11 @@ type Battle struct {
 
 // New creates a new battle.
 func New(timeLimit time.Duration, stageMesh *navmesh.Mesh) *Battle {
-	battleContext := context.NewContext(stageMesh)
+	ctx := context.NewContext(stageMesh)
 	return &Battle{
 		Gateway:       newGateway(),
-		context:       battleContext,
-		judge:         newJudge(battleContext, timeLimit),
+		ctx:           ctx,
+		judge:         newJudge(ctx, timeLimit),
 		isFighting:    abool.New(),
 		reenterUserCh: make(chan int64, 4),
 		leaveUserCh:   make(chan int64, 4),
@@ -41,7 +41,7 @@ func New(timeLimit time.Duration, stageMesh *navmesh.Mesh) *Battle {
 // StartIfPossible starts the battle that is startable.
 func (b *Battle) StartIfPossible() bool {
 	// TODO: Relevant users counting.
-	if !b.isStarted && len(b.context.Users()) > 0 {
+	if !b.isStarted && len(b.ctx.Users()) > 0 {
 		b.isStarted = true
 		go b.run()
 		return true
@@ -59,12 +59,12 @@ func (b *Battle) CloseIfPossible() {
 // EnterUser enters an user to the battle.
 func (b *Battle) EnterUser(userID int64) {
 	if !b.isStarted {
-		if s := b.context.SubmarineByUserID(userID); s == nil {
-			index := len(b.context.Users())
+		if s := b.ctx.SubmarineByUserID(userID); s == nil {
+			index := len(b.ctx.Users())
 			startPos := b.getStartPosition(index)
 			teamLayer := context.GetTeamLayer(index + 1)
 			user := context.NewUser(userID, teamLayer, startPos)
-			actor.NewSubmarine(b.context, user)
+			actor.NewSubmarine(b.ctx, user)
 		}
 	} else if b.isFighting.IsSet() {
 		b.reenterUserCh <- userID
@@ -105,19 +105,19 @@ loop:
 
 func (b *Battle) start() {
 	b.isFighting.SetTo(true)
-	b.context.StartedAt = time.Now()
-	b.Gateway.outputStart(nil, b.context.StartedAt)
-	for _, actor := range b.context.Actors() {
+	b.ctx.StartedAt = time.Now()
+	b.Gateway.outputStart(nil, b.ctx.StartedAt)
+	for _, actor := range b.ctx.Actors() {
 		b.Gateway.outputActor(nil, actor)
 	}
-	b.context.Event.On(event.ActorAdd, b.onActorAdd)
-	b.context.Event.On(event.ActorMove, b.onActorMove)
-	b.context.Event.On(event.ActorDestroy, b.onActorDestroy)
+	b.ctx.Event.On(event.ActorAdd, b.onActorAdd)
+	b.ctx.Event.On(event.ActorMove, b.onActorMove)
+	b.ctx.Event.On(event.ActorDestroy, b.onActorDestroy)
 }
 
 func (b *Battle) update(now time.Time) {
-	b.context.Now = now
-	for _, actor := range b.context.Actors() {
+	b.ctx.Now = now
+	for _, actor := range b.ctx.Actors() {
 		if !actor.IsDestroyed() {
 			actor.BeforeUpdate()
 		}
@@ -130,22 +130,22 @@ func (b *Battle) update(now time.Time) {
 func (b *Battle) finish() {
 	b.isFighting.SetTo(false)
 	if winner := b.judge.winner(); winner != nil {
-		b.Gateway.outputFinish(&winner.ID, b.context.Now)
+		b.Gateway.outputFinish(&winner.ID, b.ctx.Now)
 	} else {
-		b.Gateway.outputFinish(nil, b.context.Now)
+		b.Gateway.outputFinish(nil, b.ctx.Now)
 	}
 }
 
 func (b *Battle) reenterUser(userID int64) {
 	userIDs := []int64{userID}
-	b.Gateway.outputStart(userIDs, b.context.StartedAt)
-	for _, actor := range b.context.Actors() {
+	b.Gateway.outputStart(userIDs, b.ctx.StartedAt)
+	for _, actor := range b.ctx.Actors() {
 		b.Gateway.outputActor(userIDs, actor)
 	}
 }
 
 func (b *Battle) leaveUser(userID int64) {
-	s := b.context.SubmarineByUserID(userID)
+	s := b.ctx.SubmarineByUserID(userID)
 	if s != nil {
 		s.Event().Emit(event.UserLeave)
 	}
@@ -165,24 +165,24 @@ func (b *Battle) getStartPosition(index int) *vec2.T {
 }
 
 func (b *Battle) onInputReceive(input *gatewayInput) {
-	s := b.context.SubmarineByUserID(input.userID)
+	s := b.ctx.SubmarineByUserID(input.userID)
 	if s == nil {
 		return
 	}
 	switch m := input.message.(type) {
-	case *battle.AccelerationRequestObject:
+	case *battleAPI.AccelerationRequestObject:
 		logger.Log.Debugf("User(%v)'s submarine(%v) accelerates", s.User().ID, s.ID())
 		s.Event().Emit(event.AccelerationRequest, m)
-	case *battle.BrakeRequestObject:
+	case *battleAPI.BrakeRequestObject:
 		logger.Log.Debugf("User(%v)'s submarine(%v) brakes", s.User().ID, s.ID())
 		s.Event().Emit(event.BrakeRequest, m)
-	case *battle.TurnRequestObject:
+	case *battleAPI.TurnRequestObject:
 		logger.Log.Debugf("User(%v)'s submarine(%v) turns to %v", s.User().ID, s.ID(), m.Direction)
 		s.Event().Emit(event.TurnRequest, m)
-	case *battle.TorpedoRequestObject:
+	case *battleAPI.TorpedoRequestObject:
 		logger.Log.Debugf("User(%v)'s submarine(%v) shoots a torpedo", s.User().ID, s.ID())
 		s.Event().Emit(event.TorpedoRequest, m)
-	case *battle.PingerRequestObject:
+	case *battleAPI.PingerRequestObject:
 		logger.Log.Debugf("User(%v)'s submarine(%v) use pinger", s.User().ID, s.ID())
 		s.Event().Emit(event.PingerRequest, m)
 	}

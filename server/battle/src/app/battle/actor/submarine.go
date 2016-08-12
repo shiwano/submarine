@@ -3,7 +3,7 @@ package actor
 import (
 	"app/battle/context"
 	"app/battle/event"
-	"app/typhenapi/type/submarine/battle"
+	battleAPI "app/typhenapi/type/submarine/battle"
 	"github.com/ungerik/go3d/float64/vec2"
 )
 
@@ -12,9 +12,9 @@ type submarine struct {
 }
 
 // NewSubmarine creates a submarine.
-func NewSubmarine(battleContext *context.Context, user *context.User) context.Actor {
+func NewSubmarine(ctx *context.Context, user *context.User) context.Actor {
 	s := &submarine{
-		actor: newActor(battleContext, user, battle.ActorType_Submarine, user.StartPosition, 0, user.SubmarineParams),
+		actor: newActor(ctx, user, battleAPI.ActorType_Submarine, user.StartPosition, 0, user.SubmarineParams),
 	}
 	s.event.On(event.ActorCollideWithOtherActor, s.onCollideWithOtherActor)
 	s.event.On(event.AccelerationRequest, s.onAccelerationRequest)
@@ -22,7 +22,7 @@ func NewSubmarine(battleContext *context.Context, user *context.User) context.Ac
 	s.event.On(event.TurnRequest, s.onTurnRequest)
 	s.event.On(event.TorpedoRequest, s.onTorpedoRequest)
 	s.event.On(event.UserLeave, s.onUserLeave)
-	s.context.Event.Emit(event.ActorCreate, s)
+	s.ctx.Event.Emit(event.ActorCreate, s)
 	return s
 }
 
@@ -32,19 +32,19 @@ func (s *submarine) onCollideWithOtherActor(actor context.Actor, point vec2.T) {
 	}
 }
 
-func (s *submarine) onAccelerationRequest(message *battle.AccelerationRequestObject) {
+func (s *submarine) onAccelerationRequest(message *battleAPI.AccelerationRequestObject) {
 	s.accelerate(message.Direction)
 }
 
-func (s *submarine) onBrakeRequest(message *battle.BrakeRequestObject) {
+func (s *submarine) onBrakeRequest(message *battleAPI.BrakeRequestObject) {
 	s.brake(message.Direction)
 }
 
-func (s *submarine) onTurnRequest(message *battle.TurnRequestObject) {
+func (s *submarine) onTurnRequest(message *battleAPI.TurnRequestObject) {
 	s.turn(message.Direction)
 }
 
-func (s *submarine) onTorpedoRequest(message *battle.TorpedoRequestObject) {
+func (s *submarine) onTorpedoRequest(message *battleAPI.TorpedoRequestObject) {
 	s.shootTorpedo()
 }
 
@@ -55,5 +55,5 @@ func (s *submarine) onUserLeave() {
 func (s *submarine) shootTorpedo() {
 	p := s.motor.normalizedVelocity.Scaled(s.stageAgent.SizeRadius() * s.user.TorpedoParams.StartOffsetDistance)
 	p.Add(s.Position())
-	NewTorpedo(s.context, s.user, &p, s.motor.direction)
+	NewTorpedo(s.ctx, s.user, &p, s.motor.direction)
 }

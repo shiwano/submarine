@@ -3,7 +3,7 @@ package context
 import (
 	"app/battle/event"
 	"app/resource"
-	"app/typhenapi/type/submarine/battle"
+	battleAPI "app/typhenapi/type/submarine/battle"
 	. "github.com/smartystreets/goconvey/convey"
 	"testing"
 	"time"
@@ -91,7 +91,7 @@ func TestContextTest(t *testing.T) {
 				Convey("should return the user's submarine", func() {
 					submarine := c.SubmarineByUserID(userID)
 					So(submarine.User().ID, ShouldEqual, userID)
-					So(submarine.Type(), ShouldEqual, battle.ActorType_Submarine)
+					So(submarine.Type(), ShouldEqual, battleAPI.ActorType_Submarine)
 				})
 			})
 

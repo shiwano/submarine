@@ -3,15 +3,15 @@ package actor
 import (
 	"app/battle/context"
 	"app/battle/event"
-	"app/typhenapi/type/submarine/battle"
+	battleAPI "app/typhenapi/type/submarine/battle"
 	"github.com/ungerik/go3d/float64/vec2"
 	"lib/navmesh"
 )
 
 type actor struct {
 	user         *context.User
-	actorType    battle.ActorType
-	context      *context.Context
+	actorType    battleAPI.ActorType
+	ctx          *context.Context
 	event        *event.Emitter
 	isDestroyed  bool
 	motor        *motor
@@ -19,22 +19,22 @@ type actor struct {
 	ignoredLayer navmesh.LayerMask
 }
 
-func newActor(battleContext *context.Context, user *context.User, actorType battle.ActorType,
+func newActor(ctx *context.Context, user *context.User, actorType battleAPI.ActorType,
 	position *vec2.T, direction float64, params context.ActorParams) *actor {
 	a := &actor{
 		user:         user,
 		actorType:    actorType,
-		context:      battleContext,
+		ctx:          ctx,
 		event:        event.New(),
-		motor:        newMotor(battleContext, position, direction, params.AccelMaxSpeed(), params.AccelDuration()),
-		stageAgent:   battleContext.Stage.CreateAgent(21, position),
+		motor:        newMotor(ctx, position, direction, params.AccelMaxSpeed(), params.AccelDuration()),
+		stageAgent:   ctx.Stage.CreateAgent(21, position),
 		ignoredLayer: user.TeamLayer,
 	}
 
 	switch actorType {
-	case battle.ActorType_Submarine:
+	case battleAPI.ActorType_Submarine:
 		a.stageAgent.SetLayer(context.LayerSubmarine)
-	case battle.ActorType_Torpedo:
+	case battleAPI.ActorType_Torpedo:
 		a.stageAgent.SetLayer(context.LayerTorpedo)
 	}
 	a.stageAgent.SetLayer(a.User().TeamLayer)
@@ -42,21 +42,21 @@ func newActor(battleContext *context.Context, user *context.User, actorType batt
 	return a
 }
 
-func (a *actor) ID() int64              { return a.stageAgent.ID() }
-func (a *actor) User() *context.User    { return a.user }
-func (a *actor) Type() battle.ActorType { return a.actorType }
-func (a *actor) Event() *event.Emitter  { return a.event }
+func (a *actor) ID() int64                 { return a.stageAgent.ID() }
+func (a *actor) User() *context.User       { return a.user }
+func (a *actor) Type() battleAPI.ActorType { return a.actorType }
+func (a *actor) Event() *event.Emitter     { return a.event }
 
-func (a *actor) IsDestroyed() bool          { return a.isDestroyed }
-func (a *actor) Movement() *battle.Movement { return a.motor.toAPIType(a.ID()) }
-func (a *actor) Position() *vec2.T          { return a.stageAgent.Position() }
-func (a *actor) Direction() float64         { return a.motor.direction }
-func (a *actor) IsAccelerating() bool       { return a.motor.accelerator.isAccelerating }
+func (a *actor) IsDestroyed() bool             { return a.isDestroyed }
+func (a *actor) Movement() *battleAPI.Movement { return a.motor.toAPIType(a.ID()) }
+func (a *actor) Position() *vec2.T             { return a.stageAgent.Position() }
+func (a *actor) Direction() float64            { return a.motor.direction }
+func (a *actor) IsAccelerating() bool          { return a.motor.accelerator.isAccelerating }
 
 func (a *actor) Destroy() {
 	a.isDestroyed = true
 	a.stageAgent.Destroy()
-	a.context.Event.Emit(event.ActorDestroy, a)
+	a.ctx.Event.Emit(event.ActorDestroy, a)
 }
 
 func (a *actor) BeforeUpdate() {
@@ -72,23 +72,23 @@ func (a *actor) OnDestroy() {}
 func (a *actor) accelerate(direction float64) {
 	a.motor.accelerate()
 	a.motor.turn(direction)
-	a.context.Event.Emit(event.ActorMove, a)
+	a.ctx.Event.Emit(event.ActorMove, a)
 }
 
 func (a *actor) brake(direction float64) {
 	a.motor.brake()
 	a.motor.turn(direction)
-	a.context.Event.Emit(event.ActorMove, a)
+	a.ctx.Event.Emit(event.ActorMove, a)
 }
 
 func (a *actor) turn(direction float64) {
 	a.motor.turn(direction)
-	a.context.Event.Emit(event.ActorMove, a)
+	a.ctx.Event.Emit(event.ActorMove, a)
 }
 
 func (a *actor) idle() {
 	a.motor.idle(a.stageAgent.Position())
-	a.context.Event.Emit(event.ActorMove, a)
+	a.ctx.Event.Emit(event.ActorMove, a)
 }
 
 func (a *actor) onStageAgentCollide(obj navmesh.Object, point vec2.T) {
@@ -97,7 +97,7 @@ func (a *actor) onStageAgentCollide(obj navmesh.Object, point vec2.T) {
 	}
 	if obj == nil {
 		a.event.Emit(event.ActorCollideWithStage, point)
-	} else if other := a.context.Actor(obj.ID()); other != nil {
+	} else if other := a.ctx.Actor(obj.ID()); other != nil {
 		a.event.Emit(event.ActorCollideWithOtherActor, other, point)
 	}
 }

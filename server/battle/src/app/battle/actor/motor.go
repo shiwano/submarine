@@ -2,7 +2,7 @@ package actor
 
 import (
 	"app/battle/context"
-	"app/typhenapi/type/submarine/battle"
+	battleAPI "app/typhenapi/type/submarine/battle"
 	"github.com/ungerik/go3d/float64/vec2"
 	"lib/currentmillis"
 	"math"
@@ -15,7 +15,7 @@ const (
 )
 
 type motor struct {
-	context            *context.Context
+	ctx                *context.Context
 	accelerator        *accelerator
 	initialPosition    *vec2.T
 	initialSpeed       float64
@@ -24,19 +24,19 @@ type motor struct {
 	changedAt          time.Time
 }
 
-func newMotor(context *context.Context, position *vec2.T, direction float64,
+func newMotor(ctx *context.Context, position *vec2.T, direction float64,
 	maxSpeed float64, duration time.Duration) *motor {
 	m := &motor{
-		context:         context,
+		ctx:             ctx,
 		initialPosition: position,
 		direction:       direction,
 		normalizedVelocity: &vec2.T{
 			math.Cos(direction * deg2Rad),
 			math.Sin(direction * deg2Rad),
 		},
-		changedAt: context.Now,
+		changedAt: ctx.Now,
 		accelerator: &accelerator{
-			context:    context,
+			ctx:        ctx,
 			maxSpeed:   maxSpeed,
 			duration:   duration,
 			isShutdown: true,
@@ -45,11 +45,11 @@ func newMotor(context *context.Context, position *vec2.T, direction float64,
 	return m
 }
 
-func (m *motor) toAPIType(actorID int64) *battle.Movement {
+func (m *motor) toAPIType(actorID int64) *battleAPI.Movement {
 	position := m.position()
-	return &battle.Movement{
+	return &battleAPI.Movement{
 		ActorId:     actorID,
-		Position:    &battle.Point{X: position[0], Y: position[1]},
+		Position:    &battleAPI.Point{X: position[0], Y: position[1]},
 		Direction:   m.direction,
 		MovedAt:     currentmillis.Millis(m.changedAt),
 		Accelerator: m.accelerator.toAPIType(),
@@ -60,14 +60,14 @@ func (m *motor) accelerate() {
 	m.initialPosition = m.position()
 	m.initialSpeed = m.accelerator.speed()
 	m.accelerator.refresh(true, false)
-	m.changedAt = m.context.Now
+	m.changedAt = m.ctx.Now
 }
 
 func (m *motor) brake() {
 	m.initialPosition = m.position()
 	m.initialSpeed = m.accelerator.speed()
 	m.accelerator.refresh(false, false)
-	m.changedAt = m.context.Now
+	m.changedAt = m.ctx.Now
 }
 
 func (m *motor) turn(direction float64) {
@@ -79,14 +79,14 @@ func (m *motor) turn(direction float64) {
 		math.Cos(direction * deg2Rad),
 		math.Sin(direction * deg2Rad),
 	}
-	m.changedAt = m.context.Now
+	m.changedAt = m.ctx.Now
 }
 
 func (m *motor) idle(idlingPosition *vec2.T) {
 	m.initialPosition = idlingPosition
 	m.initialSpeed = m.accelerator.speed()
 	m.accelerator.refresh(m.accelerator.isAccelerating, true)
-	m.changedAt = m.context.Now
+	m.changedAt = m.ctx.Now
 }
 
 func (m *motor) position() *vec2.T {
@@ -95,11 +95,11 @@ func (m *motor) position() *vec2.T {
 	}
 
 	var t1, t2 float64
-	if m.context.Now.After(m.accelerator.reachedMaxSpeedAt) {
+	if m.ctx.Now.After(m.accelerator.reachedMaxSpeedAt) {
 		t1 = m.accelerator.reachedMaxSpeedAt.Sub(m.changedAt).Seconds()
-		t2 = m.context.Now.Sub(m.accelerator.reachedMaxSpeedAt).Seconds()
+		t2 = m.ctx.Now.Sub(m.accelerator.reachedMaxSpeedAt).Seconds()
 	} else {
-		t1 = m.context.Now.Sub(m.changedAt).Seconds()
+		t1 = m.ctx.Now.Sub(m.changedAt).Seconds()
 	}
 
 	p := *m.initialPosition
@@ -114,7 +114,7 @@ func (m *motor) position() *vec2.T {
 }
 
 type accelerator struct {
-	context           *context.Context
+	ctx               *context.Context
 	maxSpeed          float64
 	duration          time.Duration
 	startRate         float64
@@ -125,11 +125,11 @@ type accelerator struct {
 	reachedMaxSpeedAt time.Time
 }
 
-func (a *accelerator) toAPIType() *battle.Accelerator {
+func (a *accelerator) toAPIType() *battleAPI.Accelerator {
 	if a.isIdling || a.isShutdown {
 		return nil
 	}
-	return &battle.Accelerator{
+	return &battleAPI.Accelerator{
 		MaxSpeed:       a.maxSpeed,
 		Duration:       currentmillis.DurationMillis(a.duration),
 		StartRate:      a.startRate,
@@ -142,7 +142,7 @@ func (a *accelerator) refresh(isAccelerating bool, isIdling bool) {
 	a.isShutdown = false
 	a.isIdling = isIdling
 	a.isAccelerating = isAccelerating
-	a.changedAt = a.context.Now
+	a.changedAt = a.ctx.Now
 	remainingRate := a.startRate
 	if a.isAccelerating {
 		remainingRate = 1 - remainingRate
@@ -155,7 +155,7 @@ func (a *accelerator) rate() float64 {
 	if a.isShutdown {
 		return 0
 	}
-	rate := a.context.Now.Sub(a.changedAt).Seconds() / a.duration.Seconds()
+	rate := a.ctx.Now.Sub(a.changedAt).Seconds() / a.duration.Seconds()
 	if !a.isAccelerating {
 		rate = -rate
 	}

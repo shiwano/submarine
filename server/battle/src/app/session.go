@@ -3,9 +3,9 @@ package main
 import (
 	"app/logger"
 	"app/typhenapi/core"
-	"app/typhenapi/type/submarine"
-	"app/typhenapi/type/submarine/battle"
-	api "app/typhenapi/websocket/submarine"
+	api "app/typhenapi/type/submarine"
+	battleAPI "app/typhenapi/type/submarine/battle"
+	rtmAPI "app/typhenapi/websocket/submarine"
 	"github.com/gorilla/websocket"
 	"lib/conn"
 	"lib/currentmillis"
@@ -16,14 +16,14 @@ import (
 type Session struct {
 	id                int64
 	roomID            int64
-	info              *battle.RoomMember
+	info              *battleAPI.RoomMember
 	conn              *conn.Conn
-	api               *api.WebSocketAPI
+	api               *rtmAPI.WebSocketAPI
 	room              *Room
 	disconnectHandler func(*Session)
 }
 
-func newSession(info *battle.RoomMember, roomID int64) *Session {
+func newSession(info *battleAPI.RoomMember, roomID int64) *Session {
 	serializer := typhenapi.NewJSONSerializer()
 	session := &Session{
 		id:     info.Id,
@@ -35,7 +35,7 @@ func newSession(info *battle.RoomMember, roomID int64) *Session {
 	session.conn.DisconnectHandler = session.onDisconnect
 	session.conn.ErrorHandler = session.onError
 
-	session.api = api.New(session, serializer, session.onError)
+	session.api = rtmAPI.New(session, serializer, session.onError)
 	session.api.Battle.PingHandler = session.onPingReceive
 	session.api.Battle.StartRequestHandler = session.onStartRequestReceive
 	session.api.Battle.AccelerationRequestHandler = session.onAccelerationRequestReceive
@@ -60,8 +60,8 @@ func (s *Session) close() {
 	s.conn.Close()
 }
 
-func (s *Session) toUserAPIType() *submarine.User {
-	return &submarine.User{Name: s.info.Name}
+func (s *Session) toUserAPIType() *api.User {
+	return &api.User{Name: s.info.Name}
 }
 
 func (s *Session) onDisconnect() {
@@ -81,32 +81,32 @@ func (s *Session) onError(err error) {
 	logger.Log.Error(s.id, err)
 }
 
-func (s *Session) onPingReceive(message *battle.PingObject) {
+func (s *Session) onPingReceive(message *battleAPI.PingObject) {
 	message.Message += " " + message.Message
 	s.api.Battle.SendPing(message)
 }
 
-func (s *Session) onStartRequestReceive(message *battle.StartRequestObject) {
+func (s *Session) onStartRequestReceive(message *battleAPI.StartRequestObject) {
 	s.room.startBattleCh <- s
 }
 
-func (s *Session) onAccelerationRequestReceive(message *battle.AccelerationRequestObject) {
+func (s *Session) onAccelerationRequestReceive(message *battleAPI.AccelerationRequestObject) {
 	s.onBattleMessageReceive(message)
 }
 
-func (s *Session) onBrakeRequestReceive(message *battle.BrakeRequestObject) {
+func (s *Session) onBrakeRequestReceive(message *battleAPI.BrakeRequestObject) {
 	s.onBattleMessageReceive(message)
 }
 
-func (s *Session) onTurnRequestReceive(message *battle.TurnRequestObject) {
+func (s *Session) onTurnRequestReceive(message *battleAPI.TurnRequestObject) {
 	s.onBattleMessageReceive(message)
 }
 
-func (s *Session) onPingerRequestReceive(message *battle.PingerRequestObject) {
+func (s *Session) onPingerRequestReceive(message *battleAPI.PingerRequestObject) {
 	s.onBattleMessageReceive(message)
 }
 
-func (s *Session) onTorpedoRequestReceive(message *battle.TorpedoRequestObject) {
+func (s *Session) onTorpedoRequestReceive(message *battleAPI.TorpedoRequestObject) {
 	s.onBattleMessageReceive(message)
 }
 
@@ -117,5 +117,5 @@ func (s *Session) onBattleMessageReceive(message typhenapi.Type) {
 }
 
 func (s *Session) synchronizeTime() {
-	s.api.Battle.SendNow(&battle.NowObject{Time: currentmillis.Now()})
+	s.api.Battle.SendNow(&battleAPI.NowObject{Time: currentmillis.Now()})
 }

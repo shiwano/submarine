@@ -2,7 +2,7 @@ package context
 
 import (
 	"app/battle/event"
-	"app/typhenapi/type/submarine/battle"
+	battleAPI "app/typhenapi/type/submarine/battle"
 	"github.com/ungerik/go3d/float64/vec2"
 )
 
@@ -10,11 +10,11 @@ import (
 type Actor interface {
 	ID() int64
 	User() *User
-	Type() battle.ActorType
+	Type() battleAPI.ActorType
 	Event() *event.Emitter
 
 	IsDestroyed() bool
-	Movement() *battle.Movement
+	Movement() *battleAPI.Movement
 	Position() *vec2.T
 	Direction() float64
 	IsAccelerating() bool

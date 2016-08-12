@@ -1,13 +1,13 @@
 package main
 
 import (
-	battleLogic "app/battle"
+	"app/battle"
 	"app/logger"
 	"app/resource"
 	"app/typhenapi/core"
-	"app/typhenapi/type/submarine"
-	"app/typhenapi/type/submarine/battle"
-	webapi "app/typhenapi/web/submarine"
+	api "app/typhenapi/type/submarine"
+	battleAPI "app/typhenapi/type/submarine/battle"
+	webAPI "app/typhenapi/web/submarine"
 	"fmt"
 	"github.com/tevino/abool"
 	"time"
@@ -16,10 +16,10 @@ import (
 // Room represents a network group for battle.
 type Room struct {
 	id            int64
-	webAPI        *webapi.WebAPI
-	info          *battle.Room
+	webAPI        *webAPI.WebAPI
+	info          *battleAPI.Room
 	sessions      map[int64]*Session
-	battle        *battleLogic.Battle
+	battle        *battle.Battle
 	closeHandler  func(*Room)
 	startBattleCh chan *Session
 	joinCh        chan *Session
@@ -51,7 +51,7 @@ func newRoom(id int64) (*Room, error) {
 		webAPI:        webAPI,
 		info:          res.Room,
 		sessions:      make(map[int64]*Session),
-		battle:        battleLogic.New(time.Second*60, stageMesh),
+		battle:        battle.New(time.Second*60, stageMesh),
 		startBattleCh: make(chan *Session, 1),
 		joinCh:        make(chan *Session, 4),
 		leaveCh:       make(chan *Session, 4),
@@ -93,14 +93,14 @@ loop:
 	}
 }
 
-func (r *Room) toRoomAPIType() *submarine.Room {
-	members := make([]*submarine.User, len(r.sessions))
+func (r *Room) toRoomAPIType() *api.Room {
+	members := make([]*api.User, len(r.sessions))
 	i := 0
 	for _, s := range r.sessions {
 		members[i] = s.toUserAPIType()
 		i++
 	}
-	return &submarine.Room{Id: r.id, Members: members}
+	return &api.Room{Id: r.id, Members: members}
 }
 
 func (r *Room) broadcastRoom() {
@@ -156,7 +156,7 @@ func (r *Room) sendBattleInput(userID int64, message typhenapi.Type) {
 	r.battle.Gateway.InputMessage(userID, message)
 }
 
-func (r *Room) onBattleOutputReceive(output *battleLogic.GatewayOutput) {
+func (r *Room) onBattleOutputReceive(output *battle.GatewayOutput) {
 	if output.UserIDs == nil {
 		for _, s := range r.sessions {
 			s.api.Battle.Send(output.Message)
