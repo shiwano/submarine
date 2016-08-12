@@ -104,12 +104,15 @@ func (c *Conn) postEnvelope(e *envelope) error {
 }
 
 func (c *Conn) writeMessage(e *envelope) error {
-	c.conn.SetWriteDeadline(time.Now().Add(c.Settings.WriteWait))
-	err := c.conn.WriteMessage(e.messageType, e.data)
-	if err != nil {
+	if err := c.conn.SetWriteDeadline(time.Now().Add(c.Settings.WriteWait)); err != nil {
 		c.handleError(err)
+		return err
 	}
-	return err
+	if err := c.conn.WriteMessage(e.messageType, e.data); err != nil {
+		c.handleError(err)
+		return err
+	}
+	return nil
 }
 
 func (c *Conn) handleError(err error) {
@@ -151,8 +154,7 @@ func (c *Conn) readPump() {
 	c.conn.SetReadLimit(c.Settings.MaxMessageSize)
 	c.conn.SetReadDeadline(time.Now().Add(c.Settings.PongWait))
 	c.conn.SetPongHandler(func(string) error {
-		c.conn.SetReadDeadline(time.Now().Add(c.Settings.PongWait))
-		return nil
+		return c.conn.SetReadDeadline(time.Now().Add(c.Settings.PongWait))
 	})
 
 	for {
