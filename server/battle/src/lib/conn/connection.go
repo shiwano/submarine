@@ -12,9 +12,9 @@ var (
 	// ErrMessageChannelFull is returned when the connection's envelope channel is full.
 	ErrMessageChannelFull = errors.New("Message channel is full")
 
-	closeEnvelope      = &envelope{websocket.CloseMessage, websocket.FormatCloseMessage(websocket.CloseNormalClosure, "")}
-	closeErrorEnvelope = &envelope{websocket.CloseMessage, websocket.FormatCloseMessage(websocket.CloseInternalServerErr, "")}
-	pingEnvelope       = &envelope{websocket.PingMessage, []byte{}}
+	closeEnvelope          = &envelope{websocket.CloseMessage, websocket.FormatCloseMessage(websocket.CloseNormalClosure, "")}
+	closeGoingAwayEnvelope = &envelope{websocket.CloseMessage, websocket.FormatCloseMessage(websocket.CloseGoingAway, "")}
+	pingEnvelope           = &envelope{websocket.PingMessage, []byte{}}
 )
 
 // Conn represents a web socket connection.
@@ -134,7 +134,7 @@ loop:
 		select {
 		case e, ok := <-c.envelope:
 			if !ok {
-				c.writeMessage(closeErrorEnvelope)
+				c.writeMessage(closeGoingAwayEnvelope)
 				break loop
 			}
 			if err := c.writeMessage(e); err != nil {
