@@ -75,8 +75,7 @@ module.exports = function(typhen, options, helpers) {
       } else if (type.isPrimitiveType || type.isEnum) {
         return isOptional ? pointerMark + type.name : type.name;
       } else if (type.isArray) {
-        var name = '[]' + helpers.typeName(type.type, currentModule, false, hasPointerMark)
-        return isOptional ? pointerMark + name : name;
+        return '[]' + helpers.typeName(type.type, currentModule, false, hasPointerMark)
       } else if (type.parentModule !== null && type.parentModule !== currentModule) {
         return pointerMark + [helpers.namespace(type, '_'), typhen.helpers.upperCamelCase(type.name)].join('.');
       } else {
