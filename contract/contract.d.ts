@@ -30,6 +30,12 @@ declare module Submarine {
   interface Room {
     id: integer;
     members: User[];
+    bots?: Bot[];
+  }
+
+  interface Bot {
+    id: integer;
+    name: string;
   }
 
   interface JoinedRoom extends Room {
