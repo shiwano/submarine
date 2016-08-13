@@ -13,13 +13,20 @@ namespace Submarine.Battle
         [Inject]
         StartBattleCommand startBattleCommand;
         [Inject]
+        AddBotCommand addBotCommand;
+        [Inject]
+        RemoveBotCommand removeBotCommand;
+        [Inject]
         RoomView view;
 
         public void Initialize()
         {
             battleModel.OnStartAsObservable().Take(1).Subscribe(_ => OnBattleStart()).AddTo(view);
             lobbyModel.JoinedRoom.Where(r => r != null).Subscribe(OnRoomChange).AddTo(view);
+
             view.BattleStartButtonClickedAsObservable().Subscribe(_ => OnBattleStartButtonClick()).AddTo(view);
+            view.AddBotButtonClickedAsObservable().Subscribe(_ => OnAddBotButtonClick()).AddTo(view);
+            view.RemoveBotButtonClickedAsObservable().Subscribe(OnRemoveBotButtonClick).AddTo(view);
 
             view.gameObject.SetActive(true);
         }
@@ -31,12 +38,22 @@ namespace Submarine.Battle
 
         void OnRoomChange(Type.Room room)
         {
-            view.RefreshRoomMembers(room.Members);
+            view.RefreshRoomMembers(room.Members, room.Bots);
         }
 
         void OnBattleStartButtonClick()
         {
             startBattleCommand.Execute();
+        }
+
+        void OnAddBotButtonClick()
+        {
+            addBotCommand.Execute();
+        }
+
+        void OnRemoveBotButtonClick(Type.Bot bot)
+        {
+            removeBotCommand.Execute(bot.Id);
         }
     }
 }

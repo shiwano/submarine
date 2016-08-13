@@ -28,6 +28,8 @@ namespace Submarine.Battle
 
             Container.BindCommand<InitializeBattleCommand>().HandleWithSingle<InitializeBattleCommand.Handler>();
             Container.BindCommand<StartBattleCommand>().HandleWithSingle<StartBattleCommand.Handler>();
+            Container.BindCommand<AddBotCommand>().HandleWithSingle<AddBotCommand.Handler>();
+            Container.BindCommand<RemoveBotCommand, long>().HandleWithSingle<RemoveBotCommand.Handler>();
 
             Container.Bind<BattleView>().ToSingleInstance(battleView);
             Container.Bind<BattleMediator>().ToSingle();

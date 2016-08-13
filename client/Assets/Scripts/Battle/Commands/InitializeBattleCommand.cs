@@ -41,6 +41,7 @@ namespace Submarine.Battle
                 {
                     var room = lobbyModel.JoinedRoom.Value;
                     room.Members = message.Members;
+                    room.Bots = message.Bots;
                     lobbyModel.JoinedRoom.SetValueAndForceNotify(room);
                 });
 

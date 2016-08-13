@@ -14,13 +14,27 @@ namespace Submarine.Battle
         RoomMemberView roomMemberTemplate;
         [SerializeField]
         Button battleStartButton;
+        [SerializeField]
+        Button addBotButton;
+
+        Subject<Type.Bot> removeBotSubject;
 
         public IObservable<Unit> BattleStartButtonClickedAsObservable()
         {
             return battleStartButton.OnSingleClickAsObservable();
         }
 
-        public void RefreshRoomMembers(IEnumerable<Type.User> users)
+        public IObservable<Unit> AddBotButtonClickedAsObservable()
+        {
+            return addBotButton.OnSingleClickAsObservable();
+        }
+
+        public IObservable<Type.Bot> RemoveBotButtonClickedAsObservable()
+        {
+            return removeBotSubject.AsObservable();
+        }
+
+        public void RefreshRoomMembers(IEnumerable<Type.User> users, IEnumerable<Type.Bot> bots)
         {
             foreach (Transform roomMember in roomMemberGroup.transform)
             {
@@ -32,16 +46,34 @@ namespace Submarine.Battle
 
             foreach (var user in users)
             {
-                var listItem = Instantiate<RoomMemberView>(roomMemberTemplate);
-                listItem.Setup(user);
-                listItem.transform.SetParent(roomMemberGroup, false);
-                listItem.gameObject.SetActive(true);
+                var roomMemberView = CreateRoomMemberView();
+                roomMemberView.Setup(user);
+            }
+
+            if (bots != null)
+            {
+                foreach (var bot in bots)
+                {
+                    var roomMemberView = CreateRoomMemberView();
+                    roomMemberView.Setup(bot);
+                    roomMemberView.OnRemoveButtonClickAsObservable()
+                        .Subscribe(v => removeBotSubject.OnNext(v.Bot));
+                }
             }
         }
 
         void Awake()
         {
+            removeBotSubject = new Subject<Type.Bot>();
             roomMemberTemplate.gameObject.SetActive(false);
+        }
+
+        RoomMemberView CreateRoomMemberView()
+        {
+            var roomMemberView = Instantiate<RoomMemberView>(roomMemberTemplate);
+            roomMemberView.transform.SetParent(roomMemberGroup, false);
+            roomMemberView.gameObject.SetActive(true);
+            return roomMemberView;
         }
     }
 }
