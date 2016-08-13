@@ -8,25 +8,23 @@ import (
 
 // AI represents a battle artificial intelligence.
 type AI interface {
-	Update()
+	Update(submarine context.Actor)
 }
 
 type ai struct {
-	ctx       context.Context
-	user      *context.User
+	ctx       *context.Context
 	navigator *navigator
 }
 
-func newAI(ctx context.Context, user *context.User) *ai {
+func newAI(ctx *context.Context) *ai {
 	return &ai{
 		ctx:       ctx,
-		user:      user,
 		navigator: new(navigator),
 	}
 }
 
 // Overridable methods.
-func (a *ai) Update() {}
+func (a *ai) Update(submarine context.Actor) {}
 
 func (a *ai) accelerateActor(actor context.Actor, dir float64) {
 	a.ctx.Event.Emit(event.AccelerationRequest, &battleAPI.AccelerationRequestObject{Direction: dir})

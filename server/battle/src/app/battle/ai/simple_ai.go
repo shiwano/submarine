@@ -13,16 +13,15 @@ type SimpleAI struct {
 }
 
 // NewSimpleAI creates a SimpleAI.
-func NewSimpleAI(ctx context.Context, user *context.User) *SimpleAI {
-	return &SimpleAI{ai: newAI(ctx, user)}
+func NewSimpleAI(ctx *context.Context) *SimpleAI {
+	return &SimpleAI{ai: newAI(ctx)}
 }
 
 // Update the SimpleAI.
-func (a *SimpleAI) Update() {
-	submarine := a.ctx.SubmarineByUserID(a.user.ID)
-
+func (a *SimpleAI) Update(submarine context.Actor) {
 	if !a.navigator.isStarted() {
-		path := a.ctx.Stage.FindPath(submarine.Position(), a.nextDest())
+		nextDest := a.nextDest(submarine.User().StartPosition)
+		path := a.ctx.Stage.FindPath(submarine.Position(), nextDest)
 		a.navigator.start(path, submarine.Position())
 	}
 
@@ -37,12 +36,12 @@ func (a *SimpleAI) Update() {
 	}
 }
 
-func (a *SimpleAI) nextDest() *vec2.T {
+func (a *SimpleAI) nextDest(startPosition *vec2.T) *vec2.T {
 	var dest *vec2.T
 	if a.isNextDestStartPosition {
-		dest = &vec2.T{a.user.StartPosition[0], a.user.StartPosition[1]}
+		dest = &vec2.T{startPosition[0], startPosition[1]}
 	} else {
-		dest = &vec2.T{-a.user.StartPosition[0], -a.user.StartPosition[1]}
+		dest = &vec2.T{-startPosition[0], -startPosition[1]}
 	}
 	a.isNextDestStartPosition = !a.isNextDestStartPosition
 	return dest
