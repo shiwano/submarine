@@ -17,6 +17,7 @@ func NewSubmarine(ctx *context.Context, user *context.User) context.Actor {
 		actor: newActor(ctx, user, battleAPI.ActorType_Submarine, user.StartPosition, 0, user.SubmarineParams),
 	}
 	s.event.On(event.ActorCollideWithOtherActor, s.onCollideWithOtherActor)
+	s.event.On(event.ActorCollideWithStage, s.onCollideWithStage)
 	s.event.On(event.AccelerationRequest, s.onAccelerationRequest)
 	s.event.On(event.BrakeRequest, s.onBrakeRequest)
 	s.event.On(event.TurnRequest, s.onTurnRequest)
@@ -36,6 +37,10 @@ func (s *submarine) onCollideWithOtherActor(actor context.Actor, point vec2.T) {
 	if actor.User() != s.user {
 		s.idle()
 	}
+}
+
+func (s *submarine) onCollideWithStage(point vec2.T) {
+	s.idle()
 }
 
 func (s *submarine) onAccelerationRequest(message *battleAPI.AccelerationRequestObject) {
