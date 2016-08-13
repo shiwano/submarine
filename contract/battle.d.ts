@@ -67,4 +67,5 @@ declare module Submarine.Battle {
   var torpedoRequest: {};
 
   var addBotRequest: {};
+  var removeBotRequest: { botId: integer; };
 }
