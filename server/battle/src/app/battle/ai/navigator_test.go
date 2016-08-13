@@ -7,7 +7,7 @@ import (
 	"testing"
 )
 
-func TestActorParams(t *testing.T) {
+func TestNavigator(t *testing.T) {
 	Convey("navigator", t, func() {
 		n := &navigator{}
 

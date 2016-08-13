@@ -6,11 +6,6 @@ import (
 	battleAPI "app/typhenapi/type/submarine/battle"
 )
 
-// AI represents a battle artificial intelligence.
-type AI interface {
-	Update(submarine context.Actor)
-}
-
 type ai struct {
 	ctx       *context.Context
 	navigator *navigator
