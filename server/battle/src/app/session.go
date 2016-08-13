@@ -83,46 +83,46 @@ func (s *Session) onError(err error) {
 	logger.Log.Error(s.id, err)
 }
 
-func (s *Session) onPingReceive(message *battleAPI.PingObject) {
-	message.Message += " " + message.Message
-	s.api.Battle.SendPing(message)
+func (s *Session) onPingReceive(m *battleAPI.PingObject) {
+	m.Message += " " + m.Message
+	s.api.Battle.SendPing(m)
 }
 
-func (s *Session) onStartRequestReceive(message *battleAPI.StartRequestObject) {
+func (s *Session) onStartRequestReceive(m *battleAPI.StartRequestObject) {
 	s.room.startBattleCh <- s
 }
 
-func (s *Session) onAddBotRequestReceive(message *battleAPI.AddBotRequestObject) {
+func (s *Session) onAddBotRequestReceive(m *battleAPI.AddBotRequestObject) {
 	s.room.addBotCh <- struct{}{}
 }
 
-func (s *Session) onRemoveBotRequestReceive(message *battleAPI.RemoveBotRequestObject) {
-	s.room.removeBotCh <- message.BotId
+func (s *Session) onRemoveBotRequestReceive(m *battleAPI.RemoveBotRequestObject) {
+	s.room.removeBotCh <- m.BotId
 }
 
-func (s *Session) onAccelerationRequestReceive(message *battleAPI.AccelerationRequestObject) {
-	s.onBattleMessageReceive(message)
+func (s *Session) onAccelerationRequestReceive(m *battleAPI.AccelerationRequestObject) {
+	s.onBattleMessageReceive(m)
 }
 
-func (s *Session) onBrakeRequestReceive(message *battleAPI.BrakeRequestObject) {
-	s.onBattleMessageReceive(message)
+func (s *Session) onBrakeRequestReceive(m *battleAPI.BrakeRequestObject) {
+	s.onBattleMessageReceive(m)
 }
 
-func (s *Session) onTurnRequestReceive(message *battleAPI.TurnRequestObject) {
-	s.onBattleMessageReceive(message)
+func (s *Session) onTurnRequestReceive(m *battleAPI.TurnRequestObject) {
+	s.onBattleMessageReceive(m)
 }
 
-func (s *Session) onPingerRequestReceive(message *battleAPI.PingerRequestObject) {
-	s.onBattleMessageReceive(message)
+func (s *Session) onPingerRequestReceive(m *battleAPI.PingerRequestObject) {
+	s.onBattleMessageReceive(m)
 }
 
-func (s *Session) onTorpedoRequestReceive(message *battleAPI.TorpedoRequestObject) {
-	s.onBattleMessageReceive(message)
+func (s *Session) onTorpedoRequestReceive(m *battleAPI.TorpedoRequestObject) {
+	s.onBattleMessageReceive(m)
 }
 
-func (s *Session) onBattleMessageReceive(message typhenapi.Type) {
+func (s *Session) onBattleMessageReceive(m typhenapi.Type) {
 	if s.room != nil && !s.room.isClosed.IsSet() {
-		s.room.sendBattleInput(s.id, message)
+		s.room.sendBattleInput(s.id, m)
 	}
 }
 
