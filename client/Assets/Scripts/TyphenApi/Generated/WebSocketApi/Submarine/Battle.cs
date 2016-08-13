@@ -24,6 +24,7 @@ namespace TyphenApi.WebSocketApi.Parts.Submarine
             PingerRequest = 110864488,
             TorpedoRequest = 1327463172,
             AddBotRequest = 1859155646,
+            RemoveBotRequest = -1928553516,
         }
 
         readonly IWebSocketSession session;
@@ -43,6 +44,7 @@ namespace TyphenApi.WebSocketApi.Parts.Submarine
         public event Action<TyphenApi.Type.Submarine.Battle.PingerRequestObject> OnPingerRequestReceive;
         public event Action<TyphenApi.Type.Submarine.Battle.TorpedoRequestObject> OnTorpedoRequestReceive;
         public event Action<TyphenApi.Type.Submarine.Battle.AddBotRequestObject> OnAddBotRequestReceive;
+        public event Action<TyphenApi.Type.Submarine.Battle.RemoveBotRequestObject> OnRemoveBotRequestReceive;
 
 
         public Battle(IWebSocketSession session)
@@ -68,12 +70,13 @@ namespace TyphenApi.WebSocketApi.Parts.Submarine
             session.Send((int)MessageType.Room, room);
         }
 
-        public void SendRoom(long id, List<TyphenApi.Type.Submarine.User> members)
+        public void SendRoom(long id, List<TyphenApi.Type.Submarine.User> members, List<TyphenApi.Type.Submarine.Bot> bots)
         {
             session.Send((int)MessageType.Room, new TyphenApi.Type.Submarine.Room()
             {
                 Id = id,
                 Members = members,
+                Bots = bots,
             });
         }
         public void SendNow(TyphenApi.Type.Submarine.Battle.NowObject now)
@@ -234,6 +237,18 @@ namespace TyphenApi.WebSocketApi.Parts.Submarine
         {
             session.Send((int)MessageType.AddBotRequest, new TyphenApi.Type.Submarine.Battle.AddBotRequestObject()
             {
+            });
+        }
+        public void SendRemoveBotRequest(TyphenApi.Type.Submarine.Battle.RemoveBotRequestObject removeBotRequest)
+        {
+            session.Send((int)MessageType.RemoveBotRequest, removeBotRequest);
+        }
+
+        public void SendRemoveBotRequest(long botId)
+        {
+            session.Send((int)MessageType.RemoveBotRequest, new TyphenApi.Type.Submarine.Battle.RemoveBotRequestObject()
+            {
+                BotId = botId,
             });
         }
 
@@ -402,6 +417,17 @@ namespace TyphenApi.WebSocketApi.Parts.Submarine
                     if (OnAddBotRequestReceive != null)
                     {
                         OnAddBotRequestReceive(message);
+                    }
+
+                    return message;
+                }
+                case MessageType.RemoveBotRequest:
+                {
+                    var message = session.MessageDeserializer.Deserialize<TyphenApi.Type.Submarine.Battle.RemoveBotRequestObject>(messageData);
+
+                    if (OnRemoveBotRequestReceive != null)
+                    {
+                        OnRemoveBotRequestReceive(message);
                     }
 
                     return message;

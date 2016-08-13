@@ -9,23 +9,19 @@ import (
 
 var _ = errors.New
 
-// Room is a kind of TyphenAPI type.
-type Room struct {
-	Id      int64   `codec:"id"`
-	Members []*User `codec:"members"`
-	Bots    []*Bot  `codec:"bots"`
+// Bot is a kind of TyphenAPI type.
+type Bot struct {
+	Id   int64  `codec:"id"`
+	Name string `codec:"name"`
 }
 
 // Coerce the fields.
-func (t *Room) Coerce() error {
-	if t.Members == nil {
-		return errors.New("Members should not be empty")
-	}
+func (t *Bot) Coerce() error {
 	return nil
 }
 
 // Bytes creates the byte array.
-func (t *Room) Bytes(serializer typhenapi.Serializer) ([]byte, error) {
+func (t *Bot) Bytes(serializer typhenapi.Serializer) ([]byte, error) {
 	if err := t.Coerce(); err != nil {
 		return nil, err
 	}

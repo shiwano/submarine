@@ -25,6 +25,7 @@ const (
 	MessageType_PingerRequest       int32 = 110864488
 	MessageType_TorpedoRequest      int32 = 1327463172
 	MessageType_AddBotRequest       int32 = 1859155646
+	MessageType_RemoveBotRequest    int32 = -1928553516
 )
 
 // WebSocketAPI sends messages, and dispatches message events.
@@ -48,6 +49,7 @@ type WebSocketAPI struct {
 	PingerRequestHandler       func(message *submarine_battle.PingerRequestObject)
 	TorpedoRequestHandler      func(message *submarine_battle.TorpedoRequestObject)
 	AddBotRequestHandler       func(message *submarine_battle.AddBotRequestObject)
+	RemoveBotRequestHandler    func(message *submarine_battle.RemoveBotRequestObject)
 }
 
 // New creates a WebSocketAPI.
@@ -92,6 +94,8 @@ func (api *WebSocketAPI) Send(body typhenapi.Type) (message *typhenapi.Message, 
 		message, err = typhenapi.NewMessage(api.serializer, MessageType_TorpedoRequest, messageBody)
 	case *submarine_battle.AddBotRequestObject:
 		message, err = typhenapi.NewMessage(api.serializer, MessageType_AddBotRequest, messageBody)
+	case *submarine_battle.RemoveBotRequestObject:
+		message, err = typhenapi.NewMessage(api.serializer, MessageType_RemoveBotRequest, messageBody)
 	default:
 		err = fmt.Errorf("Unsupported TyphenAPI type is given: %v", messageBody)
 	}
@@ -406,6 +410,26 @@ func (api *WebSocketAPI) SendAddBotRequest(addBotRequest *submarine_battle.AddBo
 	return nil
 }
 
+// SendRemoveBotRequest sends a removeBotRequest message.
+func (api *WebSocketAPI) SendRemoveBotRequest(removeBotRequest *submarine_battle.RemoveBotRequestObject) error {
+	message, err := typhenapi.NewMessage(api.serializer, MessageType_RemoveBotRequest, removeBotRequest)
+
+	if err != nil {
+		if api.errorHandler != nil {
+			api.errorHandler(err)
+		}
+		return err
+	}
+
+	if err := api.session.Send(message.Bytes()); err != nil {
+		if api.errorHandler != nil {
+			api.errorHandler(err)
+		}
+		return err
+	}
+	return nil
+}
+
 // DispatchMessageEvent dispatches a binary message.
 func (api *WebSocketAPI) DispatchMessageEvent(data []byte) error {
 
@@ -703,6 +727,25 @@ func (api *WebSocketAPI) DispatchMessageEvent(data []byte) error {
 
 		if api.AddBotRequestHandler != nil {
 			api.AddBotRequestHandler(typhenType)
+		}
+	case MessageType_RemoveBotRequest:
+		typhenType := new(submarine_battle.RemoveBotRequestObject)
+		if err := api.serializer.Deserialize(message.Body, typhenType); err != nil {
+			if api.errorHandler != nil {
+				api.errorHandler(err)
+			}
+			return err
+		}
+
+		if err := typhenType.Coerce(); err != nil {
+			if api.errorHandler != nil {
+				api.errorHandler(err)
+			}
+			return err
+		}
+
+		if api.RemoveBotRequestHandler != nil {
+			api.RemoveBotRequestHandler(typhenType)
 		}
 	}
 

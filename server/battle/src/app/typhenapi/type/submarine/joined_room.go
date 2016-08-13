@@ -15,6 +15,7 @@ type JoinedRoom struct {
 	RoomKey             string  `codec:"room_key"`
 	Id                  int64   `codec:"id"`
 	Members             []*User `codec:"members"`
+	Bots                []*Bot  `codec:"bots"`
 }
 
 // Coerce the fields.

@@ -67,5 +67,9 @@ namespace TyphenApi.WebSocketApi.Parts.Submarine
         {
             return Observable.FromEvent<TyphenApi.Type.Submarine.Battle.AddBotRequestObject>(h => OnAddBotRequestReceive += h, h => OnAddBotRequestReceive -= h);
         }
+        public IObservable<TyphenApi.Type.Submarine.Battle.RemoveBotRequestObject> OnRemoveBotRequestReceiveAsObservable()
+        {
+            return Observable.FromEvent<TyphenApi.Type.Submarine.Battle.RemoveBotRequestObject>(h => OnRemoveBotRequestReceive += h, h => OnRemoveBotRequestReceive -= h);
+        }
     }
 }
