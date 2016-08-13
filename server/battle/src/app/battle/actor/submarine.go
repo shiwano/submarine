@@ -26,8 +26,14 @@ func NewSubmarine(ctx *context.Context, user *context.User) context.Actor {
 	return s
 }
 
+func (s *submarine) Update() {
+	if s.user.AI != nil {
+		s.user.AI.Update(s)
+	}
+}
+
 func (s *submarine) onCollideWithOtherActor(actor context.Actor, point vec2.T) {
-	if actor.User() != s.User() {
+	if actor.User() != s.user {
 		s.idle()
 	}
 }

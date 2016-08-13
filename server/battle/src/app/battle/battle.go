@@ -2,9 +2,11 @@ package battle
 
 import (
 	"app/battle/actor"
+	"app/battle/ai"
 	"app/battle/context"
 	"app/battle/event"
 	"app/logger"
+	api "app/typhenapi/type/submarine"
 	battleAPI "app/typhenapi/type/submarine/battle"
 	"github.com/tevino/abool"
 	"github.com/ungerik/go3d/float64/vec2"
@@ -76,6 +78,32 @@ func (b *Battle) LeaveUser(userID int64) {
 	if b.isFighting.IsSet() {
 		b.leaveUserCh <- userID
 	}
+}
+
+// EnterBot enters a bot to the battle.
+func (b *Battle) EnterBot(bot *api.Bot) bool {
+	if !b.isStarted {
+		index := len(b.ctx.Users())
+		startPos := b.getStartPosition(index)
+		teamLayer := context.GetTeamLayer(index + 1)
+		user := context.NewUser(bot.Id, teamLayer, startPos)
+		user.AI = ai.NewSimpleAI(b.ctx)
+		actor.NewSubmarine(b.ctx, user)
+		return true
+	}
+	return false
+}
+
+// LeaveBot leaves a bot from the battle.
+func (b *Battle) LeaveBot(bot *api.Bot) bool {
+	if !b.isStarted {
+		submarine := b.ctx.SubmarineByUserID(bot.Id)
+		if submarine != nil {
+			submarine.Destroy()
+		}
+		return true
+	}
+	return false
 }
 
 func (b *Battle) run() {

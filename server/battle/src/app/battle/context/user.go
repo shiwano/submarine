@@ -9,6 +9,7 @@ import (
 // User represents an user in the battle.
 type User struct {
 	ID              int64
+	AI              AI
 	TeamLayer       navmesh.LayerMask
 	StartPosition   *vec2.T
 	SubmarineParams *SubmarineParams
