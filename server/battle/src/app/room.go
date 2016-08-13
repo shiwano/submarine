@@ -15,17 +15,21 @@ import (
 
 // Room represents a network group for battle.
 type Room struct {
-	id            int64
-	webAPI        *webAPI.WebAPI
-	info          *battleAPI.Room
-	sessions      map[int64]*Session
-	battle        *battle.Battle
-	closeHandler  func(*Room)
-	startBattleCh chan *Session
-	joinCh        chan *Session
-	leaveCh       chan *Session
-	closeCh       chan struct{}
-	isClosed      *abool.AtomicBool
+	id               int64
+	webAPI           *webAPI.WebAPI
+	info             *battleAPI.Room
+	sessions         map[int64]*Session
+	bots             map[int64]*api.Bot
+	battle           *battle.Battle
+	closeHandler     func(*Room)
+	isClosed         *abool.AtomicBool
+	lastCreatedBotID int64
+	startBattleCh    chan *Session
+	addBotCh         chan struct{}
+	removeBotCh      chan int64
+	joinCh           chan *Session
+	leaveCh          chan *Session
+	closeCh          chan struct{}
 }
 
 func newRoom(id int64) (*Room, error) {
@@ -51,8 +55,11 @@ func newRoom(id int64) (*Room, error) {
 		webAPI:        webAPI,
 		info:          res.Room,
 		sessions:      make(map[int64]*Session),
+		bots:          make(map[int64]*api.Bot),
 		battle:        battle.New(time.Second*60, stageMesh),
 		startBattleCh: make(chan *Session, 1),
+		addBotCh:      make(chan struct{}, 1),
+		removeBotCh:   make(chan int64, 1),
 		joinCh:        make(chan *Session, 4),
 		leaveCh:       make(chan *Session, 4),
 		closeCh:       make(chan struct{}, 1),
@@ -71,13 +78,14 @@ loop:
 		select {
 		case session := <-r.startBattleCh:
 			r.startBattle(session)
+		case <-r.addBotCh:
+			r.addBot()
+		case botID := <-r.removeBotCh:
+			r.removeBot(botID)
 		case session := <-r.joinCh:
 			r.join(session)
-			r.broadcastRoom()
-			session.synchronizeTime()
 		case session := <-r.leaveCh:
 			r.leave(session)
-			r.broadcastRoom()
 		case <-r.closeCh:
 			r.close()
 			break loop
@@ -100,13 +108,19 @@ func (r *Room) toRoomAPIType() *api.Room {
 		members[i] = s.toUserAPIType()
 		i++
 	}
-	return &api.Room{Id: r.id, Members: members}
+	bots := make([]*api.Bot, len(r.bots))
+	i = 0
+	for _, b := range r.bots {
+		bots[i] = b
+		i++
+	}
+	return &api.Room{Id: r.id, Members: members, Bots: bots}
 }
 
 func (r *Room) broadcastRoom() {
-	typhenType := r.toRoomAPIType()
+	message := r.toRoomAPIType()
 	for _, s := range r.sessions {
-		s.api.Battle.SendRoom(typhenType)
+		s.api.Battle.SendRoom(message)
 	}
 }
 
@@ -114,6 +128,26 @@ func (r *Room) startBattle(session *Session) {
 	// TODO: Validate that can the session starts the battle.
 	if r.battle.Start() {
 		logger.Log.Infof("Room(%v)'s battle started", r.id)
+	}
+}
+
+func (r *Room) addBot() {
+	r.lastCreatedBotID++
+	bot := &api.Bot{Id: r.lastCreatedBotID, Name: "BOT"}
+	if r.battle.EnterBot(bot) {
+		r.bots[bot.Id] = bot
+		r.broadcastRoom()
+		logger.Log.Infof("Bot(%v) is added to Room(%v)", bot.Id, r.id)
+	}
+}
+
+func (r *Room) removeBot(botID int64) {
+	if bot, ok := r.bots[botID]; ok {
+		if r.battle.LeaveBot(bot) {
+			delete(r.bots, bot.Id)
+			r.broadcastRoom()
+			logger.Log.Infof("Bot(%v) is removed from Room(%v)", bot.Id, r.id)
+		}
 	}
 }
 
@@ -125,6 +159,8 @@ func (r *Room) join(session *Session) {
 		r.leaveCh <- session
 	}
 	r.battle.EnterUser(session.id)
+	session.synchronizeTime()
+	r.broadcastRoom()
 }
 
 func (r *Room) leave(session *Session) {
@@ -133,6 +169,7 @@ func (r *Room) leave(session *Session) {
 	session.room = nil
 	delete(r.sessions, session.id)
 	r.battle.LeaveUser(session.id)
+	r.broadcastRoom()
 }
 
 func (r *Room) close() {

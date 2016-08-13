@@ -38,6 +38,8 @@ func newSession(info *battleAPI.RoomMember, roomID int64) *Session {
 	session.api = rtmAPI.New(session, serializer, session.onError)
 	session.api.Battle.PingHandler = session.onPingReceive
 	session.api.Battle.StartRequestHandler = session.onStartRequestReceive
+	session.api.Battle.AddBotRequestHandler = session.onAddBotRequestReceive
+	session.api.Battle.RemoveBotRequestHandler = session.onRemoveBotRequestReceive
 	session.api.Battle.AccelerationRequestHandler = session.onAccelerationRequestReceive
 	session.api.Battle.BrakeRequestHandler = session.onBrakeRequestReceive
 	session.api.Battle.TurnRequestHandler = session.onTurnRequestReceive
@@ -88,6 +90,14 @@ func (s *Session) onPingReceive(message *battleAPI.PingObject) {
 
 func (s *Session) onStartRequestReceive(message *battleAPI.StartRequestObject) {
 	s.room.startBattleCh <- s
+}
+
+func (s *Session) onAddBotRequestReceive(message *battleAPI.AddBotRequestObject) {
+	s.room.addBotCh <- struct{}{}
+}
+
+func (s *Session) onRemoveBotRequestReceive(message *battleAPI.RemoveBotRequestObject) {
+	s.room.removeBotCh <- message.BotId
 }
 
 func (s *Session) onAccelerationRequestReceive(message *battleAPI.AccelerationRequestObject) {
