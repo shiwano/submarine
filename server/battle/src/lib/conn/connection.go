@@ -15,6 +15,7 @@ var (
 	closeEnvelope          = &envelope{websocket.CloseMessage, websocket.FormatCloseMessage(websocket.CloseNormalClosure, "")}
 	closeGoingAwayEnvelope = &envelope{websocket.CloseMessage, websocket.FormatCloseMessage(websocket.CloseGoingAway, "")}
 	pingEnvelope           = &envelope{websocket.PingMessage, []byte{}}
+	pongEnvelope           = &envelope{websocket.PongMessage, []byte{}}
 )
 
 // Conn represents a web socket connection.
@@ -153,6 +154,9 @@ func (c *Conn) readPump() {
 
 	c.conn.SetReadLimit(c.Settings.MaxMessageSize)
 	c.conn.SetReadDeadline(time.Now().Add(c.Settings.PongWait))
+	c.conn.SetPingHandler(func(string) error {
+		return c.postEnvelope(pongEnvelope)
+	})
 	c.conn.SetPongHandler(func(string) error {
 		return c.conn.SetReadDeadline(time.Now().Add(c.Settings.PongWait))
 	})
