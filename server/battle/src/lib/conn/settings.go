@@ -21,7 +21,7 @@ func newDefaultSettings() *Settings {
 	return &Settings{
 		WriteWait:                10 * time.Second,
 		PongWait:                 60 * time.Second,
-		PingPeriod:               (60 * time.Second * 9) / 10,
+		PingPeriod:               54 * time.Second,
 		MessageChannelBufferSize: 256,
 		MaxMessageSize:           2048,
 		ReadBufferSize:           4096,
