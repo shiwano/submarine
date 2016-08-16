@@ -98,6 +98,12 @@
 			"branch": "master"
 		},
 		{
+			"importpath": "github.com/shiwano/websocket-conn",
+			"repository": "https://github.com/shiwano/websocket-conn",
+			"revision": "1b724814e07e1837bdb2d64acac6960339910114",
+			"branch": "master"
+		},
+		{
 			"importpath": "github.com/smartystreets/assertions",
 			"repository": "https://github.com/smartystreets/assertions",
 			"revision": "edb6e295a22c57a2aa353b2f0729b6eff9f9f4b7",
