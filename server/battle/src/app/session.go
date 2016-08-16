@@ -7,7 +7,7 @@ import (
 	battleAPI "app/typhenapi/type/submarine/battle"
 	rtmAPI "app/typhenapi/websocket/submarine"
 	"github.com/gorilla/websocket"
-	"lib/conn"
+	"github.com/shiwano/websocket-conn"
 	"lib/currentmillis"
 	"net/http"
 )
