@@ -13,7 +13,7 @@ func TestEdge(t *testing.T) {
 			&vec2.T{-5, 0},
 		)
 
-		Convey("#intersect", func() {
+		Convey("#intersectWithLine", func() {
 			Convey("with an intersected points", func() {
 				Convey("should return the intersection point", func() {
 					p1 := &vec2.T{0, 5}

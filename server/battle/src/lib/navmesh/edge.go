@@ -23,7 +23,7 @@ func (e *edge) cross(a, b *vec2.T) float64 {
 
 func (e *edge) intersectWithLine(lineOrigin, lineVector *vec2.T) (vec2.T, bool) {
 	crossEVandLV := e.cross(e.vector, lineVector)
-	if crossEVandLV == 0 {
+	if equalFloats(crossEVandLV, 0) {
 		return vec2.Zero, false
 	}
 
