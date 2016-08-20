@@ -2,8 +2,8 @@ package ai
 
 import (
 	"app/battle/context"
-	"app/util"
 	"github.com/ungerik/go3d/float64/vec2"
+	"math"
 )
 
 // SimpleAI represents a simple battle AI.
@@ -26,7 +26,7 @@ func (a *SimpleAI) Update(submarine context.Actor) {
 	}
 
 	if ok, dir := a.navigator.navigate(submarine.Position()); ok {
-		if !util.EqualFloats(dir, submarine.Direction()) {
+		if math.Abs(dir-submarine.Direction()) > 0.01 {
 			a.accelerateActor(submarine, dir)
 		}
 	} else {
