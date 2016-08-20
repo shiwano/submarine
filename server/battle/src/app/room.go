@@ -136,7 +136,7 @@ func (r *Room) startBattle(session *Session) {
 }
 
 func (r *Room) addBot() {
-	r.lastCreatedBotID++
+	r.lastCreatedBotID--
 	bot := &api.Bot{Id: r.lastCreatedBotID, Name: "BOT"}
 	if r.battle.EnterBot(bot) {
 		r.bots[bot.Id] = bot
