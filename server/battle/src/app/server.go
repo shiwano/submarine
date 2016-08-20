@@ -67,13 +67,13 @@ func (s *Server) roomsGET(c *gin.Context) {
 	}
 
 	if room.isClosed.IsSet() {
-		logger.Log.Infof("Room(%v) is already closed", session.id)
+		logger.Log.Infof("%v is already closed", room)
 		session.close()
 		return
 	}
 
 	room.joinCh <- session
-	logger.Log.Infof("Session(%v) is created", session.id)
+	logger.Log.Infof("%v is created", session)
 }
 
 func init() {

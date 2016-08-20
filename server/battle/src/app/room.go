@@ -70,8 +70,12 @@ func newRoom(id int64) (*Room, error) {
 	return room, nil
 }
 
+func (r *Room) String() string {
+	return fmt.Sprintf("Room(%v)", r.id)
+}
+
 func (r *Room) run() {
-	logger.Log.Infof("Room(%v) opened", r.id)
+	logger.Log.Infof("%v opened", r)
 
 loop:
 	for {
@@ -127,7 +131,7 @@ func (r *Room) broadcastRoom() {
 func (r *Room) startBattle(session *Session) {
 	// TODO: Validate that can the session starts the battle.
 	if r.battle.Start() {
-		logger.Log.Infof("Room(%v)'s battle started", r.id)
+		logger.Log.Infof("%v's battle started", r)
 	}
 }
 
@@ -137,7 +141,7 @@ func (r *Room) addBot() {
 	if r.battle.EnterBot(bot) {
 		r.bots[bot.Id] = bot
 		r.broadcastRoom()
-		logger.Log.Infof("Bot(%v) is added to Room(%v)", bot.Id, r.id)
+		logger.Log.Infof("Bot(%v) is added to %v", bot.Id, r)
 	}
 }
 
@@ -146,13 +150,13 @@ func (r *Room) removeBot(botID int64) {
 		if r.battle.LeaveBot(bot) {
 			delete(r.bots, bot.Id)
 			r.broadcastRoom()
-			logger.Log.Infof("Bot(%v) is removed from Room(%v)", bot.Id, r.id)
+			logger.Log.Infof("Bot(%v) is removed from %v", bot.Id, r)
 		}
 	}
 }
 
 func (r *Room) join(session *Session) {
-	logger.Log.Infof("Session(%v) joined into Room(%v)", session.id, r.id)
+	logger.Log.Infof("%v joined into %v", session, r)
 	r.sessions[session.id] = session
 	session.room = r
 	session.disconnectHandler = func(session *Session) {
@@ -164,7 +168,7 @@ func (r *Room) join(session *Session) {
 }
 
 func (r *Room) leave(session *Session) {
-	logger.Log.Infof("Session(%v) leaved from Room(%v)", session.id, r.id)
+	logger.Log.Infof("%v leaved from %v", session, r)
 	session.disconnectHandler = nil
 	session.room = nil
 	delete(r.sessions, session.id)
@@ -175,13 +179,13 @@ func (r *Room) leave(session *Session) {
 func (r *Room) close() {
 	for c := 1; true; c++ {
 		if _, err := r.webAPI.Battle.CloseRoom(r.id); err != nil {
-			logger.Log.Errorf("Room(%v) failed %v times to use closeRoom API: %v", r.id, c, err)
+			logger.Log.Errorf("%v failed %v times to use closeRoom API: %v", r, c, err)
 			time.Sleep(time.Duration(c) * time.Second)
 			continue
 		}
 		break
 	}
-	logger.Log.Infof("Room(%v) closed", r.id)
+	logger.Log.Infof("%v closed", r)
 	r.battle.Close()
 	for _, session := range r.sessions {
 		r.leave(session)

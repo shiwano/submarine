@@ -5,7 +5,6 @@ import (
 	"app/battle/ai"
 	"app/battle/context"
 	"app/battle/event"
-	"app/logger"
 	api "app/typhenapi/type/submarine"
 	battleAPI "app/typhenapi/type/submarine/battle"
 	"github.com/tevino/abool"
@@ -199,19 +198,14 @@ func (b *Battle) onInputReceive(input *gatewayInput) {
 	}
 	switch m := input.message.(type) {
 	case *battleAPI.AccelerationRequestObject:
-		logger.Log.Debugf("User(%v)'s submarine(%v) accelerates", s.User().ID, s.ID())
 		s.Event().Emit(event.AccelerationRequest, m)
 	case *battleAPI.BrakeRequestObject:
-		logger.Log.Debugf("User(%v)'s submarine(%v) brakes", s.User().ID, s.ID())
 		s.Event().Emit(event.BrakeRequest, m)
 	case *battleAPI.TurnRequestObject:
-		logger.Log.Debugf("User(%v)'s submarine(%v) turns to %v", s.User().ID, s.ID(), m.Direction)
 		s.Event().Emit(event.TurnRequest, m)
 	case *battleAPI.TorpedoRequestObject:
-		logger.Log.Debugf("User(%v)'s submarine(%v) shoots a torpedo", s.User().ID, s.ID())
 		s.Event().Emit(event.TorpedoRequest, m)
 	case *battleAPI.PingerRequestObject:
-		logger.Log.Debugf("User(%v)'s submarine(%v) use pinger", s.User().ID, s.ID())
 		s.Event().Emit(event.PingerRequest, m)
 	}
 }

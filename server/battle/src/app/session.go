@@ -6,6 +6,7 @@ import (
 	api "app/typhenapi/type/submarine"
 	battleAPI "app/typhenapi/type/submarine/battle"
 	rtmAPI "app/typhenapi/websocket/submarine"
+	"fmt"
 	"github.com/gorilla/websocket"
 	"github.com/shiwano/websocket-conn"
 	"lib/currentmillis"
@@ -48,6 +49,10 @@ func newSession(info *battleAPI.RoomMember, roomID int64) *Session {
 	return session
 }
 
+func (s *Session) String() string {
+	return fmt.Sprintf("Session(%v)", s.id)
+}
+
 // Connect connects to the client.
 func (s *Session) Connect(responseWriter http.ResponseWriter, request *http.Request) error {
 	return s.conn.UpgradeFromHTTP(responseWriter, request)
@@ -80,7 +85,7 @@ func (s *Session) onError(err error) {
 	if closeError, ok := err.(*websocket.CloseError); ok && (closeError.Code == 1000 || closeError.Code == 1005) {
 		return
 	}
-	logger.Log.Error(s.id, err)
+	logger.Log.Errorf("%v received the error: %v", s, err)
 }
 
 func (s *Session) onPingReceive(m *battleAPI.PingObject) {
