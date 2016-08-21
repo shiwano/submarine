@@ -61,7 +61,12 @@ func (a *actor) Destroy() {
 
 func (a *actor) BeforeUpdate() {
 	position := a.motor.position()
-	a.stageAgent.Move(position, a.ignoredLayer)
+
+	if a.user.AI == nil {
+		a.stageAgent.Move(position, a.ignoredLayer)
+	} else {
+		a.stageAgent.Warp(position)
+	}
 }
 
 // Overridable methods.

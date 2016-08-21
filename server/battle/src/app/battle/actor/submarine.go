@@ -47,7 +47,9 @@ func (s *submarine) onCollideWithOtherActor(actor context.Actor, point vec2.T) {
 }
 
 func (s *submarine) onCollideWithStage(point vec2.T) {
-	s.idle()
+	if s.user.AI == nil {
+		s.idle()
+	}
 }
 
 func (s *submarine) onAccelerationRequest(m *battleAPI.AccelerationRequestObject) {
