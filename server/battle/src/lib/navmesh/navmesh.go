@@ -51,7 +51,7 @@ func (n *NavMesh) DestroyObject(objectID int64) {
 func (n *NavMesh) Raycast(origin, vector *vec2.T, ignoredLayer LayerMask) (hitInfo RaycastHitInfo, result bool) {
 	var resultLengthSqr float64
 
-	if p, ok := n.Mesh.intersectWithLine(origin, vector); ok {
+	if p, ok := n.Mesh.intersectWithLineSeg(origin, vector); ok {
 		hitInfo.point = p
 		resultLengthSqr = calculateVectorLengthSqr(origin, &p)
 		result = true
@@ -86,7 +86,7 @@ func (n *NavMesh) FindPath(start *vec2.T, goal *vec2.T) []vec2.T {
 
 	goalVector := vec2.Sub(goal, start)
 	if startTriangle == goalTriangle ||
-		!n.Mesh.isIntersectedWithLine(start, &goalVector) {
+		!n.Mesh.isIntersectedWithLineSeg(start, &goalVector) {
 		return []vec2.T{*start, *goal}
 	}
 

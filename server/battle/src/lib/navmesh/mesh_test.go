@@ -65,12 +65,12 @@ func TestMesh(t *testing.T) {
 			})
 		})
 
-		Convey("#isIntersectWithLine", func() {
+		Convey("#isIntersectWithLineSeg", func() {
 			Convey("with intersected points", func() {
 				Convey("should return true", func() {
 					p1 := &vec2.T{1, 0}
 					p2 := &vec2.T{1, 10}
-					So(m.isIntersectedWithLine(p1, p2.Sub(p1)), ShouldBeTrue)
+					So(m.isIntersectedWithLineSeg(p1, p2.Sub(p1)), ShouldBeTrue)
 				})
 			})
 
@@ -78,18 +78,18 @@ func TestMesh(t *testing.T) {
 				Convey("should return false", func() {
 					p1 := &vec2.T{999, 999}
 					p2 := &vec2.T{1000, 1000}
-					So(m.isIntersectedWithLine(p1, p2.Sub(p1)), ShouldBeFalse)
+					So(m.isIntersectedWithLineSeg(p1, p2.Sub(p1)), ShouldBeFalse)
 				})
 			})
 		})
 
-		Convey("#intersectWithLine", func() {
+		Convey("#intersectWithLineSeg", func() {
 			Convey("with intersected points", func() {
 				Convey("should return the intersection point", func() {
 					p1 := &vec2.T{1, 0}
 					p2 := &vec2.T{10, 0}
 
-					p, ok := m.intersectWithLine(p1, p2.Sub(p1))
+					p, ok := m.intersectWithLineSeg(p1, p2.Sub(p1))
 					So(ok, ShouldBeTrue)
 					So(p[0], ShouldEqual, 8.875)
 					So(p[1], ShouldEqual, 0)
@@ -101,7 +101,7 @@ func TestMesh(t *testing.T) {
 					p1 := &vec2.T{-7, 3.5}
 					p2 := &vec2.T{-1, -11}
 
-					p, ok := m.intersectWithLine(p1, p2.Sub(p1))
+					p, ok := m.intersectWithLineSeg(p1, p2.Sub(p1))
 					So(ok, ShouldBeTrue)
 					So(p[0], ShouldEqual, -5.551724137931035)
 					So(p[1], ShouldEqual, 0)
@@ -112,12 +112,12 @@ func TestMesh(t *testing.T) {
 				Convey("should return nil", func() {
 					p1 := &vec2.T{0.00000000001, 0}
 					p2 := &vec2.T{5, 0}
-					_, ok := m.intersectWithLine(p1, p2.Sub(p1))
+					_, ok := m.intersectWithLineSeg(p1, p2.Sub(p1))
 					So(ok, ShouldBeFalse)
 
 					p1 = &vec2.T{3, 2}
 					p2 = &vec2.T{2, -10}
-					_, ok = m.intersectWithLine(p1, p2.Sub(p1))
+					_, ok = m.intersectWithLineSeg(p1, p2.Sub(p1))
 					So(ok, ShouldBeFalse)
 				})
 			})
