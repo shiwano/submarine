@@ -16,6 +16,14 @@ func TestAgent(t *testing.T) {
 			So(agent, ShouldImplement, (*Object)(nil))
 		})
 
+		Convey("#Warp", func() {
+			Convey("should set the position", func() {
+				agent.Move(&vec2.T{2, 3}, 0)
+				So(agent.Position()[0], ShouldEqual, 2)
+				So(agent.Position()[1], ShouldEqual, 3)
+			})
+		})
+
 		Convey("#Move", func() {
 			Convey("with the position which is in the mesh", func() {
 				Convey("should set the position", func() {

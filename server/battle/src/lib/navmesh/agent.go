@@ -9,6 +9,11 @@ type Agent struct {
 	*object
 }
 
+// Warp sets the actor position.
+func (a *Agent) Warp(position *vec2.T) {
+	a.position = position
+}
+
 // Move sets the actor position. If the specified position is collided with
 // the mesh or objects, this method sets the collided position.
 func (a *Agent) Move(position *vec2.T, ignoredLayer LayerMask) {
