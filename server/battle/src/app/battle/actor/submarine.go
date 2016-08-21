@@ -14,7 +14,7 @@ type submarine struct {
 }
 
 // NewSubmarine creates a submarine.
-func NewSubmarine(ctx *context.Context, user *context.User) context.Actor {
+func NewSubmarine(ctx *context.Context, user *context.Player) context.Actor {
 	s := &submarine{
 		actor: newActor(ctx, user, battleAPI.ActorType_Submarine, user.StartPosition, 0, user.SubmarineParams),
 	}
@@ -31,23 +31,23 @@ func NewSubmarine(ctx *context.Context, user *context.User) context.Actor {
 }
 
 func (s *submarine) String() string {
-	return fmt.Sprintf("User(%v)'s submarine(%v)", s.User().ID, s.ID())
+	return fmt.Sprintf("User(%v)'s submarine(%v)", s.Player().ID, s.ID())
 }
 
 func (s *submarine) Update() {
-	if s.user.AI != nil {
-		s.user.AI.Update(s)
+	if s.player.AI != nil {
+		s.player.AI.Update(s)
 	}
 }
 
 func (s *submarine) onCollideWithOtherActor(actor context.Actor, point vec2.T) {
-	if actor.User() != s.user {
+	if actor.Player() != s.player {
 		s.idle()
 	}
 }
 
 func (s *submarine) onCollideWithStage(point vec2.T) {
-	if s.user.AI == nil {
+	if s.player.AI == nil {
 		s.idle()
 	}
 }
@@ -81,7 +81,7 @@ func (s *submarine) onUserLeave() {
 }
 
 func (s *submarine) shootTorpedo() {
-	p := s.motor.normalizedVelocity.Scaled(s.stageAgent.SizeRadius() * s.user.TorpedoParams.StartOffsetDistance)
+	p := s.motor.normalizedVelocity.Scaled(s.stageAgent.SizeRadius() * s.player.TorpedoParams.StartOffsetDistance)
 	p.Add(s.Position())
-	NewTorpedo(s.ctx, s.user, &p, s.motor.direction)
+	NewTorpedo(s.ctx, s.player, &p, s.motor.direction)
 }

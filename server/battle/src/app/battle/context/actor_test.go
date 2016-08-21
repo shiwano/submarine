@@ -10,7 +10,7 @@ var lastCreateActorID int64
 
 type actor struct {
 	id          int64
-	user        *User
+	player      *Player
 	actorType   battleAPI.ActorType
 	ctx         *Context
 	event       *event.Emitter
@@ -23,10 +23,10 @@ type actor struct {
 func newSubmarine(ctx *Context) *actor {
 	lastCreateActorID++
 	id := lastCreateActorID
-	user := &User{ID: id * 100, StartPosition: &vec2.Zero}
+	player := &Player{ID: id * 100, StartPosition: &vec2.Zero}
 	a := &actor{
 		id:        id,
-		user:      user,
+		player:    player,
 		actorType: battleAPI.ActorType_Submarine,
 		ctx:       ctx,
 		event:     event.New(),
@@ -36,7 +36,7 @@ func newSubmarine(ctx *Context) *actor {
 }
 
 func (a *actor) ID() int64                 { return a.id }
-func (a *actor) User() *User               { return a.user }
+func (a *actor) Player() *Player           { return a.player }
 func (a *actor) Type() battleAPI.ActorType { return a.actorType }
 func (a *actor) Event() *event.Emitter     { return a.event }
 

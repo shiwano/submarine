@@ -34,9 +34,9 @@ func (c *Context) ElapsedTime() time.Duration {
 	return c.Now.Sub(c.StartedAt)
 }
 
-// SubmarineByUserID returns the submarine which has the given actor id.
-func (c *Context) SubmarineByUserID(userID int64) Actor {
-	return c.container.submarinesByUserID[userID]
+// SubmarineByPlayerID returns the submarine which has the given player id.
+func (c *Context) SubmarineByPlayerID(userID int64) Actor {
+	return c.container.submarinesByPlayerID[userID]
 }
 
 // Actors returns all actors.
@@ -57,9 +57,9 @@ func (c *Context) HasActor(actorID int64) bool {
 	return ok
 }
 
-// Users returns users in the battle.
-func (c *Context) Users() []*User {
-	return c.container.users
+// Players returns players in the battle.
+func (c *Context) Players() []*Player {
+	return c.container.players
 }
 
 func (c *Context) onActorCreate(actor Actor) {

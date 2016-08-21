@@ -18,11 +18,11 @@ func newJudge(context *context.Context, timeLimit time.Duration) *judge {
 }
 
 func (j judge) isBattleFinished() bool {
-	return j.context.ElapsedTime() >= j.timeLimit || len(j.context.Users()) == 1
+	return j.context.ElapsedTime() >= j.timeLimit || len(j.context.Players()) == 1
 }
 
-func (j judge) winner() *context.User {
-	users := j.context.Users()
+func (j judge) winner() *context.Player {
+	users := j.context.Players()
 	if len(users) != 1 {
 		return nil
 	}

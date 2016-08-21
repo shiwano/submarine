@@ -5,18 +5,18 @@ import (
 )
 
 type container struct {
-	actors             []Actor
-	actorsByID         map[int64]Actor
-	submarinesByUserID map[int64]Actor
-	users              []*User
+	actors               []Actor
+	actorsByID           map[int64]Actor
+	submarinesByPlayerID map[int64]Actor
+	players              []*Player
 }
 
 func newContainer() *container {
 	c := &container{
-		actors:             make([]Actor, 0),
-		actorsByID:         make(map[int64]Actor),
-		submarinesByUserID: make(map[int64]Actor),
-		users:              make([]*User, 0),
+		actors:               make([]Actor, 0),
+		actorsByID:           make(map[int64]Actor),
+		submarinesByPlayerID: make(map[int64]Actor),
+		players:              make([]*Player, 0),
 	}
 	return c
 }
@@ -25,8 +25,8 @@ func (c *container) addActor(actor Actor) {
 	c.actorsByID[actor.ID()] = actor
 	c.actors = append(c.actors, actor)
 	if actor.Type() == battleAPI.ActorType_Submarine {
-		c.submarinesByUserID[actor.User().ID] = actor
-		c.users = append(c.users, actor.User())
+		c.submarinesByPlayerID[actor.Player().ID] = actor
+		c.players = append(c.players, actor.Player())
 	}
 }
 
@@ -45,15 +45,15 @@ func (c *container) removeActor(rawActor Actor) Actor {
 	}
 	c.actors = actors
 	if actor.Type() == battleAPI.ActorType_Submarine {
-		delete(c.submarinesByUserID, actor.User().ID)
+		delete(c.submarinesByPlayerID, actor.Player().ID)
 
-		users := c.users[:0]
-		for _, u := range c.users {
-			if u != actor.User() {
-				users = append(users, u)
+		players := c.players[:0]
+		for _, p := range c.players {
+			if p != actor.Player() {
+				players = append(players, p)
 			}
 		}
-		c.users = users
+		c.players = players
 	}
 	return actor
 }

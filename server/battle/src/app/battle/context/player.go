@@ -6,8 +6,8 @@ import (
 	"time"
 )
 
-// User represents an user in the battle.
-type User struct {
+// Player represents a player in the battle.
+type Player struct {
 	ID              int64
 	AI              AI
 	TeamLayer       navmesh.LayerMask
@@ -16,10 +16,10 @@ type User struct {
 	TorpedoParams   *TorpedoParams
 }
 
-// NewUser creates an user.
-func NewUser(userID int64, teamLayer navmesh.LayerMask, startPosition *vec2.T) *User {
-	return &User{
-		ID:            userID,
+// NewPlayer creates a player.
+func NewPlayer(playerID int64, teamLayer navmesh.LayerMask, startPosition *vec2.T) *Player {
+	return &Player{
+		ID:            playerID,
 		TeamLayer:     teamLayer,
 		StartPosition: startPosition,
 		SubmarineParams: &SubmarineParams{

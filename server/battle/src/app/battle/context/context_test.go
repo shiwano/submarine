@@ -41,7 +41,7 @@ func TestContextTest(t *testing.T) {
 				actor.Destroy()
 				So(c.HasActor(actor.ID()), ShouldBeFalse)
 				So(c.Actors(), ShouldHaveLength, 1)
-				So(c.Users(), ShouldHaveLength, 1)
+				So(c.Players(), ShouldHaveLength, 1)
 			})
 
 			Convey("should call the actor's OnDestroy method", func() {
@@ -85,19 +85,19 @@ func TestContextTest(t *testing.T) {
 		})
 
 		Convey("#SubmarineByUserID", func() {
-			userID := newSubmarine(c).User().ID
+			userID := newSubmarine(c).Player().ID
 
 			Convey("with valid user id", func() {
 				Convey("should return the user's submarine", func() {
-					submarine := c.SubmarineByUserID(userID)
-					So(submarine.User().ID, ShouldEqual, userID)
+					submarine := c.SubmarineByPlayerID(userID)
+					So(submarine.Player().ID, ShouldEqual, userID)
 					So(submarine.Type(), ShouldEqual, battleAPI.ActorType_Submarine)
 				})
 			})
 
 			Convey("with invalid user id", func() {
 				Convey("should return nil", func() {
-					submarine := c.SubmarineByUserID(userID + 1)
+					submarine := c.SubmarineByPlayerID(userID + 1)
 					So(submarine, ShouldBeNil)
 				})
 			})

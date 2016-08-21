@@ -42,7 +42,7 @@ func New(timeLimit time.Duration, stageMesh *navmesh.Mesh) *Battle {
 // Start starts the battle that is startable.
 func (b *Battle) Start() bool {
 	// TODO: Relevant users counting.
-	if !b.isStarted && len(b.ctx.Users()) > 0 {
+	if !b.isStarted && len(b.ctx.Players()) > 0 {
 		b.isStarted = true
 		go b.run()
 		return true
@@ -60,11 +60,11 @@ func (b *Battle) Close() {
 // EnterUser enters an user to the battle.
 func (b *Battle) EnterUser(userID int64) {
 	if !b.isStarted {
-		if s := b.ctx.SubmarineByUserID(userID); s == nil {
-			index := len(b.ctx.Users())
+		if s := b.ctx.SubmarineByPlayerID(userID); s == nil {
+			index := len(b.ctx.Players())
 			startPos := b.getStartPosition(index)
 			teamLayer := context.GetTeamLayer(index + 1)
-			user := context.NewUser(userID, teamLayer, startPos)
+			user := context.NewPlayer(userID, teamLayer, startPos)
 			actor.NewSubmarine(b.ctx, user)
 		}
 	} else if b.isFighting.IsSet() {
@@ -82,12 +82,12 @@ func (b *Battle) LeaveUser(userID int64) {
 // EnterBot enters a bot to the battle.
 func (b *Battle) EnterBot(bot *api.Bot) bool {
 	if !b.isStarted {
-		index := len(b.ctx.Users())
+		index := len(b.ctx.Players())
 		startPos := b.getStartPosition(index)
 		teamLayer := context.GetTeamLayer(index + 1)
-		user := context.NewUser(bot.Id, teamLayer, startPos)
-		user.AI = ai.NewSimpleAI(b.ctx)
-		actor.NewSubmarine(b.ctx, user)
+		player := context.NewPlayer(bot.Id, teamLayer, startPos)
+		player.AI = ai.NewSimpleAI(b.ctx)
+		actor.NewSubmarine(b.ctx, player)
 		return true
 	}
 	return false
@@ -96,7 +96,7 @@ func (b *Battle) EnterBot(bot *api.Bot) bool {
 // LeaveBot leaves a bot from the battle.
 func (b *Battle) LeaveBot(bot *api.Bot) bool {
 	if !b.isStarted {
-		submarine := b.ctx.SubmarineByUserID(bot.Id)
+		submarine := b.ctx.SubmarineByPlayerID(bot.Id)
 		if submarine != nil {
 			submarine.Destroy()
 		}
@@ -172,7 +172,7 @@ func (b *Battle) reenterUser(userID int64) {
 }
 
 func (b *Battle) leaveUser(userID int64) {
-	s := b.ctx.SubmarineByUserID(userID)
+	s := b.ctx.SubmarineByPlayerID(userID)
 	if s != nil {
 		s.Event().Emit(event.UserLeave)
 	}
@@ -192,7 +192,7 @@ func (b *Battle) getStartPosition(index int) *vec2.T {
 }
 
 func (b *Battle) onInputReceive(input *gatewayInput) {
-	s := b.ctx.SubmarineByUserID(input.userID)
+	s := b.ctx.SubmarineByPlayerID(input.userID)
 	if s == nil {
 		return
 	}

@@ -53,7 +53,7 @@ func (g *Gateway) outputActor(userIDs []int64, actor context.Actor) {
 		UserIDs: userIDs,
 		Message: &battleAPI.Actor{
 			Id:       actor.ID(),
-			UserId:   actor.User().ID,
+			UserId:   actor.Player().ID,
 			Type:     actor.Type(),
 			Movement: actor.Movement(),
 		},

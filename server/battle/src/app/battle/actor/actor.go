@@ -9,7 +9,7 @@ import (
 )
 
 type actor struct {
-	user         *context.User
+	player       *context.Player
 	actorType    battleAPI.ActorType
 	ctx          *context.Context
 	event        *event.Emitter
@@ -19,16 +19,16 @@ type actor struct {
 	ignoredLayer navmesh.LayerMask
 }
 
-func newActor(ctx *context.Context, user *context.User, actorType battleAPI.ActorType,
+func newActor(ctx *context.Context, player *context.Player, actorType battleAPI.ActorType,
 	position *vec2.T, direction float64, params context.ActorParams) *actor {
 	a := &actor{
-		user:         user,
+		player:       player,
 		actorType:    actorType,
 		ctx:          ctx,
 		event:        event.New(),
 		motor:        newMotor(ctx, position, direction, params.AccelMaxSpeed(), params.AccelDuration()),
 		stageAgent:   ctx.Stage.CreateAgent(21, position),
-		ignoredLayer: user.TeamLayer,
+		ignoredLayer: player.TeamLayer,
 	}
 
 	switch actorType {
@@ -37,13 +37,13 @@ func newActor(ctx *context.Context, user *context.User, actorType battleAPI.Acto
 	case battleAPI.ActorType_Torpedo:
 		a.stageAgent.SetLayer(context.LayerTorpedo)
 	}
-	a.stageAgent.SetLayer(a.User().TeamLayer)
+	a.stageAgent.SetLayer(a.Player().TeamLayer)
 	a.stageAgent.SetCollideHandler(a.onStageAgentCollide)
 	return a
 }
 
 func (a *actor) ID() int64                 { return a.stageAgent.ID() }
-func (a *actor) User() *context.User       { return a.user }
+func (a *actor) Player() *context.Player   { return a.player }
 func (a *actor) Type() battleAPI.ActorType { return a.actorType }
 func (a *actor) Event() *event.Emitter     { return a.event }
 
@@ -62,7 +62,7 @@ func (a *actor) Destroy() {
 func (a *actor) BeforeUpdate() {
 	position := a.motor.position()
 
-	if a.user.AI == nil {
+	if a.player.AI == nil {
 		a.stageAgent.Move(position, a.ignoredLayer)
 	} else {
 		a.stageAgent.Warp(position)

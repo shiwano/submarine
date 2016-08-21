@@ -20,7 +20,7 @@ func NewSimpleAI(ctx *context.Context) *SimpleAI {
 // Update the SimpleAI.
 func (a *SimpleAI) Update(submarine context.Actor) {
 	if !a.navigator.isStarted() {
-		nextDest := a.nextDest(submarine.User().StartPosition)
+		nextDest := a.nextDest(submarine.Player().StartPosition)
 		path := a.ctx.Stage.FindPath(submarine.Position(), nextDest)
 		a.navigator.start(path, submarine.Position())
 	}
