@@ -15,9 +15,6 @@ type Object interface {
 	Layer() LayerMask
 	SetLayer(LayerMask)
 
-	callCollideHandler(Object, vec2.T)
-	SetCollideHandler(func(Object, vec2.T))
-
 	IntersectWithLine(lineOrigin, lineDir, lineVector *vec2.T) (vec2.T, bool)
 }
 
@@ -52,16 +49,6 @@ func (o *object) Layer() LayerMask {
 
 func (o *object) SetLayer(layer LayerMask) {
 	o.layer = layer
-}
-
-func (o *object) callCollideHandler(obj Object, point vec2.T) {
-	if o.collideHandler != nil {
-		o.collideHandler(obj, point)
-	}
-}
-
-func (o *object) SetCollideHandler(handler func(Object, vec2.T)) {
-	o.collideHandler = handler
 }
 
 func (o *object) IntersectWithLine(lineOrigin, lineDir, lineVector *vec2.T) (vec2.T, bool) {

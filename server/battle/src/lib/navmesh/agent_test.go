@@ -41,15 +41,10 @@ func TestAgent(t *testing.T) {
 				})
 
 				Convey("should call the collide handler", func() {
-					called := false
-					agent.SetCollideHandler(func(obj Object, point vec2.T) {
-						So(obj, ShouldBeNil)
-						So(point[0], ShouldEqual, 1)
-						So(point[1], ShouldEqual, 7)
-						called = true
-					})
-					agent.Move(&vec2.T{1, 9999}, 0)
-					So(called, ShouldBeTrue)
+					hitInfo := agent.Move(&vec2.T{1, 9999}, 0)
+					So(hitInfo.Object, ShouldBeNil)
+					So(hitInfo.Point[0], ShouldEqual, 1)
+					So(hitInfo.Point[1], ShouldEqual, 7)
 				})
 			})
 
@@ -63,38 +58,17 @@ func TestAgent(t *testing.T) {
 					So(agent.Position()[1], ShouldEqual, 6-1)
 				})
 
-				Convey("should call the collide handler", func() {
-					called := false
-					agent.SetCollideHandler(func(obj Object, point vec2.T) {
-						So(obj, ShouldEqual, otherObj)
-						So(point[0], ShouldEqual, 1)
-						So(point[1], ShouldEqual, 6-1)
-						called = true
-					})
-					agent.Move(&vec2.T{1, 5}, 0)
-					So(called, ShouldBeTrue)
+				Convey("should return the collided hitInfo", func() {
+					hitInfo := agent.Move(&vec2.T{1, 5}, 0)
+					So(hitInfo.Object, ShouldEqual, otherObj)
+					So(hitInfo.Point[0], ShouldEqual, 1)
+					So(hitInfo.Point[1], ShouldEqual, 6-1)
 				})
 
-				Convey("should call the other object's collide handler", func() {
-					called := false
-					otherObj.SetCollideHandler(func(obj Object, point vec2.T) {
-						So(obj, ShouldEqual, agent)
-						So(point[0], ShouldEqual, 1)
-						So(point[1], ShouldEqual, 6-1)
-						called = true
-					})
-					agent.Move(&vec2.T{1, 5}, 0)
-					So(called, ShouldBeTrue)
-				})
-
-				Convey("with the other object's layer as ignoredLayer parameter", func() {
+				Convey("and with the other object's layer as ignoredLayer parameter", func() {
 					Convey("should ignore the other object", func() {
-						called := false
-						otherObj.SetCollideHandler(func(obj Object, point vec2.T) {
-							called = true
-						})
-						agent.Move(&vec2.T{1, 3}, Layer02)
-						So(called, ShouldBeFalse)
+						hitInfo := agent.Move(&vec2.T{1, 3}, Layer02)
+						So(hitInfo, ShouldBeNil)
 					})
 				})
 			})

@@ -36,9 +36,9 @@ func TestNavMesh(t *testing.T) {
 						0,
 					)
 					So(ok, ShouldBeTrue)
-					So(hitInfo.obj, ShouldBeNil)
-					So(hitInfo.point[0], ShouldEqual, 1)
-					So(hitInfo.point[1], ShouldEqual, 7)
+					So(hitInfo.Object, ShouldBeNil)
+					So(hitInfo.Point[0], ShouldEqual, 1)
+					So(hitInfo.Point[1], ShouldEqual, 7)
 				})
 			})
 
@@ -51,9 +51,9 @@ func TestNavMesh(t *testing.T) {
 						0,
 					)
 					So(ok, ShouldBeTrue)
-					So(hitInfo.obj.ID(), ShouldEqual, agent.ID())
-					So(hitInfo.point[0], ShouldEqual, 1)
-					So(hitInfo.point[1], ShouldEqual, 2)
+					So(hitInfo.Object.ID(), ShouldEqual, agent.ID())
+					So(hitInfo.Point[0], ShouldEqual, 1)
+					So(hitInfo.Point[1], ShouldEqual, 2)
 				})
 			})
 
@@ -78,7 +78,7 @@ func TestNavMesh(t *testing.T) {
 						Layer02,
 					)
 					So(ok, ShouldBeTrue)
-					So(hitInfo.obj, ShouldBeNil)
+					So(hitInfo.Object, ShouldBeNil)
 				})
 			})
 		})

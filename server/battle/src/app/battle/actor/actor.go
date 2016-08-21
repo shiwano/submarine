@@ -38,7 +38,6 @@ func newActor(ctx *context.Context, player *context.Player, actorType battleAPI.
 		a.stageAgent.SetLayer(context.LayerTorpedo)
 	}
 	a.stageAgent.SetLayer(a.Player().TeamLayer)
-	a.stageAgent.SetCollideHandler(a.onStageAgentCollide)
 	return a
 }
 
@@ -62,10 +61,12 @@ func (a *actor) Destroy() {
 func (a *actor) BeforeUpdate() {
 	position := a.motor.position()
 
-	if a.player.AI == nil {
-		a.stageAgent.Move(position, a.ignoredLayer)
-	} else {
+	if a.player.AI != nil {
 		a.stageAgent.Warp(position)
+		return
+	}
+	if hitInfo := a.stageAgent.Move(position, a.ignoredLayer); hitInfo != nil {
+		a.onStageAgentCollide(hitInfo.Object, hitInfo.Point)
 	}
 }
 

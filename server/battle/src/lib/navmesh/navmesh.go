@@ -6,8 +6,8 @@ import (
 
 // RaycastHitInfo represents a raycast hit info.
 type RaycastHitInfo struct {
-	obj   Object
-	point vec2.T
+	Object Object
+	Point  vec2.T
 }
 
 // NavMesh represents a navmesh.
@@ -48,11 +48,11 @@ func (n *NavMesh) DestroyObject(objectID int64) {
 }
 
 // Raycast casts a ray on the navmesh.
-func (n *NavMesh) Raycast(origin, vector *vec2.T, ignoredLayer LayerMask) (hitInfo RaycastHitInfo, result bool) {
+func (n *NavMesh) Raycast(origin, vector *vec2.T, ignoredLayer LayerMask) (hitInfo *RaycastHitInfo, result bool) {
 	var resultLengthSqr float64
 
 	if p, ok := n.Mesh.intersectWithLineSeg(origin, vector); ok {
-		hitInfo.point = p
+		hitInfo = &RaycastHitInfo{Point: p}
 		resultLengthSqr = calculateVectorLengthSqr(origin, &p)
 		result = true
 	}
@@ -64,8 +64,7 @@ func (n *NavMesh) Raycast(origin, vector *vec2.T, ignoredLayer LayerMask) (hitIn
 				lengthSqr := calculateVectorLengthSqr(origin, &p)
 
 				if !result || lengthSqr < resultLengthSqr {
-					hitInfo.obj = obj
-					hitInfo.point = p
+					hitInfo = &RaycastHitInfo{Object: obj, Point: p}
 					resultLengthSqr = lengthSqr
 					result = true
 				}

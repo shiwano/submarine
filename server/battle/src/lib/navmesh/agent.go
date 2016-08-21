@@ -16,17 +16,13 @@ func (a *Agent) Warp(position *vec2.T) {
 
 // Move sets the actor position. If the specified position is collided with
 // the mesh or objects, this method sets the collided position.
-func (a *Agent) Move(position *vec2.T, ignoredLayer LayerMask) {
+func (a *Agent) Move(position *vec2.T, ignoredLayer LayerMask) *RaycastHitInfo {
 	vec := vec2.Sub(position, a.position)
 
 	if hitInfo, ok := a.navMesh.Raycast(a.position, &vec, ignoredLayer); ok {
-		a.position = &hitInfo.point
-
-		a.callCollideHandler(hitInfo.obj, hitInfo.point)
-		if hitInfo.obj != nil {
-			hitInfo.obj.callCollideHandler(a, hitInfo.point)
-		}
-		return
+		a.position = &hitInfo.Point
+		return hitInfo
 	}
 	a.position = position
+	return nil
 }
