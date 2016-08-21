@@ -9,16 +9,13 @@ type Agent struct {
 	*object
 }
 
-// Move sets the specified position to the agent if the position is out of the mesh.
+// Move sets the actor position. If the specified position is collided with
+// the mesh or objects, this method sets the collided position.
 func (a *Agent) Move(position *vec2.T, ignoredLayer LayerMask) {
-	vector := vec2.Sub(position, a.position)
-	sizeRadiusVector := vector.Normalized()
-	sizeRadiusVector.Scale(a.sizeRadius)
-	vector.Add(&sizeRadiusVector)
+	vec := vec2.Sub(position, a.position)
 
-	if hitInfo, ok := a.navMesh.Raycast(a.position, &vector, ignoredLayer); ok {
+	if hitInfo, ok := a.navMesh.Raycast(a.position, &vec, ignoredLayer); ok {
 		a.position = &hitInfo.point
-		a.position.Sub(&sizeRadiusVector)
 
 		a.callCollideHandler(hitInfo.obj, hitInfo.point)
 		if hitInfo.obj != nil {

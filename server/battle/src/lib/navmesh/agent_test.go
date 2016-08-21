@@ -17,7 +17,7 @@ func TestAgent(t *testing.T) {
 		})
 
 		Convey("#Move", func() {
-			Convey("with the position which is in of the mesh", func() {
+			Convey("with the position which is in the mesh", func() {
 				Convey("should set the position", func() {
 					agent.Move(&vec2.T{2, 3}, 0)
 					So(agent.Position()[0], ShouldEqual, 2)
@@ -29,7 +29,7 @@ func TestAgent(t *testing.T) {
 				Convey("should set the intersection point", func() {
 					agent.Move(&vec2.T{1, 9999}, 0)
 					So(agent.Position()[0], ShouldEqual, 1)
-					So(agent.Position()[1], ShouldEqual, 7-3)
+					So(agent.Position()[1], ShouldEqual, 7)
 				})
 
 				Convey("should call the collide handler", func() {
@@ -37,7 +37,7 @@ func TestAgent(t *testing.T) {
 					agent.SetCollideHandler(func(obj Object, point vec2.T) {
 						So(obj, ShouldBeNil)
 						So(point[0], ShouldEqual, 1)
-						So(point[1], ShouldEqual, 7-3)
+						So(point[1], ShouldEqual, 7)
 						called = true
 					})
 					agent.Move(&vec2.T{1, 9999}, 0)
@@ -50,9 +50,9 @@ func TestAgent(t *testing.T) {
 				otherObj.SetLayer(Layer02)
 
 				Convey("should set the intersection point", func() {
-					agent.Move(&vec2.T{1, 3}, 0)
+					agent.Move(&vec2.T{1, 5}, 0)
 					So(agent.Position()[0], ShouldEqual, 1)
-					So(agent.Position()[1], ShouldEqual, 6-3-1)
+					So(agent.Position()[1], ShouldEqual, 6-1)
 				})
 
 				Convey("should call the collide handler", func() {
@@ -60,10 +60,10 @@ func TestAgent(t *testing.T) {
 					agent.SetCollideHandler(func(obj Object, point vec2.T) {
 						So(obj, ShouldEqual, otherObj)
 						So(point[0], ShouldEqual, 1)
-						So(point[1], ShouldEqual, 6-3-1)
+						So(point[1], ShouldEqual, 6-1)
 						called = true
 					})
-					agent.Move(&vec2.T{1, 3}, 0)
+					agent.Move(&vec2.T{1, 5}, 0)
 					So(called, ShouldBeTrue)
 				})
 
@@ -72,10 +72,10 @@ func TestAgent(t *testing.T) {
 					otherObj.SetCollideHandler(func(obj Object, point vec2.T) {
 						So(obj, ShouldEqual, agent)
 						So(point[0], ShouldEqual, 1)
-						So(point[1], ShouldEqual, 6-3-1)
+						So(point[1], ShouldEqual, 6-1)
 						called = true
 					})
-					agent.Move(&vec2.T{1, 3}, 0)
+					agent.Move(&vec2.T{1, 5}, 0)
 					So(called, ShouldBeTrue)
 				})
 
