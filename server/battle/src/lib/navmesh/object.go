@@ -15,7 +15,7 @@ type Object interface {
 	Layer() LayerMask
 	SetLayer(LayerMask)
 
-	IntersectWithLine(lineOrigin, lineDir, lineVector *vec2.T) (vec2.T, bool)
+	IntersectWithLineSeg(lineOrigin, lineDir, lineVec *vec2.T) (vec2.T, bool)
 }
 
 type object struct {
@@ -51,7 +51,7 @@ func (o *object) SetLayer(layer LayerMask) {
 	o.layer = layer
 }
 
-func (o *object) IntersectWithLine(lineOrigin, lineDir, lineVector *vec2.T) (vec2.T, bool) {
+func (o *object) IntersectWithLineSeg(lineOrigin, lineDir, lineVec *vec2.T) (vec2.T, bool) {
 	lineOriginFromObject := vec2.Sub(lineOrigin, o.position)
 	normalizedLineVector := lineDir.Normalized()
 
@@ -66,7 +66,7 @@ func (o *object) IntersectWithLine(lineOrigin, lineDir, lineVector *vec2.T) (vec
 	sq := math.Sqrt(s)
 	t1 := -dotLOandLV - sq
 	t2 := -dotLOandLV + sq
-	if t1 < 0 || t2 < 0 || t1*t1 > lineVector.LengthSqr() {
+	if t1 < 0 || t2 < 0 || t1*t1 > lineVec.LengthSqr() {
 		return vec2.Zero, false
 	}
 
