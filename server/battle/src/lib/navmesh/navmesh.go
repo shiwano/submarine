@@ -48,13 +48,12 @@ func (n *NavMesh) DestroyObject(objectID int64) {
 }
 
 // Raycast casts a ray on the navmesh.
-func (n *NavMesh) Raycast(origin, vec *vec2.T, ignoredLayer LayerMask) (hitInfo *RaycastHitInfo, result bool) {
+func (n *NavMesh) Raycast(origin, vec *vec2.T, ignoredLayer LayerMask) (hitInfo *RaycastHitInfo) {
 	var resultLengthSqr float64
 
 	if p, ok := n.Mesh.intersectWithLineSeg(origin, vec); ok {
 		hitInfo = &RaycastHitInfo{Point: p}
 		resultLengthSqr = calculateVectorLengthSqr(origin, &p)
-		result = true
 	}
 
 	dir := vec.Normalized()
@@ -63,10 +62,9 @@ func (n *NavMesh) Raycast(origin, vec *vec2.T, ignoredLayer LayerMask) (hitInfo 
 			if p, ok := obj.IntersectWithLineSeg(origin, &dir, vec); ok {
 				lengthSqr := calculateVectorLengthSqr(origin, &p)
 
-				if !result || lengthSqr < resultLengthSqr {
+				if hitInfo == nil || lengthSqr < resultLengthSqr {
 					hitInfo = &RaycastHitInfo{Object: obj, Point: p}
 					resultLengthSqr = lengthSqr
-					result = true
 				}
 			}
 		}
