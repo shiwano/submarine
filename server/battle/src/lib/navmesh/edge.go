@@ -17,10 +17,6 @@ func newEdge(a, b *vec2.T) *edge {
 	}
 }
 
-func (e *edge) cross(a, b *vec2.T) float64 {
-	return a[1]*b[0] - a[0]*b[1]
-}
-
 func (e *edge) containsPoint(point *vec2.T) bool {
 	pointVec := vec2.Sub(point, e.points[0])
 	vectorLengthSqr := e.vector.LengthSqr()
@@ -37,19 +33,19 @@ func (e *edge) containsPoint(point *vec2.T) bool {
 }
 
 func (e *edge) intersectWithLineSeg(lineOrigin, lineVec *vec2.T) (vec2.T, bool) {
-	crossEVandLV := e.cross(e.vector, lineVec)
+	crossEVandLV := cross(e.vector, lineVec)
 	if equalFloats(crossEVandLV, 0) {
 		return vec2.Zero, false
 	}
 
 	v := vec2.Sub(lineOrigin, e.points[0])
-	crossVandEV := e.cross(&v, e.vector)
+	crossVandEV := cross(&v, e.vector)
 	t2 := crossVandEV / crossEVandLV
 	if t2 < 0 || t2 > 1 {
 		return vec2.Zero, false
 	}
 
-	crossVandLV := e.cross(&v, lineVec)
+	crossVandLV := cross(&v, lineVec)
 	t1 := crossVandLV / crossEVandLV
 	if t1 < 0 || t1 > 1 {
 		return vec2.Zero, false

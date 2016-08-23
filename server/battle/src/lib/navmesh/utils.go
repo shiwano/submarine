@@ -23,3 +23,7 @@ func calculateVectorLengthSqr(src, dest *vec2.T) float64 {
 	vector := vec2.Sub(dest, src)
 	return vector.LengthSqr()
 }
+
+func cross(a, b *vec2.T) float64 {
+	return a[1]*b[0] - a[0]*b[1]
+}
