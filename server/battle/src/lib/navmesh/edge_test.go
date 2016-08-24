@@ -7,11 +7,13 @@ import (
 )
 
 func TestEdge(t *testing.T) {
-	Convey("Edge", t, func() {
-		e := newEdge(
-			&vec2.T{5, 0},
-			&vec2.T{-5, 0},
-		)
+	Convey("edge", t, func() {
+		v1 := &vec2.T{5, 0}
+		v2 := &vec2.T{-5, 0}
+		v3 := &vec2.T{0, 5}
+		triangle := newTriangle(v1, v2, v3)
+
+		e := newEdge(triangle, 0, 1)
 
 		Convey("#containsPoint", func() {
 			Convey("with an contained point", func() {
@@ -28,7 +30,7 @@ func TestEdge(t *testing.T) {
 		})
 
 		Convey("#intersectWithLineSeg", func() {
-			Convey("with an intersected points", func() {
+			Convey("with an intersected line segment", func() {
 				Convey("should return the intersection point", func() {
 					p1 := &vec2.T{0, 5}
 					p2 := &vec2.T{0, -5}
@@ -40,13 +42,37 @@ func TestEdge(t *testing.T) {
 				})
 			})
 
-			Convey("with an no-intersected points", func() {
+			Convey("with an no-intersected line segment", func() {
 				Convey("should return nil", func() {
 					p1 := &vec2.T{-1, 1}
 					p2 := &vec2.T{1, 1}
 
 					_, ok := e.intersectWithLineSeg(p1, p2.Sub(p1))
 					So(ok, ShouldBeFalse)
+				})
+			})
+
+			Convey("with an line segment whose line origin is on the edge", func() {
+				Convey("and line vector faces the inside of the edge", func() {
+					Convey("should return nil", func() {
+						p1 := &vec2.T{0, 0}
+						p2 := &vec2.T{0, 5}
+
+						_, ok := e.intersectWithLineSeg(p1, p2.Sub(p1))
+						So(ok, ShouldBeFalse)
+					})
+				})
+
+				Convey("and line vector faces the outside of the edge", func() {
+					Convey("should return the intersection point", func() {
+						p1 := &vec2.T{0, 0}
+						p2 := &vec2.T{0, -5}
+
+						p, ok := e.intersectWithLineSeg(p1, p2.Sub(p1))
+						So(ok, ShouldBeTrue)
+						So(p[0], ShouldEqual, 0)
+						So(p[1], ShouldEqual, 0)
+					})
 				})
 			})
 		})

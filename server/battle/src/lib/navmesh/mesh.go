@@ -79,10 +79,15 @@ func LoadMeshFromJSONFile(jsonPath string) (*Mesh, error) {
 	m.outerEdges = make([]*edge, 0)
 	for key, value := range rawEdges {
 		if value == 2 {
-			m.outerEdges = append(m.outerEdges, newEdge(
-				m.Vertices[key[0]],
-				m.Vertices[key[1]],
-			))
+			a := m.Vertices[key[0]]
+			b := m.Vertices[key[1]]
+			for _, triangle := range m.Triangles {
+				if aIndex, ok := triangle.vertexIndex(a); ok {
+					if bIndex, ok := triangle.vertexIndex(b); ok {
+						m.outerEdges = append(m.outerEdges, newEdge(triangle, aIndex, bIndex))
+					}
+				}
+			}
 		}
 	}
 

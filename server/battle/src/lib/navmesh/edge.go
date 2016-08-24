@@ -5,15 +5,27 @@ import (
 )
 
 type edge struct {
-	points [2]*vec2.T
-	vector *vec2.T
+	points                    [2]*vec2.T
+	vector                    *vec2.T
+	hasPlusNormalCrossProduct bool
 }
 
-func newEdge(a, b *vec2.T) *edge {
-	vector := vec2.Sub(b, a)
+func newEdge(triangle *Triangle, aIndex, bIndex int) *edge {
+	a := triangle.Vertices[aIndex]
+	b := triangle.Vertices[bIndex]
+	var c *vec2.T
+	for _, v := range triangle.Vertices {
+		if v != a && v != b {
+			c = v
+		}
+	}
+	abVec := vec2.Sub(b, a)
+	acVec := vec2.Sub(c, a)
+	hasPlusNormalCrossProduct := cross(&abVec, &acVec) > 0
 	return &edge{
 		points: [2]*vec2.T{a, b},
-		vector: &vector,
+		vector: &abVec,
+		hasPlusNormalCrossProduct: hasPlusNormalCrossProduct,
 	}
 }
 
@@ -36,6 +48,11 @@ func (e *edge) intersectWithLineSeg(lineOrigin, lineVec *vec2.T) (vec2.T, bool) 
 	crossEVandLV := cross(e.vector, lineVec)
 	if equalFloats(crossEVandLV, 0) {
 		return vec2.Zero, false
+	}
+	if e.containsPoint(lineOrigin) {
+		if crossEVandLV > 0 == e.hasPlusNormalCrossProduct {
+			return vec2.Zero, false
+		}
 	}
 
 	v := vec2.Sub(lineOrigin, e.points[0])
