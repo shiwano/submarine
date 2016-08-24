@@ -5,12 +5,15 @@ import (
 	"math"
 )
 
+// FloatEpsilon is a tolerance for comparing floating point values.
+var FloatEpsilon = 0.000001
+
 func equalVectors(v1, v2 *vec2.T) bool {
 	return equalFloats(v1[0], v2[0]) && equalFloats(v1[1], v2[1])
 }
 
 func equalFloats(a, b float64) bool {
-	return math.Abs(a-b) < math.SmallestNonzeroFloat64
+	return math.Abs(a-b) < FloatEpsilon
 }
 
 func calculateOctileDistance(from, to *vec2.T) float64 {
