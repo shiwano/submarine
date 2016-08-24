@@ -42,5 +42,19 @@ func TestTriangle(t *testing.T) {
 				So(triangle.hasVertex(&vec2.T{-1, -1}), ShouldBeFalse)
 			})
 		})
+
+		Convey("#vertexIndex", func() {
+			Convey("with a vertex on the triangle", func() {
+				index, ok := triangle.vertexIndex(triangle.Vertices[0])
+				So(ok, ShouldBeTrue)
+				So(index, ShouldEqual, 0)
+			})
+
+			Convey("with a vertex not on the triangle", func() {
+				index, ok := triangle.vertexIndex(&vec2.T{-1, -1})
+				So(ok, ShouldBeFalse)
+				So(index, ShouldEqual, -1)
+			})
+		})
 	})
 }

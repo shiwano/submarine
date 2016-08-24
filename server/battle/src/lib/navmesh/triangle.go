@@ -46,3 +46,12 @@ func (t *Triangle) hasVertex(vertex *vec2.T) bool {
 	}
 	return false
 }
+
+func (t *Triangle) vertexIndex(vertex *vec2.T) (int, bool) {
+	for i, v := range t.Vertices {
+		if v == vertex {
+			return i, true
+		}
+	}
+	return -1, false
+}
