@@ -52,6 +52,16 @@ func TestEdge(t *testing.T) {
 				})
 			})
 
+			Convey("with an parallel line segment", func() {
+				Convey("should return nil", func() {
+					p1 := &vec2.T{4, 0}
+					p2 := &vec2.T{-4, 0}
+
+					_, ok := e.intersectWithLineSeg(p1, p2.Sub(p1))
+					So(ok, ShouldBeFalse)
+				})
+			})
+
 			Convey("with an line segment whose line origin is on the edge", func() {
 				Convey("and line vector faces the inside of the edge", func() {
 					Convey("should return nil", func() {
