@@ -1,6 +1,7 @@
 package context
 
 import (
+	"fmt"
 	"github.com/ungerik/go3d/float64/vec2"
 	"lib/navmesh"
 	"time"
@@ -36,4 +37,8 @@ func NewPlayer(playerID int64, teamLayer navmesh.LayerMask, startPosition *vec2.
 			StartOffsetDistance: 1.2,
 		},
 	}
+}
+
+func (p *Player) String() string {
+	return fmt.Sprintf("Player(%v)", p.ID)
 }

@@ -3,7 +3,9 @@ package actor
 import (
 	"app/battle/context"
 	"app/battle/event"
+	"app/logger"
 	battleAPI "app/typhenapi/type/submarine/battle"
+	"fmt"
 	"github.com/ungerik/go3d/float64/vec2"
 	"lib/navmesh"
 )
@@ -41,6 +43,10 @@ func newActor(ctx *context.Context, player *context.Player, actorType battleAPI.
 	return a
 }
 
+func (a *actor) String() string {
+	return fmt.Sprintf("%v's %v(%v)", a.player, a.actorType, a.stageAgent.ID())
+}
+
 func (a *actor) ID() int64                 { return a.stageAgent.ID() }
 func (a *actor) Player() *context.Player   { return a.player }
 func (a *actor) Type() battleAPI.ActorType { return a.actorType }
@@ -76,18 +82,21 @@ func (a *actor) Update()    {}
 func (a *actor) OnDestroy() {}
 
 func (a *actor) accelerate(direction float64) {
+	logger.Log.Debugf("%v accelerates to %v", a, direction)
 	a.motor.accelerate()
 	a.motor.turn(direction)
 	a.ctx.Event.Emit(event.ActorMove, a)
 }
 
 func (a *actor) brake(direction float64) {
+	logger.Log.Debugf("%v brakes", a)
 	a.motor.brake()
 	a.motor.turn(direction)
 	a.ctx.Event.Emit(event.ActorMove, a)
 }
 
 func (a *actor) turn(direction float64) {
+	logger.Log.Debugf("%v turns to %v", a, direction)
 	a.motor.turn(direction)
 	a.ctx.Event.Emit(event.ActorMove, a)
 }
@@ -102,8 +111,10 @@ func (a *actor) onStageAgentCollide(obj navmesh.Object, point vec2.T) {
 		return
 	}
 	if obj == nil {
+		logger.Log.Debugf("%v collided with stage", a)
 		a.event.Emit(event.ActorCollideWithStage, point)
 	} else if other := a.ctx.Actor(obj.ID()); other != nil {
+		logger.Log.Debugf("%v collided with %v", a, other)
 		a.event.Emit(event.ActorCollideWithOtherActor, other, point)
 	}
 }
