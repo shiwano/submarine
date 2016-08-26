@@ -11,13 +11,13 @@ type ActorType int
 func (i ActorType) String() string {
 	switch i {
 	case ActorType_Submarine:
-		return "0"
+		return "Submarine"
 	case ActorType_Torpedo:
-		return "1"
+		return "Torpedo"
 	case ActorType_Decoy:
-		return "2"
+		return "Decoy"
 	case ActorType_Lookout:
-		return "3"
+		return "Lookout"
 	}
 	return ""
 }
