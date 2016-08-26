@@ -12,7 +12,7 @@ func (i {{upperCamelCase name}}) String() string {
 	switch i {
 	{{#each members}}
 	case {{upperCamelCase ../name}}_{{upperCamelCase name}}:
-		return "{{value}}"
+		return "{{upperCamelCase name}}"
 	{{/each}}
 	}
 	return ""
