@@ -56,7 +56,7 @@ func newRoom(id int64) (*Room, error) {
 		info:          res.Room,
 		sessions:      make(map[int64]*Session),
 		bots:          make(map[int64]*api.Bot),
-		battle:        battle.New(time.Second*60, stageMesh),
+		battle:        battle.New(time.Second*300, stageMesh),
 		startBattleCh: make(chan *Session, 1),
 		addBotCh:      make(chan struct{}, 1),
 		removeBotCh:   make(chan int64, 1),

@@ -83,21 +83,21 @@ func (a *actor) OnDestroy() {}
 
 func (a *actor) accelerate(direction float64) {
 	logger.Log.Debugf("%v accelerates to %v", a, direction)
-	a.motor.accelerate()
-	a.motor.turn(direction)
+	a.motor.accelerate(a.stageAgent.Position())
+	a.motor.turn(a.stageAgent.Position(), direction)
 	a.ctx.Event.Emit(event.ActorMove, a)
 }
 
 func (a *actor) brake(direction float64) {
 	logger.Log.Debugf("%v brakes", a)
-	a.motor.brake()
-	a.motor.turn(direction)
+	a.motor.brake(a.stageAgent.Position())
+	a.motor.turn(a.stageAgent.Position(), direction)
 	a.ctx.Event.Emit(event.ActorMove, a)
 }
 
 func (a *actor) turn(direction float64) {
 	logger.Log.Debugf("%v turns to %v", a, direction)
-	a.motor.turn(direction)
+	a.motor.turn(a.stageAgent.Position(), direction)
 	a.ctx.Event.Emit(event.ActorMove, a)
 }
 

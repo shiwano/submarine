@@ -56,22 +56,22 @@ func (m *motor) toAPIType(actorID int64) *battleAPI.Movement {
 	}
 }
 
-func (m *motor) accelerate() {
-	m.initialPosition = m.position()
+func (m *motor) accelerate(position *vec2.T) {
+	m.initialPosition = position
 	m.initialSpeed = m.accelerator.speed()
 	m.accelerator.refresh(true, false)
 	m.changedAt = m.ctx.Now
 }
 
-func (m *motor) brake() {
+func (m *motor) brake(position *vec2.T) {
 	m.initialPosition = m.position()
 	m.initialSpeed = m.accelerator.speed()
 	m.accelerator.refresh(false, false)
 	m.changedAt = m.ctx.Now
 }
 
-func (m *motor) turn(direction float64) {
-	m.initialPosition = m.position()
+func (m *motor) turn(position *vec2.T, direction float64) {
+	m.initialPosition = position
 	m.initialSpeed = m.accelerator.speed()
 	m.accelerator.refresh(m.accelerator.isAccelerating, false)
 	m.direction = direction
@@ -82,8 +82,8 @@ func (m *motor) turn(direction float64) {
 	m.changedAt = m.ctx.Now
 }
 
-func (m *motor) idle(idlingPosition *vec2.T) {
-	m.initialPosition = idlingPosition
+func (m *motor) idle(position *vec2.T) {
+	m.initialPosition = position
 	m.initialSpeed = m.accelerator.speed()
 	m.accelerator.refresh(m.accelerator.isAccelerating, true)
 	m.changedAt = m.ctx.Now
