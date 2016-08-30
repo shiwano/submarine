@@ -46,6 +46,11 @@ func (n *NavMesh) destroyObject(objectID int64) {
 	delete(n.Objects, objectID)
 }
 
+// ContainsPoint determines whether the specified point is contained.
+func (n *NavMesh) ContainsPoint(point *vec2.T) bool {
+	return n.Mesh.findTriangleByPoint(point) != nil
+}
+
 // Raycast casts a ray on the navmesh.
 func (n *NavMesh) Raycast(origin, vec *vec2.T, ignoredLayer LayerMask) (hitInfo *RaycastHitInfo) {
 	var resultLengthSqr float64

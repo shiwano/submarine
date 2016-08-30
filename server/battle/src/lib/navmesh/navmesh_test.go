@@ -27,6 +27,20 @@ func TestNavMesh(t *testing.T) {
 			})
 		})
 
+		Convey("#ContainsPoint", func() {
+			Convey("with a contained point", func() {
+				Convey("should return true", func() {
+					So(navmesh.ContainsPoint(&vec2.T{0, 0}), ShouldBeTrue)
+				})
+			})
+
+			Convey("with a no-contained point", func() {
+				Convey("should return false", func() {
+					So(navmesh.ContainsPoint(&vec2.T{999, 999}), ShouldBeFalse)
+				})
+			})
+		})
+
 		Convey("#Raycast", func() {
 			Convey("with ray parameters which intersected with the mesh", func() {
 				Convey("should return the intersection point", func() {
