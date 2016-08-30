@@ -42,8 +42,7 @@ func (n *NavMesh) CreateAgent(size float64, position *vec2.T) *Agent {
 	return agent
 }
 
-// DestroyObject destroys the specified object.
-func (n *NavMesh) DestroyObject(objectID int64) {
+func (n *NavMesh) destroyObject(objectID int64) {
 	delete(n.Objects, objectID)
 }
 

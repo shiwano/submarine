@@ -40,7 +40,7 @@ func (o *object) SizeRadius() float64 {
 }
 
 func (o *object) Destroy() {
-	o.navMesh.DestroyObject(o.id)
+	o.navMesh.destroyObject(o.id)
 }
 
 func (o *object) Layer() LayerMask {

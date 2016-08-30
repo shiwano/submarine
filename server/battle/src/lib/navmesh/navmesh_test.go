@@ -19,10 +19,10 @@ func TestNavMesh(t *testing.T) {
 			})
 		})
 
-		Convey("#DestoryObject", func() {
+		Convey("#destoryObject", func() {
 			Convey("should destroys the specified object", func() {
 				agent := navmesh.CreateAgent(1, &vec2.Zero)
-				navmesh.DestroyObject(agent.ID())
+				navmesh.destroyObject(agent.ID())
 				So(navmesh.Objects, ShouldNotContainKey, (int64)(1))
 			})
 		})
