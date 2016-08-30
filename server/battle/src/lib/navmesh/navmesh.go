@@ -59,6 +59,9 @@ func (n *NavMesh) Raycast(origin, vec *vec2.T, ignoredLayer LayerMask) (hitInfo 
 		hitInfo = &RaycastHitInfo{Point: p}
 		resultLengthSqr = calculateVectorLengthSqr(origin, &p)
 	}
+	if ignoredLayer == LayerAll {
+		return
+	}
 
 	dir := vec.Normalized()
 	for _, obj := range n.Objects {

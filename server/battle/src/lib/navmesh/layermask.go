@@ -1,5 +1,9 @@
 package navmesh
 
+import (
+	"math"
+)
+
 // LayerMask represents a layer of the navmesh.
 type LayerMask uint16
 
@@ -21,6 +25,7 @@ const (
 	Layer14
 	Layer15
 	Layer16
+	LayerAll = LayerMask(math.MaxUint16)
 )
 
 // Has determines whether the layer mask has specified layers.
