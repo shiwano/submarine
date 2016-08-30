@@ -19,6 +19,7 @@ type meshData struct {
 
 // Mesh represents a navmesh.
 type Mesh struct {
+	Rect              *vec2.Rect
 	Vertices          []*vec2.T
 	Triangles         []*Triangle
 	outerEdges        []*edge
@@ -43,9 +44,23 @@ func LoadMeshFromJSONFile(jsonPath string) (*Mesh, error) {
 	// Vertices
 	verticesLength := len(rawMesh.Vertices)
 	m := new(Mesh)
+	m.Rect = new(vec2.Rect)
 	m.Vertices = make([]*vec2.T, verticesLength)
 	for i, v := range rawMesh.Vertices {
 		m.Vertices[i] = &vec2.T{v.X, v.Y}
+
+		if v.X < m.Rect.Min[0] {
+			m.Rect.Min[0] = v.X
+		}
+		if v.Y < m.Rect.Min[1] {
+			m.Rect.Min[1] = v.Y
+		}
+		if v.X > m.Rect.Max[0] {
+			m.Rect.Max[0] = v.X
+		}
+		if v.Y > m.Rect.Max[1] {
+			m.Rect.Max[1] = v.Y
+		}
 	}
 
 	// Triangles
