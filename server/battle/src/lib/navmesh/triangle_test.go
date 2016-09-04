@@ -24,6 +24,18 @@ func TestTriangle(t *testing.T) {
 
 			Convey("with a point on the triangle edge", func() {
 				So(triangle.containsPoint(&vec2.T{-1, 5}), ShouldBeTrue)
+
+				v1 := &vec2.T{5, 5}
+				v2 := &vec2.T{0, 5}
+				v3 := &vec2.T{0, -5}
+				triangle := newTriangle(v1, v2, v3)
+				So(triangle.containsPoint(&vec2.T{0, -1}), ShouldBeTrue)
+
+				v1 = &vec2.T{0, 0}
+				v2 = &vec2.T{-10, 7}
+				v3 = &vec2.T{8, 7}
+				triangle = newTriangle(v1, v2, v3)
+				So(triangle.containsPoint(&vec2.T{-6, 7}), ShouldBeTrue)
 			})
 
 			Convey("with a point on the triangle vertex", func() {

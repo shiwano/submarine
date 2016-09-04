@@ -17,10 +17,6 @@ func newTriangle(vertex1, vertex2, vertex3 *vec2.T) *Triangle {
 
 // via http://www.blackpawn.com/texts/pointinpoly/default.html
 func (t *Triangle) containsPoint(point *vec2.T) bool {
-	if equalVectors(point, t.Vertices[1]) ||
-		equalVectors(point, t.Vertices[2]) {
-		return true
-	}
 	v0 := vec2.Sub(t.Vertices[2], t.Vertices[0])
 	v1 := vec2.Sub(t.Vertices[1], t.Vertices[0])
 	v2 := vec2.Sub(point, t.Vertices[0])
@@ -35,7 +31,7 @@ func (t *Triangle) containsPoint(point *vec2.T) bool {
 	u := (dot11*dot02 - dot01*dot12) * invDenom
 	v := (dot00*dot12 - dot01*dot02) * invDenom
 
-	return (u >= 0) && (v >= 0) && (u+v < 1)
+	return (u >= 0) && (v >= 0) && (u+v <= 1+FloatEpsilon)
 }
 
 func (t *Triangle) hasVertex(vertex *vec2.T) bool {
