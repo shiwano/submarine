@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/ungerik/go3d/float64/vec2"
+	"math"
 	"os"
 )
 
@@ -191,17 +192,32 @@ func (m *Mesh) isIntersectedWithLineSeg(lineOrigin, lineVec *vec2.T) bool {
 	return false
 }
 
-func (m *Mesh) intersectWithLineSeg(lineOrigin, lineVec *vec2.T) (resultPos vec2.T, result bool) {
-	var resultLengthSqr float64
+func (m *Mesh) intersectWithLineSeg(lineOrigin, lineVec *vec2.T) (resultPoint vec2.T, result bool) {
+	resultLengthSqr := math.MaxFloat64
+	var resultEdgeEndPoint *vec2.T
 
 	for _, edge := range m.outerEdges {
 		if p, ok := edge.intersectWithLineSeg(lineOrigin, lineVec); ok {
 			lengthSqr := calculateVectorLengthSqr(lineOrigin, &p)
 
-			if !result || lengthSqr < resultLengthSqr {
-				resultPos = p
+			if resultEdgeEndPoint != nil && equalVectors(resultEdgeEndPoint, &p) {
 				resultLengthSqr = lengthSqr
+				resultPoint = p
 				result = true
+				resultEdgeEndPoint = nil
+				continue
+			}
+
+			if lengthSqr < resultLengthSqr {
+				if edge.isEndPoint(&p) {
+					resultEdgeEndPoint = &p
+					continue
+				}
+
+				resultLengthSqr = lengthSqr
+				resultPoint = p
+				result = true
+				resultEdgeEndPoint = nil
 			}
 		}
 	}

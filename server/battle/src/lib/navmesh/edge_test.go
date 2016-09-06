@@ -15,6 +15,20 @@ func TestEdge(t *testing.T) {
 
 		e := newEdge(triangle, 0, 1)
 
+		Convey("#isEndPoint", func() {
+			Convey("with a same point with the end point", func() {
+				Convey("should return true", func() {
+					So(e.isEndPoint(&vec2.T{5, 0}), ShouldBeTrue)
+				})
+			})
+
+			Convey("with a different point with the end point", func() {
+				Convey("should return false", func() {
+					So(e.isEndPoint(&vec2.T{0, 0}), ShouldBeFalse)
+				})
+			})
+		})
+
 		Convey("#containsPoint", func() {
 			Convey("with an contained point", func() {
 				Convey("should return true", func() {

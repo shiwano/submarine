@@ -29,6 +29,10 @@ func newEdge(triangle *Triangle, aIndex, bIndex int) *edge {
 	}
 }
 
+func (e *edge) isEndPoint(point *vec2.T) bool {
+	return equalVectors(e.points[0], point) || equalVectors(e.points[1], point)
+}
+
 func (e *edge) containsPoint(point *vec2.T) bool {
 	pointVec := vec2.Sub(point, e.points[0])
 	vectorLengthSqr := e.vector.LengthSqr()
