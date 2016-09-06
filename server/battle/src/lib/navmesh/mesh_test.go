@@ -17,11 +17,11 @@ func TestMesh(t *testing.T) {
 						Min: vec2.T{-10, -14},
 						Max: vec2.T{10, 7},
 					})
-					So(m.Vertices[0], ShouldResemble, &vec2.T{0, 0})
-					So(m.Triangles[0], ShouldResemble, newTriangle(
-						m.Vertices[0],
-						m.Vertices[1],
-						m.Vertices[2],
+					So(m.vertices[0], ShouldResemble, &vec2.T{0, 0})
+					So(m.triangles[0], ShouldResemble, newTriangle(
+						m.vertices[0],
+						m.vertices[1],
+						m.vertices[2],
 					))
 				})
 			})
@@ -32,40 +32,40 @@ func TestMesh(t *testing.T) {
 				for _, e := range m.outerEdges {
 					edgePointsList = append(edgePointsList, e.points)
 				}
-				So(edgePointsList, ShouldContain, [2]*vec2.T{m.Vertices[0], m.Vertices[1]})
-				So(edgePointsList, ShouldContain, [2]*vec2.T{m.Vertices[1], m.Vertices[2]})
-				So(edgePointsList, ShouldContain, [2]*vec2.T{m.Vertices[2], m.Vertices[3]})
-				So(edgePointsList, ShouldContain, [2]*vec2.T{m.Vertices[3], m.Vertices[4]})
-				So(edgePointsList, ShouldContain, [2]*vec2.T{m.Vertices[0], m.Vertices[5]})
-				So(edgePointsList, ShouldContain, [2]*vec2.T{m.Vertices[4], m.Vertices[7]})
-				So(edgePointsList, ShouldContain, [2]*vec2.T{m.Vertices[5], m.Vertices[6]})
-				So(edgePointsList, ShouldContain, [2]*vec2.T{m.Vertices[6], m.Vertices[7]})
+				So(edgePointsList, ShouldContain, [2]*vec2.T{m.vertices[0], m.vertices[1]})
+				So(edgePointsList, ShouldContain, [2]*vec2.T{m.vertices[1], m.vertices[2]})
+				So(edgePointsList, ShouldContain, [2]*vec2.T{m.vertices[2], m.vertices[3]})
+				So(edgePointsList, ShouldContain, [2]*vec2.T{m.vertices[3], m.vertices[4]})
+				So(edgePointsList, ShouldContain, [2]*vec2.T{m.vertices[0], m.vertices[5]})
+				So(edgePointsList, ShouldContain, [2]*vec2.T{m.vertices[4], m.vertices[7]})
+				So(edgePointsList, ShouldContain, [2]*vec2.T{m.vertices[5], m.vertices[6]})
+				So(edgePointsList, ShouldContain, [2]*vec2.T{m.vertices[6], m.vertices[7]})
 			})
 
 			Convey("should initialize trianglesByVertex", func() {
-				triangles := m.trianglesByVertex[m.Vertices[0]]
+				triangles := m.trianglesByVertex[m.vertices[0]]
 				So(triangles, ShouldHaveLength, 4)
-				So(triangles, ShouldContain, m.Triangles[0])
-				So(triangles, ShouldContain, m.Triangles[1])
-				So(triangles, ShouldContain, m.Triangles[2])
-				So(triangles, ShouldContain, m.Triangles[3])
+				So(triangles, ShouldContain, m.triangles[0])
+				So(triangles, ShouldContain, m.triangles[1])
+				So(triangles, ShouldContain, m.triangles[2])
+				So(triangles, ShouldContain, m.triangles[3])
 			})
 
 			Convey("should initialize adjoiningVertices", func() {
-				vertices := m.adjoiningVertices[m.Vertices[0]]
+				vertices := m.adjoiningVertices[m.vertices[0]]
 				So(vertices, ShouldHaveLength, 5)
-				So(vertices, ShouldContain, m.Vertices[1])
-				So(vertices, ShouldContain, m.Vertices[2])
-				So(vertices, ShouldContain, m.Vertices[3])
-				So(vertices, ShouldContain, m.Vertices[4])
-				So(vertices, ShouldContain, m.Vertices[5])
+				So(vertices, ShouldContain, m.vertices[1])
+				So(vertices, ShouldContain, m.vertices[2])
+				So(vertices, ShouldContain, m.vertices[3])
+				So(vertices, ShouldContain, m.vertices[4])
+				So(vertices, ShouldContain, m.vertices[5])
 			})
 		})
 
 		Convey("#findTriangleByPoint", func() {
 			Convey("should find the triangle that contains the specified point", func() {
 				triangle := m.findTriangleByPoint(&vec2.T{1, -11})
-				So(triangle, ShouldEqual, m.Triangles[5])
+				So(triangle, ShouldEqual, m.triangles[5])
 			})
 		})
 

@@ -21,8 +21,8 @@ type meshData struct {
 // Mesh represents a navmesh.
 type Mesh struct {
 	Rect              *vec2.Rect
-	Vertices          []*vec2.T
-	Triangles         []*Triangle
+	vertices          []*vec2.T
+	triangles         []*Triangle
 	outerEdges        []*edge
 	trianglesByVertex map[*vec2.T][]*Triangle
 	adjoiningVertices map[*vec2.T][]*vec2.T
@@ -46,9 +46,9 @@ func LoadMeshFromJSONFile(jsonPath string) (*Mesh, error) {
 	verticesLength := len(rawMesh.Vertices)
 	m := new(Mesh)
 	m.Rect = new(vec2.Rect)
-	m.Vertices = make([]*vec2.T, verticesLength)
+	m.vertices = make([]*vec2.T, verticesLength)
 	for i, v := range rawMesh.Vertices {
-		m.Vertices[i] = &vec2.T{v.X, v.Y}
+		m.vertices[i] = &vec2.T{v.X, v.Y}
 
 		if v.X < m.Rect.Min[0] {
 			m.Rect.Min[0] = v.X
@@ -65,15 +65,15 @@ func LoadMeshFromJSONFile(jsonPath string) (*Mesh, error) {
 	}
 
 	// Triangles
-	m.Triangles = make([]*Triangle, len(rawMesh.Triangles))
+	m.triangles = make([]*Triangle, len(rawMesh.Triangles))
 	for i, t := range rawMesh.Triangles {
 		if t[0] >= verticesLength || t[1] >= verticesLength || t[2] >= verticesLength {
 			return nil, fmt.Errorf("Invalid vertex index: %v (%v)", t, i)
 		}
-		m.Triangles[i] = newTriangle(
-			m.Vertices[t[0]],
-			m.Vertices[t[1]],
-			m.Vertices[t[2]],
+		m.triangles[i] = newTriangle(
+			m.vertices[t[0]],
+			m.vertices[t[1]],
+			m.vertices[t[2]],
 		)
 	}
 
@@ -95,9 +95,9 @@ func LoadMeshFromJSONFile(jsonPath string) (*Mesh, error) {
 	m.outerEdges = make([]*edge, 0)
 	for key, value := range rawEdges {
 		if value == 2 {
-			a := m.Vertices[key[0]]
-			b := m.Vertices[key[1]]
-			for _, triangle := range m.Triangles {
+			a := m.vertices[key[0]]
+			b := m.vertices[key[1]]
+			for _, triangle := range m.triangles {
 				if aIndex, ok := triangle.vertexIndex(a); ok {
 					if bIndex, ok := triangle.vertexIndex(b); ok {
 						m.outerEdges = append(m.outerEdges, newEdge(triangle, aIndex, bIndex))
@@ -109,21 +109,21 @@ func LoadMeshFromJSONFile(jsonPath string) (*Mesh, error) {
 
 	// TrianglesByVertex
 	m.trianglesByVertex = make(map[*vec2.T][]*Triangle)
-	for _, v := range m.Vertices {
+	for _, v := range m.vertices {
 		m.trianglesByVertex[v] = m.findTrianglesByVertex(v)
 	}
 
 	// AdjoiningVertices
 	m.adjoiningVertices = make(map[*vec2.T][]*vec2.T)
-	for _, v := range m.Vertices {
+	for _, v := range m.vertices {
 		m.adjoiningVertices[v] = m.findAdjoiningVertices(v)
 	}
 
 	// DistancesByVertex
 	m.distancesByVertex = make(map[*vec2.T]map[*vec2.T]float64)
-	for _, v1 := range m.Vertices {
+	for _, v1 := range m.vertices {
 		m.distancesByVertex[v1] = make(map[*vec2.T]float64)
-		for _, v2 := range m.Vertices {
+		for _, v2 := range m.vertices {
 			if v1 != v2 {
 				diff := vec2.Sub(v1, v2)
 				m.distancesByVertex[v1][v2] = diff.Length()
@@ -135,7 +135,7 @@ func LoadMeshFromJSONFile(jsonPath string) (*Mesh, error) {
 
 func (m *Mesh) findTrianglesByVertex(vertex *vec2.T) []*Triangle {
 	var triangles []*Triangle
-	for _, t := range m.Triangles {
+	for _, t := range m.triangles {
 		if vertex == t.Vertices[0] ||
 			vertex == t.Vertices[1] ||
 			vertex == t.Vertices[2] {
@@ -165,7 +165,7 @@ func (m *Mesh) findAdjoiningVertices(vertex *vec2.T) []*vec2.T {
 }
 
 func (m *Mesh) findTriangleByPoint(point *vec2.T) *Triangle {
-	for _, t := range m.Triangles {
+	for _, t := range m.triangles {
 		if t.containsPoint(point) {
 			return t
 		}
