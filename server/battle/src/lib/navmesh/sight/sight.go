@@ -25,9 +25,9 @@ func New(lightMap *LightMap) *Sight {
 func (s *Sight) Clear() {
 	s.putLights = make(map[*light]struct{})
 
-	s.cells = make([][]bool, s.lightMap.Helper.height)
-	for cellY := 0; cellY < s.lightMap.Helper.height; cellY++ {
-		s.cells[cellY] = make([]bool, s.lightMap.Helper.width)
+	s.cells = make([][]bool, s.lightMap.Helper.Height)
+	for cellY := 0; cellY < s.lightMap.Helper.Height; cellY++ {
+		s.cells[cellY] = make([]bool, s.lightMap.Helper.Width)
 	}
 }
 
@@ -48,8 +48,8 @@ func (s *Sight) PutLight(point *vec2.T) {
 // IsLitPoint determines whether the specified point is lit.
 func (s *Sight) IsLitPoint(point *vec2.T) bool {
 	cellPoint := s.lightMap.Helper.cellPointByNavMeshPoint(point)
-	if cellPoint[1] >= s.lightMap.Helper.height ||
-		cellPoint[0] >= s.lightMap.Helper.width {
+	if cellPoint[1] >= s.lightMap.Helper.Height ||
+		cellPoint[0] >= s.lightMap.Helper.Width {
 		return false
 	}
 	return s.cells[cellPoint[1]][cellPoint[0]]

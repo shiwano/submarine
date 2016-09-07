@@ -9,47 +9,47 @@ import (
 type cellPoint [2]int
 
 type helper struct {
-	cellSize float64
+	CellSize float64 `json:"cellSize"`
 
-	lightRange    float64
-	lightRangeSqr float64
-	lightDiameter float64
+	LightRange    float64 `json:"lightRange"`
+	LightRangeSqr float64 `json:"lightRangeSqr"`
+	LightDiameter float64 `json:"lightDiameter"`
 
-	minX int
-	minY int
-	maxX int
-	maxY int
+	MinX int `json:"minX"`
+	MinY int `json:"minY"`
+	MaxX int `json:"maxX"`
+	MaxY int `json:"maxY"`
 
-	width  int
-	height int
+	Width  int `json:"width"`
+	Height int `json:"height"`
 }
 
 func newHelper(navMesh *navmesh.NavMesh, cellSize float64, lightRange float64) *helper {
 	h := &helper{
-		cellSize:      cellSize,
-		lightRange:    lightRange,
-		lightRangeSqr: lightRange * lightRange,
-		lightDiameter: lightRange*2 + 1,
-		minX:          int(math.Floor(navMesh.Mesh.Rect.Min[0] / cellSize)),
-		minY:          int(math.Floor(navMesh.Mesh.Rect.Min[1] / cellSize)),
-		maxX:          int(math.Ceil(navMesh.Mesh.Rect.Max[0] / cellSize)),
-		maxY:          int(math.Ceil(navMesh.Mesh.Rect.Max[1] / cellSize)),
+		CellSize:      cellSize,
+		LightRange:    lightRange,
+		LightRangeSqr: lightRange * lightRange,
+		LightDiameter: lightRange*2 + 1,
+		MinX:          int(math.Floor(navMesh.Mesh.Rect.Min[0] / cellSize)),
+		MinY:          int(math.Floor(navMesh.Mesh.Rect.Min[1] / cellSize)),
+		MaxX:          int(math.Ceil(navMesh.Mesh.Rect.Max[0] / cellSize)),
+		MaxY:          int(math.Ceil(navMesh.Mesh.Rect.Max[1] / cellSize)),
 	}
-	h.width = h.maxX - h.minX + 1
-	h.height = h.maxY - h.minY + 1
+	h.Width = h.MaxX - h.MinX + 1
+	h.Height = h.MaxY - h.MinY + 1
 	return h
 }
 
 func (h *helper) cellPointByNavMeshPoint(point *vec2.T) cellPoint {
 	return cellPoint{
-		int(math.Floor(point[0]/h.cellSize-float64(h.minX)) + 0.5),
-		int(math.Floor(point[1]/h.cellSize-float64(h.minY)) + 0.5),
+		int(math.Floor(point[0]/h.CellSize-float64(h.MinX)) + 0.5),
+		int(math.Floor(point[1]/h.CellSize-float64(h.MinY)) + 0.5),
 	}
 }
 
 func (h *helper) navMeshPointByCellPoint(cellPoint *cellPoint) *vec2.T {
 	return &vec2.T{
-		float64(cellPoint[0]+h.minX) * h.cellSize,
-		float64(cellPoint[1]+h.minY) * h.cellSize,
+		float64(cellPoint[0]+h.MinX) * h.CellSize,
+		float64(cellPoint[1]+h.MinY) * h.CellSize,
 	}
 }

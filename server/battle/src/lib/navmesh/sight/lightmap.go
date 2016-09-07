@@ -18,13 +18,13 @@ func GenerateLightMap(navMesh *navmesh.NavMesh, cellSize float64, lightRange flo
 	helper := newHelper(navMesh, cellSize, lightRange)
 	lm := &LightMap{
 		Helper: helper,
-		Lights: make([][]*light, helper.height),
+		Lights: make([][]*light, helper.Height),
 	}
 
-	for cellY := 0; cellY < lm.Helper.height; cellY++ {
-		lm.Lights[cellY] = make([]*light, lm.Helper.width)
+	for cellY := 0; cellY < lm.Helper.Height; cellY++ {
+		lm.Lights[cellY] = make([]*light, lm.Helper.Width)
 
-		for cellX := 0; cellX < lm.Helper.width; cellX++ {
+		for cellX := 0; cellX < lm.Helper.Width; cellX++ {
 			cellPoint := &cellPoint{cellX, cellY}
 			point := lm.Helper.navMeshPointByCellPoint(cellPoint)
 
@@ -58,8 +58,8 @@ func (lm *LightMap) ToJSON() ([]byte, error) {
 
 func (lm *LightMap) lightByNavMeshPoint(point *vec2.T) *light {
 	cellPoint := lm.Helper.cellPointByNavMeshPoint(point)
-	if cellPoint[1] >= lm.Helper.height ||
-		cellPoint[0] >= lm.Helper.width {
+	if cellPoint[1] >= lm.Helper.Height ||
+		cellPoint[0] >= lm.Helper.Width {
 		return nil
 	}
 	return lm.Lights[cellPoint[1]][cellPoint[0]]

@@ -15,16 +15,16 @@ func TestHelper(t *testing.T) {
 
 		Convey(".newHelper", func() {
 			Convey("should set NavMesh's information", func() {
-				So(h.cellSize, ShouldEqual, 1)
-				So(h.lightRange, ShouldEqual, 3)
-				So(h.lightRangeSqr, ShouldEqual, 9)
-				So(h.lightDiameter, ShouldEqual, 7)
-				So(h.minX, ShouldEqual, -10)
-				So(h.minY, ShouldEqual, -14)
-				So(h.maxX, ShouldEqual, 10)
-				So(h.maxY, ShouldEqual, 7)
-				So(h.width, ShouldEqual, 21)
-				So(h.height, ShouldEqual, 22)
+				So(h.CellSize, ShouldEqual, 1)
+				So(h.LightRange, ShouldEqual, 3)
+				So(h.LightRangeSqr, ShouldEqual, 9)
+				So(h.LightDiameter, ShouldEqual, 7)
+				So(h.MinX, ShouldEqual, -10)
+				So(h.MinY, ShouldEqual, -14)
+				So(h.MaxX, ShouldEqual, 10)
+				So(h.MaxY, ShouldEqual, 7)
+				So(h.Width, ShouldEqual, 21)
+				So(h.Height, ShouldEqual, 22)
 			})
 		})
 
@@ -37,7 +37,7 @@ func TestHelper(t *testing.T) {
 				So(p, ShouldResemble, cellPoint{10, 14})
 
 				p = h.cellPointByNavMeshPoint(&vec2.T{10, 7})
-				So(p, ShouldResemble, cellPoint{h.width - 1, h.height - 1})
+				So(p, ShouldResemble, cellPoint{h.Width - 1, h.Height - 1})
 			})
 		})
 
@@ -49,7 +49,7 @@ func TestHelper(t *testing.T) {
 				p = h.navMeshPointByCellPoint(&cellPoint{10, 14})
 				So(p, ShouldResemble, &vec2.T{0, 0})
 
-				p = h.navMeshPointByCellPoint(&cellPoint{h.width - 1, h.height - 1})
+				p = h.navMeshPointByCellPoint(&cellPoint{h.Width - 1, h.Height - 1})
 				So(p, ShouldResemble, &vec2.T{10, 7})
 			})
 		})
