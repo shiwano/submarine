@@ -1,6 +1,8 @@
 package navmesh
 
 import (
+	"crypto/sha256"
+	"encoding/hex"
 	"math"
 
 	"github.com/ungerik/go3d/float64/vec2"
@@ -30,4 +32,9 @@ func calculateVectorLengthSqr(src, dest *vec2.T) float64 {
 
 func cross(a, b *vec2.T) float64 {
 	return a[1]*b[0] - a[0]*b[1]
+}
+
+func calculateSHA256(b []byte) string {
+	bytes := sha256.Sum256(b)
+	return hex.EncodeToString(bytes[:])
 }

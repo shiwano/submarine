@@ -3,8 +3,8 @@ package navmesh
 import (
 	"encoding/json"
 	"fmt"
+	"io/ioutil"
 	"math"
-	"os"
 
 	"github.com/ungerik/go3d/float64/vec2"
 )
@@ -21,6 +21,7 @@ type meshData struct {
 
 // Mesh represents a navmesh.
 type Mesh struct {
+	Version           string
 	Rect              *vec2.Rect
 	vertices          []*vec2.T
 	triangles         []*Triangle
@@ -32,20 +33,21 @@ type Mesh struct {
 
 // LoadMeshFromJSONFile loads a mesh data from a JSON file.
 func LoadMeshFromJSONFile(jsonPath string) (*Mesh, error) {
-	f, err := os.Open(jsonPath)
-	defer f.Close()
+	b, err := ioutil.ReadFile(jsonPath)
 	if err != nil {
 		return nil, err
 	}
 
 	rawMesh := new(meshData)
-	if err := json.NewDecoder(f).Decode(rawMesh); err != nil {
+	if err := json.Unmarshal(b, rawMesh); err != nil {
 		return nil, err
 	}
 
+	m := new(Mesh)
+	m.Version = calculateSHA256(b)
+
 	// Vertices
 	verticesLength := len(rawMesh.Vertices)
-	m := new(Mesh)
 	m.Rect = new(vec2.Rect)
 	m.vertices = make([]*vec2.T, verticesLength)
 	for i, v := range rawMesh.Vertices {

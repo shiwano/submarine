@@ -14,6 +14,7 @@ func TestMesh(t *testing.T) {
 		Convey(".LoadMeshFromJSONFile", func() {
 			Convey("with a valid json path", func() {
 				Convey("should creates a mesh", func() {
+					So(m.Version, ShouldEqual, "2c51e198ca05edc8c7ef18f2a1a8174c864980d7328e439e2263d1595acadb35")
 					So(m.Rect, ShouldResemble, &vec2.Rect{
 						Min: vec2.T{-10, -14},
 						Max: vec2.T{10, 7},
