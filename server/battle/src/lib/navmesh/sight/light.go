@@ -15,9 +15,11 @@ func newLight(navMesh *navmesh.NavMesh, helper *helper, center *vec2.T) *light {
 	if !navMesh.ContainsPoint(center) {
 		return l
 	}
+	lightRangeSqr := helper.LightRange * helper.LightRange
+	lightDiameter := helper.LightRange*2 + 1
 
-	for lightX := 0.0; lightX <= helper.LightDiameter; lightX += helper.CellSize {
-		for lightY := 0.0; lightY <= helper.LightDiameter; lightY += helper.CellSize {
+	for lightX := 0.0; lightX <= lightDiameter; lightX += helper.CellSize {
+		for lightY := 0.0; lightY <= lightDiameter; lightY += helper.CellSize {
 			point := &vec2.T{
 				lightX - helper.LightRange + center[0],
 				lightY - helper.LightRange + center[1],
@@ -26,7 +28,7 @@ func newLight(navMesh *navmesh.NavMesh, helper *helper, center *vec2.T) *light {
 				continue
 			}
 			vec := vec2.Sub(point, center)
-			if vec.LengthSqr() > float64(helper.LightRangeSqr) {
+			if vec.LengthSqr() > float64(lightRangeSqr) {
 				continue
 			}
 			if navMesh.Raycast(center, &vec, navmesh.LayerAll) != nil {

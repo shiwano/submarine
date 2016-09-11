@@ -18,8 +18,6 @@ func TestHelper(t *testing.T) {
 			Convey("should set NavMesh's information", func() {
 				So(h.CellSize, ShouldEqual, 1)
 				So(h.LightRange, ShouldEqual, 3)
-				So(h.LightRangeSqr, ShouldEqual, 9)
-				So(h.LightDiameter, ShouldEqual, 7)
 				So(h.MinX, ShouldEqual, -10)
 				So(h.MinY, ShouldEqual, -14)
 				So(h.MaxX, ShouldEqual, 10)

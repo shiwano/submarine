@@ -10,11 +10,8 @@ import (
 type cellPoint [2]int
 
 type helper struct {
-	CellSize float64 `json:"cellSize"`
-
-	LightRange    float64 `json:"lightRange"`
-	LightRangeSqr float64 `json:"lightRangeSqr"`
-	LightDiameter float64 `json:"lightDiameter"`
+	CellSize   float64 `json:"cellSize"`
+	LightRange float64 `json:"lightRange"`
 
 	MinX int `json:"minX"`
 	MinY int `json:"minY"`
@@ -27,14 +24,12 @@ type helper struct {
 
 func newHelper(navMesh *navmesh.NavMesh, cellSize float64, lightRange float64) *helper {
 	h := &helper{
-		CellSize:      cellSize,
-		LightRange:    lightRange,
-		LightRangeSqr: lightRange * lightRange,
-		LightDiameter: lightRange*2 + 1,
-		MinX:          int(math.Floor(navMesh.Mesh.Rect.Min[0] / cellSize)),
-		MinY:          int(math.Floor(navMesh.Mesh.Rect.Min[1] / cellSize)),
-		MaxX:          int(math.Ceil(navMesh.Mesh.Rect.Max[0] / cellSize)),
-		MaxY:          int(math.Ceil(navMesh.Mesh.Rect.Max[1] / cellSize)),
+		CellSize:   cellSize,
+		LightRange: lightRange,
+		MinX:       int(math.Floor(navMesh.Mesh.Rect.Min[0] / cellSize)),
+		MinY:       int(math.Floor(navMesh.Mesh.Rect.Min[1] / cellSize)),
+		MaxX:       int(math.Ceil(navMesh.Mesh.Rect.Max[0] / cellSize)),
+		MaxY:       int(math.Ceil(navMesh.Mesh.Rect.Max[1] / cellSize)),
 	}
 	h.Width = h.MaxX - h.MinX + 1
 	h.Height = h.MaxY - h.MinY + 1
