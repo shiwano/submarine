@@ -7,10 +7,11 @@ import (
 	battleAPI "app/typhenapi/type/submarine/battle"
 	rtmAPI "app/typhenapi/websocket/submarine"
 	"fmt"
-	"github.com/gorilla/websocket"
-	"github.com/shiwano/websocket-conn"
 	"lib/currentmillis"
 	"net/http"
+
+	"github.com/gorilla/websocket"
+	"github.com/shiwano/websocket-conn"
 )
 
 // Session represents a network session that has user infos.

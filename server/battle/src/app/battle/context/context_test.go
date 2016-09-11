@@ -4,9 +4,10 @@ import (
 	"app/battle/event"
 	"app/resource"
 	battleAPI "app/typhenapi/type/submarine/battle"
-	. "github.com/smartystreets/goconvey/convey"
 	"testing"
 	"time"
+
+	. "github.com/smartystreets/goconvey/convey"
 )
 
 func TestContextTest(t *testing.T) {

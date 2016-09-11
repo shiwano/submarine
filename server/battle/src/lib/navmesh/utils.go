@@ -1,8 +1,9 @@
 package navmesh
 
 import (
-	"github.com/ungerik/go3d/float64/vec2"
 	"math"
+
+	"github.com/ungerik/go3d/float64/vec2"
 )
 
 // FloatEpsilon is a tolerance for comparing floating point values.

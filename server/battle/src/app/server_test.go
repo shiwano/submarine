@@ -1,8 +1,9 @@
 package main_test
 
 import (
-	. "github.com/smartystreets/goconvey/convey"
 	"testing"
+
+	. "github.com/smartystreets/goconvey/convey"
 )
 
 func TestServer(t *testing.T) {

@@ -5,6 +5,7 @@ import (
 	"app/battle/event"
 	"app/logger"
 	battleAPI "app/typhenapi/type/submarine/battle"
+
 	"github.com/ungerik/go3d/float64/vec2"
 )
 

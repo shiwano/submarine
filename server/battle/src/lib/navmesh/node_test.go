@@ -2,8 +2,9 @@ package navmesh
 
 import (
 	"container/heap"
-	. "github.com/smartystreets/goconvey/convey"
 	"testing"
+
+	. "github.com/smartystreets/goconvey/convey"
 )
 
 func TestNodeHeap(t *testing.T) {

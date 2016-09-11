@@ -1,8 +1,9 @@
 package sight
 
 import (
-	"github.com/ungerik/go3d/float64/vec2"
 	"strings"
+
+	"github.com/ungerik/go3d/float64/vec2"
 )
 
 // Sight represents the sight of the battle.

@@ -1,11 +1,12 @@
 package sight
 
 import (
-	. "github.com/smartystreets/goconvey/convey"
-	"github.com/ungerik/go3d/float64/vec2"
 	"lib/navmesh"
 	"strings"
 	"testing"
+
+	. "github.com/smartystreets/goconvey/convey"
+	"github.com/ungerik/go3d/float64/vec2"
 )
 
 func TestSight(t *testing.T) {

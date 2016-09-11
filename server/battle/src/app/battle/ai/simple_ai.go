@@ -2,8 +2,9 @@ package ai
 
 import (
 	"app/battle/context"
-	"github.com/ungerik/go3d/float64/vec2"
 	"math"
+
+	"github.com/ungerik/go3d/float64/vec2"
 )
 
 // SimpleAI represents a simple battle AI.

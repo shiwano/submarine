@@ -2,9 +2,10 @@ package sight
 
 import (
 	"encoding/json"
-	"github.com/ungerik/go3d/float64/vec2"
 	"lib/navmesh"
 	"os"
+
+	"github.com/ungerik/go3d/float64/vec2"
 )
 
 // LightMap represents a map that includes lights by a point.

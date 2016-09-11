@@ -1,8 +1,9 @@
 package context
 
 import (
-	. "github.com/smartystreets/goconvey/convey"
 	"testing"
+
+	. "github.com/smartystreets/goconvey/convey"
 )
 
 func TestActorParams(t *testing.T) {

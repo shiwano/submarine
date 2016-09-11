@@ -4,10 +4,11 @@ import (
 	"app/config"
 	"app/logger"
 	webapi "app/typhenapi/web/submarine"
-	"github.com/gin-gonic/gin"
 	"io"
 	"net/http"
 	"strconv"
+
+	"github.com/gin-gonic/gin"
 )
 
 // Server represents a battle server.

@@ -2,9 +2,10 @@ package battle
 
 import (
 	"app/resource"
-	. "github.com/smartystreets/goconvey/convey"
 	"testing"
 	"time"
+
+	. "github.com/smartystreets/goconvey/convey"
 )
 
 func TestBattle(t *testing.T) {

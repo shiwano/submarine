@@ -2,8 +2,9 @@ package ai
 
 import (
 	"app/util"
-	"github.com/ungerik/go3d/float64/vec2"
 	"math"
+
+	"github.com/ungerik/go3d/float64/vec2"
 )
 
 const rad2Deg = 180 / math.Pi

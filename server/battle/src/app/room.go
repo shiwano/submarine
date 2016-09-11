@@ -9,8 +9,9 @@ import (
 	battleAPI "app/typhenapi/type/submarine/battle"
 	webAPI "app/typhenapi/web/submarine"
 	"fmt"
-	"github.com/tevino/abool"
 	"time"
+
+	"github.com/tevino/abool"
 )
 
 // Room represents a network group for battle.

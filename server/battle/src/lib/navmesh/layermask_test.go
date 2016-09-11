@@ -1,8 +1,9 @@
 package navmesh
 
 import (
-	. "github.com/smartystreets/goconvey/convey"
 	"testing"
+
+	. "github.com/smartystreets/goconvey/convey"
 )
 
 func TestLayerMask(t *testing.T) {

@@ -6,9 +6,10 @@ import (
 	battleAPI "app/typhenapi/type/submarine/battle"
 	webAPI "app/typhenapi/web/submarine"
 	webAPI_battle "app/typhenapi/web/submarine/battle"
-	. "github.com/smartystreets/goconvey/convey"
 	"net/http"
 	"testing"
+
+	. "github.com/smartystreets/goconvey/convey"
 )
 
 func TestWebAPI(t *testing.T) {

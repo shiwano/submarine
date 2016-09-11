@@ -1,10 +1,11 @@
 package ai
 
 import (
-	. "github.com/smartystreets/goconvey/convey"
-	"github.com/ungerik/go3d/float64/vec2"
 	"math"
 	"testing"
+
+	. "github.com/smartystreets/goconvey/convey"
+	"github.com/ungerik/go3d/float64/vec2"
 )
 
 func TestNavigator(t *testing.T) {

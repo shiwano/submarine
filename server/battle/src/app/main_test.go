@@ -8,12 +8,13 @@ import (
 	websocketapi "app/typhenapi/websocket/submarine"
 	"bytes"
 	"errors"
-	"github.com/gin-gonic/gin"
-	"github.com/shiwano/websocket-conn"
 	"io/ioutil"
 	"net/http"
 	"net/http/httptest"
 	"strings"
+
+	"github.com/gin-gonic/gin"
+	"github.com/shiwano/websocket-conn"
 )
 
 type clientSession struct {

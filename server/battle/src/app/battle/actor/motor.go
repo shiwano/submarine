@@ -3,10 +3,11 @@ package actor
 import (
 	"app/battle/context"
 	battleAPI "app/typhenapi/type/submarine/battle"
-	"github.com/ungerik/go3d/float64/vec2"
 	"lib/currentmillis"
 	"math"
 	"time"
+
+	"github.com/ungerik/go3d/float64/vec2"
 )
 
 const (

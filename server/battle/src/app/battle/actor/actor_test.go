@@ -2,8 +2,9 @@ package actor
 
 import (
 	"app/battle/context"
-	. "github.com/smartystreets/goconvey/convey"
 	"testing"
+
+	. "github.com/smartystreets/goconvey/convey"
 )
 
 func TestActor(t *testing.T) {

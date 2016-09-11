@@ -1,12 +1,13 @@
 package util
 
 import (
-	. "github.com/smartystreets/goconvey/convey"
 	"math/rand"
 	"reflect"
 	"testing"
 	"testing/quick"
 	"time"
+
+	. "github.com/smartystreets/goconvey/convey"
 )
 
 func TestUtil(t *testing.T) {

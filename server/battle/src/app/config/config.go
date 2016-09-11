@@ -1,10 +1,11 @@
 package config
 
 import (
-	"gopkg.in/yaml.v2"
 	"io/ioutil"
 	"path/filepath"
 	"runtime"
+
+	"gopkg.in/yaml.v2"
 )
 
 // Config is the loaded server config.

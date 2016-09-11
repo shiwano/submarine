@@ -2,9 +2,10 @@ package context
 
 import (
 	"fmt"
-	"github.com/ungerik/go3d/float64/vec2"
 	"lib/navmesh"
 	"time"
+
+	"github.com/ungerik/go3d/float64/vec2"
 )
 
 // Player represents a player in the battle.

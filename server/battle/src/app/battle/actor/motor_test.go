@@ -3,10 +3,11 @@ package actor
 import (
 	"app/battle/context"
 	"app/resource"
-	. "github.com/smartystreets/goconvey/convey"
-	"github.com/ungerik/go3d/float64/vec2"
 	"testing"
 	"time"
+
+	. "github.com/smartystreets/goconvey/convey"
+	"github.com/ungerik/go3d/float64/vec2"
 )
 
 const timeLayout = "15:04:05.000"

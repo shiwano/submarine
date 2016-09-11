@@ -3,9 +3,10 @@ package main_test
 import (
 	api "app/typhenapi/type/submarine"
 	battleAPI "app/typhenapi/type/submarine/battle"
-	. "github.com/smartystreets/goconvey/convey"
 	"lib/currentmillis"
 	"testing"
+
+	. "github.com/smartystreets/goconvey/convey"
 )
 
 func TestRoom(t *testing.T) {

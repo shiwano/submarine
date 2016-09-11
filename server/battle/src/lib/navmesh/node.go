@@ -2,6 +2,7 @@ package navmesh
 
 import (
 	"container/heap"
+
 	"github.com/ungerik/go3d/float64/vec2"
 )
 

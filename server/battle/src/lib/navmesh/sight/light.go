@@ -1,8 +1,9 @@
 package sight
 
 import (
-	"github.com/ungerik/go3d/float64/vec2"
 	"lib/navmesh"
+
+	"github.com/ungerik/go3d/float64/vec2"
 )
 
 type light struct {

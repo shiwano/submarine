@@ -1,8 +1,9 @@
 package resource
 
 import (
-	. "github.com/smartystreets/goconvey/convey"
 	"testing"
+
+	. "github.com/smartystreets/goconvey/convey"
 )
 
 func TestLoader(t *testing.T) {

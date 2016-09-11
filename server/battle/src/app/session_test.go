@@ -2,8 +2,9 @@ package main_test
 
 import (
 	battleAPI "app/typhenapi/type/submarine/battle"
-	. "github.com/smartystreets/goconvey/convey"
 	"testing"
+
+	. "github.com/smartystreets/goconvey/convey"
 )
 
 func TestSession(t *testing.T) {

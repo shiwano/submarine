@@ -2,8 +2,9 @@ package ai
 
 import (
 	"app/battle/context"
-	. "github.com/smartystreets/goconvey/convey"
 	"testing"
+
+	. "github.com/smartystreets/goconvey/convey"
 )
 
 func TestAI(t *testing.T) {

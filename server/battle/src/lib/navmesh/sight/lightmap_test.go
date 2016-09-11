@@ -1,10 +1,11 @@
 package sight
 
 import (
-	. "github.com/smartystreets/goconvey/convey"
 	"io/ioutil"
 	"lib/navmesh"
 	"testing"
+
+	. "github.com/smartystreets/goconvey/convey"
 )
 
 func TestLightMap(t *testing.T) {

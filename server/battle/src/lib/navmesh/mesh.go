@@ -3,9 +3,10 @@ package navmesh
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/ungerik/go3d/float64/vec2"
 	"math"
 	"os"
+
+	"github.com/ungerik/go3d/float64/vec2"
 )
 
 type vertexData struct {

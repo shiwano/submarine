@@ -7,10 +7,11 @@ import (
 	"app/battle/event"
 	api "app/typhenapi/type/submarine"
 	battleAPI "app/typhenapi/type/submarine/battle"
-	"github.com/tevino/abool"
-	"github.com/ungerik/go3d/float64/vec2"
 	"lib/navmesh"
 	"time"
+
+	"github.com/tevino/abool"
+	"github.com/ungerik/go3d/float64/vec2"
 )
 
 // Battle represents a battle.

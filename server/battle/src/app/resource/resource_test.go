@@ -1,9 +1,10 @@
 package resource
 
 import (
-	. "github.com/smartystreets/goconvey/convey"
 	"os"
 	"testing"
+
+	. "github.com/smartystreets/goconvey/convey"
 )
 
 func TestResource(t *testing.T) {
