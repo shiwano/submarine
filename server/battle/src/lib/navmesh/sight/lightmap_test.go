@@ -25,6 +25,7 @@ func TestLightMap(t *testing.T) {
 					}
 				}
 				So(lightsCount, ShouldEqual, 313)
+				So(lm.MeshVersion, ShouldEqual, mesh.Version)
 			})
 		})
 
@@ -42,6 +43,7 @@ func TestLightMap(t *testing.T) {
 					}
 				}
 				So(lightsCount, ShouldEqual, 313)
+				So(lm.MeshVersion, ShouldEqual, mesh.Version)
 			})
 		})
 

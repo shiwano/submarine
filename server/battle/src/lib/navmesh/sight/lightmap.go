@@ -10,16 +10,18 @@ import (
 
 // LightMap represents a map that includes lights by a point.
 type LightMap struct {
-	Helper *helper    `json:"helper"`
-	Lights [][]*light `json:"lights"`
+	MeshVersion string
+	Helper      *helper    `json:"helper"`
+	Lights      [][]*light `json:"lights"`
 }
 
 // GenerateLightMap creates a LightMap that has the pre-calculated lights.
 func GenerateLightMap(navMesh *navmesh.NavMesh, cellSize float64, lightRange float64) *LightMap {
 	helper := newHelper(navMesh, cellSize, lightRange)
 	lm := &LightMap{
-		Helper: helper,
-		Lights: make([][]*light, helper.Height),
+		MeshVersion: navMesh.Mesh.Version,
+		Helper:      helper,
+		Lights:      make([][]*light, helper.Height),
 	}
 
 	for cellY := 0; cellY < lm.Helper.Height; cellY++ {
