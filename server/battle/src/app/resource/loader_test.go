@@ -27,5 +27,23 @@ func TestLoader(t *testing.T) {
 				})
 			})
 		})
+
+		Convey("#LoadLightMap", func() {
+			Convey("with valid stage code", func() {
+				Convey("should return the specified light map", func() {
+					lightMap, err := loader.LoadLightMap(1, 2, 3)
+					So(lightMap, ShouldNotBeNil)
+					So(err, ShouldBeNil)
+				})
+			})
+
+			Convey("with invalid stage code", func() {
+				Convey("should return nil", func() {
+					lightMap, err := loader.LoadLightMap(-1, 2, 3)
+					So(lightMap, ShouldBeNil)
+					So(err, ShouldNotBeNil)
+				})
+			})
+		})
 	})
 }

@@ -16,7 +16,7 @@ type LightMap struct {
 }
 
 // GenerateLightMap creates a LightMap that has the pre-calculated lights.
-func GenerateLightMap(navMesh *navmesh.NavMesh, cellSize float64, lightRange float64) *LightMap {
+func GenerateLightMap(navMesh *navmesh.NavMesh, cellSize, lightRange float64) *LightMap {
 	helper := newHelper(navMesh, cellSize, lightRange)
 	lm := &LightMap{
 		MeshVersion: navMesh.Mesh.Version,
