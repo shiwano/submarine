@@ -13,7 +13,7 @@ import (
 
 func TestJudge(t *testing.T) {
 	Convey("judge", t, func() {
-		stageMesh, _ := resource.Loader.LoadStageMesh(1)
+		stageMesh, _ := resource.Loader.LoadMesh(1)
 		j := newJudge(context.NewContext(stageMesh), time.Second*10)
 
 		Convey("#isBattleFinished", func() {

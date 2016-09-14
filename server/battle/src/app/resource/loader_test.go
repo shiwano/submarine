@@ -13,7 +13,7 @@ func TestLoader(t *testing.T) {
 		Convey("#LoadStageMesh", func() {
 			Convey("with valid stage code", func() {
 				Convey("should return the specified stage mesh", func() {
-					mesh, err := loader.LoadStageMesh(1)
+					mesh, err := loader.LoadMesh(1)
 					So(mesh, ShouldNotBeNil)
 					So(err, ShouldBeNil)
 				})
@@ -21,7 +21,7 @@ func TestLoader(t *testing.T) {
 
 			Convey("with invalid stage code", func() {
 				Convey("should return nil", func() {
-					mesh, err := loader.LoadStageMesh(-1)
+					mesh, err := loader.LoadMesh(-1)
 					So(mesh, ShouldBeNil)
 					So(err, ShouldNotBeNil)
 				})

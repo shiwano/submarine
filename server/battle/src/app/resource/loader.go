@@ -29,8 +29,8 @@ func newLoader() *loader {
 	}
 }
 
-// LoadStageMesh loads the specified stage mesh.
-func (l *loader) LoadStageMesh(code int64) (*navmesh.Mesh, error) {
+// LoadMesh loads the specified stage mesh.
+func (l *loader) LoadMesh(code int64) (*navmesh.Mesh, error) {
 	l.stagesMeshesMutex.Lock()
 	defer l.stagesMeshesMutex.Unlock()
 
@@ -52,7 +52,7 @@ func (l *loader) LoadLightMap(code int64, cellSize, lightRange float64) (*sight.
 	l.lightMapsMutex.Lock()
 	defer l.lightMapsMutex.Unlock()
 
-	mesh, err := l.LoadStageMesh(code)
+	mesh, err := l.LoadMesh(code)
 	if err != nil {
 		return nil, err
 	}

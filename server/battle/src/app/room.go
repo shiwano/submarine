@@ -46,7 +46,7 @@ func newRoom(id int64) (*Room, error) {
 	}
 
 	// TODO: Specify relevant stage code.
-	stageMesh, err := resource.Loader.LoadStageMesh(1)
+	stageMesh, err := resource.Loader.LoadMesh(1)
 	if err != nil {
 		return nil, err
 	}

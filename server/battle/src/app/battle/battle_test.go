@@ -10,7 +10,7 @@ import (
 
 func TestBattle(t *testing.T) {
 	Convey("Battle", t, func() {
-		stageMesh, _ := resource.Loader.LoadStageMesh(1)
+		stageMesh, _ := resource.Loader.LoadMesh(1)
 		b := New(60*time.Second, stageMesh)
 
 		Convey("#EnterUser", func() {
