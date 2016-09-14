@@ -16,6 +16,7 @@ const (
 	MessageType_Start               int32 = -1240750730
 	MessageType_Finish              int32 = -162791524
 	MessageType_Actor               int32 = -1257891252
+	MessageType_Visibility          int32 = -1278494184
 	MessageType_Movement            int32 = 1298310360
 	MessageType_Destruction         int32 = -1118469016
 	MessageType_StartRequest        int32 = 504335322
@@ -40,6 +41,7 @@ type WebSocketAPI struct {
 	StartHandler               func(message *submarine_battle.Start)
 	FinishHandler              func(message *submarine_battle.Finish)
 	ActorHandler               func(message *submarine_battle.Actor)
+	VisibilityHandler          func(message *submarine_battle.Visibility)
 	MovementHandler            func(message *submarine_battle.Movement)
 	DestructionHandler         func(message *submarine_battle.Destruction)
 	StartRequestHandler        func(message *submarine_battle.StartRequestObject)
@@ -76,6 +78,8 @@ func (api *WebSocketAPI) Send(body typhenapi.Type) (message *typhenapi.Message, 
 		message, err = typhenapi.NewMessage(api.serializer, MessageType_Finish, messageBody)
 	case *submarine_battle.Actor:
 		message, err = typhenapi.NewMessage(api.serializer, MessageType_Actor, messageBody)
+	case *submarine_battle.Visibility:
+		message, err = typhenapi.NewMessage(api.serializer, MessageType_Visibility, messageBody)
 	case *submarine_battle.Movement:
 		message, err = typhenapi.NewMessage(api.serializer, MessageType_Movement, messageBody)
 	case *submarine_battle.Destruction:
@@ -213,6 +217,26 @@ func (api *WebSocketAPI) SendFinish(finish *submarine_battle.Finish) error {
 // SendActor sends a actor message.
 func (api *WebSocketAPI) SendActor(actor *submarine_battle.Actor) error {
 	message, err := typhenapi.NewMessage(api.serializer, MessageType_Actor, actor)
+
+	if err != nil {
+		if api.errorHandler != nil {
+			api.errorHandler(err)
+		}
+		return err
+	}
+
+	if err := api.session.Send(message.Bytes()); err != nil {
+		if api.errorHandler != nil {
+			api.errorHandler(err)
+		}
+		return err
+	}
+	return nil
+}
+
+// SendVisibility sends a visibility message.
+func (api *WebSocketAPI) SendVisibility(visibility *submarine_battle.Visibility) error {
+	message, err := typhenapi.NewMessage(api.serializer, MessageType_Visibility, visibility)
 
 	if err != nil {
 		if api.errorHandler != nil {
@@ -556,6 +580,25 @@ func (api *WebSocketAPI) DispatchMessageEvent(data []byte) error {
 
 		if api.ActorHandler != nil {
 			api.ActorHandler(typhenType)
+		}
+	case MessageType_Visibility:
+		typhenType := new(submarine_battle.Visibility)
+		if err := api.serializer.Deserialize(message.Body, typhenType); err != nil {
+			if api.errorHandler != nil {
+				api.errorHandler(err)
+			}
+			return err
+		}
+
+		if err := typhenType.Coerce(); err != nil {
+			if api.errorHandler != nil {
+				api.errorHandler(err)
+			}
+			return err
+		}
+
+		if api.VisibilityHandler != nil {
+			api.VisibilityHandler(typhenType)
 		}
 	case MessageType_Movement:
 		typhenType := new(submarine_battle.Movement)

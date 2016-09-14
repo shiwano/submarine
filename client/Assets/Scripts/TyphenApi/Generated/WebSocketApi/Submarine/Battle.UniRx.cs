@@ -31,6 +31,10 @@ namespace TyphenApi.WebSocketApi.Parts.Submarine
         {
             return Observable.FromEvent<TyphenApi.Type.Submarine.Battle.Actor>(h => OnActorReceive += h, h => OnActorReceive -= h);
         }
+        public IObservable<TyphenApi.Type.Submarine.Battle.Visibility> OnVisibilityReceiveAsObservable()
+        {
+            return Observable.FromEvent<TyphenApi.Type.Submarine.Battle.Visibility>(h => OnVisibilityReceive += h, h => OnVisibilityReceive -= h);
+        }
         public IObservable<TyphenApi.Type.Submarine.Battle.Movement> OnMovementReceiveAsObservable()
         {
             return Observable.FromEvent<TyphenApi.Type.Submarine.Battle.Movement>(h => OnMovementReceive += h, h => OnMovementReceive -= h);

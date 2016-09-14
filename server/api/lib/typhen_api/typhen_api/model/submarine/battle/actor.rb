@@ -8,5 +8,6 @@ module TyphenApi::Model::Submarine::Battle
     attribute :user_id, Integer, :required => true
     attribute :type, TyphenApi::Model::Submarine::Battle::ActorType, :required => true
     attribute :movement, TyphenApi::Model::Submarine::Battle::Movement, :required => true
+    attribute :is_visible, Boolean, :required => true
   end
 end

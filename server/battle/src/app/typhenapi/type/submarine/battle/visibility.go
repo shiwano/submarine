@@ -9,20 +9,15 @@ import (
 
 var _ = errors.New
 
-// Actor is a kind of TyphenAPI type.
-type Actor struct {
-	Id        int64     `codec:"id"`
-	UserId    int64     `codec:"user_id"`
-	Type      ActorType `codec:"type"`
-	Movement  *Movement `codec:"movement"`
+// Visibility is a kind of TyphenAPI type.
+type Visibility struct {
+	ActorId   int64     `codec:"actor_id"`
 	IsVisible bool      `codec:"is_visible"`
+	Movement  *Movement `codec:"movement"`
 }
 
 // Coerce the fields.
-func (t *Actor) Coerce() error {
-	if err := t.Type.Coerce(); err != nil {
-		return err
-	}
+func (t *Visibility) Coerce() error {
 	if t.Movement == nil {
 		return errors.New("Movement should not be empty")
 	}
@@ -30,7 +25,7 @@ func (t *Actor) Coerce() error {
 }
 
 // Bytes creates the byte array.
-func (t *Actor) Bytes(serializer typhenapi.Serializer) ([]byte, error) {
+func (t *Visibility) Bytes(serializer typhenapi.Serializer) ([]byte, error) {
 	if err := t.Coerce(); err != nil {
 		return nil, err
 	}
