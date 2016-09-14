@@ -34,6 +34,13 @@ declare module Submarine.Battle {
     userId: integer;
     type: ActorType;
     movement: Movement;
+    isVisible: boolean;
+  }
+
+  interface Visibility {
+    actorId: integer;
+    isVisible: boolean;
+    movement: Movement;
   }
 
   interface Movement {
@@ -56,6 +63,7 @@ declare module Submarine.Battle {
   var finish: Finish;
 
   var actor: Actor;
+  var visibility: Visibility;
   var movement: Movement;
   var destruction: Destruction;
 
