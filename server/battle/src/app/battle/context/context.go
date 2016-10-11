@@ -3,26 +3,32 @@ package context
 import (
 	"app/battle/event"
 	"lib/navmesh"
+	"lib/navmesh/sight"
 	"time"
 )
 
 // Context represents a battle context.
 type Context struct {
-	CreatedAt time.Time
-	StartedAt time.Time
-	Now       time.Time
-	Event     *event.Emitter
-	Stage     *navmesh.NavMesh
-	container *container
+	CreatedAt    time.Time
+	StartedAt    time.Time
+	Now          time.Time
+	Event        *event.Emitter
+	Stage        *navmesh.NavMesh
+	SightsByTeam map[navmesh.LayerMask]*sight.Sight
+	container    *container
 }
 
 // NewContext creates a contest.
-func NewContext(stageMesh *navmesh.Mesh) *Context {
+func NewContext(stageMesh *navmesh.Mesh, lightMap *sight.LightMap) *Context {
 	c := &Context{
-		CreatedAt: time.Now(),
-		Event:     event.New(),
-		Stage:     navmesh.New(stageMesh),
-		container: newContainer(),
+		CreatedAt:    time.Now(),
+		Event:        event.New(),
+		Stage:        navmesh.New(stageMesh),
+		SightsByTeam: make(map[navmesh.LayerMask]*sight.Sight),
+		container:    newContainer(),
+	}
+	for _, layer := range TeamLayers {
+		c.SightsByTeam[layer] = sight.New(lightMap)
 	}
 	c.Event.On(event.ActorCreate, c.onActorCreate)
 	c.Event.On(event.ActorDestroy, c.onActorDestroy)

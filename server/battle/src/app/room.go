@@ -36,7 +36,7 @@ type Room struct {
 func newRoom(id int64) (*Room, error) {
 	webAPI := NewWebAPI("http://localhost:3000")
 
-	// TODO: Validation for creatable the room in the battle server.
+	// TODO: Validate whether the battle server can create the room.
 	res, err := webAPI.Battle.FindRoom(id)
 	if err != nil {
 		return nil, err
@@ -45,8 +45,12 @@ func newRoom(id int64) (*Room, error) {
 		return nil, fmt.Errorf("No room(%v) found", id)
 	}
 
-	// TODO: Specify relevant stage code.
+	// TODO: Load the specified stage mesh and the light map.
 	stageMesh, err := resource.Loader.LoadMesh(1)
+	if err != nil {
+		return nil, err
+	}
+	lightMap, err := resource.Loader.LoadLightMap(1, 1, 10)
 	if err != nil {
 		return nil, err
 	}
@@ -57,7 +61,7 @@ func newRoom(id int64) (*Room, error) {
 		info:          res.Room,
 		sessions:      make(map[int64]*Session),
 		bots:          make(map[int64]*api.Bot),
-		battle:        battle.New(time.Second*300, stageMesh),
+		battle:        battle.New(time.Second*300, stageMesh, lightMap),
 		startBattleCh: make(chan *Session, 1),
 		addBotCh:      make(chan struct{}, 1),
 		removeBotCh:   make(chan int64, 1),

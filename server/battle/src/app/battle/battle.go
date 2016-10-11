@@ -8,6 +8,7 @@ import (
 	api "app/typhenapi/type/submarine"
 	battleAPI "app/typhenapi/type/submarine/battle"
 	"lib/navmesh"
+	"lib/navmesh/sight"
 	"time"
 
 	"github.com/tevino/abool"
@@ -27,8 +28,8 @@ type Battle struct {
 }
 
 // New creates a new battle.
-func New(timeLimit time.Duration, stageMesh *navmesh.Mesh) *Battle {
-	ctx := context.NewContext(stageMesh)
+func New(timeLimit time.Duration, stageMesh *navmesh.Mesh, lightMap *sight.LightMap) *Battle {
+	ctx := context.NewContext(stageMesh, lightMap)
 	return &Battle{
 		Gateway:       newGateway(),
 		ctx:           ctx,

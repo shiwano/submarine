@@ -4,7 +4,7 @@ import (
 	"lib/navmesh"
 )
 
-// Navmesh layers.
+// Navmesh layers constants.
 const (
 	LayerTeam1     = navmesh.Layer01
 	LayerTeam2     = navmesh.Layer02
@@ -14,16 +14,17 @@ const (
 	LayerTorpedo   = navmesh.Layer06
 )
 
+// Navmesh layers variables.
+var (
+	TeamLayers = [4]navmesh.LayerMask{
+		LayerTeam1,
+		LayerTeam2,
+		LayerTeam3,
+		LayerTeam4,
+	}
+)
+
 // GetTeamLayer returns a layer mask that has the specified number.
 func GetTeamLayer(n int) navmesh.LayerMask {
-	switch n {
-	case 1:
-		return LayerTeam1
-	case 2:
-		return LayerTeam2
-	case 3:
-		return LayerTeam3
-	default:
-		return LayerTeam4
-	}
+	return TeamLayers[n-1]
 }
