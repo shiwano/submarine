@@ -59,8 +59,8 @@ func (a *actor) Position() *vec2.T             { return a.stageAgent.Position() 
 func (a *actor) Direction() float64            { return a.motor.direction }
 func (a *actor) IsAccelerating() bool          { return a.motor.accelerator.isAccelerating }
 
-func (a *actor) IsVisibleFrom(l navmesh.LayerMask) bool {
-	return a.ctx.SightsByTeam[l].IsLitPoint(a.Position())
+func (a *actor) IsVisibleFrom(player *context.Player) bool {
+	return a.ctx.SightsByTeam[player.TeamLayer].IsLitPoint(a.Position())
 }
 
 func (a *actor) Destroy() {
