@@ -62,8 +62,24 @@ func (l *loader) LoadLightMap(code int64, cellSize, lightRange float64) (*sight.
 		return lm, nil
 	}
 
+	jsonFileName := "light_map" + key + ".json"
+	if jsonFilePath, ok := existsCacheFile(jsonFileName); ok {
+		lm, err := sight.LoadLightMapFromJSONFile(jsonFilePath)
+		if lm.MeshVersion == mesh.Version {
+			return lm, err
+		}
+	}
+
 	navMesh := navmesh.New(mesh)
 	lm := sight.GenerateLightMap(navMesh, cellSize, lightRange)
+	jsonData, err := lm.ToJSON()
+	if err != nil {
+		return nil, err
+	}
+	if err := writeCacheFile(jsonFileName, jsonData); err != nil {
+		return nil, err
+	}
+
 	l.lightMaps[key] = lm
 	return lm, nil
 }
