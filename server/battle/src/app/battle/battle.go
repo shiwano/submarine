@@ -146,6 +146,9 @@ func (b *Battle) start() {
 
 func (b *Battle) update(now time.Time) {
 	b.ctx.Now = now
+	for _, sight := range b.ctx.SightsByTeam {
+		sight.Clear()
+	}
 	for _, actor := range b.ctx.Actors() {
 		if !actor.IsDestroyed() {
 			actor.BeforeUpdate()

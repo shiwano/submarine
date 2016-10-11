@@ -75,6 +75,10 @@ func (a *actor) BeforeUpdate() {
 	if hitInfo := a.stageAgent.Move(position, a.ignoredLayer); hitInfo != nil {
 		a.onStageAgentCollide(hitInfo.Object, hitInfo.Point)
 	}
+
+	if a.Type() == battleAPI.ActorType_Submarine {
+		a.ctx.SightsByTeam[a.Player().TeamLayer].PutLight(a.Position())
+	}
 }
 
 // Overridable methods.
