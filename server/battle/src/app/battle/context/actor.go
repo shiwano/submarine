@@ -3,6 +3,7 @@ package context
 import (
 	"app/battle/event"
 	battleAPI "app/typhenapi/type/submarine/battle"
+	"lib/navmesh"
 
 	"github.com/ungerik/go3d/float64/vec2"
 )
@@ -19,6 +20,7 @@ type Actor interface {
 	Position() *vec2.T
 	Direction() float64
 	IsAccelerating() bool
+	IsVisibleFrom(navmesh.LayerMask) bool
 
 	Destroy()
 
