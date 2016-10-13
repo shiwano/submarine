@@ -2,7 +2,7 @@ include FileUtils
 
 desc 'Run all tests'
 task :test do
-  sh 'SUBMARINE_ENV=test gb test'
+  sh 'SUBMARINE_ENV=test go test $(go list ./... | grep -v /vendor/)'
 end
 
 desc 'Remove cache directory'

@@ -31,9 +31,9 @@
       "plugin": "./tools/typhen/typhen-api/index",
       "pluginOptions": {
         "templateName": "go",
-        "importBasePath": "app/typhenapi"
+        "importBasePath": "github.com/shiwano/submarine/server/battle/lib/typhenapi"
       },
-      "outDir": "server/battle/src/app",
+      "outDir": "server/battle/lib",
       "files": [
         "contract/contract.d.ts",
         "contract/intranet/contract.d.ts"
