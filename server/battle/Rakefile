@@ -9,3 +9,8 @@ desc 'Remove cache directory'
 task :remove_cache do
   rm_rf '.cache'
 end
+
+desc 'Restore dependencies with gvt'
+task :restore_dependencies do
+  sh 'go get github.com/FiloSottile/gvt && gvt restore'
+end
