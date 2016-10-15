@@ -20,5 +20,5 @@ func NewWebAPI(baseURI string) *webapi.WebAPI {
 }
 
 func onBeforeWebAPIRequest(req *http.Request) {
-	req.Header.Add("Content-Type", "github.com/shiwano/submarine/server/battle/application/json")
+	req.Header.Add("Content-Type", "application/json")
 }
