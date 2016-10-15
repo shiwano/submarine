@@ -1,5 +1,13 @@
 include FileUtils
 
+desc 'Make a release binary'
+task dist: [:restore_dependencies, :test, :build]
+
+desc 'Build a binary'
+task :build do
+  sh 'go build'
+end
+
 desc 'Run all tests'
 task :test do
   sh 'SUBMARINE_ENV=test go test $(go list ./... | grep -v /vendor/)'
