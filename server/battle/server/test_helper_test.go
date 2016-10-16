@@ -91,6 +91,6 @@ func newWebAPIMock(url string) *webapi.WebAPI {
 func newTestServer() *httptest.Server {
 	WebAPIRoundTripper = &webAPITransporter{typhenapi.NewJSONSerializer()}
 	gin.SetMode(gin.TestMode)
-	s := httptest.NewServer(NewServer())
+	s := httptest.NewServer(New())
 	return s
 }

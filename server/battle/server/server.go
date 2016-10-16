@@ -21,7 +21,7 @@ type Server struct {
 }
 
 // NewServer creates a Server.
-func NewServer() *Server {
+func New() *Server {
 	server := &Server{
 		Engine:      gin.New(),
 		logWriter:   logger.Log.Writer(),

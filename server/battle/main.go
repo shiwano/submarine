@@ -5,6 +5,6 @@ import (
 )
 
 func main() {
-	s := server.NewServer()
+	s := server.New()
 	s.Run(":5000")
 }
