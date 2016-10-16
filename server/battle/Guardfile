@@ -2,6 +2,6 @@ guard :shell, run_all: 'bundle exec rake test' do
   watch(/^(.*)\.go/) do |m|
     package_name = Pathname.new(m[0]).dirname.to_s
     puts "### Changed #{m[0]}"
-    `SUBMARINE_ENV=test go test -v ./#{package_name}`
+    `go test -v ./#{package_name}`
   end
 end

@@ -1,17 +1,22 @@
 package config
 
 import (
+	"flag"
 	"os"
 	"strings"
 )
 
 // Env is the server env.
-var Env = getEnv()
+var Env = getenv()
 
-func getEnv() string {
-	env := strings.ToLower(os.Getenv("SUBMARINE_ENV"))
-	if env == "" {
-		env = "development"
+func getenv() string {
+	submarineEnv := os.Getenv("SUBMARINE_ENV")
+	if submarineEnv != "" {
+		return strings.ToLower(submarineEnv)
 	}
-	return env
+
+	if flag.Lookup("test.run") != nil {
+		return "test"
+	}
+	return "development"
 }
