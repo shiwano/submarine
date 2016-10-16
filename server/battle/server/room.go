@@ -15,27 +15,26 @@ import (
 	"github.com/shiwano/submarine/server/battle/server/resource"
 )
 
-// Room represents a network group for battle.
-type Room struct {
+type room struct {
 	id               int64
 	webAPI           *webAPI.WebAPI
 	info             *battleAPI.Room
-	sessions         map[int64]*Session
+	sessions         map[int64]*session
 	bots             map[int64]*api.Bot
 	battle           *battle.Battle
-	closeHandler     func(*Room)
+	closeHandler     func(*room)
 	isClosed         *abool.AtomicBool
 	lastCreatedBotID int64
-	startBattleCh    chan *Session
+	startBattleCh    chan *session
 	addBotCh         chan struct{}
 	removeBotCh      chan int64
-	joinCh           chan *Session
-	leaveCh          chan *Session
+	joinCh           chan *session
+	leaveCh          chan *session
 	closeCh          chan struct{}
 }
 
-func newRoom(id int64) (*Room, error) {
-	webAPI := NewWebAPI("http://localhost:3000")
+func newRoom(id int64) (*room, error) {
+	webAPI := newWebAPI("http://localhost:3000")
 
 	// TODO: Validate whether the battle server can create the room.
 	res, err := webAPI.Battle.FindRoom(id)
@@ -56,31 +55,31 @@ func newRoom(id int64) (*Room, error) {
 		return nil, err
 	}
 
-	room := &Room{
+	r := &room{
 		id:            id,
 		webAPI:        webAPI,
 		info:          res.Room,
-		sessions:      make(map[int64]*Session),
+		sessions:      make(map[int64]*session),
 		bots:          make(map[int64]*api.Bot),
 		battle:        battle.New(time.Second*300, stageMesh, lightMap),
-		startBattleCh: make(chan *Session, 1),
+		startBattleCh: make(chan *session, 1),
 		addBotCh:      make(chan struct{}, 1),
 		removeBotCh:   make(chan int64, 1),
-		joinCh:        make(chan *Session, 4),
-		leaveCh:       make(chan *Session, 4),
+		joinCh:        make(chan *session, 4),
+		leaveCh:       make(chan *session, 4),
 		closeCh:       make(chan struct{}, 1),
 		isClosed:      abool.New(),
 	}
 
-	go room.run()
-	return room, nil
+	go r.run()
+	return r, nil
 }
 
-func (r *Room) String() string {
+func (r *room) String() string {
 	return fmt.Sprintf("Room(%v)", r.id)
 }
 
-func (r *Room) run() {
+func (r *room) run() {
 	logger.Log.Infof("%v opened", r)
 
 loop:
@@ -111,7 +110,7 @@ loop:
 	}
 }
 
-func (r *Room) toRoomAPIType() *api.Room {
+func (r *room) toRoomAPIType() *api.Room {
 	members := make([]*api.User, len(r.sessions))
 	i := 0
 	for _, s := range r.sessions {
@@ -127,21 +126,21 @@ func (r *Room) toRoomAPIType() *api.Room {
 	return &api.Room{Id: r.id, Members: members, Bots: bots}
 }
 
-func (r *Room) broadcastRoom() {
+func (r *room) broadcastRoom() {
 	message := r.toRoomAPIType()
 	for _, s := range r.sessions {
 		s.api.Battle.SendRoom(message)
 	}
 }
 
-func (r *Room) startBattle(session *Session) {
+func (r *room) startBattle(s *session) {
 	// TODO: Validate that can the session starts the battle.
 	if r.battle.Start() {
 		logger.Log.Infof("%v's battle started", r)
 	}
 }
 
-func (r *Room) addBot() {
+func (r *room) addBot() {
 	r.lastCreatedBotID--
 	bot := &api.Bot{Id: r.lastCreatedBotID, Name: "BOT"}
 	if r.battle.EnterBot(bot) {
@@ -151,7 +150,7 @@ func (r *Room) addBot() {
 	}
 }
 
-func (r *Room) removeBot(botID int64) {
+func (r *room) removeBot(botID int64) {
 	if bot, ok := r.bots[botID]; ok {
 		if r.battle.LeaveBot(bot) {
 			delete(r.bots, bot.Id)
@@ -161,28 +160,28 @@ func (r *Room) removeBot(botID int64) {
 	}
 }
 
-func (r *Room) join(session *Session) {
-	logger.Log.Infof("%v joined into %v", session, r)
-	r.sessions[session.id] = session
-	session.room = r
-	session.disconnectHandler = func(session *Session) {
-		r.leaveCh <- session
+func (r *room) join(s *session) {
+	logger.Log.Infof("%v joined into %v", s, r)
+	r.sessions[s.id] = s
+	s.room = r
+	s.disconnectHandler = func(s *session) {
+		r.leaveCh <- s
 	}
-	r.battle.EnterUser(session.id)
-	session.synchronizeTime()
+	r.battle.EnterUser(s.id)
+	s.synchronizeTime()
 	r.broadcastRoom()
 }
 
-func (r *Room) leave(session *Session) {
-	logger.Log.Infof("%v leaved from %v", session, r)
-	session.disconnectHandler = nil
-	session.room = nil
-	delete(r.sessions, session.id)
-	r.battle.LeaveUser(session.id)
+func (r *room) leave(s *session) {
+	logger.Log.Infof("%v leaved from %v", s, r)
+	s.disconnectHandler = nil
+	s.room = nil
+	delete(r.sessions, s.id)
+	r.battle.LeaveUser(s.id)
 	r.broadcastRoom()
 }
 
-func (r *Room) close() {
+func (r *room) close() {
 	for c := 1; true; c++ {
 		if _, err := r.webAPI.Battle.CloseRoom(r.id); err != nil {
 			logger.Log.Errorf("%v failed %v times to use closeRoom API: %v", r, c, err)
@@ -199,11 +198,11 @@ func (r *Room) close() {
 	}
 }
 
-func (r *Room) sendBattleInput(userID int64, message typhenapi.Type) {
+func (r *room) sendBattleInput(userID int64, message typhenapi.Type) {
 	r.battle.Gateway.InputMessage(userID, message)
 }
 
-func (r *Room) onBattleOutputReceive(output *battle.GatewayOutput) {
+func (r *room) onBattleOutputReceive(output *battle.GatewayOutput) {
 	if output.UserIDs == nil {
 		for _, s := range r.sessions {
 			s.api.Battle.Send(output.Message)

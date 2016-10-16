@@ -15,124 +15,121 @@ import (
 	"github.com/shiwano/submarine/server/battle/server/logger"
 )
 
-// Session represents a network session that has user infos.
-type Session struct {
+type session struct {
 	id                int64
 	roomID            int64
 	info              *battleAPI.RoomMember
 	conn              *conn.Conn
 	api               *rtmAPI.WebSocketAPI
-	room              *Room
-	disconnectHandler func(*Session)
+	room              *room
+	disconnectHandler func(*session)
 }
 
-func newSession(info *battleAPI.RoomMember, roomID int64) *Session {
+func newSession(info *battleAPI.RoomMember, roomID int64) *session {
 	serializer := typhenapi.NewJSONSerializer()
-	session := &Session{
+	s := &session{
 		id:     info.Id,
 		info:   info,
 		roomID: roomID,
 		conn:   conn.New(),
 	}
-	session.conn.BinaryMessageHandler = session.onBinaryMessageReceive
-	session.conn.DisconnectHandler = session.onDisconnect
-	session.conn.ErrorHandler = session.onError
+	s.conn.BinaryMessageHandler = s.onBinaryMessageReceive
+	s.conn.DisconnectHandler = s.onDisconnect
+	s.conn.ErrorHandler = s.onError
 
-	session.api = rtmAPI.New(session, serializer, session.onError)
-	session.api.Battle.PingHandler = session.onPingReceive
-	session.api.Battle.StartRequestHandler = session.onStartRequestReceive
-	session.api.Battle.AddBotRequestHandler = session.onAddBotRequestReceive
-	session.api.Battle.RemoveBotRequestHandler = session.onRemoveBotRequestReceive
-	session.api.Battle.AccelerationRequestHandler = session.onAccelerationRequestReceive
-	session.api.Battle.BrakeRequestHandler = session.onBrakeRequestReceive
-	session.api.Battle.TurnRequestHandler = session.onTurnRequestReceive
-	session.api.Battle.TorpedoRequestHandler = session.onTorpedoRequestReceive
-	session.api.Battle.PingerRequestHandler = session.onPingerRequestReceive
-	return session
+	s.api = rtmAPI.New(s, serializer, s.onError)
+	s.api.Battle.PingHandler = s.onPingReceive
+	s.api.Battle.StartRequestHandler = s.onStartRequestReceive
+	s.api.Battle.AddBotRequestHandler = s.onAddBotRequestReceive
+	s.api.Battle.RemoveBotRequestHandler = s.onRemoveBotRequestReceive
+	s.api.Battle.AccelerationRequestHandler = s.onAccelerationRequestReceive
+	s.api.Battle.BrakeRequestHandler = s.onBrakeRequestReceive
+	s.api.Battle.TurnRequestHandler = s.onTurnRequestReceive
+	s.api.Battle.TorpedoRequestHandler = s.onTorpedoRequestReceive
+	s.api.Battle.PingerRequestHandler = s.onPingerRequestReceive
+	return s
 }
 
-func (s *Session) String() string {
+func (s *session) String() string {
 	return fmt.Sprintf("Session(%v)", s.id)
 }
 
-// Connect connects to the client.
-func (s *Session) Connect(responseWriter http.ResponseWriter, request *http.Request) error {
+func (s *session) Connect(responseWriter http.ResponseWriter, request *http.Request) error {
 	return s.conn.UpgradeFromHTTP(responseWriter, request)
 }
 
-// Send sends a binary message to the client.
-func (s *Session) Send(data []byte) error {
+func (s *session) Send(data []byte) error {
 	return s.conn.WriteBinaryMessage(data)
 }
 
-func (s *Session) close() {
+func (s *session) close() {
 	s.conn.Close()
 }
 
-func (s *Session) toUserAPIType() *api.User {
+func (s *session) toUserAPIType() *api.User {
 	return &api.User{Name: s.info.Name}
 }
 
-func (s *Session) onDisconnect() {
+func (s *session) onDisconnect() {
 	if s.disconnectHandler != nil {
 		s.disconnectHandler(s)
 	}
 }
 
-func (s *Session) onBinaryMessageReceive(data []byte) {
+func (s *session) onBinaryMessageReceive(data []byte) {
 	s.api.DispatchMessageEvent(data)
 }
 
-func (s *Session) onError(err error) {
+func (s *session) onError(err error) {
 	if closeError, ok := err.(*websocket.CloseError); ok && (closeError.Code == 1000 || closeError.Code == 1005) {
 		return
 	}
 	logger.Log.Errorf("%v received the error: %v", s, err)
 }
 
-func (s *Session) onPingReceive(m *battleAPI.PingObject) {
+func (s *session) onPingReceive(m *battleAPI.PingObject) {
 	m.Message += " " + m.Message
 	s.api.Battle.SendPing(m)
 }
 
-func (s *Session) onStartRequestReceive(m *battleAPI.StartRequestObject) {
+func (s *session) onStartRequestReceive(m *battleAPI.StartRequestObject) {
 	s.room.startBattleCh <- s
 }
 
-func (s *Session) onAddBotRequestReceive(m *battleAPI.AddBotRequestObject) {
+func (s *session) onAddBotRequestReceive(m *battleAPI.AddBotRequestObject) {
 	s.room.addBotCh <- struct{}{}
 }
 
-func (s *Session) onRemoveBotRequestReceive(m *battleAPI.RemoveBotRequestObject) {
+func (s *session) onRemoveBotRequestReceive(m *battleAPI.RemoveBotRequestObject) {
 	s.room.removeBotCh <- m.BotId
 }
 
-func (s *Session) onAccelerationRequestReceive(m *battleAPI.AccelerationRequestObject) {
+func (s *session) onAccelerationRequestReceive(m *battleAPI.AccelerationRequestObject) {
 	s.onBattleMessageReceive(m)
 }
 
-func (s *Session) onBrakeRequestReceive(m *battleAPI.BrakeRequestObject) {
+func (s *session) onBrakeRequestReceive(m *battleAPI.BrakeRequestObject) {
 	s.onBattleMessageReceive(m)
 }
 
-func (s *Session) onTurnRequestReceive(m *battleAPI.TurnRequestObject) {
+func (s *session) onTurnRequestReceive(m *battleAPI.TurnRequestObject) {
 	s.onBattleMessageReceive(m)
 }
 
-func (s *Session) onPingerRequestReceive(m *battleAPI.PingerRequestObject) {
+func (s *session) onPingerRequestReceive(m *battleAPI.PingerRequestObject) {
 	s.onBattleMessageReceive(m)
 }
 
-func (s *Session) onTorpedoRequestReceive(m *battleAPI.TorpedoRequestObject) {
+func (s *session) onTorpedoRequestReceive(m *battleAPI.TorpedoRequestObject) {
 	s.onBattleMessageReceive(m)
 }
 
-func (s *Session) onBattleMessageReceive(m typhenapi.Type) {
+func (s *session) onBattleMessageReceive(m typhenapi.Type) {
 	if s.room != nil && !s.room.isClosed.IsSet() {
 		s.room.sendBattleInput(s.id, m)
 	}
 }
 
-func (s *Session) synchronizeTime() {
+func (s *session) synchronizeTime() {
 	s.api.Battle.SendNow(&battleAPI.NowObject{Time: currentmillis.Now()})
 }

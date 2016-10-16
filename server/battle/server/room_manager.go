@@ -4,47 +4,46 @@ import (
 	"github.com/shiwano/submarine/server/battle/lib/respondable"
 )
 
-// RoomManager manages rooms.
-type RoomManager struct {
-	rooms             map[int64]*Room
+type roomManager struct {
+	rooms             map[int64]*room
 	getOrCreateRoomCh chan *respondable.T
-	deleteRoomCh      chan *Room
+	deleteRoomCh      chan *room
 }
 
-func newRoomManager() *RoomManager {
-	roomManager := &RoomManager{
-		rooms:             make(map[int64]*Room),
+func newRoomManager() *roomManager {
+	rm := &roomManager{
+		rooms:             make(map[int64]*room),
 		getOrCreateRoomCh: make(chan *respondable.T, 32),
-		deleteRoomCh:      make(chan *Room, 8),
+		deleteRoomCh:      make(chan *room, 8),
 	}
-	go roomManager.run()
-	return roomManager
+	go rm.run()
+	return rm
 }
 
-func (m *RoomManager) run() {
+func (rm *roomManager) run() {
 	for {
 		select {
-		case respondable := <-m.getOrCreateRoomCh:
-			m.getOrCreateRoom(respondable)
-		case room := <-m.deleteRoomCh:
-			m.deleteRoom(room)
+		case respondable := <-rm.getOrCreateRoomCh:
+			rm.getOrCreateRoom(respondable)
+		case room := <-rm.deleteRoomCh:
+			rm.deleteRoom(room)
 		}
 	}
 }
 
-func (m *RoomManager) fetchRoom(roomID int64) (*Room, error) {
+func (rm *roomManager) fetchRoom(roomID int64) (*room, error) {
 	respondable := respondable.New(roomID)
-	m.getOrCreateRoomCh <- respondable
+	rm.getOrCreateRoomCh <- respondable
 	res, err := respondable.Receive()
 	if err != nil {
 		return nil, err
 	}
-	return res.(*Room), nil
+	return res.(*room), nil
 }
 
-func (m *RoomManager) getOrCreateRoom(respondable *respondable.T) {
+func (rm *roomManager) getOrCreateRoom(respondable *respondable.T) {
 	roomID := respondable.Value.(int64)
-	room, ok := m.rooms[roomID]
+	r, ok := rm.rooms[roomID]
 	if !ok {
 		newRoom, err := newRoom(roomID)
 		if err != nil {
@@ -52,16 +51,16 @@ func (m *RoomManager) getOrCreateRoom(respondable *respondable.T) {
 			return
 		}
 
-		room = newRoom
-		room.closeHandler = func(room *Room) {
-			m.deleteRoomCh <- room
+		r = newRoom
+		r.closeHandler = func(r *room) {
+			rm.deleteRoomCh <- r
 		}
-		m.rooms[roomID] = room
+		rm.rooms[roomID] = r
 	}
-	respondable.Respond(room, nil)
+	respondable.Respond(r, nil)
 }
 
-func (m *RoomManager) deleteRoom(room *Room) {
-	room.closeHandler = nil
-	delete(m.rooms, room.id)
+func (rm *roomManager) deleteRoom(r *room) {
+	r.closeHandler = nil
+	delete(rm.rooms, r.id)
 }

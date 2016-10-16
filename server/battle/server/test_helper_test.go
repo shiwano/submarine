@@ -85,7 +85,7 @@ func (m *webAPITransporter) RoundTrip(request *http.Request) (*http.Response, er
 
 func newWebAPIMock(url string) *webapi.WebAPI {
 	WebAPIRoundTripper = &webAPITransporter{typhenapi.NewJSONSerializer()}
-	return NewWebAPI(url)
+	return newWebAPI(url)
 }
 
 func newTestServer() *httptest.Server {

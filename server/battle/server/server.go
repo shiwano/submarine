@@ -16,7 +16,7 @@ import (
 type Server struct {
 	*gin.Engine
 	logWriter   *io.PipeWriter
-	roomManager *RoomManager
+	roomManager *roomManager
 	webAPI      *webapi.WebAPI
 }
 
@@ -26,7 +26,7 @@ func NewServer() *Server {
 		Engine:      gin.New(),
 		logWriter:   logger.Log.Writer(),
 		roomManager: newRoomManager(),
-		webAPI:      NewWebAPI("http://localhost:3000"),
+		webAPI:      newWebAPI("http://localhost:3000"),
 	}
 	server.Use(gin.Recovery(), gin.LoggerWithWriter(server.logWriter))
 
@@ -46,14 +46,14 @@ func (s *Server) roomsGET(c *gin.Context) {
 	room, err := s.roomManager.fetchRoom(roomID)
 	if err != nil {
 		logger.Log.Error(err)
-		c.String(http.StatusForbidden, "Failed getting the room")
+		c.String(http.StatusForbidden, "Failed to get the room")
 		return
 	}
 
 	res, err := s.webAPI.Battle.FindRoomMember(c.Query("room_key"))
 	if err != nil {
 		logger.Log.Error(err)
-		c.String(http.StatusInternalServerError, "Failed authenticating the room key")
+		c.String(http.StatusInternalServerError, "Failed to authenticate the room key")
 		return
 	}
 	if res.RoomMember == nil {
@@ -64,18 +64,18 @@ func (s *Server) roomsGET(c *gin.Context) {
 	session := newSession(res.RoomMember, roomID)
 	if err := session.Connect(c.Writer, c.Request); err != nil {
 		logger.Log.Error(err)
-		c.String(http.StatusForbidden, "Failed upgrading the connection to the Web Socket Protocol")
+		c.String(http.StatusForbidden, "Failed to upgrade the connection to Web Socket Protocol")
 		return
 	}
 
 	if room.isClosed.IsSet() {
-		logger.Log.Infof("%v is already closed", room)
+		logger.Log.Infof("%v already closed", room)
 		session.close()
 		return
 	}
 
 	room.joinCh <- session
-	logger.Log.Infof("%v is created", session)
+	logger.Log.Infof("%v was created", session)
 }
 
 func init() {
