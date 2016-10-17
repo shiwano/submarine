@@ -5,18 +5,16 @@ import (
 )
 
 type container struct {
-	actors               []Actor
+	actors               ActorSlice
 	actorsByID           map[int64]Actor
 	submarinesByPlayerID map[int64]Actor
-	players              []*Player
+	players              PlayerSlice
 }
 
 func newContainer() *container {
 	c := &container{
-		actors:               make([]Actor, 0),
 		actorsByID:           make(map[int64]Actor),
 		submarinesByPlayerID: make(map[int64]Actor),
-		players:              make([]*Player, 0),
 	}
 	return c
 }

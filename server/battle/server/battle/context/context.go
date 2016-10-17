@@ -47,8 +47,8 @@ func (c *Context) SubmarineByPlayerID(userID int64) Actor {
 }
 
 // Actors returns all actors.
-func (c *Context) Actors() []Actor {
-	actors := make([]Actor, len(c.container.actors))
+func (c *Context) Actors() ActorSlice {
+	actors := make(ActorSlice, len(c.container.actors))
 	copy(actors, c.container.actors)
 	return actors
 }
@@ -65,7 +65,7 @@ func (c *Context) HasActor(actorID int64) bool {
 }
 
 // Players returns players in the battle.
-func (c *Context) Players() []*Player {
+func (c *Context) Players() PlayerSlice {
 	return c.container.players
 }
 
