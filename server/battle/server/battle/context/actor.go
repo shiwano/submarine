@@ -1,3 +1,5 @@
+//go:generate gen
+
 package context
 
 import (
@@ -8,6 +10,7 @@ import (
 )
 
 // Actor represents an actor in the battle.
+// +gen slice:"All,Any,First,MaxBy,MinBy,SortBy,Where,Count,GroupBy[string],GroupBy[*Player]"
 type Actor interface {
 	ID() int64
 	Player() *Player
