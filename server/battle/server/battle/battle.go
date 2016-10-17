@@ -67,7 +67,7 @@ func (b *Battle) EnterUser(userID int64) {
 			index := len(b.ctx.Players())
 			startPos := b.getStartPosition(index)
 			teamLayer := context.GetTeamLayer(index + 1)
-			user := context.NewPlayer(userID, teamLayer, startPos)
+			user := context.NewPlayer(userID, true, teamLayer, startPos)
 			actor.NewSubmarine(b.ctx, user)
 		}
 	} else if b.isFighting.IsSet() {
@@ -88,7 +88,7 @@ func (b *Battle) EnterBot(bot *api.Bot) bool {
 		index := len(b.ctx.Players())
 		startPos := b.getStartPosition(index)
 		teamLayer := context.GetTeamLayer(index + 1)
-		player := context.NewPlayer(bot.Id, teamLayer, startPos)
+		player := context.NewPlayer(bot.Id, false, teamLayer, startPos)
 		player.AI = ai.NewSimpleAI(b.ctx)
 		actor.NewSubmarine(b.ctx, player)
 		return true

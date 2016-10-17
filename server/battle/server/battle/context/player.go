@@ -15,6 +15,7 @@ import (
 // +gen * slice:"All,Any,First,Where,Count,Select[int64],GroupBy[string]"
 type Player struct {
 	ID              int64
+	IsUser          bool
 	AI              AI
 	TeamLayer       navmesh.LayerMask
 	StartPosition   *vec2.T
@@ -23,9 +24,11 @@ type Player struct {
 }
 
 // NewPlayer creates a player.
-func NewPlayer(playerID int64, teamLayer navmesh.LayerMask, startPosition *vec2.T) *Player {
+func NewPlayer(playerID int64, isUser bool, teamLayer navmesh.LayerMask,
+	startPosition *vec2.T) *Player {
 	return &Player{
 		ID:            playerID,
+		IsUser:        isUser,
 		TeamLayer:     teamLayer,
 		StartPosition: startPosition,
 		SubmarineParams: &SubmarineParams{

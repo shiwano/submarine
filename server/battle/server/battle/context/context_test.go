@@ -19,32 +19,35 @@ func TestContextTest(t *testing.T) {
 
 		Convey("when an actor is created", func() {
 			Convey("should add the actor", func() {
-				actor := newSubmarine(c)
+				actor := newSubmarine(c, true)
 				So(c.HasActor(actor.ID()), ShouldBeTrue)
 			})
 
 			Convey("should call the actor's Start method", func() {
-				actor := newSubmarine(c)
+				actor := newSubmarine(c, true)
 				So(actor.isCalledStart, ShouldBeTrue)
 			})
 
 			Convey("should emit the ActorAdded event", func() {
 				isCalled := false
 				c.Event.On(event.ActorAdd, func(a Actor) { isCalled = true })
-				newSubmarine(c)
+				newSubmarine(c, true)
 				So(isCalled, ShouldBeTrue)
 			})
 		})
 
 		Convey("when an actor is destroyed", func() {
-			actor := newSubmarine(c)
-			newSubmarine(c)
+			actor := newSubmarine(c, true)
+			newSubmarine(c, false)
+			newSubmarine(c, true)
 
 			Convey("should remove the actor", func() {
 				actor.Destroy()
 				So(c.HasActor(actor.ID()), ShouldBeFalse)
-				So(c.Actors(), ShouldHaveLength, 1)
-				So(c.Players(), ShouldHaveLength, 1)
+				So(c.Actors(), ShouldHaveLength, 2)
+				So(c.Players(), ShouldHaveLength, 2)
+				So(c.UserPlayersByTeamLayer(), ShouldHaveLength, 1)
+				So(c.UserPlayersByTeamLayer(), ShouldHaveLength, 1)
 			})
 
 			Convey("should call the actor's OnDestroy method", func() {
@@ -70,7 +73,7 @@ func TestContextTest(t *testing.T) {
 		})
 
 		Convey("#Actor", func() {
-			actorID := newSubmarine(c).ID()
+			actorID := newSubmarine(c, true).ID()
 
 			Convey("with valid actor id", func() {
 				Convey("should return the actor", func() {
@@ -88,7 +91,7 @@ func TestContextTest(t *testing.T) {
 		})
 
 		Convey("#SubmarineByUserID", func() {
-			userID := newSubmarine(c).Player().ID
+			userID := newSubmarine(c, true).Player().ID
 
 			Convey("with valid user id", func() {
 				Convey("should return the user's submarine", func() {

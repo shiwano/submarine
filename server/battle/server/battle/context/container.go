@@ -1,14 +1,16 @@
 package context
 
 import (
+	"github.com/shiwano/submarine/server/battle/lib/navmesh"
 	battleAPI "github.com/shiwano/submarine/server/battle/lib/typhenapi/type/submarine/battle"
 )
 
 type container struct {
-	actors               ActorSlice
-	actorsByID           map[int64]Actor
-	submarinesByPlayerID map[int64]Actor
-	players              PlayerSlice
+	actors                 ActorSlice
+	actorsByID             map[int64]Actor
+	submarinesByPlayerID   map[int64]Actor
+	players                PlayerSlice
+	userPlayersByTeamLayer map[navmesh.LayerMask]PlayerSlice
 }
 
 func newContainer() *container {
@@ -26,6 +28,11 @@ func (c *container) addActor(actor Actor) {
 		c.submarinesByPlayerID[actor.Player().ID] = actor
 		c.players = append(c.players, actor.Player())
 	}
+	c.userPlayersByTeamLayer = c.players.Where(func(p *Player) bool {
+		return p.IsUser
+	}).GroupByTeamLayer(func(p *Player) navmesh.LayerMask {
+		return p.TeamLayer
+	})
 }
 
 func (c *container) removeActor(rawActor Actor) Actor {
@@ -53,5 +60,10 @@ func (c *container) removeActor(rawActor Actor) Actor {
 		}
 		c.players = players
 	}
+	c.userPlayersByTeamLayer = c.players.Where(func(p *Player) bool {
+		return p.IsUser
+	}).GroupByTeamLayer(func(p *Player) navmesh.LayerMask {
+		return p.TeamLayer
+	})
 	return actor
 }

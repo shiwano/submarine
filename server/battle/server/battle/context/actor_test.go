@@ -21,10 +21,10 @@ type actor struct {
 	isCalledOnDestroy bool
 }
 
-func newSubmarine(ctx *Context) *actor {
+func newSubmarine(ctx *Context, isUser bool) *actor {
 	lastCreateActorID++
 	id := lastCreateActorID
-	player := &Player{ID: id * 100, StartPosition: &vec2.Zero}
+	player := &Player{ID: id * 100, IsUser: isUser, StartPosition: &vec2.Zero}
 	a := &actor{
 		id:        id,
 		player:    player,

@@ -37,8 +37,8 @@ func TestJudge(t *testing.T) {
 		})
 
 		Convey("#winner", func() {
-			user1 := context.NewPlayer(1, context.LayerTeam1, &vec2.T{0, 0})
-			user2 := context.NewPlayer(2, context.LayerTeam1, &vec2.T{0, 0})
+			user1 := context.NewPlayer(1, true, context.LayerTeam1, &vec2.T{0, 0})
+			user2 := context.NewPlayer(2, true, context.LayerTeam1, &vec2.T{0, 0})
 			actor.NewSubmarine(j.context, user1)
 			submarine2 := actor.NewSubmarine(j.context, user2)
 

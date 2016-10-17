@@ -69,6 +69,11 @@ func (c *Context) Players() PlayerSlice {
 	return c.container.players
 }
 
+// UserPlayersByTeamLayer returns user's players by team layer of the battle.
+func (c *Context) UserPlayersByTeamLayer() map[navmesh.LayerMask]PlayerSlice {
+	return c.container.userPlayersByTeamLayer
+}
+
 func (c *Context) onActorCreate(actor Actor) {
 	c.container.addActor(actor)
 	actor.Start()
