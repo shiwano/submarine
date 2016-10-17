@@ -1,7 +1,13 @@
 include FileUtils
 
 desc 'Make a release binary'
-task dist: [:restore_dependencies, :test, :build]
+task dist: [:restore_dependencies, :generate, :test, :build]
+
+desc 'Initialize the project tools'
+task :init do
+  sh 'go get github.com/FiloSottile/gvt'
+  sh 'go get github.com/clipperhouse/gen'
+end
 
 desc 'Build a binary'
 task :build do
@@ -13,12 +19,17 @@ task :test do
   sh 'go test $(go list ./... | grep -v /vendor/)'
 end
 
+desc 'Restore dependencies'
+task :restore_dependencies do
+  sh 'gvt restore'
+end
+
+desc 'Generate code'
+task :generate do
+  sh 'go generate $(go list ./... | grep -v /vendor/)'
+end
+
 desc 'Remove cache directory'
 task :remove_cache do
   rm_rf '.cache'
-end
-
-desc 'Restore dependencies with gvt'
-task :restore_dependencies do
-  sh 'go get github.com/FiloSottile/gvt && gvt restore'
 end
