@@ -1,3 +1,5 @@
+//go:generate gen
+
 package context
 
 import (
@@ -10,6 +12,7 @@ import (
 )
 
 // Player represents a player in the battle.
+// +gen * slice:"All,Any,First,Where,Count,Select[int64],GroupBy[string]"
 type Player struct {
 	ID              int64
 	AI              AI
