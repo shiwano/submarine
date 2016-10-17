@@ -47,3 +47,13 @@ func NewPlayer(playerID int64, teamLayer navmesh.LayerMask, startPosition *vec2.
 func (p *Player) String() string {
 	return fmt.Sprintf("Player(%v)", p.ID)
 }
+
+// GroupByTeamLayer groups elements into a map keyed by teamLayer.
+func (rcv PlayerSlice) GroupByTeamLayer(fn func(*Player) navmesh.LayerMask) map[navmesh.LayerMask]PlayerSlice {
+	result := make(map[navmesh.LayerMask]PlayerSlice)
+	for _, v := range rcv {
+		key := fn(v)
+		result[key] = append(result[key], v)
+	}
+	return result
+}

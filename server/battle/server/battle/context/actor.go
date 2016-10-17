@@ -5,6 +5,7 @@ package context
 import (
 	"github.com/ungerik/go3d/float64/vec2"
 
+	"github.com/shiwano/submarine/server/battle/lib/navmesh"
 	battleAPI "github.com/shiwano/submarine/server/battle/lib/typhenapi/type/submarine/battle"
 	"github.com/shiwano/submarine/server/battle/server/battle/event"
 )
@@ -30,4 +31,14 @@ type Actor interface {
 	BeforeUpdate()
 	Update()
 	OnDestroy()
+}
+
+// GroupByTeamLayer groups elements into a map keyed by teamLayer.
+func (rcv ActorSlice) GroupByTeamLayer(fn func(Actor) navmesh.LayerMask) map[navmesh.LayerMask]ActorSlice {
+	result := make(map[navmesh.LayerMask]ActorSlice)
+	for _, v := range rcv {
+		key := fn(v)
+		result[key] = append(result[key], v)
+	}
+	return result
 }
