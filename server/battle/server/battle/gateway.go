@@ -30,9 +30,9 @@ func (g *Gateway) InputMessage(userID int64, message typhenapi.Type) {
 	}
 }
 
-func (g *Gateway) outputStart(userIDs []int64, startedAt time.Time) {
+func (g *Gateway) outputStart(receivers context.PlayerSlice, startedAt time.Time) {
 	g.Output <- &GatewayOutput{
-		UserIDs: userIDs,
+		UserIDs: receivers.SelectInt64(func(p *context.Player) int64 { return p.ID }),
 		Message: &battleAPI.Start{
 			StartedAt: currentmillis.Millis(startedAt),
 		},
@@ -49,15 +49,18 @@ func (g *Gateway) outputFinish(winnerUserID *int64, finishedAt time.Time) {
 	}
 }
 
-func (g *Gateway) outputActor(userIDs []int64, actor context.Actor) {
-	g.Output <- &GatewayOutput{
-		UserIDs: userIDs,
-		Message: &battleAPI.Actor{
-			Id:       actor.ID(),
-			UserId:   actor.Player().ID,
-			Type:     actor.Type(),
-			Movement: actor.Movement(),
-		},
+func (g *Gateway) outputActor(receiversByTeam context.PlayersByTeam, actor context.Actor) {
+	for teamLayer, receivers := range receiversByTeam {
+		g.Output <- &GatewayOutput{
+			UserIDs: receivers.SelectInt64(func(p *context.Player) int64 { return p.ID }),
+			Message: &battleAPI.Actor{
+				Id:        actor.ID(),
+				UserId:    actor.Player().ID,
+				Type:      actor.Type(),
+				Movement:  actor.Movement(),
+				IsVisible: actor.IsVisibleFrom(teamLayer),
+			},
+		}
 	}
 }
 

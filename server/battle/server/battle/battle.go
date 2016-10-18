@@ -170,16 +170,17 @@ func (b *Battle) finish() {
 }
 
 func (b *Battle) reenterUser(userID int64) {
-	userIDs := []int64{userID}
-	b.Gateway.outputStart(userIDs, b.ctx.StartedAt)
-	for _, actor := range b.ctx.Actors() {
-		b.Gateway.outputActor(userIDs, actor)
+	if s := b.ctx.SubmarineByPlayerID(userID); s != nil {
+		players := context.PlayerSlice{s.Player()}
+		b.Gateway.outputStart(players, b.ctx.StartedAt)
+		for _, actor := range b.ctx.Actors() {
+			b.Gateway.outputActor(players.GroupByTeam(), actor)
+		}
 	}
 }
 
 func (b *Battle) leaveUser(userID int64) {
-	s := b.ctx.SubmarineByPlayerID(userID)
-	if s != nil {
+	if s := b.ctx.SubmarineByPlayerID(userID); s != nil {
 		s.Event().Emit(event.UserLeave)
 	}
 }
