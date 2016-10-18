@@ -23,7 +23,7 @@ type Actor interface {
 	Position() *vec2.T
 	Direction() float64
 	IsAccelerating() bool
-	IsVisibleFrom(*Player) bool
+	IsVisibleFrom(navmesh.LayerMask) bool
 
 	Destroy()
 

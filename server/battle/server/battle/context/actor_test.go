@@ -3,6 +3,7 @@ package context
 import (
 	"github.com/ungerik/go3d/float64/vec2"
 
+	"github.com/shiwano/submarine/server/battle/lib/navmesh"
 	battleAPI "github.com/shiwano/submarine/server/battle/lib/typhenapi/type/submarine/battle"
 	"github.com/shiwano/submarine/server/battle/server/battle/event"
 )
@@ -41,12 +42,12 @@ func (a *actor) Player() *Player           { return a.player }
 func (a *actor) Type() battleAPI.ActorType { return a.actorType }
 func (a *actor) Event() *event.Emitter     { return a.event }
 
-func (a *actor) IsDestroyed() bool             { return a.isDestroyed }
-func (a *actor) Movement() *battleAPI.Movement { panic("not implemented yet.") }
-func (a *actor) Position() *vec2.T             { return &vec2.Zero }
-func (a *actor) Direction() float64            { return 0 }
-func (a *actor) IsAccelerating() bool          { return false }
-func (a *actor) IsVisibleFrom(*Player) bool    { return true }
+func (a *actor) IsDestroyed() bool                    { return a.isDestroyed }
+func (a *actor) Movement() *battleAPI.Movement        { panic("not implemented yet.") }
+func (a *actor) Position() *vec2.T                    { return &vec2.Zero }
+func (a *actor) Direction() float64                   { return 0 }
+func (a *actor) IsAccelerating() bool                 { return false }
+func (a *actor) IsVisibleFrom(navmesh.LayerMask) bool { return true }
 
 func (a *actor) Destroy() {
 	a.isDestroyed = true
