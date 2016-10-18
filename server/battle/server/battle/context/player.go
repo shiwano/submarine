@@ -11,6 +11,9 @@ import (
 	"github.com/shiwano/submarine/server/battle/lib/navmesh"
 )
 
+// PlayersByTeam represents player slices grouped by team layer.
+type PlayersByTeam map[navmesh.LayerMask]PlayerSlice
+
 // Player represents a player in the battle.
 // +gen * slice:"All,Any,First,Where,Count,Select[int64],GroupBy[string]"
 type Player struct {
@@ -51,11 +54,11 @@ func (p *Player) String() string {
 	return fmt.Sprintf("Player(%v)", p.ID)
 }
 
-// GroupByTeamLayer groups elements into a map keyed by teamLayer.
-func (rcv PlayerSlice) GroupByTeamLayer(fn func(*Player) navmesh.LayerMask) map[navmesh.LayerMask]PlayerSlice {
+// GroupByTeam groups elements into a map keyed by team's navmesh Layer.
+func (rcv PlayerSlice) GroupByTeam() PlayersByTeam {
 	result := make(map[navmesh.LayerMask]PlayerSlice)
 	for _, v := range rcv {
-		key := fn(v)
+		key := v.TeamLayer
 		result[key] = append(result[key], v)
 	}
 	return result
