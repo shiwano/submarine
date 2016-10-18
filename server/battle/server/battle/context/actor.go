@@ -33,8 +33,8 @@ type Actor interface {
 	OnDestroy()
 }
 
-// GroupByTeamLayer groups elements into a map keyed by teamLayer.
-func (rcv ActorSlice) GroupByTeamLayer(fn func(Actor) navmesh.LayerMask) map[navmesh.LayerMask]ActorSlice {
+// GroupByLayer groups elements into a map keyed by navmesh layer.
+func (rcv ActorSlice) GroupByLayer(fn func(Actor) navmesh.LayerMask) map[navmesh.LayerMask]ActorSlice {
 	result := make(map[navmesh.LayerMask]ActorSlice)
 	for _, v := range rcv {
 		key := fn(v)
