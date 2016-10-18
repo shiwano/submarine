@@ -9,6 +9,7 @@ import (
 	"github.com/ungerik/go3d/float64/vec2"
 
 	"github.com/shiwano/submarine/server/battle/lib/navmesh"
+	battleAPI "github.com/shiwano/submarine/server/battle/lib/typhenapi/type/submarine/battle"
 )
 
 // PlayersByTeam represents player slices grouped by team layer.
@@ -36,12 +37,14 @@ func NewPlayer(playerID int64, isUser bool, teamLayer navmesh.LayerMask,
 		StartPosition: startPosition,
 		SubmarineParams: &SubmarineParams{
 			actorParams: &actorParams{
+				actorType:     battleAPI.ActorType_Submarine,
 				accelMaxSpeed: 6,
 				accelDuration: 2 * time.Second,
 			},
 		},
 		TorpedoParams: &TorpedoParams{
 			actorParams: &actorParams{
+				actorType:     battleAPI.ActorType_Torpedo,
 				accelMaxSpeed: 10,
 				accelDuration: 1 * time.Second,
 			},

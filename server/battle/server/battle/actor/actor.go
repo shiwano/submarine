@@ -23,11 +23,11 @@ type actor struct {
 	ignoredLayer navmesh.LayerMask
 }
 
-func newActor(ctx *context.Context, player *context.Player, actorType battleAPI.ActorType,
-	position *vec2.T, direction float64, params context.ActorParams) *actor {
+func newActor(ctx *context.Context, player *context.Player, position *vec2.T, direction float64,
+	params context.ActorParams) *actor {
 	a := &actor{
 		player:       player,
-		actorType:    actorType,
+		actorType:    params.Type(),
 		ctx:          ctx,
 		event:        event.New(),
 		motor:        newMotor(ctx, position, direction, params.AccelMaxSpeed(), params.AccelDuration()),
@@ -35,7 +35,7 @@ func newActor(ctx *context.Context, player *context.Player, actorType battleAPI.
 		ignoredLayer: player.TeamLayer,
 	}
 
-	switch actorType {
+	switch params.Type() {
 	case battleAPI.ActorType_Submarine:
 		a.stageAgent.SetLayer(context.LayerSubmarine)
 	case battleAPI.ActorType_Torpedo:
