@@ -38,6 +38,7 @@ func NewPlayer(playerID int64, isUser bool, teamLayer navmesh.LayerMask,
 		SubmarineParams: &SubmarineParams{
 			actorParams: &actorParams{
 				actorType:     battleAPI.ActorType_Submarine,
+				hasLight:      true,
 				accelMaxSpeed: 6,
 				accelDuration: 2 * time.Second,
 			},
@@ -45,6 +46,7 @@ func NewPlayer(playerID int64, isUser bool, teamLayer navmesh.LayerMask,
 		TorpedoParams: &TorpedoParams{
 			actorParams: &actorParams{
 				actorType:     battleAPI.ActorType_Torpedo,
+				hasLight:      false,
 				accelMaxSpeed: 10,
 				accelDuration: 1 * time.Second,
 			},

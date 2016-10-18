@@ -21,6 +21,7 @@ type actor struct {
 	motor        *motor
 	stageAgent   *navmesh.Agent
 	ignoredLayer navmesh.LayerMask
+	hasLight     bool
 }
 
 func newActor(ctx *context.Context, player *context.Player, position *vec2.T, direction float64,
@@ -33,6 +34,7 @@ func newActor(ctx *context.Context, player *context.Player, position *vec2.T, di
 		motor:        newMotor(ctx, position, direction, params.AccelMaxSpeed(), params.AccelDuration()),
 		stageAgent:   ctx.Stage.CreateAgent(21, position),
 		ignoredLayer: player.TeamLayer,
+		hasLight:     params.HasLight(),
 	}
 
 	switch params.Type() {
@@ -81,7 +83,7 @@ func (a *actor) BeforeUpdate() {
 		a.onStageAgentCollide(hitInfo.Object, hitInfo.Point)
 	}
 
-	if a.Type() == battleAPI.ActorType_Submarine {
+	if a.hasLight {
 		a.ctx.SightsByTeam[a.Player().TeamLayer].PutLight(a.Position())
 	}
 }

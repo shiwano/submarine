@@ -9,18 +9,24 @@ import (
 // ActorParams represents actor parameters.
 type ActorParams interface {
 	Type() battleAPI.ActorType
+	HasLight() bool
 	AccelMaxSpeed() float64
 	AccelDuration() time.Duration
 }
 
 type actorParams struct {
 	actorType     battleAPI.ActorType
+	hasLight      bool
 	accelMaxSpeed float64
 	accelDuration time.Duration
 }
 
 func (a *actorParams) Type() battleAPI.ActorType {
 	return a.actorType
+}
+
+func (a *actorParams) HasLight() bool {
+	return a.hasLight
 }
 
 func (a *actorParams) AccelMaxSpeed() float64 {
