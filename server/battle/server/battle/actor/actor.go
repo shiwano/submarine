@@ -13,28 +13,30 @@ import (
 )
 
 type actor struct {
-	player       *context.Player
-	actorType    battleAPI.ActorType
-	ctx          *context.Context
-	event        *event.Emitter
-	isDestroyed  bool
-	motor        *motor
-	stageAgent   *navmesh.Agent
-	ignoredLayer navmesh.LayerMask
-	hasLight     bool
+	player          *context.Player
+	actorType       battleAPI.ActorType
+	ctx             *context.Context
+	event           *event.Emitter
+	isDestroyed     bool
+	motor           *motor
+	stageAgent      *navmesh.Agent
+	ignoredLayer    navmesh.LayerMask
+	hasLight        bool
+	isAlwaysVisible bool
 }
 
-func newActor(ctx *context.Context, player *context.Player, position *vec2.T, direction float64,
-	params context.ActorParams) *actor {
+func newActor(ctx *context.Context, player *context.Player, params context.ActorParams,
+	position *vec2.T, direction float64) *actor {
 	a := &actor{
-		player:       player,
-		actorType:    params.Type(),
-		ctx:          ctx,
-		event:        event.New(),
-		motor:        newMotor(ctx, position, direction, params.AccelMaxSpeed(), params.AccelDuration()),
-		stageAgent:   ctx.Stage.CreateAgent(21, position),
-		ignoredLayer: player.TeamLayer,
-		hasLight:     params.HasLight(),
+		player:          player,
+		actorType:       params.Type(),
+		ctx:             ctx,
+		event:           event.New(),
+		motor:           newMotor(ctx, position, direction, params.AccelMaxSpeed(), params.AccelDuration()),
+		stageAgent:      ctx.Stage.CreateAgent(21, position),
+		ignoredLayer:    player.TeamLayer,
+		hasLight:        params.HasLight(),
+		isAlwaysVisible: params.IsAlwaysVisible(),
 	}
 
 	switch params.Type() {
@@ -63,7 +65,7 @@ func (a *actor) Direction() float64            { return a.motor.direction }
 func (a *actor) IsAccelerating() bool          { return a.motor.accelerator.isAccelerating }
 
 func (a *actor) IsVisibleFrom(layer navmesh.LayerMask) bool {
-	return a.ctx.SightsByTeam[layer].IsLitPoint(a.Position())
+	return a.isAlwaysVisible || a.ctx.SightsByTeam[layer].IsLitPoint(a.Position())
 }
 
 func (a *actor) Destroy() {

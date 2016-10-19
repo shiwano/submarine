@@ -10,15 +10,17 @@ import (
 type ActorParams interface {
 	Type() battleAPI.ActorType
 	HasLight() bool
+	IsAlwaysVisible() bool
 	AccelMaxSpeed() float64
 	AccelDuration() time.Duration
 }
 
 type actorParams struct {
-	actorType     battleAPI.ActorType
-	hasLight      bool
-	accelMaxSpeed float64
-	accelDuration time.Duration
+	actorType       battleAPI.ActorType
+	hasLight        bool
+	isAlwaysVisible bool
+	accelMaxSpeed   float64
+	accelDuration   time.Duration
 }
 
 func (a *actorParams) Type() battleAPI.ActorType {
@@ -27,6 +29,10 @@ func (a *actorParams) Type() battleAPI.ActorType {
 
 func (a *actorParams) HasLight() bool {
 	return a.hasLight
+}
+
+func (a *actorParams) IsAlwaysVisible() bool {
+	return a.isAlwaysVisible
 }
 
 func (a *actorParams) AccelMaxSpeed() float64 {
