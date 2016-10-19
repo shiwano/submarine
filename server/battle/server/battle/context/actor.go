@@ -30,6 +30,7 @@ type Actor interface {
 	Start()
 	BeforeUpdate()
 	Update()
+	AfterUpdate()
 	OnDestroy()
 }
 

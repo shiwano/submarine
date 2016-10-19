@@ -57,4 +57,5 @@ func (a *actor) Destroy() {
 func (a *actor) Start()        { a.isCalledStart = true }
 func (a *actor) BeforeUpdate() {}
 func (a *actor) Update()       {}
+func (a *actor) AfterUpdate()  {}
 func (a *actor) OnDestroy()    { a.isCalledOnDestroy = true }

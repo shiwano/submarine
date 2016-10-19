@@ -46,8 +46,15 @@ func (c *Context) Update(now time.Time) {
 		if !actor.IsDestroyed() {
 			actor.BeforeUpdate()
 		}
+	}
+	for _, actor := range c.Actors() {
 		if !actor.IsDestroyed() {
 			actor.Update()
+		}
+	}
+	for _, actor := range c.Actors() {
+		if !actor.IsDestroyed() {
+			actor.AfterUpdate()
 		}
 	}
 }

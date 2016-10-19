@@ -88,6 +88,9 @@ func (a *actor) BeforeUpdate() {
 	}
 }
 
+func (a *actor) AfterUpdate() {
+}
+
 // Overridable methods.
 func (a *actor) Start()     {}
 func (a *actor) Update()    {}
