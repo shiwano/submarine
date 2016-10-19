@@ -19,7 +19,7 @@ type Context struct {
 	container    *container
 }
 
-// NewContext creates a contest.
+// NewContext creates a battle context.
 func NewContext(stageMesh *navmesh.Mesh, lightMap *sight.LightMap) *Context {
 	c := &Context{
 		CreatedAt:    time.Now(),
@@ -34,6 +34,22 @@ func NewContext(stageMesh *navmesh.Mesh, lightMap *sight.LightMap) *Context {
 	c.Event.On(event.ActorCreate, c.onActorCreate)
 	c.Event.On(event.ActorDestroy, c.onActorDestroy)
 	return c
+}
+
+// Update the battle.
+func (c *Context) Update(now time.Time) {
+	c.Now = now
+	for _, sight := range c.SightsByTeam {
+		sight.Clear()
+	}
+	for _, actor := range c.Actors() {
+		if !actor.IsDestroyed() {
+			actor.BeforeUpdate()
+		}
+		if !actor.IsDestroyed() {
+			actor.Update()
+		}
+	}
 }
 
 // ElapsedTime returns the elapsed time since start of battle.

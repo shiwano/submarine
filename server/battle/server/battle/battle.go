@@ -116,8 +116,7 @@ loop:
 	for {
 		select {
 		case now := <-ticker.C:
-			b.update(now)
-			if b.judge.isBattleFinished() {
+			if b.update(now) {
 				break loop
 			}
 		case input := <-b.Gateway.input:
@@ -145,19 +144,9 @@ func (b *Battle) start() {
 	b.ctx.Event.On(event.ActorDestroy, b.onActorDestroy)
 }
 
-func (b *Battle) update(now time.Time) {
-	b.ctx.Now = now
-	for _, sight := range b.ctx.SightsByTeam {
-		sight.Clear()
-	}
-	for _, actor := range b.ctx.Actors() {
-		if !actor.IsDestroyed() {
-			actor.BeforeUpdate()
-		}
-		if !actor.IsDestroyed() {
-			actor.Update()
-		}
-	}
+func (b *Battle) update(now time.Time) bool {
+	b.ctx.Update(now)
+	return b.judge.isBattleFinished()
 }
 
 func (b *Battle) finish() {
