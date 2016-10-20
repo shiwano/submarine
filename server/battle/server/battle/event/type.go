@@ -11,6 +11,7 @@ const (
 	ActorAdd
 	ActorMove
 	ActorRemove
+	ActorChangeVisibility
 
 	ActorCollideWithStage
 	ActorCollideWithOtherActor

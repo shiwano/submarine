@@ -13,30 +13,32 @@ import (
 )
 
 type actor struct {
-	player          *context.Player
-	actorType       battleAPI.ActorType
-	ctx             *context.Context
-	event           *event.Emitter
-	isDestroyed     bool
-	motor           *motor
-	stageAgent      *navmesh.Agent
-	ignoredLayer    navmesh.LayerMask
-	hasLight        bool
-	isAlwaysVisible bool
+	player             *context.Player
+	actorType          battleAPI.ActorType
+	ctx                *context.Context
+	event              *event.Emitter
+	isDestroyed        bool
+	motor              *motor
+	stageAgent         *navmesh.Agent
+	ignoredLayer       navmesh.LayerMask
+	hasLight           bool
+	isAlwaysVisible    bool
+	visibilitiesByTeam map[navmesh.LayerMask]bool
 }
 
 func newActor(ctx *context.Context, player *context.Player, params context.ActorParams,
 	position *vec2.T, direction float64) *actor {
 	a := &actor{
-		player:          player,
-		actorType:       params.Type(),
-		ctx:             ctx,
-		event:           event.New(),
-		motor:           newMotor(ctx, position, direction, params.AccelMaxSpeed(), params.AccelDuration()),
-		stageAgent:      ctx.Stage.CreateAgent(21, position),
-		ignoredLayer:    player.TeamLayer,
-		hasLight:        params.HasLight(),
-		isAlwaysVisible: params.IsAlwaysVisible(),
+		player:             player,
+		actorType:          params.Type(),
+		ctx:                ctx,
+		event:              event.New(),
+		motor:              newMotor(ctx, position, direction, params.AccelMaxSpeed(), params.AccelDuration()),
+		stageAgent:         ctx.Stage.CreateAgent(21, position),
+		ignoredLayer:       player.TeamLayer,
+		hasLight:           params.HasLight(),
+		isAlwaysVisible:    params.IsAlwaysVisible(),
+		visibilitiesByTeam: make(map[navmesh.LayerMask]bool),
 	}
 
 	switch params.Type() {
@@ -65,7 +67,12 @@ func (a *actor) Direction() float64            { return a.motor.direction }
 func (a *actor) IsAccelerating() bool          { return a.motor.accelerator.isAccelerating }
 
 func (a *actor) IsVisibleFrom(layer navmesh.LayerMask) bool {
-	return a.isAlwaysVisible || a.ctx.SightsByTeam[layer].IsLitPoint(a.Position())
+	if a.isAlwaysVisible {
+		return true
+	} else if v, ok := a.visibilitiesByTeam[layer]; ok {
+		return v
+	}
+	return false
 }
 
 func (a *actor) Destroy() {
@@ -91,6 +98,17 @@ func (a *actor) BeforeUpdate() {
 }
 
 func (a *actor) AfterUpdate() {
+	if !a.isAlwaysVisible {
+		for _, teamLayer := range context.TeamLayers {
+			newVisibility := a.ctx.SightsByTeam[teamLayer].IsLitPoint(a.Position())
+			oldVisibility := a.visibilitiesByTeam[teamLayer]
+			a.visibilitiesByTeam[teamLayer] = newVisibility
+
+			if newVisibility != oldVisibility {
+				a.ctx.Event.Emit(event.ActorChangeVisibility, a, teamLayer)
+			}
+		}
+	}
 }
 
 // Overridable methods.
