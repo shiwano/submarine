@@ -1,8 +1,20 @@
 require './tools/build/build'
+require 'fileutils'
+include FileUtils
 
-desc 'Generate code from the contract'
-task :gen do
-  sh 'typhen'
+namespace :gen do
+  desc 'Generate code from the contract'
+  task :contract do
+    sh 'typhen'
+  end
+
+  desc 'Generate light map JSON files'
+  task :lightmap do
+    cd 'tools/lightmap' do
+      sh 'go build'
+      sh './lightmap'
+    end
+  end
 end
 
 namespace :build do
