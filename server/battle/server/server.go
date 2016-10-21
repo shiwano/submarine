@@ -20,7 +20,7 @@ type Server struct {
 	webAPI      *webapi.WebAPI
 }
 
-// NewServer creates a Server.
+// New creates a Server.
 func New() *Server {
 	server := &Server{
 		Engine:      gin.New(),

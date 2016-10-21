@@ -61,7 +61,7 @@ func (m *webAPITransporter) Routes(path string, data []byte) (typhenapi.Type, in
 }
 
 func (m *webAPITransporter) Ping(params *webAPI.PingRequestBody) (typhenapi.Type, int) {
-	typhenType := &api.PingObject{params.Message + " PONG"}
+	typhenType := &api.PingObject{Message: params.Message + " PONG"}
 	return typhenType, http.StatusOK
 }
 

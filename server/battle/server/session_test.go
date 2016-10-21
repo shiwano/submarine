@@ -17,7 +17,7 @@ func TestSession(t *testing.T) {
 			done := make(chan *battleAPI.PingObject)
 			s.connect(server.URL + "/rooms/1?room_key=key_1")
 			s.api.Battle.PingHandler = func(m *battleAPI.PingObject) { done <- m }
-			s.api.Battle.SendPing(&battleAPI.PingObject{"Hey"})
+			s.api.Battle.SendPing(&battleAPI.PingObject{Message: "Hey"})
 			m := <-done
 			So(m.Message, ShouldEqual, "Hey Hey")
 		})
