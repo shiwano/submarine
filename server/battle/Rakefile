@@ -1,5 +1,7 @@
 include FileUtils
 
+task default: :test
+
 desc 'Make a release binary'
 task dist: [:restore_dependencies, :generate, :test, :build]
 
