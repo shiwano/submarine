@@ -13,7 +13,7 @@ var clientAssetDir string
 func init() {
 	_, filename, _, _ := runtime.Caller(1)
 	rootDir := path.Join(path.Dir(filename), "../../../../")
-	cacheDir = path.Join(rootDir, "server/battle/server/.cache")
+	cacheDir = path.Join(rootDir, "server/battle/.cache")
 
 	switch config.Env {
 	case "test":
