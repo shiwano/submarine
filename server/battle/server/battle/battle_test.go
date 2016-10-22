@@ -12,7 +12,7 @@ import (
 func TestBattle(t *testing.T) {
 	Convey("Battle", t, func() {
 		stageMesh, _ := resource.Loader.LoadMesh(1)
-		lightMap, _ := resource.Loader.LoadLightMap(1, 2, 3)
+		lightMap, _ := resource.Loader.LoadLightMap(1)
 		b := New(60*time.Second, stageMesh, lightMap)
 
 		Convey("#EnterUser", func() {

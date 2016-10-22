@@ -50,7 +50,7 @@ func newRoom(id int64) (*room, error) {
 	if err != nil {
 		return nil, err
 	}
-	lightMap, err := resource.Loader.LoadLightMap(1, 1, 10)
+	lightMap, err := resource.Loader.LoadLightMap(1)
 	if err != nil {
 		return nil, err
 	}

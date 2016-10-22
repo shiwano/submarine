@@ -16,7 +16,7 @@ type loader struct {
 	stageMeshes       map[int64]*navmesh.Mesh
 	stagesMeshesMutex *sync.Mutex
 
-	lightMaps      map[string]*sight.LightMap
+	lightMaps      map[int64]*sight.LightMap
 	lightMapsMutex *sync.Mutex
 }
 
@@ -25,7 +25,7 @@ func newLoader() *loader {
 		stageMeshes:       make(map[int64]*navmesh.Mesh),
 		stagesMeshesMutex: new(sync.Mutex),
 
-		lightMaps:      make(map[string]*sight.LightMap),
+		lightMaps:      make(map[int64]*sight.LightMap),
 		lightMapsMutex: new(sync.Mutex),
 	}
 }
@@ -49,38 +49,19 @@ func (l *loader) LoadMesh(code int64) (*navmesh.Mesh, error) {
 }
 
 // LoadLightMap loads the specified light map.
-func (l *loader) LoadLightMap(code int64, cellSize, lightRange float64) (*sight.LightMap, error) {
+func (l *loader) LoadLightMap(code int64) (*sight.LightMap, error) {
 	l.lightMapsMutex.Lock()
 	defer l.lightMapsMutex.Unlock()
 
-	mesh, err := l.LoadMesh(code)
-	if err != nil {
-		return nil, err
-	}
-
-	key := fmt.Sprintf("%v-%v-%v", code, cellSize, lightRange)
-	if lm, ok := l.lightMaps[key]; ok {
+	if lm, ok := l.lightMaps[code]; ok {
 		return lm, nil
 	}
 
-	jsonFileName := "light_map" + key + ".json"
-	if jsonFilePath, ok := existsCacheFile(jsonFileName); ok {
-		lm, err := sight.LoadLightMapFromJSONFile(jsonFilePath)
-		if lm.MeshVersion == mesh.Version {
-			return lm, err
-		}
-	}
-
-	navMesh := navmesh.New(mesh)
-	lm := sight.GenerateLightMap(navMesh, cellSize, lightRange)
-	jsonData, err := lm.ToJSON()
+	assetPath := fmt.Sprintf("Art/Stages/%03d/LightMap.json", code)
+	lm, err := sight.LoadLightMapFromJSONFile(path.Join(clientAssetDir, assetPath))
 	if err != nil {
 		return nil, err
 	}
-	if err := writeCacheFile(jsonFileName, jsonData); err != nil {
-		return nil, err
-	}
-
-	l.lightMaps[key] = lm
+	l.lightMaps[code] = lm
 	return lm, nil
 }

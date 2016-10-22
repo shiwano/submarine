@@ -14,7 +14,7 @@ import (
 func TestContextTest(t *testing.T) {
 	Convey("Context", t, func() {
 		stageMesh, _ := resource.Loader.LoadMesh(1)
-		lightMap, _ := resource.Loader.LoadLightMap(1, 2, 3)
+		lightMap, _ := resource.Loader.LoadLightMap(1)
 		c := NewContext(stageMesh, lightMap)
 
 		Convey("when an actor is created", func() {

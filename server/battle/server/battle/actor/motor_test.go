@@ -16,7 +16,7 @@ const timeLayout = "15:04:05.000"
 func TestMotor(t *testing.T) {
 	Convey("Motor", t, func() {
 		stageMesh, _ := resource.Loader.LoadMesh(1)
-		lightMap, _ := resource.Loader.LoadLightMap(1, 2, 3)
+		lightMap, _ := resource.Loader.LoadLightMap(1)
 		c := context.NewContext(stageMesh, lightMap)
 		c.Now, _ = time.Parse(timeLayout, "00:00:00.000")
 		m := newMotor(c, &vec2.T{1, 1}, 0, 3, 5*time.Second)

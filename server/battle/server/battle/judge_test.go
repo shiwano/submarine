@@ -15,7 +15,7 @@ import (
 func TestJudge(t *testing.T) {
 	Convey("judge", t, func() {
 		stageMesh, _ := resource.Loader.LoadMesh(1)
-		lightMap, _ := resource.Loader.LoadLightMap(1, 2, 3)
+		lightMap, _ := resource.Loader.LoadLightMap(1)
 		j := newJudge(context.NewContext(stageMesh, lightMap), time.Second*10)
 
 		Convey("#isBattleFinished", func() {
