@@ -135,9 +135,9 @@ loop:
 func (b *Battle) start() {
 	b.isFighting.SetTo(true)
 	b.ctx.StartedAt = time.Now()
-	b.Gateway.outputStart(nil, b.ctx.StartedAt)
+	b.Gateway.outputStart(b.ctx.Players(), b.ctx.StartedAt)
 	for _, actor := range b.ctx.Actors() {
-		b.Gateway.outputActor(nil, actor)
+		b.Gateway.outputActor(b.ctx.UserPlayersByTeam(), actor)
 	}
 	b.ctx.Event.On(event.ActorAdd, b.onActorAdd)
 	b.ctx.Event.On(event.ActorMove, b.onActorMove)
@@ -207,7 +207,7 @@ func (b *Battle) onInputReceive(input *gatewayInput) {
 }
 
 func (b *Battle) onActorAdd(actor context.Actor) {
-	b.Gateway.outputActor(nil, actor)
+	b.Gateway.outputActor(b.ctx.UserPlayersByTeam(), actor)
 }
 
 func (b *Battle) onActorMove(actor context.Actor) {
