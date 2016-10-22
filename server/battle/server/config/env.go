@@ -6,8 +6,12 @@ import (
 	"strings"
 )
 
-// Env is the server env.
-var Env = getenv()
+// server env.
+var (
+	Env            = getenv()
+	EnvDevelopment = "development"
+	EnvTest        = "test"
+)
 
 func getenv() string {
 	submarineEnv := os.Getenv("SUBMARINE_ENV")
@@ -16,7 +20,7 @@ func getenv() string {
 	}
 
 	if flag.Lookup("test.run") != nil {
-		return "test"
+		return EnvTest
 	}
-	return "development"
+	return EnvDevelopment
 }
