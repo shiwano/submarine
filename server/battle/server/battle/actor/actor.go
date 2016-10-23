@@ -84,10 +84,6 @@ func (a *actor) Destroy() {
 func (a *actor) BeforeUpdate() {
 	position := a.motor.position()
 
-	if a.player.AI != nil {
-		a.stageAgent.Warp(position)
-		return
-	}
 	if hitInfo := a.stageAgent.Move(position, a.ignoredLayer); hitInfo != nil {
 		a.onStageAgentCollide(hitInfo.Object, hitInfo.Point)
 	}
