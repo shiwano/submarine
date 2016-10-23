@@ -67,10 +67,10 @@ func (a *actor) Direction() float64            { return a.motor.direction }
 func (a *actor) IsAccelerating() bool          { return a.motor.accelerator.isAccelerating }
 
 func (a *actor) IsVisibleFrom(layer navmesh.LayerMask) bool {
-	if a.isAlwaysVisible {
+	if a.isAlwaysVisible || a.player.TeamLayer == layer {
 		return true
-	} else if v, ok := a.visibilitiesByTeam[layer]; ok {
-		return v
+	} else if isVisible, ok := a.visibilitiesByTeam[layer]; ok {
+		return isVisible
 	}
 	return false
 }
