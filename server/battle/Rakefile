@@ -9,6 +9,7 @@ desc 'Initialize the project tools'
 task :init do
   sh 'go get github.com/FiloSottile/gvt'
   sh 'go get github.com/clipperhouse/gen'
+  sh 'go get github.com/shiwano/genem'
 end
 
 desc 'Build a binary'
