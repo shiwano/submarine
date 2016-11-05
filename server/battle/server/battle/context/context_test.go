@@ -7,7 +7,6 @@ import (
 	. "github.com/smartystreets/goconvey/convey"
 
 	battleAPI "github.com/shiwano/submarine/server/battle/lib/typhenapi/type/submarine/battle"
-	"github.com/shiwano/submarine/server/battle/server/battle/event"
 	"github.com/shiwano/submarine/server/battle/server/resource"
 )
 
@@ -30,7 +29,7 @@ func TestContextTest(t *testing.T) {
 
 			Convey("should emit the ActorAdded event", func() {
 				isCalled := false
-				c.Event.On(event.ActorAdd, func(a Actor) { isCalled = true })
+				c.Event.AddActorAddEventListener(func(a Actor) { isCalled = true })
 				newSubmarine(c, true)
 				So(isCalled, ShouldBeTrue)
 			})
@@ -57,7 +56,7 @@ func TestContextTest(t *testing.T) {
 
 			Convey("should emit the ActorRemoved event", func() {
 				isCalled := false
-				c.Event.On(event.ActorRemove, func(a Actor) { isCalled = true })
+				c.Event.AddActorRemoveEventListener(func(a Actor) { isCalled = true })
 				actor.Destroy()
 				So(isCalled, ShouldBeTrue)
 			})

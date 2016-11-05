@@ -10,7 +10,6 @@ import (
 	"github.com/shiwano/submarine/server/battle/server/battle/actor"
 	"github.com/shiwano/submarine/server/battle/server/battle/ai"
 	"github.com/shiwano/submarine/server/battle/server/battle/context"
-	"github.com/shiwano/submarine/server/battle/server/battle/event"
 
 	"github.com/tevino/abool"
 	"github.com/ungerik/go3d/float64/vec2"
@@ -139,9 +138,9 @@ func (b *Battle) start() {
 	for _, actor := range b.ctx.Actors() {
 		b.Gateway.outputActor(b.ctx.UserPlayersByTeam(), actor)
 	}
-	b.ctx.Event.On(event.ActorAdd, b.onActorAdd)
-	b.ctx.Event.On(event.ActorMove, b.onActorMove)
-	b.ctx.Event.On(event.ActorDestroy, b.onActorDestroy)
+	b.ctx.Event.AddActorAddEventListener(b.onActorAdd)
+	b.ctx.Event.AddActorMoveEventListener(b.onActorMove)
+	b.ctx.Event.AddActorDestroyEventListener(b.onActorDestroy)
 }
 
 func (b *Battle) update(now time.Time) bool {
@@ -170,7 +169,7 @@ func (b *Battle) reenterUser(userID int64) {
 
 func (b *Battle) leaveUser(userID int64) {
 	if s := b.ctx.SubmarineByPlayerID(userID); s != nil {
-		s.Event().Emit(event.UserLeave)
+		s.Event().EmitUserLeaveEvent()
 	}
 }
 
@@ -194,15 +193,15 @@ func (b *Battle) onInputReceive(input *gatewayInput) {
 	}
 	switch m := input.message.(type) {
 	case *battleAPI.AccelerationRequestObject:
-		s.Event().Emit(event.AccelerationRequest, m)
+		s.Event().EmitAccelerationRequestEvent(m)
 	case *battleAPI.BrakeRequestObject:
-		s.Event().Emit(event.BrakeRequest, m)
+		s.Event().EmitBrakeRequestEvent(m)
 	case *battleAPI.TurnRequestObject:
-		s.Event().Emit(event.TurnRequest, m)
+		s.Event().EmitTurnRequestEvent(m)
 	case *battleAPI.TorpedoRequestObject:
-		s.Event().Emit(event.TorpedoRequest, m)
+		s.Event().EmitTorpedoRequestEvent(m)
 	case *battleAPI.PingerRequestObject:
-		s.Event().Emit(event.PingerRequest, m)
+		s.Event().EmitPingerRequestEvent(m)
 	}
 }
 

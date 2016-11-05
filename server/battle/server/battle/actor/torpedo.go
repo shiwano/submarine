@@ -3,7 +3,6 @@ package actor
 import (
 	battleAPI "github.com/shiwano/submarine/server/battle/lib/typhenapi/type/submarine/battle"
 	"github.com/shiwano/submarine/server/battle/server/battle/context"
-	"github.com/shiwano/submarine/server/battle/server/battle/event"
 
 	"github.com/ungerik/go3d/float64/vec2"
 )
@@ -17,9 +16,9 @@ func NewTorpedo(ctx *context.Context, user *context.Player, position *vec2.T, di
 	t := &torpedo{
 		actor: newActor(ctx, user, user.TorpedoParams, position, direction),
 	}
-	t.event.On(event.ActorCollideWithStage, t.onCollideWithStage)
-	t.event.On(event.ActorCollideWithOtherActor, t.onCollideWithOtherActor)
-	t.ctx.Event.Emit(event.ActorCreate, t)
+	t.event.AddCollideWithStageEventListener(t.onCollideWithStage)
+	t.event.AddCollideWithOtherActorEventListener(t.onCollideWithOtherActor)
+	t.ctx.Event.EmitActorCreateEvent(t)
 	t.accelerate(direction)
 	return t
 }

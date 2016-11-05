@@ -6,7 +6,6 @@ import (
 	"github.com/shiwano/submarine/server/battle/lib/navmesh"
 	battleAPI "github.com/shiwano/submarine/server/battle/lib/typhenapi/type/submarine/battle"
 	"github.com/shiwano/submarine/server/battle/server/battle/context"
-	"github.com/shiwano/submarine/server/battle/server/battle/event"
 	"github.com/shiwano/submarine/server/battle/server/logger"
 
 	"github.com/ungerik/go3d/float64/vec2"
@@ -16,7 +15,7 @@ type actor struct {
 	player             *context.Player
 	actorType          battleAPI.ActorType
 	ctx                *context.Context
-	event              *event.Emitter
+	event              *context.ActorEventEmitter
 	isDestroyed        bool
 	motor              *motor
 	stageAgent         *navmesh.Agent
@@ -32,7 +31,7 @@ func newActor(ctx *context.Context, player *context.Player, params context.Actor
 		player:             player,
 		actorType:          params.Type(),
 		ctx:                ctx,
-		event:              event.New(),
+		event:              context.NewActorEventEmitter(),
 		motor:              newMotor(ctx, position, direction, params.AccelMaxSpeed(), params.AccelDuration()),
 		stageAgent:         ctx.Stage.CreateAgent(21, position),
 		ignoredLayer:       player.TeamLayer,
@@ -55,10 +54,10 @@ func (a *actor) String() string {
 	return fmt.Sprintf("%v's %v(%v)", a.player, a.actorType, a.stageAgent.ID())
 }
 
-func (a *actor) ID() int64                 { return a.stageAgent.ID() }
-func (a *actor) Player() *context.Player   { return a.player }
-func (a *actor) Type() battleAPI.ActorType { return a.actorType }
-func (a *actor) Event() *event.Emitter     { return a.event }
+func (a *actor) ID() int64                         { return a.stageAgent.ID() }
+func (a *actor) Player() *context.Player           { return a.player }
+func (a *actor) Type() battleAPI.ActorType         { return a.actorType }
+func (a *actor) Event() *context.ActorEventEmitter { return a.event }
 
 func (a *actor) IsDestroyed() bool             { return a.isDestroyed }
 func (a *actor) Movement() *battleAPI.Movement { return a.motor.toAPIType(a.ID()) }
@@ -78,7 +77,7 @@ func (a *actor) IsVisibleFrom(layer navmesh.LayerMask) bool {
 func (a *actor) Destroy() {
 	a.isDestroyed = true
 	a.stageAgent.Destroy()
-	a.ctx.Event.Emit(event.ActorDestroy, a)
+	a.ctx.Event.EmitActorDestroyEvent(a)
 }
 
 func (a *actor) BeforeUpdate() {
@@ -101,7 +100,7 @@ func (a *actor) AfterUpdate() {
 			a.visibilitiesByTeam[teamLayer] = newVisibility
 
 			if newVisibility != oldVisibility {
-				a.ctx.Event.Emit(event.ActorChangeVisibility, a, teamLayer)
+				a.ctx.Event.EmitActorChangeVisibilityEvent(a, teamLayer)
 			}
 		}
 	}
@@ -116,25 +115,25 @@ func (a *actor) accelerate(direction float64) {
 	logger.Log.Debugf("%v accelerates to %v", a, direction)
 	a.motor.accelerate(a.stageAgent.Position())
 	a.motor.turn(a.stageAgent.Position(), direction)
-	a.ctx.Event.Emit(event.ActorMove, a)
+	a.ctx.Event.EmitActorMoveEvent(a)
 }
 
 func (a *actor) brake(direction float64) {
 	logger.Log.Debugf("%v brakes", a)
 	a.motor.brake(a.stageAgent.Position())
 	a.motor.turn(a.stageAgent.Position(), direction)
-	a.ctx.Event.Emit(event.ActorMove, a)
+	a.ctx.Event.EmitActorMoveEvent(a)
 }
 
 func (a *actor) turn(direction float64) {
 	logger.Log.Debugf("%v turns to %v", a, direction)
 	a.motor.turn(a.stageAgent.Position(), direction)
-	a.ctx.Event.Emit(event.ActorMove, a)
+	a.ctx.Event.EmitActorMoveEvent(a)
 }
 
 func (a *actor) idle() {
 	a.motor.idle(a.stageAgent.Position())
-	a.ctx.Event.Emit(event.ActorMove, a)
+	a.ctx.Event.EmitActorMoveEvent(a)
 }
 
 func (a *actor) onStageAgentCollide(obj navmesh.Object, point vec2.T) {
@@ -143,9 +142,9 @@ func (a *actor) onStageAgentCollide(obj navmesh.Object, point vec2.T) {
 	}
 	if obj == nil {
 		logger.Log.Debugf("%v collided with stage", a)
-		a.event.Emit(event.ActorCollideWithStage, point)
+		a.event.EmitCollideWithStageEvent(point)
 	} else if other := a.ctx.Actor(obj.ID()); other != nil {
 		logger.Log.Debugf("%v collided with %v", a, other)
-		a.event.Emit(event.ActorCollideWithOtherActor, other, point)
+		a.event.EmitCollideWithOtherActorEvent(other, point)
 	}
 }

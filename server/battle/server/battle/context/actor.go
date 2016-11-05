@@ -7,7 +7,6 @@ import (
 
 	"github.com/shiwano/submarine/server/battle/lib/navmesh"
 	battleAPI "github.com/shiwano/submarine/server/battle/lib/typhenapi/type/submarine/battle"
-	"github.com/shiwano/submarine/server/battle/server/battle/event"
 )
 
 // Actor represents an actor in the battle.
@@ -16,7 +15,7 @@ type Actor interface {
 	ID() int64
 	Player() *Player
 	Type() battleAPI.ActorType
-	Event() *event.Emitter
+	Event() *ActorEventEmitter
 
 	IsDestroyed() bool
 	Movement() *battleAPI.Movement

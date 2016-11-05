@@ -5,7 +5,6 @@ import (
 
 	"github.com/shiwano/submarine/server/battle/lib/navmesh"
 	"github.com/shiwano/submarine/server/battle/lib/navmesh/sight"
-	"github.com/shiwano/submarine/server/battle/server/battle/event"
 )
 
 // Context represents a battle context.
@@ -13,7 +12,7 @@ type Context struct {
 	CreatedAt    time.Time
 	StartedAt    time.Time
 	Now          time.Time
-	Event        *event.Emitter
+	Event        *EventEmitter
 	Stage        *navmesh.NavMesh
 	SightsByTeam map[navmesh.LayerMask]*sight.Sight
 	container    *container
@@ -23,7 +22,7 @@ type Context struct {
 func NewContext(stageMesh *navmesh.Mesh, lightMap *sight.LightMap) *Context {
 	c := &Context{
 		CreatedAt:    time.Now(),
-		Event:        event.New(),
+		Event:        NewEventEmitter(),
 		Stage:        navmesh.New(stageMesh),
 		SightsByTeam: make(map[navmesh.LayerMask]*sight.Sight),
 		container:    newContainer(),
@@ -31,8 +30,8 @@ func NewContext(stageMesh *navmesh.Mesh, lightMap *sight.LightMap) *Context {
 	for _, layer := range TeamLayers {
 		c.SightsByTeam[layer] = sight.New(lightMap)
 	}
-	c.Event.On(event.ActorCreate, c.onActorCreate)
-	c.Event.On(event.ActorDestroy, c.onActorDestroy)
+	c.Event.AddActorCreateEventListener(c.onActorCreate)
+	c.Event.AddActorDestroyEventListener(c.onActorDestroy)
 	return c
 }
 
@@ -100,13 +99,13 @@ func (c *Context) UserPlayersByTeam() PlayersByTeam {
 func (c *Context) onActorCreate(actor Actor) {
 	c.container.addActor(actor)
 	actor.Start()
-	c.Event.Emit(event.ActorAdd, actor)
+	c.Event.EmitActorAddEvent(actor)
 }
 
 func (c *Context) onActorDestroy(actor Actor) {
 	removedActor := c.container.removeActor(actor)
 	if removedActor != nil {
 		removedActor.OnDestroy()
-		c.Event.Emit(event.ActorRemove, removedActor)
+		c.Event.EmitActorRemoveEvent(removedActor)
 	}
 }

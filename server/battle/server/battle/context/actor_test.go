@@ -5,7 +5,6 @@ import (
 
 	"github.com/shiwano/submarine/server/battle/lib/navmesh"
 	battleAPI "github.com/shiwano/submarine/server/battle/lib/typhenapi/type/submarine/battle"
-	"github.com/shiwano/submarine/server/battle/server/battle/event"
 )
 
 var lastCreateActorID int64
@@ -15,7 +14,7 @@ type actor struct {
 	player      *Player
 	actorType   battleAPI.ActorType
 	ctx         *Context
-	event       *event.Emitter
+	event       *ActorEventEmitter
 	isDestroyed bool
 
 	isCalledStart     bool
@@ -31,16 +30,16 @@ func newSubmarine(ctx *Context, isUser bool) *actor {
 		player:    player,
 		actorType: battleAPI.ActorType_Submarine,
 		ctx:       ctx,
-		event:     event.New(),
+		event:     NewActorEventEmitter(),
 	}
-	a.ctx.Event.Emit(event.ActorCreate, a)
+	a.ctx.Event.EmitActorCreateEvent(a)
 	return a
 }
 
 func (a *actor) ID() int64                 { return a.id }
 func (a *actor) Player() *Player           { return a.player }
 func (a *actor) Type() battleAPI.ActorType { return a.actorType }
-func (a *actor) Event() *event.Emitter     { return a.event }
+func (a *actor) Event() *ActorEventEmitter { return a.event }
 
 func (a *actor) IsDestroyed() bool                    { return a.isDestroyed }
 func (a *actor) Movement() *battleAPI.Movement        { panic("not implemented yet.") }
@@ -51,7 +50,7 @@ func (a *actor) IsVisibleFrom(navmesh.LayerMask) bool { return true }
 
 func (a *actor) Destroy() {
 	a.isDestroyed = true
-	a.ctx.Event.Emit(event.ActorDestroy, a)
+	a.ctx.Event.EmitActorDestroyEvent(a)
 }
 
 func (a *actor) Start()        { a.isCalledStart = true }

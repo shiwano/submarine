@@ -3,7 +3,6 @@ package actor
 import (
 	battleAPI "github.com/shiwano/submarine/server/battle/lib/typhenapi/type/submarine/battle"
 	"github.com/shiwano/submarine/server/battle/server/battle/context"
-	"github.com/shiwano/submarine/server/battle/server/battle/event"
 	"github.com/shiwano/submarine/server/battle/server/logger"
 
 	"github.com/ungerik/go3d/float64/vec2"
@@ -18,15 +17,15 @@ func NewSubmarine(ctx *context.Context, user *context.Player) context.Actor {
 	s := &submarine{
 		actor: newActor(ctx, user, user.SubmarineParams, user.StartPosition, 0),
 	}
-	s.event.On(event.ActorCollideWithOtherActor, s.onCollideWithOtherActor)
-	s.event.On(event.ActorCollideWithStage, s.onCollideWithStage)
-	s.event.On(event.AccelerationRequest, s.onAccelerationRequest)
-	s.event.On(event.BrakeRequest, s.onBrakeRequest)
-	s.event.On(event.TurnRequest, s.onTurnRequest)
-	s.event.On(event.TorpedoRequest, s.onTorpedoRequest)
-	s.event.On(event.PingerRequest, s.onPingerRequest)
-	s.event.On(event.UserLeave, s.onUserLeave)
-	s.ctx.Event.Emit(event.ActorCreate, s)
+	s.event.AddCollideWithOtherActorEventListener(s.onCollideWithOtherActor)
+	s.event.AddCollideWithStageEventListener(s.onCollideWithStage)
+	s.event.AddAccelerationRequestEventListener(s.onAccelerationRequest)
+	s.event.AddBrakeRequestEventListener(s.onBrakeRequest)
+	s.event.AddTurnRequestEventListener(s.onTurnRequest)
+	s.event.AddTorpedoRequestEventListener(s.onTorpedoRequest)
+	s.event.AddPingerRequestEventListener(s.onPingerRequest)
+	s.event.AddUserLeaveEventListener(s.onUserLeave)
+	s.ctx.Event.EmitActorCreateEvent(s)
 	return s
 }
 
