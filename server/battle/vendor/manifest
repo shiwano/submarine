@@ -18,14 +18,6 @@
 			"notests": true
 		},
 		{
-			"importpath": "github.com/chuckpreslar/emission",
-			"repository": "https://github.com/chuckpreslar/emission",
-			"vcs": "git",
-			"revision": "cbe5fe2282b51edd760a422334bb040e40d313c7",
-			"branch": "master",
-			"notests": true
-		},
-		{
 			"importpath": "github.com/dustin/go-broadcast",
 			"repository": "https://github.com/dustin/go-broadcast",
 			"vcs": "git",
