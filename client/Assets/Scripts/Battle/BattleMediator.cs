@@ -63,10 +63,10 @@ namespace Submarine.Battle
 
         void OnActorMove(Type.Battle.Movement movement)
         {
-            var actor = actorContainer.Get(movement.ActorId);
-            if (actor != null)
+            ActorFacade actorFacade;
+            if (actorContainer.TryGet(movement.ActorId, out actorFacade))
             {
-                actor.Motor.SetMovement(movement);
+                actorFacade.Motor.SetMovement(movement);
             }
         }
 

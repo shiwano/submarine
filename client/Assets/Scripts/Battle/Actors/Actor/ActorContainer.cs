@@ -24,11 +24,9 @@ namespace Submarine.Battle
             }
         }
 
-        public ActorFacade Get(long actorId)
+        public bool TryGet(long actorId, out ActorFacade actorFacade)
         {
-            ActorFacade actor;
-            actors.TryGetValue(actorId, out actor);
-            return actor;
+            return actors.TryGetValue(actorId, out actorFacade);
         }
 
         public ActorFacade CreateActor(Type.Battle.Actor actor)
@@ -46,8 +44,7 @@ namespace Submarine.Battle
 
         public bool TryDestroyActor(long actorId, out ActorFacade actor)
         {
-            actor = Get(actorId);
-            if (actor != null)
+            if (TryGet(actorId, out actor))
             {
                 actors.Remove(actorId);
                 actor.Dispose();
