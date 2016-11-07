@@ -9,6 +9,8 @@ namespace Submarine.Battle
         [Inject]
         BattleEvent.ActorCreate actorCreateEvent;
         [Inject]
+        BattleEvent.ActorDestroy actorDestroyEvent;
+        [Inject]
         BattleService battleService;
         [Inject]
         BattleModel battleModel;
@@ -70,7 +72,11 @@ namespace Submarine.Battle
 
         void OnActorDestroy(Type.Battle.Destruction destruction)
         {
-            actorContainer.DestroyActor(destruction.ActorId);
+            ActorFacade actorFacade;
+            if (actorContainer.TryDestroyActor(destruction.ActorId, out actorFacade))
+            {
+                actorDestroyEvent.Invoke(actorFacade);
+            }
         }
     }
 }

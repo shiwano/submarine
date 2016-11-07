@@ -44,14 +44,16 @@ namespace Submarine.Battle
             }
         }
 
-        public void DestroyActor(long actorId)
+        public bool TryDestroyActor(long actorId, out ActorFacade actor)
         {
-            var actor = Get(actorId);
+            actor = Get(actorId);
             if (actor != null)
             {
                 actors.Remove(actorId);
                 actor.Dispose();
+                return true;
             }
+            return false;
         }
 
         SubmarineFacade CreateSubmarine(Type.Battle.Actor actor)
