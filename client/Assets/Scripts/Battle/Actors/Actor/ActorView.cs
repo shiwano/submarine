@@ -26,7 +26,7 @@ namespace Submarine.Battle
             }
             set
             {
-                transform.DORotate(new Vector3(0f, 360f - value - 90f, 0f), RotationTweenDuration);
+                transform.DORotate(new Vector3(0f, 360f - value - 270f, 0f), RotationTweenDuration);
             }
         }
 
