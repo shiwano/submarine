@@ -139,6 +139,7 @@ func (b *Battle) start() {
 	}
 	b.ctx.Event.AddActorAddEventListener(b.onActorAdd)
 	b.ctx.Event.AddActorMoveEventListener(b.onActorMove)
+	b.ctx.Event.AddActorChangeVisibilityEventListener(b.onActorChangeVisibility)
 	b.ctx.Event.AddActorDestroyEventListener(b.onActorDestroy)
 }
 
@@ -210,6 +211,10 @@ func (b *Battle) onActorAdd(actor context.Actor) {
 
 func (b *Battle) onActorMove(actor context.Actor) {
 	b.Gateway.outputMovement(actor)
+}
+
+func (b *Battle) onActorChangeVisibility(actor context.Actor, teamLayer navmesh.LayerMask) {
+	b.Gateway.outputVisibility(b.ctx.UserPlayersByTeam(), actor, teamLayer)
 }
 
 func (b *Battle) onActorDestroy(actor context.Actor) {

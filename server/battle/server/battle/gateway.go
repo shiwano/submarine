@@ -4,6 +4,7 @@ import (
 	"time"
 
 	"github.com/shiwano/submarine/server/battle/lib/currentmillis"
+	"github.com/shiwano/submarine/server/battle/lib/navmesh"
 	"github.com/shiwano/submarine/server/battle/lib/typhenapi/core"
 	battleAPI "github.com/shiwano/submarine/server/battle/lib/typhenapi/type/submarine/battle"
 	"github.com/shiwano/submarine/server/battle/server/battle/context"
@@ -60,6 +61,22 @@ func (g *Gateway) outputActor(receiversByTeam context.PlayersByTeam, actor conte
 				Movement:  actor.Movement(),
 				IsVisible: actor.IsVisibleFrom(teamLayer),
 			},
+		}
+	}
+}
+
+func (g *Gateway) outputVisibility(receiversByTeam context.PlayersByTeam, actor context.Actor,
+	targetTeamLayer navmesh.LayerMask) {
+	for teamLayer, receivers := range receiversByTeam {
+		if teamLayer == targetTeamLayer {
+			g.Output <- &GatewayOutput{
+				UserIDs: receivers.SelectInt64(func(p *context.Player) int64 { return p.ID }),
+				Message: &battleAPI.Visibility{
+					ActorId:   actor.ID(),
+					IsVisible: actor.IsVisibleFrom(teamLayer),
+					Movement:  actor.Movement(),
+				},
+			}
 		}
 	}
 }
