@@ -76,15 +76,17 @@ func TestContextTest(t *testing.T) {
 
 			Convey("with valid actor id", func() {
 				Convey("should return the actor", func() {
-					actor := c.Actor(actorID)
-					So(actor.ID(), ShouldEqual, actorID)
+					a, ok := c.Actor(actorID)
+					So(ok, ShouldBeTrue)
+					So(a.ID(), ShouldEqual, actorID)
 				})
 			})
 
 			Convey("with invalid user id", func() {
 				Convey("should return nil", func() {
-					actor := c.Actor(actorID + 1)
-					So(actor, ShouldBeNil)
+					a, ok := c.Actor(actorID + 1)
+					So(ok, ShouldBeFalse)
+					So(a, ShouldBeNil)
 				})
 			})
 		})
@@ -94,16 +96,18 @@ func TestContextTest(t *testing.T) {
 
 			Convey("with valid user id", func() {
 				Convey("should return the user's submarine", func() {
-					submarine := c.SubmarineByPlayerID(userID)
-					So(submarine.Player().ID, ShouldEqual, userID)
-					So(submarine.Type(), ShouldEqual, battleAPI.ActorType_Submarine)
+					s, ok := c.SubmarineByPlayerID(userID)
+					So(ok, ShouldBeTrue)
+					So(s.Player().ID, ShouldEqual, userID)
+					So(s.Type(), ShouldEqual, battleAPI.ActorType_Submarine)
 				})
 			})
 
 			Convey("with invalid user id", func() {
 				Convey("should return nil", func() {
-					submarine := c.SubmarineByPlayerID(userID + 1)
-					So(submarine, ShouldBeNil)
+					s, ok := c.SubmarineByPlayerID(userID + 1)
+					So(ok, ShouldBeFalse)
+					So(s, ShouldBeNil)
 				})
 			})
 		})

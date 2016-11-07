@@ -64,8 +64,11 @@ func (c *Context) ElapsedTime() time.Duration {
 }
 
 // SubmarineByPlayerID returns the submarine which has the given player id.
-func (c *Context) SubmarineByPlayerID(userID int64) Actor {
-	return c.container.submarinesByPlayerID[userID]
+func (c *Context) SubmarineByPlayerID(userID int64) (Actor, bool) {
+	if s, ok := c.container.submarinesByPlayerID[userID]; ok {
+		return s, true
+	}
+	return nil, false
 }
 
 // Actors returns all actors.
@@ -76,8 +79,11 @@ func (c *Context) Actors() ActorSlice {
 }
 
 // Actor returns the actor that has the actor id.
-func (c *Context) Actor(actorID int64) Actor {
-	return c.container.actorsByID[actorID]
+func (c *Context) Actor(actorID int64) (Actor, bool) {
+	if a, ok := c.container.actorsByID[actorID]; ok {
+		return a, true
+	}
+	return nil, false
 }
 
 // HasActor determines whether the specified actor exists.

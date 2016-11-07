@@ -62,7 +62,7 @@ func (b *Battle) Close() {
 // EnterUser enters an user to the battle.
 func (b *Battle) EnterUser(userID int64) {
 	if !b.isStarted {
-		if s := b.ctx.SubmarineByPlayerID(userID); s == nil {
+		if _, ok := b.ctx.SubmarineByPlayerID(userID); !ok {
 			index := len(b.ctx.Players())
 			startPos := b.getStartPosition(index)
 			teamLayer := context.GetTeamLayer(index + 1)
@@ -98,9 +98,8 @@ func (b *Battle) EnterBot(bot *api.Bot) bool {
 // LeaveBot leaves a bot from the battle.
 func (b *Battle) LeaveBot(bot *api.Bot) bool {
 	if !b.isStarted {
-		submarine := b.ctx.SubmarineByPlayerID(bot.Id)
-		if submarine != nil {
-			submarine.Destroy()
+		if s, ok := b.ctx.SubmarineByPlayerID(bot.Id); ok {
+			s.Destroy()
 		}
 		return true
 	}
@@ -158,7 +157,7 @@ func (b *Battle) finish() {
 }
 
 func (b *Battle) reenterUser(userID int64) {
-	if s := b.ctx.SubmarineByPlayerID(userID); s != nil {
+	if s, ok := b.ctx.SubmarineByPlayerID(userID); ok {
 		players := context.PlayerSlice{s.Player()}
 		b.Gateway.outputStart(players, b.ctx.StartedAt)
 		for _, actor := range b.ctx.Actors() {
@@ -168,7 +167,7 @@ func (b *Battle) reenterUser(userID int64) {
 }
 
 func (b *Battle) leaveUser(userID int64) {
-	if s := b.ctx.SubmarineByPlayerID(userID); s != nil {
+	if s, ok := b.ctx.SubmarineByPlayerID(userID); ok {
 		s.Event().EmitUserLeaveEvent()
 	}
 }
@@ -187,8 +186,8 @@ func (b *Battle) getStartPosition(index int) *vec2.T {
 }
 
 func (b *Battle) onInputReceive(input *gatewayInput) {
-	s := b.ctx.SubmarineByPlayerID(input.userID)
-	if s == nil {
+	s, ok := b.ctx.SubmarineByPlayerID(input.userID)
+	if !ok {
 		return
 	}
 	switch m := input.message.(type) {

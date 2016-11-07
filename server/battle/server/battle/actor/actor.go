@@ -143,7 +143,7 @@ func (a *actor) onStageAgentCollide(obj navmesh.Object, point vec2.T) {
 	if obj == nil {
 		logger.Log.Debugf("%v collided with stage", a)
 		a.event.EmitCollideWithStageEvent(point)
-	} else if other := a.ctx.Actor(obj.ID()); other != nil {
+	} else if other, ok := a.ctx.Actor(obj.ID()); ok {
 		logger.Log.Debugf("%v collided with %v", a, other)
 		a.event.EmitCollideWithOtherActorEvent(other, point)
 	}
