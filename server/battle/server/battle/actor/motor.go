@@ -48,10 +48,9 @@ func newMotor(ctx *context.Context, position *vec2.T, direction float64,
 }
 
 func (m *motor) toAPIType(actorID int64) *battleAPI.Movement {
-	position := m.position()
 	return &battleAPI.Movement{
 		ActorId:     actorID,
-		Position:    &battleAPI.Point{X: position[0], Y: position[1]},
+		Position:    &battleAPI.Point{X: m.initialPosition[0], Y: m.initialPosition[1]},
 		Direction:   m.direction,
 		MovedAt:     currentmillis.Millis(m.changedAt),
 		Accelerator: m.accelerator.toAPIType(),
