@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Zenject;
 using Type = TyphenApi.Type.Submarine;
 
@@ -13,7 +14,7 @@ namespace Submarine.Battle
         [Inject]
         TorpedoFacade.Factory torpedoFactory;
 
-        Dictionary<long, ActorFacade> actors = new Dictionary<long, ActorFacade>();
+        readonly Dictionary<long, ActorFacade> actors = new Dictionary<long, ActorFacade>();
 
         public void Tick()
         {
@@ -30,16 +31,16 @@ namespace Submarine.Battle
             return actor;
         }
 
-        public void CreateActor(Type.Battle.Actor actor)
+        public ActorFacade CreateActor(Type.Battle.Actor actor)
         {
             switch (actor.Type)
             {
                 case Type.Battle.ActorType.Submarine:
-                    CreateSubmarine(actor);
-                    break;
+                    return CreateSubmarine(actor);
                 case Type.Battle.ActorType.Torpedo:
-                    CreateTorpedo(actor);
-                    break;
+                    return CreateTorpedo(actor);
+                default:
+                    throw new NotImplementedException("Unsupported actor type: " + actor.Type);
             }
         }
 
@@ -53,17 +54,19 @@ namespace Submarine.Battle
             }
         }
 
-        void CreateSubmarine(Type.Battle.Actor actor)
+        SubmarineFacade CreateSubmarine(Type.Battle.Actor actor)
         {
             var isPlayerSubmarine = actor.UserId == userModel.LoggedInUser.Value.Id;
             var submarine = submarineFactory.Create(actor, isPlayerSubmarine);
             actors.Add(actor.Id, submarine);
+            return submarine;
         }
 
-        void CreateTorpedo(Type.Battle.Actor actor)
+        TorpedoFacade CreateTorpedo(Type.Battle.Actor actor)
         {
             var torpedo = torpedoFactory.Create(actor);
             actors.Add(actor.Id, torpedo);
+            return torpedo;
         }
     }
 }

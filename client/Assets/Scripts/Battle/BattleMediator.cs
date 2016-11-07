@@ -7,6 +7,8 @@ namespace Submarine.Battle
     public class BattleMediator : IInitializable, ITickable
     {
         [Inject]
+        BattleEvent.ActorCreate actorCreateEvent;
+        [Inject]
         BattleService battleService;
         [Inject]
         BattleModel battleModel;
@@ -53,7 +55,8 @@ namespace Submarine.Battle
 
         void OnActorCreate(Type.Battle.Actor actor)
         {
-            actorContainer.CreateActor(actor);
+            var actorFacade = actorContainer.CreateActor(actor);
+            actorCreateEvent.Invoke(actorFacade);
         }
 
         void OnActorMove(Type.Battle.Movement movement)
