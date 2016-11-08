@@ -32,15 +32,15 @@ func main() {
 }
 
 func generateLightMapIfNeeded(stageDir string) {
-	navMeshJSONPath := path.Join(stageDir, "NavMesh.json")
-	lightMapJSONPath := path.Join(stageDir, "LightMap.json")
+	navMeshFilePath := path.Join(stageDir, "NavMesh.json")
+	lightMapFilePath := path.Join(stageDir, "LightMap.bytes")
 
-	mesh, err := navmesh.LoadMeshFromJSONFile(navMeshJSONPath)
+	mesh, err := navmesh.LoadMeshFromJSONFile(navMeshFilePath)
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	lightMap, err := sight.LoadLightMapFromJSONFile(lightMapJSONPath)
+	lightMap, err := sight.LoadLightMapFromMessagePackFile(lightMapFilePath)
 	if err == nil &&
 		lightMap.MeshVersion == mesh.Version &&
 		lightMap.Helper.CellSize == cellSize &&
@@ -48,14 +48,14 @@ func generateLightMapIfNeeded(stageDir string) {
 		return
 	}
 
-	lightMapData, err := sight.GenerateLightMap(navmesh.New(mesh), cellSize, lightRange).ToJSON()
+	lightMapData, err := sight.GenerateLightMap(navmesh.New(mesh), cellSize, lightRange).ToMessagePack()
 	if err != nil {
 		log.Fatal(err)
 	}
-	if err := ioutil.WriteFile(lightMapJSONPath, lightMapData, os.ModePerm); err != nil {
+	if err := ioutil.WriteFile(lightMapFilePath, lightMapData, os.ModePerm); err != nil {
 		log.Fatal(err)
 	}
-	fmt.Println("Generated", lightMapJSONPath)
+	fmt.Println("Generated", lightMapFilePath)
 }
 
 func getSubDirs(dir string) (subDirs []string) {
