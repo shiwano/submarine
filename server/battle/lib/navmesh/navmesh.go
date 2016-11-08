@@ -52,7 +52,7 @@ func (n *NavMesh) ContainsPoint(point *vec2.T) bool {
 }
 
 // Raycast casts a ray on the navmesh.
-func (n *NavMesh) Raycast(origin, vec *vec2.T, ignoredLayer LayerMask) (hitInfo *RaycastHitInfo) {
+func (n *NavMesh) Raycast(origin, vec *vec2.T, ignoredLayer LayerMask) (hitInfo *RaycastHitInfo, isHit bool) {
 	var resultLengthSqr float64
 
 	if p, ok := n.Mesh.intersectWithLineSeg(origin, vec); ok {
@@ -60,7 +60,7 @@ func (n *NavMesh) Raycast(origin, vec *vec2.T, ignoredLayer LayerMask) (hitInfo 
 		resultLengthSqr = calculateVectorLengthSqr(origin, &p)
 	}
 	if ignoredLayer == LayerAll {
-		return
+		return hitInfo, hitInfo != nil
 	}
 
 	dir := vec.Normalized()
@@ -76,7 +76,7 @@ func (n *NavMesh) Raycast(origin, vec *vec2.T, ignoredLayer LayerMask) (hitInfo 
 			}
 		}
 	}
-	return
+	return hitInfo, hitInfo != nil
 }
 
 // FindPath finds a path on the navmesh.

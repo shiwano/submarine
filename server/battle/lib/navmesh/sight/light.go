@@ -32,7 +32,7 @@ func newLight(navMesh *navmesh.NavMesh, helper *helper, center *vec2.T) *light {
 				continue
 			}
 			var cellPoint cellPoint
-			if hitInfo := navMesh.Raycast(center, &vec, navmesh.LayerAll); hitInfo != nil {
+			if hitInfo, ok := navMesh.Raycast(center, &vec, navmesh.LayerAll); ok {
 				cellPoint = helper.cellPointByNavMeshPoint(&hitInfo.Point)
 			} else {
 				cellPoint = helper.cellPointByNavMeshPoint(point)

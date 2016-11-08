@@ -19,7 +19,7 @@ func (a *Agent) Warp(position *vec2.T) {
 func (a *Agent) Move(position *vec2.T, ignoredLayer LayerMask) *RaycastHitInfo {
 	vec := vec2.Sub(position, a.position)
 
-	if hitInfo := a.navMesh.Raycast(a.position, &vec, ignoredLayer); hitInfo != nil {
+	if hitInfo, ok := a.navMesh.Raycast(a.position, &vec, ignoredLayer); ok {
 		a.position = &hitInfo.Point
 		return hitInfo
 	}
