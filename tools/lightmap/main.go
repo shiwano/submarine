@@ -7,16 +7,26 @@ import (
 	"os"
 	"path"
 	"path/filepath"
+	"strconv"
 	"sync"
 
 	"github.com/shiwano/submarine/server/battle/lib/navmesh"
 	"github.com/shiwano/submarine/server/battle/lib/navmesh/sight"
 )
 
-const cellSize = 5
-const lightRange = 20
-
 func main() {
+	if len(os.Args) < 3 {
+		log.Fatal("Usage: ./lightmap cellSize lightRange")
+	}
+	cellSize, err := strconv.ParseFloat(os.Args[1], 64)
+	if err != nil {
+		log.Fatal(err)
+	}
+	lightRange, err := strconv.ParseFloat(os.Args[2], 64)
+	if err != nil {
+		log.Fatal(err)
+	}
+
 	stageRootDir := getStageRootDir()
 	stageDirs := getSubDirs(stageRootDir)
 
@@ -24,14 +34,14 @@ func main() {
 	for _, stageDir := range stageDirs {
 		wg.Add(1)
 		go func(stageDir string) {
-			generateLightMapIfNeeded(stageDir)
+			generateLightMapIfNeeded(cellSize, lightRange, stageDir)
 			wg.Done()
 		}(stageDir)
 	}
 	wg.Wait()
 }
 
-func generateLightMapIfNeeded(stageDir string) {
+func generateLightMapIfNeeded(cellSize, lightRange float64, stageDir string) {
 	navMeshFilePath := path.Join(stageDir, "NavMesh.json")
 	lightMapFilePath := path.Join(stageDir, "LightMap.bytes")
 

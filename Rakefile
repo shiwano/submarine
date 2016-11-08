@@ -11,8 +11,7 @@ namespace :gen do
   desc 'Generate light map JSON files'
   task :lightmap do
     cd 'tools/lightmap' do
-      sh 'go build'
-      sh './lightmap'
+      sh 'go build && ./lightmap 5 20'
     end
   end
 end
