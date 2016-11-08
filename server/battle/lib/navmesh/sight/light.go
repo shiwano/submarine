@@ -31,10 +31,12 @@ func newLight(navMesh *navmesh.NavMesh, helper *helper, center *vec2.T) *light {
 			if vec.LengthSqr() > float64(lightRangeSqr) {
 				continue
 			}
-			if navMesh.Raycast(center, &vec, navmesh.LayerAll) != nil {
-				continue
+			var cellPoint cellPoint
+			if hitInfo := navMesh.Raycast(center, &vec, navmesh.LayerAll); hitInfo != nil {
+				cellPoint = helper.cellPointByNavMeshPoint(&hitInfo.Point)
+			} else {
+				cellPoint = helper.cellPointByNavMeshPoint(point)
 			}
-			cellPoint := helper.cellPointByNavMeshPoint(point)
 			l.LitPoints = append(l.LitPoints, cellPoint)
 		}
 	}
