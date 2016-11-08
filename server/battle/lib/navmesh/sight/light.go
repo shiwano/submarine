@@ -7,7 +7,7 @@ import (
 )
 
 type light struct {
-	LitPoints []cellPoint `json:"litPoints"`
+	LitPoints []cellPoint `codec:"litPoints"`
 }
 
 func newLight(navMesh *navmesh.NavMesh, helper *helper, center *vec2.T) *light {

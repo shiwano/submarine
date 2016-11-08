@@ -1,9 +1,10 @@
 package sight
 
 import (
-	"encoding/json"
+	"bytes"
 	"os"
 
+	"github.com/ugorji/go/codec"
 	"github.com/ungerik/go3d/float64/vec2"
 
 	"github.com/shiwano/submarine/server/battle/lib/navmesh"
@@ -11,9 +12,9 @@ import (
 
 // LightMap represents a map that includes lights by a point.
 type LightMap struct {
-	MeshVersion string
-	Helper      *helper    `json:"helper"`
-	Lights      [][]*light `json:"lights"`
+	MeshVersion string     `codec:"mesh_version"`
+	Helper      *helper    `codec:"helper"`
+	Lights      [][]*light `codec:"lights"`
 }
 
 // GenerateLightMap creates a LightMap that has the pre-calculated lights.
@@ -49,7 +50,8 @@ func LoadLightMapFromJSONFile(jsonPath string) (*LightMap, error) {
 	}
 
 	lm := new(LightMap)
-	if err := json.NewDecoder(f).Decode(lm); err != nil {
+	json := new(codec.JsonHandle)
+	if err := codec.NewDecoder(f, json).Decode(lm); err != nil {
 		return nil, err
 	}
 	return lm, nil
@@ -57,7 +59,12 @@ func LoadLightMapFromJSONFile(jsonPath string) (*LightMap, error) {
 
 // ToJSON returns JSON encoding of the light map.
 func (lm *LightMap) ToJSON() ([]byte, error) {
-	return json.Marshal(lm)
+	b := new(bytes.Buffer)
+	json := new(codec.JsonHandle)
+	if err := codec.NewEncoder(b, json).Encode(lm); err != nil {
+		return nil, err
+	}
+	return b.Bytes(), nil
 }
 
 func (lm *LightMap) lightByNavMeshPoint(point *vec2.T) *light {

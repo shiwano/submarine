@@ -11,16 +11,16 @@ import (
 type cellPoint [2]int
 
 type helper struct {
-	CellSize   float64 `json:"cellSize"`
-	LightRange float64 `json:"lightRange"`
+	CellSize   float64 `codec:"cellSize"`
+	LightRange float64 `codec:"lightRange"`
 
-	MinX int `json:"minX"`
-	MinY int `json:"minY"`
-	MaxX int `json:"maxX"`
-	MaxY int `json:"maxY"`
+	MinX int `codec:"minX"`
+	MinY int `codec:"minY"`
+	MaxX int `codec:"maxX"`
+	MaxY int `codec:"maxY"`
 
-	Width  int `json:"width"`
-	Height int `json:"height"`
+	Width  int `codec:"width"`
+	Height int `codec:"height"`
 }
 
 func newHelper(navMesh *navmesh.NavMesh, cellSize float64, lightRange float64) *helper {
