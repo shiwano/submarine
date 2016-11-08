@@ -57,8 +57,8 @@ func (l *loader) LoadLightMap(code int64) (*sight.LightMap, error) {
 		return lm, nil
 	}
 
-	assetPath := fmt.Sprintf("Art/Stages/%03d/LightMap.json", code)
-	lm, err := sight.LoadLightMapFromJSONFile(path.Join(clientAssetDir, assetPath))
+	assetPath := fmt.Sprintf("Art/Stages/%03d/LightMap.bytes", code)
+	lm, err := sight.LoadLightMapFromMessagePackFile(path.Join(clientAssetDir, assetPath))
 	if err != nil {
 		return nil, err
 	}
