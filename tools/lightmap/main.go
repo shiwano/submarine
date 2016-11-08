@@ -41,7 +41,10 @@ func generateLightMapIfNeeded(stageDir string) {
 	}
 
 	lightMap, err := sight.LoadLightMapFromJSONFile(lightMapJSONPath)
-	if err == nil && lightMap.MeshVersion == mesh.Version {
+	if err == nil &&
+		lightMap.MeshVersion == mesh.Version &&
+		lightMap.Helper.CellSize == cellSize &&
+		lightMap.Helper.LightRange == lightRange {
 		return
 	}
 
