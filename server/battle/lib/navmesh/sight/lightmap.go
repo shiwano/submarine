@@ -42,16 +42,25 @@ func GenerateLightMap(navMesh *navmesh.NavMesh, cellSize, lightRange float64) *L
 }
 
 // LoadLightMapFromJSONFile loads a light map from a JSON file.
-func LoadLightMapFromJSONFile(jsonPath string) (*LightMap, error) {
-	f, err := os.Open(jsonPath)
+func LoadLightMapFromJSONFile(fileName string) (*LightMap, error) {
+	handle := new(codec.JsonHandle)
+	return deserializeLightMapFromFile(fileName, handle)
+}
+
+// LoadLightMapFromMessagePackFile loads a light map from a MessagePack file.
+func LoadLightMapFromMessagePackFile(fileName string) (*LightMap, error) {
+	handle := new(codec.MsgpackHandle)
+	return deserializeLightMapFromFile(fileName, handle)
+}
+
+func deserializeLightMapFromFile(fileName string, handle codec.Handle) (*LightMap, error) {
+	f, err := os.Open(fileName)
 	defer f.Close()
 	if err != nil {
 		return nil, err
 	}
-
 	lm := new(LightMap)
-	json := new(codec.JsonHandle)
-	if err := codec.NewDecoder(f, json).Decode(lm); err != nil {
+	if err := codec.NewDecoder(f, handle).Decode(lm); err != nil {
 		return nil, err
 	}
 	return lm, nil
@@ -59,9 +68,19 @@ func LoadLightMapFromJSONFile(jsonPath string) (*LightMap, error) {
 
 // ToJSON returns JSON encoding of the light map.
 func (lm *LightMap) ToJSON() ([]byte, error) {
+	handle := new(codec.JsonHandle)
+	return lm.serialize(handle)
+}
+
+// ToMessagePack returns MessagePack encoding of the light map.
+func (lm *LightMap) ToMessagePack() ([]byte, error) {
+	handle := new(codec.MsgpackHandle)
+	return lm.serialize(handle)
+}
+
+func (lm *LightMap) serialize(handle codec.Handle) ([]byte, error) {
 	b := new(bytes.Buffer)
-	json := new(codec.JsonHandle)
-	if err := codec.NewEncoder(b, json).Encode(lm); err != nil {
+	if err := codec.NewEncoder(b, handle).Encode(lm); err != nil {
 		return nil, err
 	}
 	return b.Bytes(), nil
