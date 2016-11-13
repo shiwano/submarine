@@ -23,8 +23,8 @@ type meshData struct {
 type Mesh struct {
 	Version           string
 	Rect              *vec2.Rect
+	Triangles         []*Triangle
 	vertices          []*vec2.T
-	triangles         []*Triangle
 	outerEdges        []*edge
 	trianglesByVertex map[*vec2.T][]*Triangle
 	adjoiningVertices map[*vec2.T][]*vec2.T
@@ -68,12 +68,12 @@ func LoadMeshFromJSONFile(jsonPath string) (*Mesh, error) {
 	}
 
 	// Triangles
-	m.triangles = make([]*Triangle, len(rawMesh.Triangles))
+	m.Triangles = make([]*Triangle, len(rawMesh.Triangles))
 	for i, t := range rawMesh.Triangles {
 		if t[0] >= verticesLength || t[1] >= verticesLength || t[2] >= verticesLength {
 			return nil, fmt.Errorf("Invalid vertex index: %v (%v)", t, i)
 		}
-		m.triangles[i] = newTriangle(
+		m.Triangles[i] = newTriangle(
 			m.vertices[t[0]],
 			m.vertices[t[1]],
 			m.vertices[t[2]],
@@ -100,7 +100,7 @@ func LoadMeshFromJSONFile(jsonPath string) (*Mesh, error) {
 		if value == 2 {
 			a := m.vertices[key[0]]
 			b := m.vertices[key[1]]
-			for _, triangle := range m.triangles {
+			for _, triangle := range m.Triangles {
 				if aIndex, ok := triangle.vertexIndex(a); ok {
 					if bIndex, ok := triangle.vertexIndex(b); ok {
 						m.outerEdges = append(m.outerEdges, newEdge(triangle, aIndex, bIndex))
@@ -138,7 +138,7 @@ func LoadMeshFromJSONFile(jsonPath string) (*Mesh, error) {
 
 func (m *Mesh) findTrianglesByVertex(vertex *vec2.T) []*Triangle {
 	var triangles []*Triangle
-	for _, t := range m.triangles {
+	for _, t := range m.Triangles {
 		if vertex == t.Vertices[0] ||
 			vertex == t.Vertices[1] ||
 			vertex == t.Vertices[2] {
@@ -168,7 +168,7 @@ func (m *Mesh) findAdjoiningVertices(vertex *vec2.T) []*vec2.T {
 }
 
 func (m *Mesh) findTriangleByPoint(point *vec2.T) *Triangle {
-	for _, t := range m.triangles {
+	for _, t := range m.Triangles {
 		if t.containsPoint(point) {
 			return t
 		}

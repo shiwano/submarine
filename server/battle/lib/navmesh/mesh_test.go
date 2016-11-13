@@ -20,7 +20,7 @@ func TestMesh(t *testing.T) {
 						Max: vec2.T{10, 7},
 					})
 					So(m.vertices[0], ShouldResemble, &vec2.T{0, 0})
-					So(m.triangles[0], ShouldResemble, newTriangle(
+					So(m.Triangles[0], ShouldResemble, newTriangle(
 						m.vertices[0],
 						m.vertices[1],
 						m.vertices[2],
@@ -47,10 +47,10 @@ func TestMesh(t *testing.T) {
 			Convey("should initialize trianglesByVertex", func() {
 				triangles := m.trianglesByVertex[m.vertices[0]]
 				So(triangles, ShouldHaveLength, 4)
-				So(triangles, ShouldContain, m.triangles[0])
-				So(triangles, ShouldContain, m.triangles[1])
-				So(triangles, ShouldContain, m.triangles[2])
-				So(triangles, ShouldContain, m.triangles[3])
+				So(triangles, ShouldContain, m.Triangles[0])
+				So(triangles, ShouldContain, m.Triangles[1])
+				So(triangles, ShouldContain, m.Triangles[2])
+				So(triangles, ShouldContain, m.Triangles[3])
 			})
 
 			Convey("should initialize adjoiningVertices", func() {
@@ -67,7 +67,7 @@ func TestMesh(t *testing.T) {
 		Convey("#findTriangleByPoint", func() {
 			Convey("should find the triangle that contains the specified point", func() {
 				triangle := m.findTriangleByPoint(&vec2.T{1, -11})
-				So(triangle, ShouldEqual, m.triangles[5])
+				So(triangle, ShouldEqual, m.Triangles[5])
 			})
 		})
 
