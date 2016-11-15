@@ -17,9 +17,14 @@ task :build do
   sh 'go build'
 end
 
-desc 'Build a binary for debug'
-task :build_for_debug do
-  sh 'go build -tags=debug -o ./battle_debug'
+namespace :build do
+  desc 'Build all binaries'
+  task :all => ['build', 'build:debug']
+
+  desc 'Build a debug binary'
+  task :debug do
+    sh 'go build -tags=debug -o ./battle_debug'
+  end
 end
 
 desc 'Run all tests'
