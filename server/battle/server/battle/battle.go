@@ -10,6 +10,7 @@ import (
 	"github.com/shiwano/submarine/server/battle/server/battle/actor"
 	"github.com/shiwano/submarine/server/battle/server/battle/ai"
 	"github.com/shiwano/submarine/server/battle/server/battle/context"
+	"github.com/shiwano/submarine/server/battle/server/debug"
 
 	"github.com/tevino/abool"
 	"github.com/ungerik/go3d/float64/vec2"
@@ -141,10 +142,17 @@ func (b *Battle) start() {
 	b.ctx.Event.AddActorMoveEventListener(b.onActorMove)
 	b.ctx.Event.AddActorChangeVisibilityEventListener(b.onActorChangeVisibility)
 	b.ctx.Event.AddActorDestroyEventListener(b.onActorDestroy)
+
+	if debug.Debug {
+		debug.Debugger.UpdateNavMesh(b.ctx.Stage)
+	}
 }
 
 func (b *Battle) update(now time.Time) bool {
 	b.ctx.Update(now)
+	if debug.Debug {
+		debug.Debugger.UpdateNavMesh(b.ctx.Stage)
+	}
 	return b.judge.isBattleFinished()
 }
 
@@ -154,6 +162,9 @@ func (b *Battle) finish() {
 		b.Gateway.outputFinish(&winner.ID, b.ctx.Now)
 	} else {
 		b.Gateway.outputFinish(nil, b.ctx.Now)
+	}
+	if debug.Debug {
+		debug.Debugger.UpdateNavMesh(nil)
 	}
 }
 
