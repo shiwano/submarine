@@ -18,6 +18,14 @@
 			"notests": true
 		},
 		{
+			"importpath": "github.com/boombuler/barcode",
+			"repository": "https://github.com/boombuler/barcode",
+			"vcs": "git",
+			"revision": "8b1271e880cb66f992a2647ff7940d4dc5a41fee",
+			"branch": "master",
+			"notests": true
+		},
+		{
 			"importpath": "github.com/dustin/go-broadcast",
 			"repository": "https://github.com/dustin/go-broadcast",
 			"vcs": "git",
@@ -31,6 +39,42 @@
 			"vcs": "git",
 			"revision": "3900df04d2a88e22beaf6a2970c63648b9e1b0e1",
 			"branch": "master",
+			"notests": true
+		},
+		{
+			"importpath": "github.com/go-gl/gl/v2.1/gl",
+			"repository": "https://github.com/go-gl/gl",
+			"vcs": "git",
+			"revision": "b303bcb3e83b7ef645a5104e1c2db7f8d9e8918a",
+			"branch": "master",
+			"path": "/v2.1/gl",
+			"notests": true
+		},
+		{
+			"importpath": "github.com/go-gl/glfw/v3.1/glfw",
+			"repository": "https://github.com/go-gl/glfw",
+			"vcs": "git",
+			"revision": "6e7202f2d691ed1d79bcdaed6cce0061006ce565",
+			"branch": "master",
+			"path": "/v3.1/glfw",
+			"notests": true
+		},
+		{
+			"importpath": "github.com/golang/freetype/raster",
+			"repository": "https://github.com/golang/freetype",
+			"vcs": "git",
+			"revision": "38b4c392adc5eed94207994c4848fff99f4ac234",
+			"branch": "master",
+			"path": "/raster",
+			"notests": true
+		},
+		{
+			"importpath": "github.com/golang/freetype/truetype",
+			"repository": "https://github.com/golang/freetype",
+			"vcs": "git",
+			"revision": "38b4c392adc5eed94207994c4848fff99f4ac234",
+			"branch": "master",
+			"path": "truetype",
 			"notests": true
 		},
 		{
@@ -77,10 +121,34 @@
 			"notests": true
 		},
 		{
+			"importpath": "github.com/jung-kurt/gofpdf",
+			"repository": "https://github.com/jung-kurt/gofpdf",
+			"vcs": "git",
+			"revision": "c81d351d55fabc44d050fb13ad7741a592f8b818",
+			"branch": "master",
+			"notests": true
+		},
+		{
 			"importpath": "github.com/k0kubun/pp",
 			"repository": "https://github.com/k0kubun/pp",
 			"vcs": "git",
 			"revision": "f5dce6ed0ccf6c350f1679964ff6b61f3d6d2033",
+			"branch": "master",
+			"notests": true
+		},
+		{
+			"importpath": "github.com/llgcode/draw2d",
+			"repository": "https://github.com/llgcode/draw2d",
+			"vcs": "git",
+			"revision": "1286d3b2030ac9952e59c5ef29ef3cc24a8e83d5",
+			"branch": "master",
+			"notests": true
+		},
+		{
+			"importpath": "github.com/llgcode/ps",
+			"repository": "https://github.com/llgcode/ps",
+			"vcs": "git",
+			"revision": "f1443b32eedb2b8d61447bf9431782ef901bf535",
 			"branch": "master",
 			"notests": true
 		},
@@ -113,6 +181,14 @@
 			"repository": "https://github.com/mattn/go-isatty",
 			"vcs": "git",
 			"revision": "66b8e73f3f5cda9f96b69efd03dd3d7fc4a5cdb8",
+			"branch": "master",
+			"notests": true
+		},
+		{
+			"importpath": "github.com/ruudk/golang-pdf417",
+			"repository": "https://github.com/ruudk/golang-pdf417",
+			"vcs": "git",
+			"revision": "60b9437b150c3acd721fd7af34e6413de4021563",
 			"branch": "master",
 			"notests": true
 		},
@@ -164,6 +240,51 @@
 			"vcs": "git",
 			"revision": "b765e791b61c6db0b9ff62072092d28395aeb106",
 			"branch": "master",
+			"notests": true
+		},
+		{
+			"importpath": "golang.org/x/image/draw",
+			"repository": "https://go.googlesource.com/image",
+			"vcs": "git",
+			"revision": "507b1a44bd72830c136e6ecf7c05f9089796d572",
+			"branch": "master",
+			"path": "/draw",
+			"notests": true
+		},
+		{
+			"importpath": "golang.org/x/image/font",
+			"repository": "https://go.googlesource.com/image",
+			"vcs": "git",
+			"revision": "507b1a44bd72830c136e6ecf7c05f9089796d572",
+			"branch": "master",
+			"path": "font",
+			"notests": true
+		},
+		{
+			"importpath": "golang.org/x/image/math/f64",
+			"repository": "https://go.googlesource.com/image",
+			"vcs": "git",
+			"revision": "507b1a44bd72830c136e6ecf7c05f9089796d572",
+			"branch": "master",
+			"path": "math/f64",
+			"notests": true
+		},
+		{
+			"importpath": "golang.org/x/image/math/fixed",
+			"repository": "https://go.googlesource.com/image",
+			"vcs": "git",
+			"revision": "507b1a44bd72830c136e6ecf7c05f9089796d572",
+			"branch": "master",
+			"path": "math/fixed",
+			"notests": true
+		},
+		{
+			"importpath": "golang.org/x/image/tiff",
+			"repository": "https://go.googlesource.com/image",
+			"vcs": "git",
+			"revision": "507b1a44bd72830c136e6ecf7c05f9089796d572",
+			"branch": "master",
+			"path": "tiff",
 			"notests": true
 		},
 		{
