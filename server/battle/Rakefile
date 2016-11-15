@@ -17,6 +17,11 @@ task :build do
   sh 'go build'
 end
 
+desc 'Build a binary for debug'
+task :build_for_debug do
+  sh 'go build -tags=debug -o ./battle_debug'
+end
+
 desc 'Run all tests'
 task :test do
   sh 'go test $(go list ./... | grep -v /vendor/)'
