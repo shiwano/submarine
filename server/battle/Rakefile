@@ -3,7 +3,7 @@ include FileUtils
 task default: :test
 
 desc 'Make a release binary'
-task dist: [:restore_dependencies, :generate, :test, :build]
+task :dist => [:restore_dependencies, :generate, :test, :build]
 
 desc 'Initialize the project tools'
 task :init do
@@ -19,7 +19,7 @@ end
 
 namespace :build do
   desc 'Build all binaries'
-  task :all => ['build', 'build:debug']
+  task :all => [:build, 'build:debug']
 
   desc 'Build a debug binary'
   task :debug do
@@ -40,9 +40,4 @@ end
 desc 'Generate code'
 task :generate do
   sh 'go generate $(go list ./... | grep -v /vendor/)'
-end
-
-desc 'Remove cache directory'
-task :remove_cache do
-  rm_rf '.cache'
 end
