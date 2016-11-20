@@ -42,11 +42,12 @@ func newActor(ctx *context.Context, player *context.Player, params context.Actor
 
 	switch params.Type() {
 	case battleAPI.ActorType_Submarine:
-		a.stageAgent.SetLayer(context.LayerSubmarine)
+		a.stageAgent.SetLayer(a.Player().TeamLayer | context.LayerSubmarine)
 	case battleAPI.ActorType_Torpedo:
-		a.stageAgent.SetLayer(context.LayerTorpedo)
+		a.stageAgent.SetLayer(a.Player().TeamLayer | context.LayerTorpedo)
+	default:
+		a.stageAgent.SetLayer(a.Player().TeamLayer)
 	}
-	a.stageAgent.SetLayer(a.Player().TeamLayer)
 	return a
 }
 
