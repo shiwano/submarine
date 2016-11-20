@@ -5,9 +5,8 @@ import (
 	"image/color"
 	"math"
 
-	"golang.org/x/image/draw"
-
 	"github.com/llgcode/draw2d/draw2dimg"
+	"golang.org/x/image/draw"
 
 	"github.com/shiwano/submarine/server/battle/lib/navmesh"
 )
@@ -74,11 +73,15 @@ func (nm *navMeshView) drawObjects(mesh *navmesh.Mesh, objects map[int64]navmesh
 	scaleY := float64(objectsImageBounds.Max.Y) / float64(meshImageBounds.Max.Y)
 
 	gc := draw2dimg.NewGraphicContext(nm.objectsImage)
-	gc.SetFillColor(color.RGBA{0xe3, 0x86, 0x92, 0xff})
-	gc.SetStrokeColor(color.RGBA{0xd0, 0x42, 0x55, 0xff})
-	gc.SetLineWidth(1)
+	gc.SetLineWidth(5)
 	gc.Scale(scaleX, scaleY)
 	for _, o := range objects {
+		layer := o.Layer()
+		c1, c1Layer := colorByLayer(layer)
+		layer.Clear(c1Layer)
+		c2, _ := colorByLayer(layer)
+		gc.SetFillColor(c1)
+		gc.SetStrokeColor(c2)
 		p := o.Position()
 		x := p[0] - mesh.Rect.Min[0]
 		y := p[1] - mesh.Rect.Min[1]
