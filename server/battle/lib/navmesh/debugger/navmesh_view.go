@@ -4,6 +4,7 @@ import (
 	"image"
 	"image/color"
 	"math"
+	"sort"
 
 	"github.com/llgcode/draw2d/draw2dimg"
 	"golang.org/x/image/draw"
@@ -73,22 +74,35 @@ func (nm *navMeshView) drawObjects(mesh *navmesh.Mesh, objects map[int64]navmesh
 	scaleY := float64(objectsImageBounds.Max.Y) / float64(meshImageBounds.Max.Y)
 
 	gc := draw2dimg.NewGraphicContext(nm.objectsImage)
-	gc.SetLineWidth(5)
 	gc.Scale(scaleX, scaleY)
+	var objectSlice objectSlice
 	for _, o := range objects {
-		layer := o.Layer()
-		c1, c1Layer := colorByLayer(layer)
-		layer.Clear(c1Layer)
-		c2, _ := colorByLayer(layer)
-		gc.SetFillColor(c1)
-		gc.SetStrokeColor(c2)
-		p := o.Position()
-		x := p[0] - mesh.Rect.Min[0]
-		y := p[1] - mesh.Rect.Min[1]
-		gc.BeginPath()
-		gc.ArcTo(x, y, o.SizeRadius(), o.SizeRadius(), 0, math.Pi*2)
-		gc.FillStroke()
+		objectSlice = append(objectSlice, o)
 	}
+	sort.Sort(objectSlice)
+	for _, o := range objectSlice {
+		nm.drawObject(gc, o, mesh)
+	}
+}
+
+func (nm *navMeshView) drawObject(gc *draw2dimg.GraphicContext, o navmesh.Object, mesh *navmesh.Mesh) {
+	layer := o.Layer()
+	c1, c1Layer := colorByLayer(layer)
+	layer.Clear(c1Layer)
+	c2, _ := colorByLayer(layer)
+
+	p := o.Position()
+	x := p[0] - mesh.Rect.Min[0]
+	y := p[1] - mesh.Rect.Min[1]
+	lineWidth := o.SizeRadius() / 2
+	r := o.SizeRadius() - lineWidth/2
+
+	gc.SetLineWidth(lineWidth)
+	gc.SetFillColor(c1)
+	gc.SetStrokeColor(c2)
+	gc.BeginPath()
+	gc.ArcTo(x, y, r, r, 0, math.Pi*2)
+	gc.FillStroke()
 }
 
 func (nm *navMeshView) resizeRGBA(src *image.RGBA, rect image.Rectangle) *image.RGBA {
