@@ -35,6 +35,10 @@ func (nm *navMeshView) draw(navMesh *navmesh.NavMesh) {
 	if nm.meshImage == nil {
 		nm.drawMesh(navMesh.Mesh)
 	}
+	if nm.objectsImage == nil {
+		nm.objectsImage = image.NewRGBA(nm.meshImage.Bounds())
+		nm.objectsImage = nm.resizeRGBA(nm.objectsImage, nm.screenRect)
+	}
 	nm.drawObjects(navMesh.Mesh, navMesh.Objects)
 }
 
@@ -56,23 +60,16 @@ func (nm *navMeshView) drawMesh(mesh *navmesh.Mesh) {
 		gc.FillStroke()
 		gc.Close()
 	}
-
 	nm.scaledMeshImage = nm.resizeRGBA(nm.meshImage, nm.screenRect)
 }
 
 func (nm *navMeshView) drawObjects(mesh *navmesh.Mesh, objects map[int64]navmesh.Object) {
-	if nm.objectsImage == nil {
-		nm.objectsImage = image.NewRGBA(nm.meshImage.Bounds())
-		nm.objectsImage = nm.resizeRGBA(nm.objectsImage, nm.screenRect)
-	} else {
-		draw.Draw(nm.objectsImage, nm.objectsImage.Bounds(), image.Transparent, image.ZP, draw.Src)
-	}
-
 	objectsImageBounds := nm.objectsImage.Bounds()
 	meshImageBounds := nm.meshImage.Bounds()
 	scaleX := float64(objectsImageBounds.Max.X) / float64(meshImageBounds.Max.X)
 	scaleY := float64(objectsImageBounds.Max.Y) / float64(meshImageBounds.Max.Y)
 
+	draw.Draw(nm.objectsImage, nm.objectsImage.Bounds(), image.Transparent, image.ZP, draw.Src)
 	gc := draw2dimg.NewGraphicContext(nm.objectsImage)
 	gc.Scale(scaleX, scaleY)
 	var objectSlice objectSlice
