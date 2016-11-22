@@ -4,7 +4,6 @@ import (
 	"image"
 	"image/color"
 	"math"
-	"sort"
 
 	"github.com/llgcode/draw2d/draw2dimg"
 	"golang.org/x/image/draw"
@@ -72,11 +71,8 @@ func (nm *navMeshView) drawObjects(mesh *navmesh.Mesh, objects map[int64]navmesh
 	draw.Draw(nm.objectsImage, nm.objectsImage.Bounds(), image.Transparent, image.ZP, draw.Src)
 	gc := draw2dimg.NewGraphicContext(nm.objectsImage)
 	gc.Scale(scaleX, scaleY)
-	var objectSlice objectSlice
-	for _, o := range objects {
-		objectSlice = append(objectSlice, o)
-	}
-	sort.Sort(objectSlice)
+	objectSlice := newObjectSlice(objects)
+	objectSlice.sort()
 	for _, o := range objectSlice {
 		nm.drawObject(gc, o, mesh)
 	}
