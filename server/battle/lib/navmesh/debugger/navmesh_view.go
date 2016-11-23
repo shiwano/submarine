@@ -26,8 +26,8 @@ func newNavMeshView(screenRect image.Rectangle) *navMeshView {
 
 func (nm *navMeshView) setScreenRect(screenRect image.Rectangle) {
 	nm.screenRect = screenRect
-	nm.meshImage = nm.resizeRGBA(nm.meshImageBase, nm.screenRect)
-	nm.objectsImage = nm.resizeRGBA(nm.objectsImage, nm.screenRect)
+	nm.meshImage = resizeRGBA(nm.meshImageBase, nm.screenRect)
+	nm.objectsImage = resizeRGBA(nm.objectsImage, nm.screenRect)
 }
 
 func (nm *navMeshView) draw(navMesh *navmesh.NavMesh) {
@@ -36,7 +36,7 @@ func (nm *navMeshView) draw(navMesh *navmesh.NavMesh) {
 	}
 	if nm.objectsImage == nil {
 		nm.objectsImage = image.NewRGBA(nm.meshImageBase.Bounds())
-		nm.objectsImage = nm.resizeRGBA(nm.objectsImage, nm.screenRect)
+		nm.objectsImage = resizeRGBA(nm.objectsImage, nm.screenRect)
 	}
 	nm.drawObjects(navMesh.Mesh, navMesh.Objects)
 }
@@ -59,7 +59,7 @@ func (nm *navMeshView) drawMesh(mesh *navmesh.Mesh) {
 		gc.FillStroke()
 		gc.Close()
 	}
-	nm.meshImage = nm.resizeRGBA(nm.meshImageBase, nm.screenRect)
+	nm.meshImage = resizeRGBA(nm.meshImageBase, nm.screenRect)
 }
 
 func (nm *navMeshView) drawObjects(mesh *navmesh.Mesh, objects map[int64]navmesh.Object) {
@@ -93,16 +93,4 @@ func (nm *navMeshView) drawObject(gc *draw2dimg.GraphicContext, o navmesh.Object
 	gc.BeginPath()
 	gc.ArcTo(x, y, r, r, 0, math.Pi*2)
 	gc.FillStroke()
-}
-
-func (nm *navMeshView) resizeRGBA(src *image.RGBA, rect image.Rectangle) *image.RGBA {
-	var r image.Rectangle
-	if rect.Max.X > rect.Max.Y {
-		r = image.Rect(0, 0, rect.Max.Y, rect.Max.Y)
-	} else {
-		r = image.Rect(0, 0, rect.Max.X, rect.Max.X)
-	}
-	dst := image.NewRGBA(r)
-	draw.ApproxBiLinear.Scale(dst, dst.Bounds(), src, src.Bounds(), draw.Src, nil)
-	return dst
 }
