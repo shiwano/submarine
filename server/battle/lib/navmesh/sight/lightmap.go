@@ -88,8 +88,8 @@ func (lm *LightMap) serialize(handle codec.Handle) ([]byte, error) {
 
 func (lm *LightMap) lightByNavMeshPoint(point *vec2.T) *light {
 	cellPoint := lm.Helper.cellPointByNavMeshPoint(point)
-	if cellPoint[1] >= lm.Helper.Height ||
-		cellPoint[0] >= lm.Helper.Width {
+	if cellPoint[1] >= lm.Helper.Height || cellPoint[1] < 0 ||
+		cellPoint[0] >= lm.Helper.Width || cellPoint[0] < 0 {
 		return nil
 	}
 	return lm.Lights[cellPoint[1]][cellPoint[0]]

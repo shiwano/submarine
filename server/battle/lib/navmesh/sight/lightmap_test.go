@@ -5,6 +5,7 @@ import (
 	"testing"
 
 	. "github.com/smartystreets/goconvey/convey"
+	"github.com/ungerik/go3d/float64/vec2"
 
 	"github.com/shiwano/submarine/server/battle/lib/navmesh"
 )
@@ -79,6 +80,26 @@ func TestLightMap(t *testing.T) {
 
 				So(err, ShouldBeNil)
 				So(actualData, ShouldResemble, expectedData)
+			})
+		})
+
+		Convey("#lightByNavMeshPoint", func() {
+			lm := GenerateLightMap(navMesh, 1, 3)
+
+			Convey("with a point of a light", func() {
+				Convey("should light the specified cell point", func() {
+					p := &vec2.T{0, 0}
+					light := lm.lightByNavMeshPoint(p)
+					So(light, ShouldNotBeNil)
+				})
+			})
+
+			Convey("with a invalid point", func() {
+				Convey("should light the specified cell point", func() {
+					p := &vec2.T{1000, -1000}
+					light := lm.lightByNavMeshPoint(p)
+					So(light, ShouldBeNil)
+				})
 			})
 		})
 	})
