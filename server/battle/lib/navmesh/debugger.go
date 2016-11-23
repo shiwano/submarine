@@ -1,6 +1,6 @@
 package navmesh
 
-// Debugger is the Debugger interface of the debugger package.
+// Debugger is the Debugger interface. See also debugger package.
 type Debugger interface {
-	UpdateNavMesh(navMesh *NavMesh)
+	Update(navMesh *NavMesh)
 }

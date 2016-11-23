@@ -144,14 +144,14 @@ func (b *Battle) start() {
 	b.ctx.Event.AddActorDestroyEventListener(b.onActorDestroy)
 
 	if debug.Debug {
-		debug.Debugger.UpdateNavMesh(b.ctx.Stage)
+		debug.Debugger.Update(b.ctx.Stage)
 	}
 }
 
 func (b *Battle) update(now time.Time) bool {
 	b.ctx.Update(now)
 	if debug.Debug {
-		debug.Debugger.UpdateNavMesh(b.ctx.Stage)
+		debug.Debugger.Update(b.ctx.Stage)
 	}
 	return b.judge.isBattleFinished()
 }
@@ -164,7 +164,7 @@ func (b *Battle) finish() {
 		b.Gateway.outputFinish(nil, b.ctx.Now)
 	}
 	if debug.Debug {
-		debug.Debugger.UpdateNavMesh(nil)
+		debug.Debugger.Update(nil)
 	}
 }
 

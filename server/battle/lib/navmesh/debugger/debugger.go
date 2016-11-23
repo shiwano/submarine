@@ -26,8 +26,8 @@ func newDebugger(event screen.EventDeque) *Debugger {
 	}
 }
 
-// UpdateNavMesh updates nav mesh view.
-func (d *Debugger) UpdateNavMesh(navMesh *navmesh.NavMesh) {
+// Update updates the debugger window.
+func (d *Debugger) Update(navMesh *navmesh.NavMesh) {
 	d.mu.Lock()
 	d.drawNavMesh(navMesh)
 	d.drawScreen()
