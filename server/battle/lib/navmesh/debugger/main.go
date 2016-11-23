@@ -1,7 +1,6 @@
 package debugger
 
 import (
-	"image"
 	"log"
 
 	"golang.org/x/exp/shiny/driver"
@@ -21,14 +20,8 @@ func Main(callback func(*Debugger)) {
 		}
 		defer w.Release()
 
-		var b screen.Buffer
-		defer func() {
-			if b != nil {
-				b.Release()
-			}
-		}()
-
-		debugger := newDebugger(w)
+		d := newDebugger(w)
+		defer d.close()
 
 		var hasPublished bool
 		for {
@@ -44,24 +37,23 @@ func Main(callback func(*Debugger)) {
 					return
 				}
 			case paint.Event:
-				w.Upload(image.Point{}, b, b.Bounds())
+				d.uploadBuffer(w)
 				w.Publish()
 				if !hasPublished {
 					hasPublished = true
 					if callback != nil {
-						go callback(debugger)
+						go callback(d)
 					}
 				}
 			case size.Event:
 				if e.WidthPx == 0 && e.HeightPx == 0 {
 					return
 				}
-				b, err = s.NewBuffer(e.Size())
+				b, err := s.NewBuffer(e.Size())
 				if err != nil {
 					log.Fatal(err)
 				}
-				debugger.setScreen(b.RGBA())
-				debugger.render()
+				d.setScreen(b)
 			case error:
 				log.Fatal(err)
 			}

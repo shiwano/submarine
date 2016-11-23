@@ -11,8 +11,8 @@ import (
 )
 
 func main() {
-	debugger.Main(func(debugger *debugger.Debugger) {
-		debug.Debugger = debugger
+	debugger.Main(func(d *debugger.Debugger) {
+		debug.Debugger = d
 		s := server.New()
 		s.Run(":5000")
 	})

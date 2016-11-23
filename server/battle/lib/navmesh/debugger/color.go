@@ -23,7 +23,18 @@ var (
 	colorSilver  = &color.RGBA{0xdd, 0xdd, 0xdd, 0xff}
 	colorGray    = &color.RGBA{0xaa, 0xaa, 0xaa, 0xff}
 	colorBlack   = &color.RGBA{0x11, 0x11, 0x11, 0xff}
+	colorWhite   = &color.RGBA{0xff, 0xff, 0xff, 0xff}
 )
+
+func colorsByLayer(layer navmesh.LayerMask, count int) []color.Color {
+	colors := make([]color.Color, count)
+	for i := 0; i < count; i++ {
+		c, cLayer := colorByLayer(layer)
+		colors[i] = c
+		layer.Clear(cLayer)
+	}
+	return colors
+}
 
 func colorByLayer(layer navmesh.LayerMask) (color.Color, navmesh.LayerMask) {
 	if layer.Has(navmesh.Layer01) {
@@ -56,6 +67,8 @@ func colorByLayer(layer navmesh.LayerMask) (color.Color, navmesh.LayerMask) {
 		return colorSilver, navmesh.Layer14
 	} else if layer.Has(navmesh.Layer15) {
 		return colorGray, navmesh.Layer15
+	} else if layer.Has(navmesh.Layer16) {
+		return colorBlack, navmesh.Layer16
 	}
-	return colorBlack, 0
+	return colorWhite, 0
 }
