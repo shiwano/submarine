@@ -22,6 +22,21 @@ func New(lightMap *LightMap) *Sight {
 	return s
 }
 
+// LitPoints returns lit points on the navmesh.
+func (s *Sight) LitPoints() []vec2.T {
+	var points []vec2.T
+	for y, cellsY := range s.cells {
+		for x, isLit := range cellsY {
+			if isLit {
+				cellPoint := &cellPoint{x, y}
+				p := s.lightMap.Helper.navMeshPointByCellPoint(cellPoint)
+				points = append(points, p)
+			}
+		}
+	}
+	return points
+}
+
 // Clear clears all lit point informations and the lights.
 func (s *Sight) Clear() {
 	s.putLights = make(map[*light]struct{})

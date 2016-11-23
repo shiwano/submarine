@@ -18,6 +18,14 @@ func TestSight(t *testing.T) {
 	Convey("Sight", t, func() {
 		s := New(lightMap)
 
+		Convey("#LitPoints", func() {
+			Convey("should return lighten points", func() {
+				s.PutLight(&vec2.T{0, 1})
+				litPoints := s.LitPoints()
+				So(litPoints, ShouldHaveLength, 27)
+			})
+		})
+
 		Convey("#Clear", func() {
 			Convey("should clear cells and lights", func() {
 				s.PutLight(&vec2.T{0, 1})
