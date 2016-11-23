@@ -22,6 +22,11 @@ func New(lightMap *LightMap) *Sight {
 	return s
 }
 
+// CellSize returns size of a cell on the navmesh.
+func (s *Sight) CellSize() float64 {
+	return s.lightMap.Helper.CellSize
+}
+
 // LitPoints returns lit points on the navmesh.
 func (s *Sight) LitPoints() []vec2.T {
 	var points []vec2.T

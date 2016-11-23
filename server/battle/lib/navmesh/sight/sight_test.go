@@ -18,6 +18,12 @@ func TestSight(t *testing.T) {
 	Convey("Sight", t, func() {
 		s := New(lightMap)
 
+		Convey("#CellSize", func() {
+			Convey("should return size of a cell on the navmesh", func() {
+				So(s.CellSize(), ShouldEqual, 1)
+			})
+		})
+
 		Convey("#LitPoints", func() {
 			Convey("should return lighten points", func() {
 				s.PutLight(&vec2.T{0, 1})
