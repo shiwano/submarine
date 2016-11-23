@@ -64,7 +64,7 @@ func TestSight(t *testing.T) {
 				for y, innerCells := range s.cells {
 					for x := range innerCells {
 						p := s.lightMap.Helper.navMeshPointByCellPoint(&cellPoint{x, y})
-						s.PutLight(p)
+						s.PutLight(&p)
 					}
 				}
 				So(s.DebugString(), ShouldEqual, strings.Join([]string{

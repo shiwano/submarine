@@ -44,8 +44,8 @@ func (h *helper) cellPointByNavMeshPoint(point *vec2.T) cellPoint {
 	}
 }
 
-func (h *helper) navMeshPointByCellPoint(cellPoint *cellPoint) *vec2.T {
-	return &vec2.T{
+func (h *helper) navMeshPointByCellPoint(cellPoint *cellPoint) vec2.T {
+	return vec2.T{
 		float64(cellPoint[0]+h.MinX) * h.CellSize,
 		float64(cellPoint[1]+h.MinY) * h.CellSize,
 	}

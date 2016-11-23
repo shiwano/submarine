@@ -44,13 +44,13 @@ func TestHelper(t *testing.T) {
 		Convey("#convertCellPointToNavMeshPoint", func() {
 			Convey("should return the relavant NavMesh point", func() {
 				p := h.navMeshPointByCellPoint(&cellPoint{0, 0})
-				So(p, ShouldResemble, &vec2.T{-10, -14})
+				So(p, ShouldResemble, vec2.T{-10, -14})
 
 				p = h.navMeshPointByCellPoint(&cellPoint{10, 14})
-				So(p, ShouldResemble, &vec2.T{0, 0})
+				So(p, ShouldResemble, vec2.T{0, 0})
 
 				p = h.navMeshPointByCellPoint(&cellPoint{h.Width - 1, h.Height - 1})
-				So(p, ShouldResemble, &vec2.T{10, 7})
+				So(p, ShouldResemble, vec2.T{10, 7})
 			})
 		})
 	})

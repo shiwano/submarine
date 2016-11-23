@@ -31,9 +31,9 @@ func GenerateLightMap(navMesh *navmesh.NavMesh, cellSize, lightRange float64) *L
 
 		for cellX := 0; cellX < lm.Helper.Width; cellX++ {
 			cellPoint := &cellPoint{cellX, cellY}
-			point := lm.Helper.navMeshPointByCellPoint(cellPoint)
+			p := lm.Helper.navMeshPointByCellPoint(cellPoint)
 
-			if light := newLight(navMesh, lm.Helper, point); light.isLighting() {
+			if light := newLight(navMesh, lm.Helper, &p); light.isLighting() {
 				lm.Lights[cellY][cellX] = light
 			}
 		}
