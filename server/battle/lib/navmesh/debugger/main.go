@@ -9,12 +9,10 @@ import (
 	"golang.org/x/mobile/event/lifecycle"
 	"golang.org/x/mobile/event/paint"
 	"golang.org/x/mobile/event/size"
-
-	"github.com/shiwano/submarine/server/battle/lib/navmesh"
 )
 
 // Main is called by the program's main function to run the debugger.
-func Main(callback func(navmesh.Debugger)) {
+func Main(callback func(*Debugger)) {
 	driver.Main(func(s screen.Screen) {
 		w, err := s.NewWindow(nil)
 		if err != nil {
