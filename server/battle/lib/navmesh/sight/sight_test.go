@@ -126,6 +126,8 @@ func TestSight(t *testing.T) {
 			Convey("with a invalid point", func() {
 				Convey("should return false", func() {
 					So(s.IsLitPoint(&vec2.T{9, 8}), ShouldBeFalse)
+					So(s.IsLitPoint(&vec2.T{99999, 99999}), ShouldBeFalse)
+					So(s.IsLitPoint(&vec2.T{-99999, -99999}), ShouldBeFalse)
 				})
 			})
 		})

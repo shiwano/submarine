@@ -69,8 +69,8 @@ func (s *Sight) PutLight(point *vec2.T) {
 // IsLitPoint determines whether the specified point is lit.
 func (s *Sight) IsLitPoint(point *vec2.T) bool {
 	cellPoint := s.lightMap.Helper.cellPointByNavMeshPoint(point)
-	if cellPoint[1] >= s.lightMap.Helper.Height ||
-		cellPoint[0] >= s.lightMap.Helper.Width {
+	if cellPoint[1] >= s.lightMap.Helper.Height || cellPoint[1] < 0 ||
+		cellPoint[0] >= s.lightMap.Helper.Width || cellPoint[0] < 0 {
 		return false
 	}
 	return s.cells[cellPoint[1]][cellPoint[0]]
