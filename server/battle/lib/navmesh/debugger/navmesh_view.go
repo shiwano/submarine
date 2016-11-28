@@ -31,7 +31,7 @@ func (nm *navMeshView) setScreenRect(screenRect image.Rectangle) {
 }
 
 func (nm *navMeshView) draw(navMesh *navmesh.NavMesh) {
-	if nm.meshImageBase == nil {
+	if nm.meshImage == nil {
 		nm.drawMesh(navMesh.Mesh)
 	}
 	if nm.objectsImage == nil {
@@ -42,15 +42,14 @@ func (nm *navMeshView) draw(navMesh *navmesh.NavMesh) {
 }
 
 func (nm *navMeshView) drawMesh(mesh *navmesh.Mesh) {
-	meshRectMaxX := int(math.Ceil(mesh.Rect.Max[0])) - int(math.Floor(mesh.Rect.Min[0]))
-	meshRectMaxY := int(math.Ceil(mesh.Rect.Max[1])) - int(math.Floor(mesh.Rect.Min[1]))
-	meshRect := image.Rect(0, 0, meshRectMaxX, meshRectMaxY)
-	nm.meshImageBase = image.NewRGBA(meshRect)
+	meshImageRect := imageRectFromVec2Rect(mesh.Rect)
+	nm.meshImageBase = image.NewRGBA(meshImageRect)
 
 	gc := draw2dimg.NewGraphicContext(nm.meshImageBase)
 	gc.SetFillColor(color.RGBA{0x44, 0x44, 0x44, 0xff})
 	gc.SetStrokeColor(color.RGBA{0xff, 0xff, 0xff, 0xff})
 	gc.SetLineWidth(1)
+
 	for _, t := range mesh.Triangles {
 		gc.MoveTo(t.Vertices[0][0]-mesh.Rect.Min[0], t.Vertices[0][1]-mesh.Rect.Min[1])
 		gc.LineTo(t.Vertices[1][0]-mesh.Rect.Min[0], t.Vertices[1][1]-mesh.Rect.Min[1])
@@ -63,16 +62,14 @@ func (nm *navMeshView) drawMesh(mesh *navmesh.Mesh) {
 }
 
 func (nm *navMeshView) drawObjects(mesh *navmesh.Mesh, objects map[int64]navmesh.Object) {
-	objectsImageBounds := nm.objectsImage.Bounds()
-	meshImageBounds := nm.meshImageBase.Bounds()
-	scaleX := float64(objectsImageBounds.Max.X) / float64(meshImageBounds.Max.X)
-	scaleY := float64(objectsImageBounds.Max.Y) / float64(meshImageBounds.Max.Y)
+	scaleX, scaleY := scaleValues(nm.objectsImage.Bounds(), nm.meshImageBase.Bounds())
 
 	draw.Draw(nm.objectsImage, nm.objectsImage.Bounds(), image.Transparent, image.ZP, draw.Src)
 	gc := draw2dimg.NewGraphicContext(nm.objectsImage)
 	gc.Scale(scaleX, scaleY)
 	objectSlice := newObjectSlice(objects)
 	objectSlice.sort()
+
 	for _, o := range objectSlice {
 		nm.drawObject(gc, o, mesh)
 	}

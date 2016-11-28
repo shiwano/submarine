@@ -142,16 +142,12 @@ func (b *Battle) start() {
 	b.ctx.Event.AddActorMoveEventListener(b.onActorMove)
 	b.ctx.Event.AddActorChangeVisibilityEventListener(b.onActorChangeVisibility)
 	b.ctx.Event.AddActorDestroyEventListener(b.onActorDestroy)
-
-	if debug.Debug {
-		debug.Debugger.Update(b.ctx.Stage)
-	}
 }
 
 func (b *Battle) update(now time.Time) bool {
 	b.ctx.Update(now)
 	if debug.Debug {
-		debug.Debugger.Update(b.ctx.Stage)
+		debug.Debugger.Update(b.ctx.Stage, debug.SortedSights(b.ctx.SightsByTeam))
 	}
 	return b.judge.isBattleFinished()
 }
@@ -164,7 +160,7 @@ func (b *Battle) finish() {
 		b.Gateway.outputFinish(nil, b.ctx.Now)
 	}
 	if debug.Debug {
-		debug.Debugger.Update(nil)
+		debug.Debugger.Update(nil, nil)
 	}
 }
 
