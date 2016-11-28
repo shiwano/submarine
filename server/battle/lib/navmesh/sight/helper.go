@@ -39,8 +39,8 @@ func newHelper(navMesh *navmesh.NavMesh, cellSize float64, lightRange float64) *
 
 func (h *helper) cellPointByNavMeshPoint(point *vec2.T) cellPoint {
 	return cellPoint{
-		int(math.Floor(point[0]/h.CellSize-float64(h.MinX)) + 0.5),
-		int(math.Floor(point[1]/h.CellSize-float64(h.MinY)) + 0.5),
+		int(math.Floor(point[0]/h.CellSize - float64(h.MinX) + 0.5)),
+		int(math.Floor(point[1]/h.CellSize - float64(h.MinY) + 0.5)),
 	}
 }
 
