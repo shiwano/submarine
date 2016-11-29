@@ -1,7 +1,7 @@
 guard :shell, run_all: 'bundle exec rake test' do
   watch(/^(.*)\.go/) do |m|
     package_name = Pathname.new(m[0]).dirname.to_s
-    puts "### Changed #{m[0]}"
+    puts "\e[36m\n#{Time.now.strftime('%H:%M:%S')} - Changed #{m[0]}\e[0m"
     `go test ./#{package_name}`
   end
 end
