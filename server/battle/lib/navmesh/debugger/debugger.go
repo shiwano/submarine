@@ -12,11 +12,12 @@ import (
 	"github.com/shiwano/submarine/server/battle/lib/navmesh/sight"
 )
 
-// Debugger represents a nevmeth debugger.
+// Debugger represents a nevmesh debugger.
 type Debugger struct {
-	mu          *sync.Mutex
-	event       screen.EventDeque
-	screen      screen.Buffer
+	mu     *sync.Mutex
+	event  screen.EventDeque
+	screen screen.Buffer
+
 	navMeshView *navMeshView
 	sightViews  []*sightView
 }
@@ -28,22 +29,23 @@ func newDebugger(event screen.EventDeque) *Debugger {
 	}
 }
 
-// Update updates the debugger window.
+// Update the debugger. This function will be executed goroutine-safe.
+// If you want to clear the screen, give nil to all parameters.
 func (d *Debugger) Update(navMesh *navmesh.NavMesh, sights []*sight.Sight) {
 	d.mu.Lock()
+	draw.Draw(d.screen.RGBA(), d.screen.Bounds(), image.Transparent, image.ZP, draw.Src)
 	d.drawNavMesh(navMesh)
-	if len(sights) > 0 && navMesh != nil {
-		d.drawSights(sights, navMesh.Mesh)
-	}
-	d.drawScreen()
+	d.drawSights(navMesh, sights)
 	d.mu.Unlock()
 	d.event.Send(paint.Event{})
 }
 
 func (d *Debugger) close() {
 	d.mu.Lock()
-	d.screen.Release()
-	d.screen = nil
+	if d.screen != nil {
+		d.screen.Release()
+		d.screen = nil
+	}
 	d.mu.Unlock()
 }
 
@@ -53,18 +55,10 @@ func (d *Debugger) setScreen(s screen.Buffer) {
 		d.screen.Release()
 	}
 	d.screen = s
-	if d.navMeshView != nil {
-		d.navMeshView.setScreenRect(d.screen.Bounds())
-	}
-	for _, sightView := range d.sightViews {
-		sightView.setScreenRect(d.screen.Bounds())
-	}
-	d.drawScreen()
 	d.mu.Unlock()
-	d.event.Send(paint.Event{})
 }
 
-func (d *Debugger) uploadBuffer(uploader screen.Uploader) {
+func (d *Debugger) uploadScreen(uploader screen.Uploader) {
 	d.mu.Lock()
 	uploader.Upload(image.ZP, d.screen, d.screen.Bounds())
 	d.mu.Unlock()
@@ -75,32 +69,30 @@ func (d *Debugger) drawNavMesh(navMesh *navmesh.NavMesh) {
 		d.navMeshView = nil
 		return
 	}
-	if d.navMeshView == nil {
-		d.navMeshView = newNavMeshView(d.screen.Bounds())
+	if d.navMeshView == nil || d.navMeshView.navMesh != navMesh {
+		d.navMeshView = newNavMeshView(navMesh)
 	}
-	d.navMeshView.draw(navMesh)
+	d.navMeshView.draw(d.screen.RGBA())
 }
 
-func (d *Debugger) drawSights(sights []*sight.Sight, mesh *navmesh.Mesh) {
+func (d *Debugger) drawSights(navMesh *navmesh.NavMesh, sights []*sight.Sight) {
+	if navMesh == nil {
+		d.sightViews = d.sightViews[:0]
+		return
+	}
 	for i, s := range sights {
-		if len(d.sightViews) <= i {
-			sv := newSightView(d.screen.Bounds())
+		var sv *sightView
+		if len(d.sightViews) > i {
+			sv = d.sightViews[i]
+			if sv.sight != s {
+				sv = newSightView(s, navMesh.Mesh)
+				d.sightViews[i] = sv
+			}
+		} else {
+			sv = newSightView(s, navMesh.Mesh)
 			d.sightViews = append(d.sightViews, sv)
 		}
-		sv := d.sightViews[i]
-		sv.draw(s, mesh)
+		sv.draw(d.screen.RGBA())
 	}
-}
-
-func (d *Debugger) drawScreen() {
-	if d.navMeshView == nil {
-		draw.Draw(d.screen.RGBA(), d.screen.Bounds(), image.Transparent, image.ZP, draw.Src)
-	} else {
-		draw.Draw(d.screen.RGBA(), d.screen.Bounds(), d.navMeshView.meshImage, image.ZP, draw.Src)
-		draw.Draw(d.screen.RGBA(), d.screen.Bounds(), d.navMeshView.objectsImage, image.ZP, draw.Over)
-
-		if len(d.sightViews) > 0 {
-			draw.Draw(d.screen.RGBA(), d.screen.Bounds(), d.sightViews[0].sightImage, image.ZP, draw.Over)
-		}
-	}
+	d.sightViews = d.sightViews[:len(sights)]
 }

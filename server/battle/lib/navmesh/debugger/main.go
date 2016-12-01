@@ -12,6 +12,8 @@ import (
 )
 
 // Main is called by the program's main function to run the debugger.
+// Before executing this, it is preferable to execute runtime.LockOSThread().
+// Note the callback will be executed by another goroutine.
 func Main(callback func(*Debugger)) {
 	driver.Main(func(s screen.Screen) {
 		w, err := s.NewWindow(nil)
@@ -37,7 +39,7 @@ func Main(callback func(*Debugger)) {
 					return
 				}
 			case paint.Event:
-				d.uploadBuffer(w)
+				d.uploadScreen(w)
 				w.Publish()
 				if !hasPublished {
 					hasPublished = true

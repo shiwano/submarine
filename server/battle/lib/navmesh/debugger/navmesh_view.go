@@ -3,49 +3,43 @@ package debugger
 import (
 	"image"
 	"image/color"
+	"image/draw"
 	"math"
 
 	"github.com/llgcode/draw2d/draw2dimg"
-	"golang.org/x/image/draw"
 
 	"github.com/shiwano/submarine/server/battle/lib/navmesh"
 )
 
 type navMeshView struct {
-	screenRect    image.Rectangle
+	navMesh       *navmesh.NavMesh
 	meshImage     *image.RGBA
 	meshImageBase *image.RGBA
-	objectsImage  *image.RGBA
 }
 
-func newNavMeshView(screenRect image.Rectangle) *navMeshView {
+func newNavMeshView(navMesh *navmesh.NavMesh) *navMeshView {
 	return &navMeshView{
-		screenRect: screenRect,
+		navMesh: navMesh,
 	}
 }
 
-func (nm *navMeshView) setScreenRect(screenRect image.Rectangle) {
-	nm.screenRect = screenRect
-	nm.meshImage = resizeRGBA(nm.meshImageBase, nm.screenRect)
-	nm.objectsImage = resizeRGBA(nm.objectsImage, nm.screenRect)
+func (nv *navMeshView) draw(im *image.RGBA) {
+	if nv.meshImageBase == nil {
+		nv.meshImageBase = nv.createMeshImageBase()
+	}
+	if nv.meshImage == nil || !nv.meshImage.Bounds().Eq(imageRectForResize(im.Bounds())) {
+		nv.meshImage = resizeRGBA(nv.meshImageBase, im.Bounds())
+	}
+	draw.Draw(im, im.Bounds(), nv.meshImage, image.ZP, draw.Src)
+	nv.drawObjects(im)
 }
 
-func (nm *navMeshView) draw(navMesh *navmesh.NavMesh) {
-	if nm.meshImage == nil {
-		nm.drawMesh(navMesh.Mesh)
-	}
-	if nm.objectsImage == nil {
-		nm.objectsImage = image.NewRGBA(nm.meshImageBase.Bounds())
-		nm.objectsImage = resizeRGBA(nm.objectsImage, nm.screenRect)
-	}
-	nm.drawObjects(navMesh.Mesh, navMesh.Objects)
-}
-
-func (nm *navMeshView) drawMesh(mesh *navmesh.Mesh) {
+func (nv *navMeshView) createMeshImageBase() *image.RGBA {
+	mesh := nv.navMesh.Mesh
 	meshImageRect := imageRectFromVec2Rect(mesh.Rect)
-	nm.meshImageBase = image.NewRGBA(meshImageRect)
+	meshImageBase := image.NewRGBA(meshImageRect)
 
-	gc := draw2dimg.NewGraphicContext(nm.meshImageBase)
+	gc := draw2dimg.NewGraphicContext(meshImageBase)
 	gc.SetFillColor(color.RGBA{0x44, 0x44, 0x44, 0xff})
 	gc.SetStrokeColor(color.RGBA{0xff, 0xff, 0xff, 0xff})
 	gc.SetLineWidth(1)
@@ -58,29 +52,28 @@ func (nm *navMeshView) drawMesh(mesh *navmesh.Mesh) {
 		gc.FillStroke()
 		gc.Close()
 	}
-	nm.meshImage = resizeRGBA(nm.meshImageBase, nm.screenRect)
+	return meshImageBase
 }
 
-func (nm *navMeshView) drawObjects(mesh *navmesh.Mesh, objects map[int64]navmesh.Object) {
-	scaleX, scaleY := scaleValues(nm.objectsImage.Bounds(), nm.meshImageBase.Bounds())
+func (nv *navMeshView) drawObjects(im *image.RGBA) {
+	scaleX, scaleY := scaleValues(imageRectForResize(im.Bounds()), nv.meshImageBase.Bounds())
 
-	draw.Draw(nm.objectsImage, nm.objectsImage.Bounds(), image.Transparent, image.ZP, draw.Src)
-	gc := draw2dimg.NewGraphicContext(nm.objectsImage)
+	gc := draw2dimg.NewGraphicContext(im)
 	gc.Scale(scaleX, scaleY)
-	objectSlice := newObjectSlice(objects)
+	objectSlice := newObjectSlice(nv.navMesh.Objects)
 	objectSlice.sort()
 
 	for _, o := range objectSlice {
-		nm.drawObject(gc, o, mesh)
+		nv.drawObject(gc, o)
 	}
 }
 
-func (nm *navMeshView) drawObject(gc *draw2dimg.GraphicContext, o navmesh.Object, mesh *navmesh.Mesh) {
+func (nv *navMeshView) drawObject(gc *draw2dimg.GraphicContext, o navmesh.Object) {
 	colors := colorsByLayer(o.Layer(), 2)
 
 	p := o.Position()
-	x := p[0] - mesh.Rect.Min[0]
-	y := p[1] - mesh.Rect.Min[1]
+	x := p[0] - nv.navMesh.Mesh.Rect.Min[0]
+	y := p[1] - nv.navMesh.Mesh.Rect.Min[1]
 	lineWidth := o.SizeRadius() / 2
 	r := o.SizeRadius() - lineWidth/2
 

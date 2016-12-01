@@ -18,18 +18,10 @@ func newObjectSlice(objects map[int64]navmesh.Object) objectSlice {
 	return os
 }
 
+func (os objectSlice) Len() int           { return len(os) }
+func (os objectSlice) Swap(i, j int)      { os[i], os[j] = os[j], os[i] }
+func (os objectSlice) Less(i, j int) bool { return os[i].ID() < os[j].ID() }
+
 func (os objectSlice) sort() {
 	sort.Sort(os)
-}
-
-func (os objectSlice) Len() int {
-	return len(os)
-}
-
-func (os objectSlice) Swap(i, j int) {
-	os[i], os[j] = os[j], os[i]
-}
-
-func (os objectSlice) Less(i, j int) bool {
-	return os[i].ID() < os[j].ID()
 }

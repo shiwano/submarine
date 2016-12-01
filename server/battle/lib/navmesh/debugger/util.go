@@ -21,13 +21,15 @@ func scaleValues(a image.Rectangle, b image.Rectangle) (x float64, y float64) {
 	return
 }
 
-func resizeRGBA(src *image.RGBA, rect image.Rectangle) *image.RGBA {
-	var r image.Rectangle
+func imageRectForResize(rect image.Rectangle) image.Rectangle {
 	if rect.Max.X > rect.Max.Y {
-		r = image.Rect(0, 0, rect.Max.Y, rect.Max.Y)
-	} else {
-		r = image.Rect(0, 0, rect.Max.X, rect.Max.X)
+		return image.Rect(0, 0, rect.Max.Y, rect.Max.Y)
 	}
+	return image.Rect(0, 0, rect.Max.X, rect.Max.X)
+}
+
+func resizeRGBA(src *image.RGBA, rect image.Rectangle) *image.RGBA {
+	r := imageRectForResize(rect)
 	dst := image.NewRGBA(r)
 	draw.ApproxBiLinear.Scale(dst, dst.Bounds(), src, src.Bounds(), draw.Src, nil)
 	return dst
