@@ -8,6 +8,6 @@ import (
 
 func TestDebugger(t *testing.T) {
 	if _, ok := interface{}((*Debugger)(nil)).(iface.Debugger); !ok {
-		t.Error("should implements Debugger interface")
+		t.Error("should implement the Debugger interface")
 	}
 }
