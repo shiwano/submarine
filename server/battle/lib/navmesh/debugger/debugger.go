@@ -33,6 +33,9 @@ func newDebugger(event screen.EventDeque) *Debugger {
 // If you want to clear the screen, give nil to all parameters.
 func (d *Debugger) Update(navMesh *navmesh.NavMesh, sights []*sight.Sight) {
 	d.mu.Lock()
+	if d.screen == nil {
+		return
+	}
 	draw.Draw(d.screen.RGBA(), d.screen.Bounds(), image.Transparent, image.ZP, draw.Src)
 	d.drawNavMesh(navMesh)
 	d.drawSights(navMesh, sights)
