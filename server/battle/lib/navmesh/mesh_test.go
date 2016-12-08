@@ -66,7 +66,8 @@ func TestMesh(t *testing.T) {
 
 		Convey("#findTriangleByPoint", func() {
 			Convey("should find the triangle that contains the specified point", func() {
-				triangle := m.findTriangleByPoint(&vec2.T{1, -11})
+				triangle, ok := m.findTriangleByPoint(&vec2.T{1, -11})
+				So(ok, ShouldBeTrue)
 				So(triangle, ShouldEqual, m.Triangles[5])
 			})
 		})

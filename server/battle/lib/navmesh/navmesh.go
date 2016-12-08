@@ -48,7 +48,8 @@ func (n *NavMesh) destroyObject(objectID int64) {
 
 // ContainsPoint determines whether the specified point is contained.
 func (n *NavMesh) ContainsPoint(point *vec2.T) bool {
-	return n.Mesh.findTriangleByPoint(point) != nil
+	_, ok := n.Mesh.findTriangleByPoint(point)
+	return ok
 }
 
 // Raycast casts a ray on the navmesh.
@@ -81,10 +82,12 @@ func (n *NavMesh) Raycast(origin, vec *vec2.T, ignoredLayer LayerMask) (hitInfo 
 
 // FindPath finds a path on the navmesh.
 func (n *NavMesh) FindPath(start *vec2.T, goal *vec2.T) []vec2.T {
-	startTriangle := n.Mesh.findTriangleByPoint(start)
-	goalTriangle := n.Mesh.findTriangleByPoint(goal)
-
-	if startTriangle == nil || goalTriangle == nil {
+	startTriangle, ok := n.Mesh.findTriangleByPoint(start)
+	if !ok {
+		return []vec2.T{}
+	}
+	goalTriangle, ok := n.Mesh.findTriangleByPoint(goal)
+	if !ok {
 		return []vec2.T{}
 	}
 

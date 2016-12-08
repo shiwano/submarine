@@ -167,13 +167,13 @@ func (m *Mesh) findAdjoiningVertices(vertex *vec2.T) []*vec2.T {
 	return vertices
 }
 
-func (m *Mesh) findTriangleByPoint(point *vec2.T) *Triangle {
+func (m *Mesh) findTriangleByPoint(point *vec2.T) (*Triangle, bool) {
 	for _, t := range m.Triangles {
 		if t.containsPoint(point) {
-			return t
+			return t, true
 		}
 	}
-	return nil
+	return nil, false
 }
 
 func (m *Mesh) getOrCalculateDistance(from, to *vec2.T) float64 {
