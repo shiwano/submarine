@@ -65,7 +65,7 @@ func TestMesh(t *testing.T) {
 		})
 
 		Convey("#findTriangleByPoint", func() {
-			Convey("should find the triangle that contains the specified point", func() {
+			Convey("should return a triangle that contains the specified point", func() {
 				triangle, ok := m.findTriangleByPoint(&vec2.T{1, -11})
 				So(ok, ShouldBeTrue)
 				So(triangle, ShouldEqual, m.Triangles[5])
@@ -73,7 +73,7 @@ func TestMesh(t *testing.T) {
 		})
 
 		Convey("#isIntersectWithLineSeg", func() {
-			Convey("with intersected points", func() {
+			Convey("with an intersected line segment", func() {
 				Convey("should return true", func() {
 					p1 := &vec2.T{1, 0}
 					p2 := &vec2.T{1, 10}
@@ -81,7 +81,7 @@ func TestMesh(t *testing.T) {
 				})
 			})
 
-			Convey("with no-intersected points", func() {
+			Convey("with a no-intersected line segment", func() {
 				Convey("should return false", func() {
 					p1 := &vec2.T{999, 999}
 					p2 := &vec2.T{1000, 1000}
@@ -91,8 +91,8 @@ func TestMesh(t *testing.T) {
 		})
 
 		Convey("#intersectWithLineSeg", func() {
-			Convey("with intersected points", func() {
-				Convey("should return the intersection point", func() {
+			Convey("with an intersected line segment", func() {
+				Convey("should return a point of intersection", func() {
 					p1 := &vec2.T{1, 0}
 					p2 := &vec2.T{10, 0}
 					p, ok := m.intersectWithLineSeg(p1, p2.Sub(p1))
@@ -102,8 +102,8 @@ func TestMesh(t *testing.T) {
 				})
 			})
 
-			Convey("with intersected points which has multi intersection points", func() {
-				Convey("should return the most neaby intersection point", func() {
+			Convey("with an intersected line segment that has some points of intersection", func() {
+				Convey("should return the most neaby point of intersection", func() {
 					p1 := &vec2.T{-7, 3.5}
 					p2 := &vec2.T{-1, -11}
 					p, ok := m.intersectWithLineSeg(p1, p2.Sub(p1))
@@ -120,7 +120,7 @@ func TestMesh(t *testing.T) {
 				})
 			})
 
-			Convey("with no-intersected points", func() {
+			Convey("with no-intersected line segment", func() {
 				Convey("should return nil", func() {
 					p1 := &vec2.T{0.00000000001, 0}
 					p2 := &vec2.T{5, 0}
