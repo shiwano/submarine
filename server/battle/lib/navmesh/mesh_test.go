@@ -110,13 +110,6 @@ func TestMesh(t *testing.T) {
 					So(ok, ShouldBeTrue)
 					So(p[0], ShouldEqual, -5.551724137931035)
 					So(p[1], ShouldEqual, 0)
-
-					p1 = &vec2.T{0, 0}
-					p2 = &vec2.T{0, -100}
-					p, ok = m.intersectWithLineSeg(p1, p2.Sub(p1))
-					So(ok, ShouldBeTrue)
-					So(p[0], ShouldEqual, 0)
-					So(p[1], ShouldEqual, -14)
 				})
 			})
 
@@ -129,11 +122,6 @@ func TestMesh(t *testing.T) {
 
 					p1 = &vec2.T{3, 2}
 					p2 = &vec2.T{2, -10}
-					_, ok = m.intersectWithLineSeg(p1, p2.Sub(p1))
-					So(ok, ShouldBeFalse)
-
-					p1 = &vec2.T{0, 0}
-					p2 = &vec2.T{0, -3}
 					_, ok = m.intersectWithLineSeg(p1, p2.Sub(p1))
 					So(ok, ShouldBeFalse)
 				})

@@ -47,7 +47,6 @@ func TestLightMap(t *testing.T) {
 			Convey("should load the light map from the specified JSON file", func() {
 				lm, err := LoadLightMapFromJSONFile("../fixtures/lightmap.json")
 				So(err, ShouldBeNil)
-				So(countLights(lm), ShouldEqual, 313)
 				So(lm.MeshVersion, ShouldEqual, mesh.Version)
 			})
 		})
@@ -56,14 +55,13 @@ func TestLightMap(t *testing.T) {
 			Convey("should load the light map from the specified MessagePack file", func() {
 				lm, err := LoadLightMapFromMessagePackFile("../fixtures/lightmap.mpac")
 				So(err, ShouldBeNil)
-				So(countLights(lm), ShouldEqual, 313)
 				So(lm.MeshVersion, ShouldEqual, mesh.Version)
 			})
 		})
 
 		Convey("#ToJSON", func() {
 			Convey("should return JSON encoding of the light map", func() {
-				lm := GenerateLightMap(navMesh, 1, 3)
+				lm := GenerateLightMap(navMesh, 100, 1)
 				actualData, err := lm.ToJSON()
 				expectedData, _ := ioutil.ReadFile("../fixtures/lightmap.json")
 
@@ -74,7 +72,7 @@ func TestLightMap(t *testing.T) {
 
 		Convey("#ToMessagePack", func() {
 			Convey("should return MessagePack encoding of the light map", func() {
-				lm := GenerateLightMap(navMesh, 1, 3)
+				lm := GenerateLightMap(navMesh, 100, 1)
 				actualData, err := lm.ToMessagePack()
 				expectedData, _ := ioutil.ReadFile("../fixtures/lightmap.mpac")
 

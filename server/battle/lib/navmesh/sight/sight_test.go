@@ -28,7 +28,7 @@ func TestSight(t *testing.T) {
 			Convey("should return lighten points", func() {
 				s.PutLight(&vec2.T{0, 1})
 				litPoints := s.LitPoints()
-				So(litPoints, ShouldHaveLength, 27)
+				So(litPoints, ShouldHaveLength, 25)
 			})
 		})
 
@@ -59,8 +59,8 @@ func TestSight(t *testing.T) {
 					"________XXXXX________",
 					"_______XXXXXXX_______",
 					"________XXXXX________",
-					"__________XXX________",
-					"__________X__________",
+					"___________XX________",
+					"_____________________",
 					"_____________________",
 					"_____________________",
 					"_____________________",
