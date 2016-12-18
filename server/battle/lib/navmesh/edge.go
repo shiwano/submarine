@@ -42,6 +42,9 @@ func (e *edge) containsPoint(point *vec2.T) bool {
 		return false
 	}
 	dot := vec2.Dot(e.vector, &pointVec)
+	if dot < 0 {
+		return false
+	}
 	if !equalFloats(dot*dot, vectorLengthSqr*pointVecLengthSqr) {
 		return false
 	}

@@ -40,6 +40,8 @@ func TestEdge(t *testing.T) {
 			Convey("with an no-contained point", func() {
 				Convey("should return false", func() {
 					So(e.containsPoint(&vec2.T{0, 1}), ShouldBeFalse)
+					So(e.containsPoint(&vec2.T{6, 0}), ShouldBeFalse)
+					So(e.containsPoint(&vec2.T{-6, 0}), ShouldBeFalse)
 				})
 			})
 		})
