@@ -15,6 +15,8 @@ func newLight(navMesh *navmesh.NavMesh, helper *helper, center *vec2.T) *light {
 	if !navMesh.ContainsPoint(center) {
 		return l
 	}
+
+	litPointMap := make(map[cellPoint]struct{})
 	lightRangeSqr := helper.LightRange * helper.LightRange
 	lightDiameter := helper.LightRange*2 + 1
 
@@ -37,8 +39,11 @@ func newLight(navMesh *navmesh.NavMesh, helper *helper, center *vec2.T) *light {
 			} else {
 				cellPoint = helper.cellPointByNavMeshPoint(point)
 			}
-			l.LitPoints = append(l.LitPoints, cellPoint)
+			litPointMap[cellPoint] = struct{}{}
 		}
+	}
+	for cellPoint := range litPointMap {
+		l.LitPoints = append(l.LitPoints, cellPoint)
 	}
 	return l
 }
