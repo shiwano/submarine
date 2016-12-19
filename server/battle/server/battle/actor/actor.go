@@ -13,32 +13,40 @@ import (
 )
 
 type actor struct {
-	player             *context.Player
-	actorType          battleAPI.ActorType
-	ctx                *context.Context
-	event              *context.ActorEventEmitter
-	isDestroyed        bool
-	motor              *component.Motor
-	stageAgent         *navmesh.Agent
-	ignoredLayer       navmesh.LayerMask
-	hasLight           bool
-	isAlwaysVisible    bool
-	visibilitiesByTeam map[navmesh.LayerMask]bool
+	player                     *context.Player
+	actorType                  battleAPI.ActorType
+	ctx                        *context.Context
+	event                      *context.ActorEventEmitter
+	isDestroyed                bool
+	motor                      *component.Motor
+	stageAgent                 *navmesh.Agent
+	ignoredLayer               navmesh.LayerMask
+	hasLight                   bool
+	previousVisibilitiesByTeam map[navmesh.LayerMask]bool
+	visibilitiesByTeam         map[navmesh.LayerMask]*component.MultiLock
+	isLitByTeam                map[navmesh.LayerMask]bool
 }
 
 func newActor(ctx *context.Context, player *context.Player, params context.ActorParams,
 	position *vec2.T, direction float64) *actor {
 	a := &actor{
-		player:             player,
-		actorType:          params.Type(),
-		ctx:                ctx,
-		event:              context.NewActorEventEmitter(),
-		motor:              component.NewMotor(ctx, position, direction, params.AccelMaxSpeed(), params.AccelDuration()),
-		stageAgent:         ctx.Stage.CreateAgent(21, position),
-		ignoredLayer:       player.TeamLayer,
-		hasLight:           params.HasLight(),
-		isAlwaysVisible:    params.IsAlwaysVisible(),
-		visibilitiesByTeam: make(map[navmesh.LayerMask]bool),
+		player:                     player,
+		actorType:                  params.Type(),
+		ctx:                        ctx,
+		event:                      context.NewActorEventEmitter(),
+		motor:                      component.NewMotor(ctx, position, direction, params.AccelMaxSpeed(), params.AccelDuration()),
+		stageAgent:                 ctx.Stage.CreateAgent(21, position),
+		ignoredLayer:               player.TeamLayer,
+		hasLight:                   params.HasLight(),
+		previousVisibilitiesByTeam: make(map[navmesh.LayerMask]bool),
+		visibilitiesByTeam:         make(map[navmesh.LayerMask]*component.MultiLock),
+		isLitByTeam:                make(map[navmesh.LayerMask]bool),
+	}
+	for _, l := range context.TeamLayers {
+		a.visibilitiesByTeam[l] = new(component.MultiLock)
+		if params.IsAlwaysVisible() || a.player.TeamLayer == l {
+			a.visibilitiesByTeam[l].Lock()
+		}
 	}
 
 	switch params.Type() {
@@ -68,10 +76,8 @@ func (a *actor) Direction() float64            { return a.motor.Direction() }
 func (a *actor) IsAccelerating() bool          { return a.motor.IsAccelerating() }
 
 func (a *actor) IsVisibleFrom(layer navmesh.LayerMask) bool {
-	if a.isAlwaysVisible || a.player.TeamLayer == layer {
-		return true
-	} else if isVisible, ok := a.visibilitiesByTeam[layer]; ok {
-		return isVisible
+	if visibility, ok := a.visibilitiesByTeam[layer]; ok {
+		return visibility.IsLocked()
 	}
 	return false
 }
@@ -84,7 +90,6 @@ func (a *actor) Destroy() {
 
 func (a *actor) BeforeUpdate() {
 	position := a.motor.Position()
-
 	if hitInfo := a.stageAgent.Move(position, a.ignoredLayer); hitInfo != nil {
 		a.onStageAgentCollide(hitInfo.Object, hitInfo.Point)
 	}
@@ -95,17 +100,7 @@ func (a *actor) BeforeUpdate() {
 }
 
 func (a *actor) AfterUpdate() {
-	if !a.isAlwaysVisible {
-		for _, teamLayer := range context.TeamLayers {
-			newVisibility := a.ctx.SightsByTeam[teamLayer].IsLitPoint(a.Position())
-			oldVisibility := a.visibilitiesByTeam[teamLayer]
-			a.visibilitiesByTeam[teamLayer] = newVisibility
-
-			if newVisibility != oldVisibility {
-				a.ctx.Event.EmitActorChangeVisibilityEvent(a, teamLayer)
-			}
-		}
-	}
+	a.refreshVisibilities()
 }
 
 // Overridable methods.
@@ -148,5 +143,23 @@ func (a *actor) onStageAgentCollide(obj navmesh.Object, point vec2.T) {
 	} else if other, ok := a.ctx.Actor(obj.ID()); ok {
 		logger.Log.Debugf("%v collided with %v", a, other)
 		a.event.EmitCollideWithOtherActorEvent(other, point)
+	}
+}
+
+func (a *actor) refreshVisibilities() {
+	for _, l := range context.TeamLayers {
+		isLit := a.ctx.SightsByTeam[l].IsLitPoint(a.Position())
+		if isLit != a.isLitByTeam[l] {
+			a.isLitByTeam[l] = isLit
+			if isLit {
+				a.visibilitiesByTeam[l].Lock()
+			} else {
+				a.visibilitiesByTeam[l].Unlock()
+			}
+		}
+		if a.previousVisibilitiesByTeam[l] != a.visibilitiesByTeam[l].IsLocked() {
+			a.ctx.Event.EmitActorChangeVisibilityEvent(a, l)
+		}
+		a.previousVisibilitiesByTeam[l] = a.visibilitiesByTeam[l].IsLocked()
 	}
 }
