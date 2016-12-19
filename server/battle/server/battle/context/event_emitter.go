@@ -34,6 +34,10 @@ type EventEmitter struct {
 	actorChangeVisibilityEventMu            *sync.Mutex
 	actorChangeVisibilityEventListeners     []func(actor Actor, teamLayer navmesh.LayerMask)
 	actorChangeVisibilityEventListenersOnce []func(actor Actor, teamLayer navmesh.LayerMask)
+
+	actorUsePingerEventMu            *sync.Mutex
+	actorUsePingerEventListeners     []func(actor Actor, finished bool)
+	actorUsePingerEventListenersOnce []func(actor Actor, finished bool)
 }
 
 // NewEventEmitter creates an event emitter.
@@ -51,6 +55,8 @@ func NewEventEmitter() *EventEmitter {
 		actorRemoveEventMu: new(sync.Mutex),
 
 		actorChangeVisibilityEventMu: new(sync.Mutex),
+
+		actorUsePingerEventMu: new(sync.Mutex),
 	}
 }
 
@@ -358,4 +364,55 @@ func (_e *EventEmitter) RemoveActorChangeVisibilityEventListener(listener func(a
 	}
 	_e.actorChangeVisibilityEventListenersOnce = listenersOnce
 	_e.actorChangeVisibilityEventMu.Unlock()
+}
+
+// EmitActorUsePingerEvent emits the specified event.
+func (_e *EventEmitter) EmitActorUsePingerEvent(actor Actor, finished bool) {
+	_e.actorUsePingerEventMu.Lock()
+	listeners := make([]func(actor Actor, finished bool), len(_e.actorUsePingerEventListeners))
+	copy(listeners, _e.actorUsePingerEventListeners)
+	listenersOnce := _e.actorUsePingerEventListenersOnce
+	_e.actorUsePingerEventListenersOnce = make([]func(actor Actor, finished bool), 0)
+	_e.actorUsePingerEventMu.Unlock()
+	for _, l := range listeners {
+		l(actor, finished)
+	}
+	for _, l := range listenersOnce {
+		l(actor, finished)
+	}
+}
+
+// AddActorUsePingerEventListener registers the specified event listener.
+func (_e *EventEmitter) AddActorUsePingerEventListener(listener func(actor Actor, finished bool)) {
+	_e.actorUsePingerEventMu.Lock()
+	_e.actorUsePingerEventListeners = append(_e.actorUsePingerEventListeners, listener)
+	_e.actorUsePingerEventMu.Unlock()
+}
+
+// AddActorUsePingerEventListenerOnce registers the specified event listener that is invoked only once.
+func (_e *EventEmitter) AddActorUsePingerEventListenerOnce(listener func(actor Actor, finished bool)) {
+	_e.actorUsePingerEventMu.Lock()
+	_e.actorUsePingerEventListenersOnce = append(_e.actorUsePingerEventListenersOnce, listener)
+	_e.actorUsePingerEventMu.Unlock()
+}
+
+// RemoveActorUsePingerEventListener removes the event listener previously registered.
+func (_e *EventEmitter) RemoveActorUsePingerEventListener(listener func(actor Actor, finished bool)) {
+	listenerPtr := reflect.ValueOf(listener).Pointer()
+	_e.actorUsePingerEventMu.Lock()
+	listeners := _e.actorUsePingerEventListeners[:0]
+	for _, l := range _e.actorUsePingerEventListeners {
+		if reflect.ValueOf(l).Pointer() != listenerPtr {
+			listeners = append(listeners, l)
+		}
+	}
+	_e.actorUsePingerEventListeners = listeners
+	listenersOnce := _e.actorUsePingerEventListenersOnce[:0]
+	for _, l := range _e.actorUsePingerEventListenersOnce {
+		if reflect.ValueOf(l).Pointer() != listenerPtr {
+			listenersOnce = append(listenersOnce, l)
+		}
+	}
+	_e.actorUsePingerEventListenersOnce = listenersOnce
+	_e.actorUsePingerEventMu.Unlock()
 }

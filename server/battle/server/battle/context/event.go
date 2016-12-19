@@ -30,3 +30,8 @@ type actorChangeVisibilityEvent struct {
 	actor     Actor
 	teamLayer navmesh.LayerMask
 }
+
+type actorUsePingerEvent struct {
+	actor    Actor
+	finished bool
+}
