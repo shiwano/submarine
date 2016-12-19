@@ -1,4 +1,4 @@
-package actor
+package component
 
 import (
 	"math"
@@ -16,7 +16,8 @@ const (
 	deg2Rad = math.Pi / 180
 )
 
-type motor struct {
+// Motor represents a motor for actor moving.
+type Motor struct {
 	ctx                *context.Context
 	accelerator        *accelerator
 	initialPosition    *vec2.T
@@ -26,9 +27,10 @@ type motor struct {
 	changedAt          time.Time
 }
 
-func newMotor(ctx *context.Context, position *vec2.T, direction float64,
-	maxSpeed float64, duration time.Duration) *motor {
-	m := &motor{
+// NewMotor creates a motor.
+func NewMotor(ctx *context.Context, position *vec2.T, direction float64,
+	maxSpeed float64, duration time.Duration) *Motor {
+	return &Motor{
 		ctx:             ctx,
 		initialPosition: position,
 		direction:       direction,
@@ -44,10 +46,19 @@ func newMotor(ctx *context.Context, position *vec2.T, direction float64,
 			isShutdown: true,
 		},
 	}
-	return m
 }
 
-func (m *motor) toAPIType(actorID int64) *battleAPI.Movement {
+// Direction returns the direction of the motor moving.
+func (m *Motor) Direction() float64 { return m.direction }
+
+// IsAccelerating determines whether the motor is accelerating.
+func (m *Motor) IsAccelerating() bool { return m.accelerator.isAccelerating }
+
+// NormalizedVelocity returns the normalized velocity of the motor moving.
+func (m *Motor) NormalizedVelocity() vec2.T { return *m.normalizedVelocity }
+
+// ToAPIType creates a movement message from the motor.
+func (m *Motor) ToAPIType(actorID int64) *battleAPI.Movement {
 	return &battleAPI.Movement{
 		ActorId:     actorID,
 		Position:    &battleAPI.Point{X: m.initialPosition[0], Y: m.initialPosition[1]},
@@ -57,21 +68,24 @@ func (m *motor) toAPIType(actorID int64) *battleAPI.Movement {
 	}
 }
 
-func (m *motor) accelerate(position *vec2.T) {
+// Accelerate the motor.
+func (m *Motor) Accelerate(position *vec2.T) {
 	m.initialPosition = position
 	m.initialSpeed = m.accelerator.speed()
 	m.accelerator.refresh(true, false)
 	m.changedAt = m.ctx.Now
 }
 
-func (m *motor) brake(position *vec2.T) {
-	m.initialPosition = m.position()
+// Brake the motor.
+func (m *Motor) Brake(position *vec2.T) {
+	m.initialPosition = m.Position()
 	m.initialSpeed = m.accelerator.speed()
 	m.accelerator.refresh(false, false)
 	m.changedAt = m.ctx.Now
 }
 
-func (m *motor) turn(position *vec2.T, direction float64) {
+// Turn the direction of the motor.
+func (m *Motor) Turn(position *vec2.T, direction float64) {
 	m.initialPosition = position
 	m.initialSpeed = m.accelerator.speed()
 	m.accelerator.refresh(m.accelerator.isAccelerating, false)
@@ -83,14 +97,16 @@ func (m *motor) turn(position *vec2.T, direction float64) {
 	m.changedAt = m.ctx.Now
 }
 
-func (m *motor) idle(position *vec2.T) {
+// Idle the motor.
+func (m *Motor) Idle(position *vec2.T) {
 	m.initialPosition = position
 	m.initialSpeed = m.accelerator.speed()
 	m.accelerator.refresh(m.accelerator.isAccelerating, true)
 	m.changedAt = m.ctx.Now
 }
 
-func (m *motor) position() *vec2.T {
+// Position returns the current position.
+func (m *Motor) Position() *vec2.T {
 	if m.accelerator.isIdling || m.accelerator.isShutdown {
 		return &(*m.initialPosition)
 	}

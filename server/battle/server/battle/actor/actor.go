@@ -5,6 +5,7 @@ import (
 
 	"github.com/shiwano/submarine/server/battle/lib/navmesh"
 	battleAPI "github.com/shiwano/submarine/server/battle/lib/typhenapi/type/submarine/battle"
+	"github.com/shiwano/submarine/server/battle/server/battle/actor/component"
 	"github.com/shiwano/submarine/server/battle/server/battle/context"
 	"github.com/shiwano/submarine/server/battle/server/logger"
 
@@ -17,7 +18,7 @@ type actor struct {
 	ctx                *context.Context
 	event              *context.ActorEventEmitter
 	isDestroyed        bool
-	motor              *motor
+	motor              *component.Motor
 	stageAgent         *navmesh.Agent
 	ignoredLayer       navmesh.LayerMask
 	hasLight           bool
@@ -32,7 +33,7 @@ func newActor(ctx *context.Context, player *context.Player, params context.Actor
 		actorType:          params.Type(),
 		ctx:                ctx,
 		event:              context.NewActorEventEmitter(),
-		motor:              newMotor(ctx, position, direction, params.AccelMaxSpeed(), params.AccelDuration()),
+		motor:              component.NewMotor(ctx, position, direction, params.AccelMaxSpeed(), params.AccelDuration()),
 		stageAgent:         ctx.Stage.CreateAgent(21, position),
 		ignoredLayer:       player.TeamLayer,
 		hasLight:           params.HasLight(),
@@ -61,10 +62,10 @@ func (a *actor) Type() battleAPI.ActorType         { return a.actorType }
 func (a *actor) Event() *context.ActorEventEmitter { return a.event }
 
 func (a *actor) IsDestroyed() bool             { return a.isDestroyed }
-func (a *actor) Movement() *battleAPI.Movement { return a.motor.toAPIType(a.ID()) }
+func (a *actor) Movement() *battleAPI.Movement { return a.motor.ToAPIType(a.ID()) }
 func (a *actor) Position() *vec2.T             { return a.stageAgent.Position() }
-func (a *actor) Direction() float64            { return a.motor.direction }
-func (a *actor) IsAccelerating() bool          { return a.motor.accelerator.isAccelerating }
+func (a *actor) Direction() float64            { return a.motor.Direction() }
+func (a *actor) IsAccelerating() bool          { return a.motor.IsAccelerating() }
 
 func (a *actor) IsVisibleFrom(layer navmesh.LayerMask) bool {
 	if a.isAlwaysVisible || a.player.TeamLayer == layer {
@@ -82,7 +83,7 @@ func (a *actor) Destroy() {
 }
 
 func (a *actor) BeforeUpdate() {
-	position := a.motor.position()
+	position := a.motor.Position()
 
 	if hitInfo := a.stageAgent.Move(position, a.ignoredLayer); hitInfo != nil {
 		a.onStageAgentCollide(hitInfo.Object, hitInfo.Point)
@@ -114,26 +115,26 @@ func (a *actor) OnDestroy() {}
 
 func (a *actor) accelerate(direction float64) {
 	logger.Log.Debugf("%v accelerates to %v", a, direction)
-	a.motor.accelerate(a.stageAgent.Position())
-	a.motor.turn(a.stageAgent.Position(), direction)
+	a.motor.Accelerate(a.stageAgent.Position())
+	a.motor.Turn(a.stageAgent.Position(), direction)
 	a.ctx.Event.EmitActorMoveEvent(a)
 }
 
 func (a *actor) brake(direction float64) {
 	logger.Log.Debugf("%v brakes", a)
-	a.motor.brake(a.stageAgent.Position())
-	a.motor.turn(a.stageAgent.Position(), direction)
+	a.motor.Brake(a.stageAgent.Position())
+	a.motor.Turn(a.stageAgent.Position(), direction)
 	a.ctx.Event.EmitActorMoveEvent(a)
 }
 
 func (a *actor) turn(direction float64) {
 	logger.Log.Debugf("%v turns to %v", a, direction)
-	a.motor.turn(a.stageAgent.Position(), direction)
+	a.motor.Turn(a.stageAgent.Position(), direction)
 	a.ctx.Event.EmitActorMoveEvent(a)
 }
 
 func (a *actor) idle() {
-	a.motor.idle(a.stageAgent.Position())
+	a.motor.Idle(a.stageAgent.Position())
 	a.ctx.Event.EmitActorMoveEvent(a)
 }
 

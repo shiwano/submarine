@@ -66,12 +66,13 @@ func (s *submarine) onPingerRequest(m *battleAPI.PingerRequestObject) {
 }
 
 func (s *submarine) onUserLeave() {
-	s.brake(s.motor.direction)
+	s.brake(s.motor.Direction())
 }
 
 func (s *submarine) shootTorpedo() {
 	logger.Log.Debugf("%v shoots a torpedo", s)
-	p := s.motor.normalizedVelocity.Scaled(s.stageAgent.SizeRadius() * s.player.TorpedoParams.StartOffsetDistance)
-	p.Add(s.Position())
-	NewTorpedo(s.ctx, s.player, &p, s.motor.direction)
+	normalizedVelocity := s.motor.NormalizedVelocity()
+	startOffsetValue := s.stageAgent.SizeRadius() * s.player.TorpedoParams.StartOffsetDistance
+	startPoint := normalizedVelocity.Scale(startOffsetValue).Add(s.Position())
+	NewTorpedo(s.ctx, s.player, startPoint, s.motor.Direction())
 }
