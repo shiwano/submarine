@@ -25,6 +25,8 @@ func NewSubmarine(ctx *context.Context, user *context.Player) context.Actor {
 	s.event.AddTorpedoRequestEventListener(s.onTorpedoRequest)
 	s.event.AddPingerRequestEventListener(s.onPingerRequest)
 	s.event.AddUserLeaveEventListener(s.onUserLeave)
+
+	s.ctx.Event.AddActorUsePingerEventListener(s.onActorUsePinger)
 	s.ctx.Event.EmitActorCreateEvent(s)
 	return s
 }
@@ -63,10 +65,24 @@ func (s *submarine) onTorpedoRequest(m *battleAPI.TorpedoRequestObject) {
 
 func (s *submarine) onPingerRequest(m *battleAPI.PingerRequestObject) {
 	logger.Log.Debugf("%v uses pinger", s)
+	s.ctx.Event.EmitActorUsePingerEvent(s, false)
 }
 
 func (s *submarine) onUserLeave() {
 	s.brake(s.motor.Direction())
+}
+
+func (s *submarine) onActorUsePinger(a context.Actor, finished bool) {
+	pingerTeam := a.Player().TeamLayer
+	if s.Player().TeamLayer == pingerTeam {
+		return
+	}
+	if finished {
+		s.visibilitiesByTeam[pingerTeam].Unlock()
+	} else {
+		s.visibilitiesByTeam[pingerTeam].Lock()
+	}
+	logger.Log.Debugf("%v uses pinger %v", s, s.IsVisibleFrom(pingerTeam))
 }
 
 func (s *submarine) shootTorpedo() {
