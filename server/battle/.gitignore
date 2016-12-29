@@ -3,5 +3,7 @@
 /vendor/*
 !/vendor/manifest
 
+/.idea
+
 /battle
 /battle_debug
