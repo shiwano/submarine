@@ -39,7 +39,7 @@ func (l *loader) LoadMesh(code int64) (*navmesh.Mesh, error) {
 		return mesh, nil
 	}
 
-	assetPath := fmt.Sprintf("Art/Stages/%03d/NavMesh.json", code)
+	assetPath := fmt.Sprintf("stages/%03d/mesh.json", code)
 	mesh, err := navmesh.LoadMeshFromJSONFile(path.Join(clientAssetDir, assetPath))
 	if err != nil {
 		return nil, err
@@ -57,7 +57,7 @@ func (l *loader) LoadLightMap(code int64) (*sight.LightMap, error) {
 		return lm, nil
 	}
 
-	assetPath := fmt.Sprintf("Art/Stages/%03d/LightMap.bytes", code)
+	assetPath := fmt.Sprintf("stages/%03d/lightmap.mpac", code)
 	lm, err := sight.LoadLightMapFromMessagePackFile(path.Join(clientAssetDir, assetPath))
 	if err != nil {
 		return nil, err

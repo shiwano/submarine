@@ -17,10 +17,10 @@ func init() {
 
 	switch config.Env {
 	case "test":
-		clientAssetDir = path.Join(rootDir, "server/battle/fixtures/Assets")
+		clientAssetDir = path.Join(rootDir, "server/battle/test_fixtures/assets")
 	case "development":
-		clientAssetDir = path.Join(rootDir, "client/Assets")
+		clientAssetDir = path.Join(rootDir, "server/battle/assets")
 	default:
-		clientAssetDir = path.Join(rootDir, "client/Assets")
+		clientAssetDir = path.Join(rootDir, "server/battle/assets")
 	}
 }
