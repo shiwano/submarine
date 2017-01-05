@@ -8,7 +8,7 @@ import (
 )
 
 var cacheDir string
-var clientAssetDir string
+var assetDir string
 
 func init() {
 	_, filename, _, _ := runtime.Caller(1)
@@ -17,10 +17,10 @@ func init() {
 
 	switch config.Env {
 	case "test":
-		clientAssetDir = path.Join(rootDir, "server/battle/test_fixtures/assets")
+		assetDir = path.Join(rootDir, "server/battle/test_fixtures/assets")
 	case "development":
-		clientAssetDir = path.Join(rootDir, "server/battle/assets")
+		assetDir = path.Join(rootDir, "server/battle/assets")
 	default:
-		clientAssetDir = path.Join(rootDir, "server/battle/assets")
+		assetDir = path.Join(rootDir, "server/battle/assets")
 	}
 }
