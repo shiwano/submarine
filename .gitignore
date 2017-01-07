@@ -1,2 +1,2 @@
-config.*.yml
-!config.example.yml
+/config.*.yml
+!/config.example.yml
