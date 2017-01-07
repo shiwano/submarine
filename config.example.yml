@@ -4,6 +4,11 @@ client:
 server:
   api_server_base_uri: http://localhost:3000
   battle_server_base_uri: ws://localhost:5000
+  database:
+    host: localhost
+    port: 3306
+    user: root
+    password: ''
 build:
   product_name: Foo
   bundle_identifier: com.example.foo

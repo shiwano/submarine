@@ -13,9 +13,11 @@ default: &default
   adapter: mysql2
   encoding: utf8
   pool: 5
-  username: root
-  password:
   socket: /tmp/mysql.sock
+  host: <%= GameConfig.database.host %>
+  port: <%= GameConfig.database.port %>
+  username: <%= GameConfig.database.user %>
+  password: <%= GameConfig.database.password %>
 
 development:
   <<: *default
@@ -50,5 +52,3 @@ test:
 production:
   <<: *default
   database: submarine_api_production
-  username: submarine_api
-  password: <%= ENV['SUBMARINE_API_DATABASE_PASSWORD'] %>
