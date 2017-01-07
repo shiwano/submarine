@@ -27,7 +27,7 @@ func newServerConfig() (*ServerConfig, error) {
 
 	var path string
 	if Env == "test" {
-		path = filepath.Join(dir, "config.example.yml")
+		path = filepath.Join(dir, "config.test.yml")
 	} else {
 		path = filepath.Join(dir, "config.yml")
 	}
