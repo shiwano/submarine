@@ -1,5 +1,5 @@
 class GameConfig
-  open("#{Rails.root}/config#{Rails.env.test? ? '.example' : ''}.yml") do |file|
+  open("#{Rails.root}/config#{Rails.env.test? ? '.test' : ''}.yml") do |file|
     hash = YAML.load(file)
     config = Hashie::Mash.new(hash)
 
