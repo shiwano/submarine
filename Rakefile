@@ -29,6 +29,6 @@ namespace :build do
 
   desc 'Generate the config file for the client'
   task :generate_config_for_client do
-    Build::ClientBuilder.generate_config_for_client
+    Build::ClientBuilder.generate_config
   end
 end
