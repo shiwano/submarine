@@ -213,6 +213,8 @@ GEM
     timecop (0.8.1)
     tzinfo (1.2.2)
       thread_safe (~> 0.1)
+    tzinfo-data (1.2016.10)
+      tzinfo (>= 1.0.0)
     unicode-display_width (0.1.1)
     uniform_notifier (1.10.0)
     virtus (1.0.5)
@@ -249,6 +251,7 @@ DEPENDENCIES
   spring
   tapp-awesome_print
   timecop
+  tzinfo-data
   virtus
 
 BUNDLED WITH
