@@ -1,9 +1,7 @@
-/bin
-/pkg
 /vendor/*
 !/vendor/manifest
-
 /.idea
-
 /battle
 /battle_debug
+
+/config.yml
