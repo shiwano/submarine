@@ -1,0 +1,14 @@
+.bundle
+
+log/*
+!log/.keep
+tmp/*
+
+vendor/bin
+vendor/bundle
+
+config/settings.local.yml
+config/settings/*.local.yml
+config/environments/*.local.yml
+
+dump.rdb
