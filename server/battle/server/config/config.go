@@ -19,7 +19,7 @@ type ServerConfig struct {
 
 func newServerConfig() (*ServerConfig, error) {
 	_, filename, _, _ := runtime.Caller(1)
-	dir := filepath.Join(filepath.Dir(filename), "../../../../")
+	dir := filepath.Join(filepath.Dir(filename), "../../")
 	dir, err := filepath.Abs(dir)
 	if err != nil {
 		return nil, err
@@ -29,7 +29,7 @@ func newServerConfig() (*ServerConfig, error) {
 	if Env == "test" {
 		path = filepath.Join(dir, "config.example.yml")
 	} else {
-		path = filepath.Join(dir, "config."+Env+".yml")
+		path = filepath.Join(dir, "config.yml")
 	}
 
 	data, err := ioutil.ReadFile(path)
@@ -37,14 +37,12 @@ func newServerConfig() (*ServerConfig, error) {
 		return nil, err
 	}
 
-	c := new(struct {
-		Server ServerConfig `yaml:"server"`
-	})
-	err = yaml.Unmarshal(data, &c)
+	c := new(ServerConfig)
+	err = yaml.Unmarshal(data, c)
 	if err != nil {
 		return nil, err
 	}
-	return &c.Server, nil
+	return c, nil
 }
 
 func init() {

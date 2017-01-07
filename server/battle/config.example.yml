@@ -1,0 +1,2 @@
+api_server_base_uri: http://localhost:3000
+battle_server_base_uri: ws://localhost:5000
