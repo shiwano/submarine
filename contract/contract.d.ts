@@ -1,4 +1,5 @@
 /// <reference path='./battle.d.ts' />
+/// <reference path='./configuration.d.ts' />
 
 interface integer {}
 
@@ -11,11 +12,6 @@ declare module Submarine {
     code: integer;
     name: string;
     message: string;
-  }
-
-  interface Config {
-    version: string;
-    apiServerBaseUri: string;
   }
 
   interface User {
