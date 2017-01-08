@@ -10,7 +10,7 @@ namespace TyphenApi.WebApi
 
         public bool IsAuthenticated { get { return !string.IsNullOrEmpty(accessToken); } }
 
-        public Submarine(Config config) : base(config.ApiServerBaseUri)
+        public Submarine(TyphenApi.Type.Submarine.Configuration.Client config) : base(config.ApiServerBaseUri)
         {
             RequestSender = new WebApiRequestSenderUnity();
 

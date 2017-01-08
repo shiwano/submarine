@@ -1,12 +1,9 @@
 ﻿using UnityEngine;
-using TyphenApi.Type.Submarine;
 
 namespace Submarine
 {
     public static class Constants
     {
-        public static readonly Config Config = Config.Load();
-
         public const int FrameRate = 30;
         public const int MapLength = 400;
 
