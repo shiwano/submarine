@@ -7,9 +7,6 @@ RUN apk update && \
     mkdir -p /src
 WORKDIR /src
 
-ARG env=development
-ENV RAILS_ENV $env
-
 COPY Gemfile /src
 COPY Gemfile.lock /src
 RUN bundle install --deployment
@@ -17,6 +14,8 @@ RUN bundle install --deployment
 COPY config.json /src
 COPY . /src
 
+ARG env=development
+ENV RAILS_ENV $env
 EXPOSE 3000
 ENTRYPOINT ["bundle", "exec", "rails"]
 CMD ["server", "-b", "0.0.0.0"]
