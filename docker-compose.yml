@@ -1,0 +1,28 @@
+version: '2'
+services:
+  battle:
+    build:
+      context: ./server/battle
+      args:
+        env: development
+    image: submarine-development-battle
+    links:
+      - api
+    ports:
+     - "5000:5000"
+  api:
+    build:
+      context: ./server/api
+      args:
+        env: development
+    image: submarine-development-api
+    links:
+      - mysql
+    ports:
+     - "3000:3000"
+  mysql:
+    image: mysql:5.7.17
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_ALLOW_EMPTY_PASSWORD: 1
