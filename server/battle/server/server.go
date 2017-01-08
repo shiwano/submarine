@@ -26,7 +26,7 @@ func New() *Server {
 		Engine:      gin.New(),
 		logWriter:   logger.Log.Writer(),
 		roomManager: newRoomManager(),
-		webAPI:      newWebAPI("http://localhost:3000"),
+		webAPI:      newWebAPI(config.Config.ApiServerBaseUri),
 	}
 	server.Use(gin.Recovery(), gin.LoggerWithWriter(server.logWriter))
 

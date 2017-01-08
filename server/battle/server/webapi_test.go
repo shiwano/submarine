@@ -11,11 +11,12 @@ import (
 	battleAPI "github.com/shiwano/submarine/server/battle/lib/typhenapi/type/submarine/battle"
 	webAPI "github.com/shiwano/submarine/server/battle/lib/typhenapi/web/submarine"
 	webAPI_battle "github.com/shiwano/submarine/server/battle/lib/typhenapi/web/submarine/battle"
+	"github.com/shiwano/submarine/server/battle/server/config"
 )
 
 func TestWebAPI(t *testing.T) {
 	Convey("WebAPI", t, func() {
-		api := newWebAPIMock("http://localhost:3000")
+		api := newWebAPIMock(config.Config.ApiServerBaseUri)
 
 		Convey("should send a ping request", func() {
 			res, err := api.Ping("PING")
