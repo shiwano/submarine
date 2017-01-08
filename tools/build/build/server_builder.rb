@@ -1,4 +1,4 @@
-require 'yaml'
+require 'json'
 require 'fileutils'
 include FileUtils
 
@@ -30,8 +30,8 @@ module Build
     end
 
     def generate_config
-      open("#{server_directory}/config.yml", 'w') do |file|
-        YAML.dump(Configuration.server, file)
+      open("#{server_directory}/config.json", 'w') do |file|
+        JSON.dump(Configuration.server, file)
       end
     end
 

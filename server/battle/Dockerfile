@@ -10,11 +10,12 @@ WORKDIR /go/src/github.com/shiwano/submarine/server/battle
 COPY vendor /go/src/github.com/shiwano/submarine/server/battle/vendor
 RUN gvt restore
 
-COPY config.yml /go/src/github.com/shiwano/submarine/server/battle
+COPY config.json /go/src/github.com/shiwano/submarine/server/battle
 COPY . /go/src/github.com/shiwano/submarine/server/battle
 RUN go build
 
 ARG env=development
 ENV SUBMARINE_ENV $env
+
 EXPOSE 5000
 ENTRYPOINT ["./battle"]

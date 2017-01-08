@@ -11,7 +11,7 @@ COPY Gemfile /src
 COPY Gemfile.lock /src
 RUN bundle install --deployment
 
-COPY config.yml /src
+COPY config.json /src
 COPY . /src
 
 ARG env=development

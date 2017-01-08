@@ -5,19 +5,14 @@ import (
 	"path/filepath"
 	"runtime"
 
-	"gopkg.in/yaml.v2"
+	"github.com/shiwano/submarine/server/battle/lib/typhenapi/core"
+	configAPI "github.com/shiwano/submarine/server/battle/lib/typhenapi/type/submarine/configuration"
 )
 
 // Config is the loaded server config.
-var Config *ServerConfig
+var Config *configAPI.Server
 
-// ServerConfig represents the game server config.
-type ServerConfig struct {
-	APIServerBaseURI    string `yaml:"api_server_base_uri"`
-	BattleServerBaseURI string `yaml:"battle_server_base_uri"`
-}
-
-func newServerConfig() (*ServerConfig, error) {
+func newServerConfig() (*configAPI.Server, error) {
 	_, filename, _, _ := runtime.Caller(1)
 	dir := filepath.Join(filepath.Dir(filename), "../../")
 	dir, err := filepath.Abs(dir)
@@ -27,9 +22,9 @@ func newServerConfig() (*ServerConfig, error) {
 
 	var path string
 	if Env == "test" {
-		path = filepath.Join(dir, "config.test.yml")
+		path = filepath.Join(dir, "config.test.json")
 	} else {
-		path = filepath.Join(dir, "config.yml")
+		path = filepath.Join(dir, "config.json")
 	}
 
 	data, err := ioutil.ReadFile(path)
@@ -37,8 +32,9 @@ func newServerConfig() (*ServerConfig, error) {
 		return nil, err
 	}
 
-	c := new(ServerConfig)
-	err = yaml.Unmarshal(data, c)
+	serializer := typhenapi.NewJSONSerializer()
+	c := new(configAPI.Server)
+	err = serializer.Deserialize(data, c)
 	if err != nil {
 		return nil, err
 	}
