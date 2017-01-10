@@ -77,12 +77,7 @@ func (s *submarine) onActorUsePinger(a context.Actor, finished bool) {
 	if s.Player().TeamLayer == pingerTeam {
 		return
 	}
-	if finished {
-		s.visibilitiesByTeam[pingerTeam].Unlock()
-	} else {
-		s.visibilitiesByTeam[pingerTeam].Lock()
-	}
-	logger.Log.Debugf("%v uses pinger %v", s, s.IsVisibleFrom(pingerTeam))
+	s.visibility.Set(pingerTeam, !finished)
 }
 
 func (s *submarine) shootTorpedo() {
