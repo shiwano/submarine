@@ -1,27 +1,38 @@
 package component
 
+import (
+	"github.com/shiwano/submarine/server/battle/lib/navmesh"
+)
+
 // Visibility represents visibility of an actor, it manages visibility in duplicate.
 type Visibility struct {
-	count         int
-	ChangeHandler func()
+	countsByTeam  map[navmesh.LayerMask]int
+	ChangeHandler func(navmesh.LayerMask)
 }
 
-// IsVisible determines whether the actor is visible.
-func (v *Visibility) IsVisible() bool {
-	return v.count > 0
+// NewVisibility creates a visibility.
+func NewVisibility() *Visibility {
+	return &Visibility{
+		countsByTeam: make(map[navmesh.LayerMask]int),
+	}
+}
+
+// IsVisibleFrom determines whether the actor is visible from the specified layer.
+func (v *Visibility) IsVisibleFrom(layer navmesh.LayerMask) bool {
+	return v.countsByTeam[layer] > 0
 }
 
 // Set the actor visibility.
-func (v *Visibility) Set(isVisible bool) {
-	previousVisibility := v.IsVisible()
+func (v *Visibility) Set(layer navmesh.LayerMask, isVisible bool) {
+	previousVisibility := v.IsVisibleFrom(layer)
 
 	if isVisible {
-		v.count++
-	} else if v.count > 0 {
-		v.count--
+		v.countsByTeam[layer]++
+	} else if v.countsByTeam[layer] > 0 {
+		v.countsByTeam[layer]--
 	}
 
-	if v.ChangeHandler != nil && previousVisibility != v.IsVisible() {
-		v.ChangeHandler()
+	if v.ChangeHandler != nil && previousVisibility != v.IsVisibleFrom(layer) {
+		v.ChangeHandler(layer)
 	}
 }
