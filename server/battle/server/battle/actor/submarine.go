@@ -77,7 +77,7 @@ func (s *submarine) onPingerRequest(m *battleAPI.PingerRequestObject) {
 	s.isUsingPinger = true
 	s.ctx.Event.EmitActorUsePingerEvent(s, false)
 
-	s.timer.Register(10, func() {
+	s.timer.Register(s.player.SubmarineParams.PingerIntervalSeconds, func() {
 		s.ctx.Event.EmitActorUsePingerEvent(s, true)
 		s.isUsingPinger = false
 	})

@@ -46,6 +46,7 @@ func (a *actorParams) AccelDuration() time.Duration {
 // SubmarineParams represents submatine parameters.
 type SubmarineParams struct {
 	*actorParams
+	PingerIntervalSeconds float64
 }
 
 // TorpedoParams represents submatine parameters.
