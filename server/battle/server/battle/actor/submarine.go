@@ -2,6 +2,7 @@ package actor
 
 import (
 	battleAPI "github.com/shiwano/submarine/server/battle/lib/typhenapi/type/submarine/battle"
+	"github.com/shiwano/submarine/server/battle/server/battle/actor/component"
 	"github.com/shiwano/submarine/server/battle/server/battle/context"
 	"github.com/shiwano/submarine/server/battle/server/logger"
 
@@ -10,12 +11,15 @@ import (
 
 type submarine struct {
 	*actor
+	isUsingPinger bool
+	timer         *component.Timer
 }
 
 // NewSubmarine creates a submarine.
 func NewSubmarine(ctx *context.Context, user *context.Player) context.Actor {
 	s := &submarine{
 		actor: newActor(ctx, user, user.SubmarineParams, user.StartPosition, 0),
+		timer: component.NewTimer(ctx.Now),
 	}
 	s.event.AddCollideWithOtherActorEventListener(s.onCollideWithOtherActor)
 	s.event.AddCollideWithStageEventListener(s.onCollideWithStage)
@@ -32,6 +36,8 @@ func NewSubmarine(ctx *context.Context, user *context.Player) context.Actor {
 }
 
 func (s *submarine) Update() {
+	s.timer.Update(s.ctx.Now)
+
 	if s.player.AI != nil {
 		s.player.AI.Update(s)
 	}
@@ -64,8 +70,17 @@ func (s *submarine) onTorpedoRequest(m *battleAPI.TorpedoRequestObject) {
 }
 
 func (s *submarine) onPingerRequest(m *battleAPI.PingerRequestObject) {
+	if s.isUsingPinger {
+		return
+	}
 	logger.Log.Debugf("%v uses pinger", s)
+	s.isUsingPinger = true
 	s.ctx.Event.EmitActorUsePingerEvent(s, false)
+
+	s.timer.Register(10, func() {
+		s.ctx.Event.EmitActorUsePingerEvent(s, true)
+		s.isUsingPinger = false
+	})
 }
 
 func (s *submarine) onUserLeave() {
