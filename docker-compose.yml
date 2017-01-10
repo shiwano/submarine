@@ -9,7 +9,7 @@ services:
     links:
       - api
     ports:
-     - "5000:5000"
+      - "5000:5000"
   api:
     build:
       context: ./server/api
@@ -19,7 +19,7 @@ services:
     links:
       - mysql
     ports:
-     - "3000:3000"
+      - "3000:3000"
   mysql:
     image: mysql:5.7.17
     ports:
