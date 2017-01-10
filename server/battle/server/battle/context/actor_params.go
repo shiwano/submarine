@@ -43,13 +43,13 @@ func (a *actorParams) AccelDuration() time.Duration {
 	return a.accelDuration
 }
 
-// SubmarineParams represents submatine parameters.
+// SubmarineParams represents submarine parameters.
 type SubmarineParams struct {
 	*actorParams
 	PingerIntervalSeconds float64
 }
 
-// TorpedoParams represents submatine parameters.
+// TorpedoParams represents torpedo parameters.
 type TorpedoParams struct {
 	*actorParams
 	StartOffsetDistance float64
