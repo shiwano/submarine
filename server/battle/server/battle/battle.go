@@ -142,6 +142,7 @@ func (b *Battle) start() {
 	b.ctx.Event.AddActorMoveEventListener(b.onActorMove)
 	b.ctx.Event.AddActorChangeVisibilityEventListener(b.onActorChangeVisibility)
 	b.ctx.Event.AddActorDestroyEventListener(b.onActorDestroy)
+	b.ctx.Event.AddActorUsePingerEventListener(b.onActorUsePinger)
 }
 
 func (b *Battle) update(now time.Time) bool {
@@ -226,4 +227,8 @@ func (b *Battle) onActorChangeVisibility(actor context.Actor, teamLayer navmesh.
 
 func (b *Battle) onActorDestroy(actor context.Actor) {
 	b.Gateway.outputDestruction(actor)
+}
+
+func (b *Battle) onActorUsePinger(actor context.Actor, finished bool) {
+	b.Gateway.outputPinger(actor, finished)
 }
