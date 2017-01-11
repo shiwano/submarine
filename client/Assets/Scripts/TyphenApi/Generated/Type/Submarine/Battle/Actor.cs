@@ -16,5 +16,7 @@ namespace TyphenApi.Type.Submarine.Battle
         public TyphenApi.Type.Submarine.Battle.Movement Movement { get; set; }
         protected static readonly SerializationInfo<Actor, bool> isVisible = new SerializationInfo<Actor, bool>("is_visible", false, (x) => x.IsVisible, (x, v) => x.IsVisible = v);
         public bool IsVisible { get; set; }
+        protected static readonly SerializationInfo<Actor, TyphenApi.Type.Submarine.Battle.ActorSubmarineObject> submarine = new SerializationInfo<Actor, TyphenApi.Type.Submarine.Battle.ActorSubmarineObject>("submarine", true, (x) => x.Submarine, (x, v) => x.Submarine = v);
+        public TyphenApi.Type.Submarine.Battle.ActorSubmarineObject Submarine { get; set; }
     }
 }

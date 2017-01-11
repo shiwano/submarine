@@ -9,5 +9,6 @@ module TyphenApi::Model::Submarine::Battle
     attribute :type, TyphenApi::Model::Submarine::Battle::ActorType, :required => true
     attribute :movement, TyphenApi::Model::Submarine::Battle::Movement, :required => true
     attribute :is_visible, Boolean, :required => true
+    attribute :submarine, TyphenApi::Model::Submarine::Battle::ActorSubmarineObject, :required => false
   end
 end
