@@ -67,15 +67,13 @@ func (a *actor) Player() *context.Player           { return a.player }
 func (a *actor) Type() battleAPI.ActorType         { return a.actorType }
 func (a *actor) Event() *context.ActorEventEmitter { return a.event }
 
-func (a *actor) IsDestroyed() bool             { return a.isDestroyed }
-func (a *actor) Movement() *battleAPI.Movement { return a.motor.ToAPIType(a.ID()) }
-func (a *actor) Position() *vec2.T             { return a.stageAgent.Position() }
-func (a *actor) Direction() float64            { return a.motor.Direction() }
-func (a *actor) IsAccelerating() bool          { return a.motor.IsAccelerating() }
-
-func (a *actor) IsVisibleFrom(layer navmesh.LayerMask) bool {
-	return a.visibility.IsVisibleFrom(layer)
-}
+func (a *actor) IsDestroyed() bool                          { return a.isDestroyed }
+func (a *actor) Movement() *battleAPI.Movement              { return a.motor.ToAPIType(a.ID()) }
+func (a *actor) Position() *vec2.T                          { return a.stageAgent.Position() }
+func (a *actor) Direction() float64                         { return a.motor.Direction() }
+func (a *actor) IsAccelerating() bool                       { return a.motor.IsAccelerating() }
+func (a *actor) IsVisibleFrom(layer navmesh.LayerMask) bool { return a.visibility.IsVisibleFrom(layer) }
+func (a *actor) Submarine() *battleAPI.ActorSubmarineObject { return nil }
 
 func (a *actor) Destroy() {
 	a.isDestroyed = true

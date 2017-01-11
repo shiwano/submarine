@@ -41,12 +41,13 @@ func (a *actor) Player() *Player           { return a.player }
 func (a *actor) Type() battleAPI.ActorType { return a.actorType }
 func (a *actor) Event() *ActorEventEmitter { return a.event }
 
-func (a *actor) IsDestroyed() bool                    { return a.isDestroyed }
-func (a *actor) Movement() *battleAPI.Movement        { panic("not implemented yet.") }
-func (a *actor) Position() *vec2.T                    { return &vec2.Zero }
-func (a *actor) Direction() float64                   { return 0 }
-func (a *actor) IsAccelerating() bool                 { return false }
-func (a *actor) IsVisibleFrom(navmesh.LayerMask) bool { return true }
+func (a *actor) IsDestroyed() bool                          { return a.isDestroyed }
+func (a *actor) Movement() *battleAPI.Movement              { panic("not implemented yet.") }
+func (a *actor) Position() *vec2.T                          { return &vec2.Zero }
+func (a *actor) Direction() float64                         { return 0 }
+func (a *actor) IsAccelerating() bool                       { return false }
+func (a *actor) IsVisibleFrom(navmesh.LayerMask) bool       { return true }
+func (a *actor) Submarine() *battleAPI.ActorSubmarineObject { return nil }
 
 func (a *actor) Destroy() {
 	a.isDestroyed = true

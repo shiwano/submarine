@@ -43,6 +43,12 @@ func (s *submarine) Update() {
 	}
 }
 
+func (s *submarine) Submarine() *battleAPI.ActorSubmarineObject {
+	return &battleAPI.ActorSubmarineObject{
+		IsUsingPinger: s.isUsingPinger,
+	}
+}
+
 func (s *submarine) onCollideWithOtherActor(actor context.Actor, point vec2.T) {
 	if actor.Player() != s.player {
 		s.idle()

@@ -23,6 +23,7 @@ type Actor interface {
 	Direction() float64
 	IsAccelerating() bool
 	IsVisibleFrom(navmesh.LayerMask) bool
+	Submarine() *battleAPI.ActorSubmarineObject
 
 	Destroy()
 
@@ -41,4 +42,9 @@ func (rcv ActorSlice) GroupByLayer(fn func(Actor) navmesh.LayerMask) map[navmesh
 		result[key] = append(result[key], v)
 	}
 	return result
+}
+
+// Submarine represents additional actor data for a submarine.
+type Submarine interface {
+	IsUsingPinger() bool
 }
