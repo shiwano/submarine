@@ -44,6 +44,7 @@ namespace Submarine.Battle
             battleService.Api.OnMovementReceiveAsObservable().Subscribe(OnActorMove).AddTo(view);
             battleService.Api.OnVisibilityReceiveAsObservable().Subscribe(OnActorVisibilityChange).AddTo(view);
             battleService.Api.OnDestructionReceiveAsObservable().Subscribe(OnActorDestroy).AddTo(view);
+            battleService.Api.OnPingerReceiveAsObservable().Subscribe(OnActorUsePinger).AddTo(view);
         }
 
         void OnBattleStart()
@@ -87,6 +88,15 @@ namespace Submarine.Battle
             if (actorContainer.TryDestroyActor(destruction.ActorId, out actorFacade))
             {
                 actorDestroyEvent.Invoke(actorFacade);
+            }
+        }
+
+        void OnActorUsePinger(Type.Battle.Pinger pinger)
+        {
+            ActorFacade actorFacade;
+            if (actorContainer.TryGet(pinger.ActorId, out actorFacade) && actorFacade.Actor.Submarine != null)
+            {
+                actorFacade.Actor.Submarine.IsUsingPinger = !pinger.IsFinished;
             }
         }
     }
