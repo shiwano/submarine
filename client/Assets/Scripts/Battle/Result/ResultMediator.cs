@@ -17,7 +17,7 @@ namespace Submarine.Battle
 
         public void Initialize()
         {
-            battleModel.OnFinishAsObservable().Take(1).Subscribe(_ => OnBattleFinish()).AddTo(view);
+            battleModel.OnFinishAsObservable().Subscribe(_ => OnBattleFinish()).AddTo(view);
             view.OnCloseButtonClickAsObservable().Take(1).Subscribe(_ => OnClose()).AddTo(view);
         }
 

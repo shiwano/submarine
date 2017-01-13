@@ -3,6 +3,7 @@ using System.Linq;
 using Zenject;
 using Zenject.Commands;
 using UniRx;
+using Type = TyphenApi.Type.Submarine;
 
 namespace Submarine.Battle
 {
@@ -62,6 +63,43 @@ namespace Submarine.Battle
                 battleService.Api.OnNowReceiveAsObservable().Subscribe(message =>
                 {
                     battleModel.Now = CurrentMillis.FromMilliseconds(message.Time);
+                });
+
+                battleService.Api.OnActorReceiveAsObservable().Subscribe(message =>
+                {
+                    battleModel.ActorsById.Add(message.Id, message);
+                });
+
+                battleService.Api.OnDestructionReceiveAsObservable().Subscribe(message =>
+                {
+                    battleModel.ActorsById.Remove(message.ActorId);
+                });
+
+                battleService.Api.OnMovementReceiveAsObservable().Subscribe(message =>
+                {
+                    Type.Battle.Actor actor;
+                    if (battleModel.ActorsById.TryGetValue(message.ActorId, out actor))
+                    {
+                        actor.UpdateValues(message);
+                    }
+                });
+
+                battleService.Api.OnVisibilityReceiveAsObservable().Subscribe(message =>
+                {
+                    Type.Battle.Actor actor;
+                    if (battleModel.ActorsById.TryGetValue(message.ActorId, out actor))
+                    {
+                        actor.UpdateValues(message);
+                    }
+                });
+
+                battleService.Api.OnPingerReceiveAsObservable().Subscribe(message =>
+                {
+                    Type.Battle.Actor actor;
+                    if (battleModel.ActorsById.TryGetValue(message.ActorId, out actor))
+                    {
+                        actor.UpdateValues(message);
+                    }
                 });
             }
         }

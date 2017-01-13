@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using UniRx;
 using Type = TyphenApi.Type.Submarine;
 
@@ -14,33 +15,21 @@ namespace Submarine.Battle
 
     public class BattleModel
     {
-        public readonly ReactiveProperty<BattleState> State;
+        public readonly ReactiveProperty<BattleState> State = new ReactiveProperty<BattleState>(BattleState.NotConnected);
+        public readonly ReactiveDictionary<long, Type.Battle.Actor> ActorsById = new ReactiveDictionary<long, Type.Battle.Actor>();
 
         public DateTime StartedAt { get; set; }
         public DateTime FinishedAt { get; set; }
-
         public Type.User Winner { get; set; }
+
+        public TimeSpan ElapsedTime { get { return Now - StartedAt; } }
+        public bool IsInBattle { get { return State.Value == BattleState.InBattle; } }
 
         TimeSpan differenceFromBattleServerTime;
         public DateTime Now
         {
             get { return DateTime.Now.Add(differenceFromBattleServerTime); }
             set { differenceFromBattleServerTime = value.Subtract(DateTime.Now); }
-        }
-
-        public TimeSpan ElapsedTime
-        {
-            get { return Now - StartedAt; }
-        }
-
-        public bool IsInBattle
-        {
-            get { return State.Value == BattleState.InBattle; }
-        }
-
-        public BattleModel()
-        {
-            State = new ReactiveProperty<BattleState>(BattleState.NotConnected);
         }
 
         public IObservable<Unit> OnPrepareAsObservable()

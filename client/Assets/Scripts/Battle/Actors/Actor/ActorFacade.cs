@@ -1,5 +1,6 @@
 ﻿using Zenject;
 using Type = TyphenApi.Type.Submarine;
+using UniRx;
 
 namespace Submarine.Battle
 {
@@ -15,7 +16,6 @@ namespace Submarine.Battle
         ActorView view;
 
         public Type.Battle.Actor Actor { get { return actor; } }
-        public ActorMotor Motor { get { return motor; } }
         public ActorView View { get { return view; } }
         public bool IsMine { get { return actor.UserId == userModel.LoggedInUser.Value.Id; } }
 
@@ -24,13 +24,15 @@ namespace Submarine.Battle
         public override void Initialize()
         {
             base.Initialize();
-            Motor.SetMovement(Actor.Movement);
+            motor.SetMovement(Actor.Movement);
             UpdatePositionAndDirection();
 
             if (!IsMine)
             {
                 view.ChangeToEnemyColor();
             }
+
+            Actor.OnMoveAsObservable().Subscribe(motor.SetMovement).AddTo(view);
         }
 
         public override void Tick()
