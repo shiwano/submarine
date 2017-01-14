@@ -11,6 +11,7 @@ module Build
       end
 
       def generate_config
+        mkdir 'client/Assets/Resources/Config'
         open('client/Assets/Resources/Config/Config.json', 'w') do |file|
           Configuration.client['version'] = Environment.version
           JSON.dump(Configuration.client, file)
