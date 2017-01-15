@@ -10,6 +10,8 @@ services:
       - api
     ports:
       - "5000:5000"
+    stdin_open: true
+    tty: true
   api:
     build:
       context: ./server/api
@@ -20,9 +22,13 @@ services:
       - mysql
     ports:
       - "3000:3000"
+    stdin_open: true
+    tty: true      
   mysql:
     image: mysql:5.7.17
     ports:
       - "3306:3306"
     environment:
       MYSQL_ALLOW_EMPTY_PASSWORD: 1
+    stdin_open: true
+    tty: true      
