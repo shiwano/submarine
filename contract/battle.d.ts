@@ -35,6 +35,9 @@ declare module Submarine.Battle {
     type: ActorType;
     movement: Movement;
     isVisible: boolean;
+    submarine?: {
+      isUsingPinger: boolean;
+    }
   }
 
   interface Visibility {
@@ -55,6 +58,11 @@ declare module Submarine.Battle {
     actorId: integer;
   }
 
+  interface Pinger {
+    actorId: integer;
+    isFinished: boolean;
+  }
+
   var ping: { message: string; }
   var room: Submarine.Room;
 
@@ -66,6 +74,7 @@ declare module Submarine.Battle {
   var visibility: Visibility;
   var movement: Movement;
   var destruction: Destruction;
+  var pinger: Pinger;
 
   var startRequest: {};
   var accelerationRequest: { direction: degrees; };

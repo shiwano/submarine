@@ -10,7 +10,8 @@ module Build
         self.new(target).build
       end
 
-      def generate_config_for_client
+      def generate_config
+        mkdir_p 'client/Assets/Resources/Config'
         open('client/Assets/Resources/Config/Config.json', 'w') do |file|
           Configuration.client['version'] = Environment.version
           JSON.dump(Configuration.client, file)
@@ -25,7 +26,7 @@ module Build
     end
 
     def build
-      self.class.generate_config_for_client
+      self.class.generate_config
       case @target
       when :ios     then build_for_ios
       when :android then build_for_android

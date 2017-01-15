@@ -11,6 +11,7 @@ import (
 	battleAPI "github.com/shiwano/submarine/server/battle/lib/typhenapi/type/submarine/battle"
 	webAPI "github.com/shiwano/submarine/server/battle/lib/typhenapi/web/submarine"
 	"github.com/shiwano/submarine/server/battle/server/battle"
+	"github.com/shiwano/submarine/server/battle/server/config"
 	"github.com/shiwano/submarine/server/battle/server/logger"
 	"github.com/shiwano/submarine/server/battle/server/resource"
 )
@@ -34,7 +35,7 @@ type room struct {
 }
 
 func newRoom(id int64) (*room, error) {
-	webAPI := newWebAPI("http://localhost:3000")
+	webAPI := newWebAPI(config.Config.ApiServerBaseUri)
 
 	// TODO: Validate whether the battle server can create the room.
 	res, err := webAPI.Battle.FindRoom(id)

@@ -8,7 +8,7 @@ namespace Submarine
     {
         public override void InstallBindings()
         {
-            Container.Bind<Type.Config>().ToSingleInstance(Type.Config.Load());
+            Container.Bind<Type.Configuration.Client>().ToSingleInstance(Type.Configuration.Client.Load());
             Container.Bind<TyphenApi.WebApi.Submarine>().ToSingle();
 
             Container.Bind<UserModel>().ToSingle();

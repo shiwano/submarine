@@ -14,6 +14,7 @@ gem 'virtus'
 gem 'config'
 gem 'hashie'
 gem 'baby_squeel'
+gem 'tzinfo-data'
 
 group :development do
   gem 'bullet'

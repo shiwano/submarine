@@ -14,21 +14,33 @@ namespace :gen do
       sh 'go build && ./lightmap 20 80'
     end
   end
+
+  desc 'Generate all configuration files'
+  task :configs do
+    Build::ClientBuilder.generate_config
+    Build::ServerBuilder.generate_all_configs
+  end
 end
 
 namespace :build do
-  desc 'Build the client for iOS'
-  task :ios do
-    Build::ClientBuilder.build(:ios)
+  namespace :client do
+    desc 'Build the client for iOS'
+    task :ios do
+      Build::ClientBuilder.build(:ios)
+    end
+
+    desc 'Build the client for Android'
+    task :android do
+      Build::ClientBuilder.build(:android)
+    end
   end
 
-  desc 'Build the client for Android'
-  task :android do
-    Build::ClientBuilder.build(:android)
-  end
-
-  desc 'Generate the config file for the client'
-  task :generate_config_for_client do
-    Build::ClientBuilder.generate_config_for_client
+  namespace :server do
+    Build::ServerBuilder::TARGETS.each do |target|
+      desc "Bulid a docker image of the #{target} server"
+      task target do
+        Build::ServerBuilder.build(target)
+      end
+    end
   end
 end

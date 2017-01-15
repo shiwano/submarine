@@ -11,8 +11,6 @@ namespace Submarine.Battle
         [Inject]
         BattleEvent.ActorDestroy actorDestroyEvent;
         [Inject]
-        BattleService battleService;
-        [Inject]
         BattleModel battleModel;
         [Inject]
         BattleView view;
@@ -23,9 +21,12 @@ namespace Submarine.Battle
 
         public void Initialize()
         {
-            battleModel.OnPrepareAsObservable().Take(1).Subscribe(_ => OnBattlePrepare()).AddTo(view);
-            battleModel.OnStartAsObservable().Take(1).Subscribe(_ => OnBattleStart()).AddTo(view);
-            battleModel.OnFinishAsObservable().Take(1).Subscribe(_ => OnBattleFinish()).AddTo(view);
+            battleModel.OnPrepareAsObservable().Subscribe(_ => OnBattlePrepare()).AddTo(view);
+            battleModel.OnStartAsObservable().Subscribe(_ => OnBattleStart()).AddTo(view);
+            battleModel.OnFinishAsObservable().Subscribe(_ => OnBattleFinish()).AddTo(view);
+            battleModel.ActorsById.ObserveAdd().Subscribe(e => OnActorAdd(e.Value)).AddTo(view);
+            battleModel.ActorsById.ObserveRemove().Subscribe(x => OnActorRemove(x.Value)).AddTo(view);
+
             initializeBattleCommand.Execute();
         }
 
@@ -40,10 +41,6 @@ namespace Submarine.Battle
         void OnBattlePrepare()
         {
             Logger.Log("Battle Prepare");
-            battleService.Api.OnActorReceiveAsObservable().Subscribe(OnActorCreate).AddTo(view);
-            battleService.Api.OnMovementReceiveAsObservable().Subscribe(OnActorMove).AddTo(view);
-            battleService.Api.OnVisibilityReceiveAsObservable().Subscribe(OnActorVisibilityChange).AddTo(view);
-            battleService.Api.OnDestructionReceiveAsObservable().Subscribe(OnActorDestroy).AddTo(view);
         }
 
         void OnBattleStart()
@@ -56,35 +53,16 @@ namespace Submarine.Battle
             Logger.Log("Battle Finish");
         }
 
-        void OnActorCreate(Type.Battle.Actor actor)
+        void OnActorAdd(Type.Battle.Actor actor)
         {
             var actorFacade = actorContainer.CreateActor(actor);
             actorCreateEvent.Invoke(actorFacade);
         }
 
-        void OnActorMove(Type.Battle.Movement movement)
+        void OnActorRemove(Type.Battle.Actor actor)
         {
             ActorFacade actorFacade;
-            if (actorContainer.TryGet(movement.ActorId, out actorFacade))
-            {
-                actorFacade.Motor.SetMovement(movement);
-            }
-        }
-
-        void OnActorVisibilityChange(Type.Battle.Visibility visibility)
-        {
-            ActorFacade actorFacade;
-            if (actorContainer.TryGet(visibility.ActorId, out actorFacade))
-            {
-                actorFacade.Actor.IsVisible = visibility.IsVisible;
-                actorFacade.Motor.SetMovement(visibility.Movement);
-            }
-        }
-
-        void OnActorDestroy(Type.Battle.Destruction destruction)
-        {
-            ActorFacade actorFacade;
-            if (actorContainer.TryDestroyActor(destruction.ActorId, out actorFacade))
+            if (actorContainer.TryDestroyActor(actor.Id, out actorFacade))
             {
                 actorDestroyEvent.Invoke(actorFacade);
             }

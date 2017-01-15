@@ -60,6 +60,7 @@ func (g *Gateway) outputActor(receiversByTeam context.PlayersByTeam, actor conte
 				Type:      actor.Type(),
 				Movement:  actor.Movement(),
 				IsVisible: actor.IsVisibleFrom(teamLayer),
+				Submarine: actor.Submarine(),
 			},
 		}
 	}
@@ -90,6 +91,12 @@ func (g *Gateway) outputMovement(actor context.Actor) {
 func (g *Gateway) outputDestruction(actor context.Actor) {
 	g.Output <- &GatewayOutput{
 		Message: &battleAPI.Destruction{ActorId: actor.ID()},
+	}
+}
+
+func (g *Gateway) outputPinger(actor context.Actor, finished bool) {
+	g.Output <- &GatewayOutput{
+		Message: &battleAPI.Pinger{IsFinished: finished},
 	}
 }
 

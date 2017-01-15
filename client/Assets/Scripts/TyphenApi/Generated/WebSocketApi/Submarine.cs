@@ -30,6 +30,7 @@ namespace TyphenApi.WebSocketApi
                 return message;
             }
 
+
             return null;
         }
     }

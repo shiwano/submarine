@@ -18,6 +18,7 @@ namespace TyphenApi.WebSocketApi.Parts.Submarine
             Visibility = -1278494184,
             Movement = 1298310360,
             Destruction = -1118469016,
+            Pinger = 123497640,
             StartRequest = 504335322,
             AccelerationRequest = -710337400,
             BrakeRequest = 1492486768,
@@ -39,6 +40,7 @@ namespace TyphenApi.WebSocketApi.Parts.Submarine
         public event Action<TyphenApi.Type.Submarine.Battle.Visibility> OnVisibilityReceive;
         public event Action<TyphenApi.Type.Submarine.Battle.Movement> OnMovementReceive;
         public event Action<TyphenApi.Type.Submarine.Battle.Destruction> OnDestructionReceive;
+        public event Action<TyphenApi.Type.Submarine.Battle.Pinger> OnPingerReceive;
         public event Action<TyphenApi.Type.Submarine.Battle.StartRequestObject> OnStartRequestReceive;
         public event Action<TyphenApi.Type.Submarine.Battle.AccelerationRequestObject> OnAccelerationRequestReceive;
         public event Action<TyphenApi.Type.Submarine.Battle.BrakeRequestObject> OnBrakeRequestReceive;
@@ -123,7 +125,7 @@ namespace TyphenApi.WebSocketApi.Parts.Submarine
             session.Send((int)MessageType.Actor, actor);
         }
 
-        public void SendActor(long id, long userId, TyphenApi.Type.Submarine.Battle.ActorType type, TyphenApi.Type.Submarine.Battle.Movement movement, bool isVisible)
+        public void SendActor(long id, long userId, TyphenApi.Type.Submarine.Battle.ActorType type, TyphenApi.Type.Submarine.Battle.Movement movement, bool isVisible, TyphenApi.Type.Submarine.Battle.ActorSubmarineObject submarine)
         {
             session.Send((int)MessageType.Actor, new TyphenApi.Type.Submarine.Battle.Actor()
             {
@@ -132,6 +134,7 @@ namespace TyphenApi.WebSocketApi.Parts.Submarine
                 Type = type,
                 Movement = movement,
                 IsVisible = isVisible,
+                Submarine = submarine,
             });
         }
         public void SendVisibility(TyphenApi.Type.Submarine.Battle.Visibility visibility)
@@ -174,6 +177,19 @@ namespace TyphenApi.WebSocketApi.Parts.Submarine
             session.Send((int)MessageType.Destruction, new TyphenApi.Type.Submarine.Battle.Destruction()
             {
                 ActorId = actorId,
+            });
+        }
+        public void SendPinger(TyphenApi.Type.Submarine.Battle.Pinger pinger)
+        {
+            session.Send((int)MessageType.Pinger, pinger);
+        }
+
+        public void SendPinger(long actorId, bool isFinished)
+        {
+            session.Send((int)MessageType.Pinger, new TyphenApi.Type.Submarine.Battle.Pinger()
+            {
+                ActorId = actorId,
+                IsFinished = isFinished,
             });
         }
         public void SendStartRequest(TyphenApi.Type.Submarine.Battle.StartRequestObject startRequest)
@@ -368,6 +384,17 @@ namespace TyphenApi.WebSocketApi.Parts.Submarine
                     if (OnDestructionReceive != null)
                     {
                         OnDestructionReceive(message);
+                    }
+
+                    return message;
+                }
+                case MessageType.Pinger:
+                {
+                    var message = session.MessageDeserializer.Deserialize<TyphenApi.Type.Submarine.Battle.Pinger>(messageData);
+
+                    if (OnPingerReceive != null)
+                    {
+                        OnPingerReceive(message);
                     }
 
                     return message;

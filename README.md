@@ -20,6 +20,7 @@ Make out `config.*.yml` from `config.example.yml`.
 ```bash
 $ cp config.example.yml config.development.yml
 $ vi config.development.yml # Write the build settings.
+$ bundle exec rake gen:configs
 ```
 
 Output tasks.

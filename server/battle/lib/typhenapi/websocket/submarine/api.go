@@ -27,7 +27,9 @@ func New(session typhenapi.Session, serializer typhenapi.Serializer, errorHandle
 
 // DispatchMessageEvent dispatches a binary message.
 func (api *WebSocketAPI) DispatchMessageEvent(data []byte) error {
-	api.Battle.DispatchMessageEvent(data)
+	if err := api.Battle.DispatchMessageEvent(data); err != nil {
+		return err
+	}
 
 	return nil
 }

@@ -22,8 +22,8 @@ type WebAPI struct {
 	serializer          typhenapi.Serializer
 	beforeRequestHandler func(*http.Request)
 	Client              *http.Client
-	{{#each modules}}
-	{{upperCamelCase name}} *_{{moduleName this '_'}}.WebAPI
+	{{#each (webApiModules this)}}
+	{{upperCamelCase module.name}} *_{{moduleName module '_'}}.WebAPI
 	{{/each}}
 }
 
@@ -36,8 +36,8 @@ func New(baseURI string, serializer typhenapi.Serializer, client *http.Client) *
 	api.baseURI = baseURI
 	api.serializer = serializer
 	api.Client = client
-	{{#each modules}}
-	api.{{upperCamelCase name}} = _{{moduleName this '_'}}.New(baseURI, serializer, client)
+	{{#each (webApiModules this)}}
+	api.{{upperCamelCase module.name}} = _{{moduleName module '_'}}.New(baseURI, serializer, client)
 	{{/each}}
 	return api
 }
@@ -91,8 +91,8 @@ func (api *WebAPI) {{upperCamelCase name}}({{#each callSignatures.0.parameters}}
 
 func (api *WebAPI) SetBeforeRequestHandler(handler func(*http.Request)) {
 	api.beforeRequestHandler = handler
-	{{#each modules}}
-	api.{{upperCamelCase name}}.SetBeforeRequestHandler(handler)
+	{{#each (webApiModules this)}}
+	api.{{upperCamelCase module.name}}.SetBeforeRequestHandler(handler)
 	{{/each}}
 }
 

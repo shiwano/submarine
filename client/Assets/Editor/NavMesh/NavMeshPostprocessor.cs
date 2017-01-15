@@ -7,7 +7,7 @@ using System.Text.RegularExpressions;
 
 public class NavMeshPostprocessor : AssetPostprocessor
 {
-    const string NavMeshFbxPathPattern = @"^Assets/Art/Maps/\d+/NavMesh.fbx";
+    const string NavMeshFbxPathPattern = @"^Assets/Art/Stages/(\d+)/NavMesh.fbx";
 
     bool IsTargetAsset
     {
@@ -16,11 +16,13 @@ public class NavMeshPostprocessor : AssetPostprocessor
 
     public void OnPostprocessModel(GameObject go)
     {
-        if (!IsTargetAsset) return;
+        var match = Regex.Match(assetPath, NavMeshFbxPathPattern);
+        if (!match.Success) return;
 
         var mesh = go.GetComponent<MeshFilter>().sharedMesh;
         var meshData = ConvertMeshToJSON(mesh);
-        var outputPath = Regex.Replace(assetPath, "NavMesh.fbx", "NavMesh.json");
+        var stageIdAsString = match.Groups[1];
+        var outputPath = Regex.Replace(assetPath.Replace('\\', '/'), "NavMesh.fbx", "../../../../../server/battle/assets/stages/" + stageIdAsString + "/mesh.json");
         WriteTextToFile(outputPath, meshData);
     }
 
@@ -61,8 +63,9 @@ public class NavMeshPostprocessor : AssetPostprocessor
 
     void WriteTextToFile(string outputPath, string contents)
     {
-        File.WriteAllText(outputPath, contents);
-        AssetDatabase.Refresh();
-        Debug.Log("Generated " + outputPath);
+        var absoluteOutputPath = Path.GetFullPath(outputPath);
+        Directory.CreateDirectory(Path.GetDirectoryName(absoluteOutputPath));
+        File.WriteAllText(absoluteOutputPath, contents);
+        Debug.Log("Generated " + absoluteOutputPath);
     }
 }

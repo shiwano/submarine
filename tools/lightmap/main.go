@@ -42,8 +42,8 @@ func main() {
 }
 
 func generateLightMapIfNeeded(cellSize, lightRange float64, stageDir string) {
-	navMeshFilePath := path.Join(stageDir, "NavMesh.json")
-	lightMapFilePath := path.Join(stageDir, "LightMap.bytes")
+	navMeshFilePath := path.Join(stageDir, "mesh.json")
+	lightMapFilePath := path.Join(stageDir, "lightmap.mpac")
 
 	mesh, err := navmesh.LoadMeshFromJSONFile(navMeshFilePath)
 	if err != nil {
@@ -87,5 +87,5 @@ func getStageRootDir() string {
 	if err != nil {
 		log.Fatal(err)
 	}
-	return path.Join(rootDir, "../../client/Assets/Art/Stages")
+	return path.Join(rootDir, "../../server/battle/assets/stages")
 }

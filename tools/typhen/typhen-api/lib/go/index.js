@@ -40,9 +40,8 @@ module.exports = function(typhen, options, helpers) {
               type.parentModule.isGlobalModule ||
               type.isPrimitiveType) {
             return null;
-          } else {
-            return { alias: helpers.namespace(type, '_'), path: helpers.namespace(type, '/') };
           }
+          return { module: type.parentModule, alias: helpers.namespace(type, '_'), path: helpers.namespace(type, '/') };
         })
         .filter(function(x) { return x !== null; })
         .uniq(function(x) { return x.path; })
@@ -51,14 +50,14 @@ module.exports = function(typhen, options, helpers) {
     webApiModules: function(module) {
       return _.chain(module.modules)
         .filter(function(module) { return helpers.isWebApiModule(module); })
-        .map(function(module) { return { alias: helpers.moduleName(module, '_'), path: helpers.moduleName(module, '/') }; })
+        .map(function(module) { return { module: module, alias: helpers.moduleName(module, '_'), path: helpers.moduleName(module, '/') }; })
         .uniq(function(x) { return x.path; })
         .value();
     },
     webSocketApiModules: function(module) {
       return _.chain(module.modules)
         .filter(function(module) { return helpers.isWebSocketApiModule(module); })
-        .map(function(module) { return { alias: helpers.moduleName(module, '_'), path: helpers.moduleName(module, '/') }; })
+        .map(function(module) { return { module: module, alias: helpers.moduleName(module, '_'), path: helpers.moduleName(module, '/') }; })
         .uniq(function(x) { return x.path; })
         .value();
     },

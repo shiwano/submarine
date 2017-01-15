@@ -3,12 +3,20 @@ require 'yaml'
 module Build
   module Configuration
     class << self
+      def path
+        "config.#{Environment.env}.yml"
+      end
+
       def config
-        @config ||= open("config.#{Environment.env}.yml") {|f| YAML.load(f) }
+        @config ||= open(path) {|f| YAML.load(f) }
       end
 
       def client
         config['client']
+      end
+
+      def server
+        config['server']
       end
 
       def build

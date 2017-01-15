@@ -28,8 +28,8 @@ type WebSocketAPI struct {
 	session      typhenapi.Session
 	serializer   typhenapi.Serializer
 	errorHandler func(error)
-	{{#each modules}}
-	{{upperCamelCase name}} *_{{moduleName this '_'}}.WebSocketAPI
+	{{#each (webSocketApiModules this)}}
+	{{upperCamelCase module.name}} *_{{moduleName module '_'}}.WebSocketAPI
 	{{/each}}
 
 	{{#each variables}}
@@ -43,8 +43,8 @@ func New(session typhenapi.Session, serializer typhenapi.Serializer, errorHandle
 	api.session = session
 	api.serializer = serializer
 	api.errorHandler = errorHandler
-	{{#each modules}}
-	api.{{upperCamelCase name}} = _{{moduleName this '_'}}.New(session, serializer, errorHandler)
+	{{#each (webSocketApiModules this)}}
+	api.{{upperCamelCase module.name}} = _{{moduleName module '_'}}.New(session, serializer, errorHandler)
 	{{/each}}
 	return api
 }
@@ -96,8 +96,10 @@ func (api *WebSocketAPI) Send{{upperCamelCase name}}({{lowerCamelCase name}} {{t
 
 // DispatchMessageEvent dispatches a binary message.
 func (api *WebSocketAPI) DispatchMessageEvent(data []byte) error {
-	{{#each modules}}
-	api.{{upperCamelCase name}}.DispatchMessageEvent(data)
+	{{#each (webSocketApiModules this)}}
+	if err := api.{{upperCamelCase module.name}}.DispatchMessageEvent(data); err != nil {
+		return err
+	}
 	{{/each}}
 
 	{{#if variables}}
