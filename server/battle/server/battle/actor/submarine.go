@@ -43,6 +43,12 @@ func (s *submarine) Update() {
 	}
 }
 
+func (s *submarine) OnDestroy() {
+	if s.isUsingPinger {
+		s.finishToUsingPinger()
+	}
+}
+
 func (s *submarine) Submarine() *battleAPI.ActorSubmarineObject {
 	return &battleAPI.ActorSubmarineObject{
 		IsUsingPinger: s.isUsingPinger,
@@ -82,11 +88,7 @@ func (s *submarine) onPingerRequest(m *battleAPI.PingerRequestObject) {
 	logger.Log.Debugf("%v uses pinger", s)
 	s.isUsingPinger = true
 	s.ctx.Event.EmitActorUsePingerEvent(s, false)
-
-	s.timer.Register(s.player.SubmarineParams.PingerIntervalSeconds, func() {
-		s.ctx.Event.EmitActorUsePingerEvent(s, true)
-		s.isUsingPinger = false
-	})
+	s.timer.Register(s.player.SubmarineParams.PingerIntervalSeconds, s.finishToUsingPinger)
 }
 
 func (s *submarine) onUserLeave() {
@@ -99,6 +101,13 @@ func (s *submarine) onActorUsePinger(a context.Actor, finished bool) {
 		return
 	}
 	s.visibility.Set(pingerTeam, !finished)
+}
+
+func (s *submarine) finishToUsingPinger() {
+	if s.isUsingPinger {
+		s.ctx.Event.EmitActorUsePingerEvent(s, true)
+		s.isUsingPinger = false
+	}
 }
 
 func (s *submarine) shootTorpedo() {
