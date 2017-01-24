@@ -1438,17 +1438,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f0fd51713b93e453d86e9e69fe51a195, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  MainCamera: {fileID: 1473723662}
-  BattleLogText: {fileID: 1572298333}
-  TimerText: {fileID: 480431355}
-  TorpedoResourceImages:
+  battleLogText: {fileID: 1572298333}
+  timerText: {fileID: 480431355}
+  torpedoResourceImages:
   - {fileID: 1158632068}
   - {fileID: 816947649}
-  PingerAlert: {fileID: 62360095}
-  DangerAlert: {fileID: 1554210984}
-  DecoyCoolDown: {fileID: 289237022}
-  PingerCoolDown: {fileID: 222863170}
-  LookoutCoolDown: {fileID: 1744810120}
+  pingerAlertImage: {fileID: 62360095}
+  dangerAlertImage: {fileID: 1554210984}
+  decoyCoolDownText: {fileID: 289237022}
+  pingerCoolDownText: {fileID: 222863170}
+  lookoutCoolDownText: {fileID: 1744810120}
 --- !u!114 &918348796
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2475,11 +2474,6 @@ Prefab:
 --- !u!4 &1473723661 stripped
 Transform:
   m_PrefabParentObject: {fileID: 404722, guid: 182ffbfda75554d4d82af1d4b86654a8, type: 2}
-  m_PrefabInternal: {fileID: 1473723660}
---- !u!20 &1473723662 stripped
-Camera:
-  m_PrefabParentObject: {fileID: 2099654, guid: 182ffbfda75554d4d82af1d4b86654a8,
-    type: 2}
   m_PrefabInternal: {fileID: 1473723660}
 --- !u!1 &1474870745
 GameObject:
