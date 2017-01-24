@@ -35,6 +35,7 @@ namespace Submarine.Battle
             if (battleModel.IsInBattle)
             {
                 view.ElapsedTime = battleModel.ElapsedTime;
+                view.IsUsingPinger = battleModel.IsUsingPinger;
             }
         }
 

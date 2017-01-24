@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using UniRx;
+using Zenject;
 using Type = TyphenApi.Type.Submarine;
 
 namespace Submarine.Battle
@@ -15,6 +16,9 @@ namespace Submarine.Battle
 
     public class BattleModel
     {
+        [Inject]
+        UserModel userModel;
+
         public readonly ReactiveProperty<BattleState> State = new ReactiveProperty<BattleState>(BattleState.NotConnected);
         public readonly ReactiveDictionary<long, Type.Battle.Actor> ActorsById = new ReactiveDictionary<long, Type.Battle.Actor>();
 
@@ -24,6 +28,16 @@ namespace Submarine.Battle
 
         public TimeSpan ElapsedTime { get { return Now - StartedAt; } }
         public bool IsInBattle { get { return State.Value == BattleState.InBattle; } }
+
+        public bool IsUsingPinger
+        {
+            get
+            {
+                return ActorsById.Values.Any(a => a.Type == Type.Battle.ActorType.Submarine &&
+                    a.Submarine.IsUsingPinger &&
+                    a.UserId != userModel.LoggedInUser.Value.Id);
+            }
+        }
 
         TimeSpan differenceFromBattleServerTime;
         public DateTime Now

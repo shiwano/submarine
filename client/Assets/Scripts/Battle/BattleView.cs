@@ -7,29 +7,33 @@ namespace Submarine.Battle
 {
     public class BattleView : MonoBehaviour
     {
-        public Camera MainCamera;
+        [SerializeField]
+        Text battleLogText;
+        [SerializeField]
+        Text timerText;
 
-        public Text BattleLogText;
-        public Text TimerText;
+        [SerializeField]
+        List<Image> torpedoResourceImages;
+        [SerializeField]
+        Image pingerAlertImage;
+        [SerializeField]
+        Image dangerAlertImage;
 
-        public List<Image> TorpedoResourceImages;
-        public Image PingerAlert;
-        public Image DangerAlert;
+        [SerializeField]
+        Text decoyCoolDownText;
+        [SerializeField]
+        Text pingerCoolDownText;
+        [SerializeField]
+        Text lookoutCoolDownText;
 
-        public Text DecoyCoolDown;
-        public Text PingerCoolDown;
-        public Text LookoutCoolDown;
+        public bool IsUsingPinger
+        {
+            set { pingerAlertImage.gameObject.SetActive(value); }
+        }
 
         public TimeSpan ElapsedTime
         {
-            set
-            {
-                TimerText.text = string.Format(
-                    "{0:00}:{1:00}",
-                    (int)value.TotalMinutes,
-                    (int)value.Seconds
-                );
-            }
+            set { timerText.text = string.Format("{0:00}:{1:00}", (int)value.TotalMinutes, (int)value.Seconds); }
         }
     }
 }
