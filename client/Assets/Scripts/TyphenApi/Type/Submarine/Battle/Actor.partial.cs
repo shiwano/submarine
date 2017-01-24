@@ -21,7 +21,10 @@ namespace TyphenApi.Type.Submarine.Battle
 
         public void UpdateValues(Pinger pinger)
         {
-            Submarine.IsUsingPinger = !pinger.IsFinished;
+            if (Submarine != null)
+            {
+                Submarine.IsUsingPinger = !pinger.IsFinished;
+            }
         }
 
         public IObservable<Movement> OnMoveAsObservable()
