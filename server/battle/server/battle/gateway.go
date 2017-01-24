@@ -96,7 +96,7 @@ func (g *Gateway) outputDestruction(actor context.Actor) {
 
 func (g *Gateway) outputPinger(actor context.Actor, finished bool) {
 	g.Output <- &GatewayOutput{
-		Message: &battleAPI.Pinger{IsFinished: finished},
+		Message: &battleAPI.Pinger{ActorId: actor.ID(), IsFinished: finished},
 	}
 }
 
