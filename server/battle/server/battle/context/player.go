@@ -43,7 +43,10 @@ func NewPlayer(playerID int64, isUser bool, teamLayer navmesh.LayerMask,
 				accelMaxSpeed:   6,
 				accelDuration:   2 * time.Second,
 			},
-			PingerIntervalSeconds: 10,
+			TorpedoCount:           2,
+			TorpedoCooldownSeconds: 15,
+			PingerCooldownSeconds:  60,
+			PingerIntervalSeconds:  10,
 		},
 		TorpedoParams: &TorpedoParams{
 			actorParams: &actorParams{
