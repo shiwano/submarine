@@ -29,8 +29,9 @@ func NewEquipment(params *context.SubmarineParams) *Equipment {
 }
 
 // ToAPIType returns a Equipment message.
-func (e *Equipment) ToAPIType() *battleAPI.Equipment {
+func (e *Equipment) ToAPIType(actorID int64) *battleAPI.Equipment {
 	message := new(battleAPI.Equipment)
+	message.ActorId = actorID
 	for _, i := range e.torpedos {
 		message.Torpedos = append(message.Torpedos, i.toAPIType())
 	}

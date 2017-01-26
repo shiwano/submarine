@@ -21,9 +21,9 @@ func TestEquipmentItem(t *testing.T) {
 
 		Convey("#ToApiType", func() {
 			Convey("should returns a Equipment message", func() {
-				m := e.ToAPIType()
-				So(m, ShouldNotBeNil)
-				So(m.Coerce(), ShouldBeNil)
+				message := e.ToAPIType(1)
+				So(message.ActorId, ShouldEqual, 1)
+				So(message.Coerce(), ShouldBeNil)
 			})
 		})
 
