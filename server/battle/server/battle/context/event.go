@@ -4,6 +4,8 @@ package context
 
 import (
 	"github.com/shiwano/submarine/server/battle/lib/navmesh"
+
+	battleAPI "github.com/shiwano/submarine/server/battle/lib/typhenapi/type/submarine/battle"
 )
 
 type actorCreateEvent struct {
@@ -34,4 +36,8 @@ type actorChangeVisibilityEvent struct {
 type actorUsePingerEvent struct {
 	actor    Actor
 	finished bool
+}
+
+type actorUpdateEquipmentEvent struct {
+	equipment *battleAPI.Equipment
 }
