@@ -21,7 +21,15 @@ func TestMotor(t *testing.T) {
 		c.Now, _ = time.Parse(timeLayout, "00:00:00.000")
 		m := NewMotor(c, &vec2.T{1, 1}, 0, 3, 5*time.Second)
 
-		Convey("#position", func() {
+		Convey("#ToAPIType", func() {
+			Convey("should returns a Movement message", func() {
+				message := m.ToAPIType(1)
+				So(message.ActorId, ShouldEqual, 1)
+				So(message.Coerce(), ShouldBeNil)
+			})
+		})
+
+		Convey("#Position", func() {
 			Convey("when the accelerator is shutdown", func() {
 				Convey("should return the initial position", func() {
 					So(m.Position(), ShouldResemble, &vec2.T{1, 1})
