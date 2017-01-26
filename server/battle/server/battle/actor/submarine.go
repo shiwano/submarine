@@ -13,13 +13,15 @@ type submarine struct {
 	*actor
 	isUsingPinger bool
 	timer         *component.Timer
+	equipment     *component.Equipment
 }
 
 // NewSubmarine creates a submarine.
 func NewSubmarine(ctx *context.Context, user *context.Player) context.Actor {
 	s := &submarine{
-		actor: newActor(ctx, user, user.SubmarineParams, user.StartPosition, 0),
-		timer: component.NewTimer(ctx.Now),
+		actor:     newActor(ctx, user, user.SubmarineParams, user.StartPosition, 0),
+		timer:     component.NewTimer(ctx.Now),
+		equipment: component.NewEquipment(user.SubmarineParams),
 	}
 	s.event.AddCollideWithOtherActorEventListener(s.onCollideWithOtherActor)
 	s.event.AddCollideWithStageEventListener(s.onCollideWithStage)
@@ -85,10 +87,12 @@ func (s *submarine) onPingerRequest(m *battleAPI.PingerRequestObject) {
 	if s.isUsingPinger {
 		return
 	}
-	logger.Log.Debugf("%v uses pinger", s)
-	s.isUsingPinger = true
-	s.ctx.Event.EmitActorUsePingerEvent(s, false)
-	s.timer.Register(s.player.SubmarineParams.PingerIntervalSeconds, s.finishToUsePinger)
+	if s.equipment.TryConsumePinger(s.ctx.Now) {
+		logger.Log.Debugf("%v uses pinger", s)
+		s.isUsingPinger = true
+		s.ctx.Event.EmitActorUsePingerEvent(s, false)
+		s.timer.Register(s.player.SubmarineParams.PingerIntervalSeconds, s.finishToUsePinger)
+	}
 }
 
 func (s *submarine) onUserLeave() {
@@ -111,9 +115,11 @@ func (s *submarine) finishToUsePinger() {
 }
 
 func (s *submarine) shootTorpedo() {
-	logger.Log.Debugf("%v shoots a torpedo", s)
-	normalizedVelocity := s.motor.NormalizedVelocity()
-	startOffsetValue := s.stageAgent.SizeRadius() * s.player.TorpedoParams.StartOffsetDistance
-	startPoint := normalizedVelocity.Scale(startOffsetValue).Add(s.Position())
-	NewTorpedo(s.ctx, s.player, startPoint, s.motor.Direction())
+	if s.equipment.TryConsumeTorpedo(s.ctx.Now) {
+		logger.Log.Debugf("%v shoots a torpedo", s)
+		normalizedVelocity := s.motor.NormalizedVelocity()
+		startOffsetValue := s.stageAgent.SizeRadius() * s.player.TorpedoParams.StartOffsetDistance
+		startPoint := normalizedVelocity.Scale(startOffsetValue).Add(s.Position())
+		NewTorpedo(s.ctx, s.player, startPoint, s.motor.Direction())
+	}
 }
