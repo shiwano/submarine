@@ -36,6 +36,7 @@ declare module Submarine.Battle {
     movement: Movement;
     isVisible: boolean;
     submarine?: {
+      equipment: Equipment;
       isUsingPinger: boolean;
     }
   }
@@ -63,6 +64,17 @@ declare module Submarine.Battle {
     isFinished: boolean;
   }
 
+  interface Equipment {
+    actorId: integer;
+    torpedos: EquipmentItem[];
+    pinger: EquipmentItem;
+  }
+
+  interface EquipmentItem {
+    cooldownStartedAt: timeStamp;
+    cooldownDuration: milliSeconds;
+  }
+
   var ping: { message: string; }
   var room: Submarine.Room;
 
@@ -75,6 +87,7 @@ declare module Submarine.Battle {
   var movement: Movement;
   var destruction: Destruction;
   var pinger: Pinger;
+  var equipment: Equipment;
 
   var startRequest: {};
   var accelerationRequest: { direction: degrees; };
