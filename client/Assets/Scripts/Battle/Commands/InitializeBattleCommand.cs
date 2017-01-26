@@ -101,6 +101,15 @@ namespace Submarine.Battle
                         actor.UpdateValues(message);
                     }
                 });
+
+                battleService.Api.OnEquipmentReceiveAsObservable().Subscribe(message =>
+                {
+                    Type.Battle.Actor actor;
+                    if (battleModel.ActorsById.TryGetValue(message.ActorId, out actor))
+                    {
+                        actor.UpdateValues(message);
+                    }
+                });
             }
         }
     }

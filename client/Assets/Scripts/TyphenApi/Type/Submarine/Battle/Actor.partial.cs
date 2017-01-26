@@ -27,6 +27,14 @@ namespace TyphenApi.Type.Submarine.Battle
             }
         }
 
+        public void UpdateValues(Equipment equipment)
+        {
+            if (Submarine != null)
+            {
+                Submarine.Equipment = equipment;
+            }
+        }
+
         public IObservable<Movement> OnMoveAsObservable()
         {
             return onMoveSubject.AsObservable();
