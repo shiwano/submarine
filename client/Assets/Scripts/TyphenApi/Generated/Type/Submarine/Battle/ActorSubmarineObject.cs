@@ -6,6 +6,8 @@ namespace TyphenApi.Type.Submarine.Battle
 {
     public partial class ActorSubmarineObject : TyphenApi.TypeBase<ActorSubmarineObject>
     {
+        protected static readonly SerializationInfo<ActorSubmarineObject, TyphenApi.Type.Submarine.Battle.Equipment> equipment = new SerializationInfo<ActorSubmarineObject, TyphenApi.Type.Submarine.Battle.Equipment>("equipment", false, (x) => x.Equipment, (x, v) => x.Equipment = v);
+        public TyphenApi.Type.Submarine.Battle.Equipment Equipment { get; set; }
         protected static readonly SerializationInfo<ActorSubmarineObject, bool> isUsingPinger = new SerializationInfo<ActorSubmarineObject, bool>("is_using_pinger", false, (x) => x.IsUsingPinger, (x, v) => x.IsUsingPinger = v);
         public bool IsUsingPinger { get; set; }
     }

@@ -19,6 +19,7 @@ namespace TyphenApi.WebSocketApi.Parts.Submarine
             Movement = 1298310360,
             Destruction = -1118469016,
             Pinger = 123497640,
+            Equipment = 701734660,
             StartRequest = 504335322,
             AccelerationRequest = -710337400,
             BrakeRequest = 1492486768,
@@ -41,6 +42,7 @@ namespace TyphenApi.WebSocketApi.Parts.Submarine
         public event Action<TyphenApi.Type.Submarine.Battle.Movement> OnMovementReceive;
         public event Action<TyphenApi.Type.Submarine.Battle.Destruction> OnDestructionReceive;
         public event Action<TyphenApi.Type.Submarine.Battle.Pinger> OnPingerReceive;
+        public event Action<TyphenApi.Type.Submarine.Battle.Equipment> OnEquipmentReceive;
         public event Action<TyphenApi.Type.Submarine.Battle.StartRequestObject> OnStartRequestReceive;
         public event Action<TyphenApi.Type.Submarine.Battle.AccelerationRequestObject> OnAccelerationRequestReceive;
         public event Action<TyphenApi.Type.Submarine.Battle.BrakeRequestObject> OnBrakeRequestReceive;
@@ -190,6 +192,20 @@ namespace TyphenApi.WebSocketApi.Parts.Submarine
             {
                 ActorId = actorId,
                 IsFinished = isFinished,
+            });
+        }
+        public void SendEquipment(TyphenApi.Type.Submarine.Battle.Equipment equipment)
+        {
+            session.Send((int)MessageType.Equipment, equipment);
+        }
+
+        public void SendEquipment(long actorId, List<TyphenApi.Type.Submarine.Battle.EquipmentItem> torpedos, TyphenApi.Type.Submarine.Battle.EquipmentItem pinger)
+        {
+            session.Send((int)MessageType.Equipment, new TyphenApi.Type.Submarine.Battle.Equipment()
+            {
+                ActorId = actorId,
+                Torpedos = torpedos,
+                Pinger = pinger,
             });
         }
         public void SendStartRequest(TyphenApi.Type.Submarine.Battle.StartRequestObject startRequest)
@@ -395,6 +411,17 @@ namespace TyphenApi.WebSocketApi.Parts.Submarine
                     if (OnPingerReceive != null)
                     {
                         OnPingerReceive(message);
+                    }
+
+                    return message;
+                }
+                case MessageType.Equipment:
+                {
+                    var message = session.MessageDeserializer.Deserialize<TyphenApi.Type.Submarine.Battle.Equipment>(messageData);
+
+                    if (OnEquipmentReceive != null)
+                    {
+                        OnEquipmentReceive(message);
                     }
 
                     return message;

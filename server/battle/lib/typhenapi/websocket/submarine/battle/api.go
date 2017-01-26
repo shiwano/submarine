@@ -20,6 +20,7 @@ const (
 	MessageType_Movement            int32 = 1298310360
 	MessageType_Destruction         int32 = -1118469016
 	MessageType_Pinger              int32 = 123497640
+	MessageType_Equipment           int32 = 701734660
 	MessageType_StartRequest        int32 = 504335322
 	MessageType_AccelerationRequest int32 = -710337400
 	MessageType_BrakeRequest        int32 = 1492486768
@@ -46,6 +47,7 @@ type WebSocketAPI struct {
 	MovementHandler            func(message *submarine_battle.Movement)
 	DestructionHandler         func(message *submarine_battle.Destruction)
 	PingerHandler              func(message *submarine_battle.Pinger)
+	EquipmentHandler           func(message *submarine_battle.Equipment)
 	StartRequestHandler        func(message *submarine_battle.StartRequestObject)
 	AccelerationRequestHandler func(message *submarine_battle.AccelerationRequestObject)
 	BrakeRequestHandler        func(message *submarine_battle.BrakeRequestObject)
@@ -88,6 +90,8 @@ func (api *WebSocketAPI) Send(body typhenapi.Type) (message *typhenapi.Message, 
 		message, err = typhenapi.NewMessage(api.serializer, MessageType_Destruction, messageBody)
 	case *submarine_battle.Pinger:
 		message, err = typhenapi.NewMessage(api.serializer, MessageType_Pinger, messageBody)
+	case *submarine_battle.Equipment:
+		message, err = typhenapi.NewMessage(api.serializer, MessageType_Equipment, messageBody)
 	case *submarine_battle.StartRequestObject:
 		message, err = typhenapi.NewMessage(api.serializer, MessageType_StartRequest, messageBody)
 	case *submarine_battle.AccelerationRequestObject:
@@ -301,6 +305,26 @@ func (api *WebSocketAPI) SendDestruction(destruction *submarine_battle.Destructi
 // SendPinger sends a pinger message.
 func (api *WebSocketAPI) SendPinger(pinger *submarine_battle.Pinger) error {
 	message, err := typhenapi.NewMessage(api.serializer, MessageType_Pinger, pinger)
+
+	if err != nil {
+		if api.errorHandler != nil {
+			api.errorHandler(err)
+		}
+		return err
+	}
+
+	if err := api.session.Send(message.Bytes()); err != nil {
+		if api.errorHandler != nil {
+			api.errorHandler(err)
+		}
+		return err
+	}
+	return nil
+}
+
+// SendEquipment sends a equipment message.
+func (api *WebSocketAPI) SendEquipment(equipment *submarine_battle.Equipment) error {
+	message, err := typhenapi.NewMessage(api.serializer, MessageType_Equipment, equipment)
 
 	if err != nil {
 		if api.errorHandler != nil {
@@ -680,6 +704,25 @@ func (api *WebSocketAPI) DispatchMessageEvent(data []byte) error {
 
 		if api.PingerHandler != nil {
 			api.PingerHandler(typhenType)
+		}
+	case MessageType_Equipment:
+		typhenType := new(submarine_battle.Equipment)
+		if err := api.serializer.Deserialize(message.Body, typhenType); err != nil {
+			if api.errorHandler != nil {
+				api.errorHandler(err)
+			}
+			return err
+		}
+
+		if err := typhenType.Coerce(); err != nil {
+			if api.errorHandler != nil {
+				api.errorHandler(err)
+			}
+			return err
+		}
+
+		if api.EquipmentHandler != nil {
+			api.EquipmentHandler(typhenType)
 		}
 	case MessageType_StartRequest:
 		typhenType := new(submarine_battle.StartRequestObject)

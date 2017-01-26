@@ -11,11 +11,15 @@ var _ = errors.New
 
 // ActorSubmarineObject is a kind of TyphenAPI type.
 type ActorSubmarineObject struct {
-	IsUsingPinger bool `codec:"is_using_pinger"`
+	Equipment     *Equipment `codec:"equipment"`
+	IsUsingPinger bool       `codec:"is_using_pinger"`
 }
 
 // Coerce the fields.
 func (t *ActorSubmarineObject) Coerce() error {
+	if t.Equipment == nil {
+		return errors.New("Equipment should not be empty")
+	}
 	return nil
 }
 
