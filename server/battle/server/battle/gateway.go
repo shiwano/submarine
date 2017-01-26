@@ -100,6 +100,12 @@ func (g *Gateway) outputPinger(actor context.Actor, finished bool) {
 	}
 }
 
+func (g *Gateway) outputEquipment(equipment *battleAPI.Equipment) {
+	g.Output <- &GatewayOutput{
+		Message: equipment,
+	}
+}
+
 type gatewayInput struct {
 	userID  int64
 	message typhenapi.Type

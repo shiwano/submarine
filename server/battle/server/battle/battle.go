@@ -143,6 +143,7 @@ func (b *Battle) start() {
 	b.ctx.Event.AddActorChangeVisibilityEventListener(b.onActorChangeVisibility)
 	b.ctx.Event.AddActorDestroyEventListener(b.onActorDestroy)
 	b.ctx.Event.AddActorUsePingerEventListener(b.onActorUsePinger)
+	b.ctx.Event.AddActorUpdateEquipmentEventListener(b.onActorUpdateEquipment)
 }
 
 func (b *Battle) update(now time.Time) bool {
@@ -231,4 +232,8 @@ func (b *Battle) onActorDestroy(actor context.Actor) {
 
 func (b *Battle) onActorUsePinger(actor context.Actor, finished bool) {
 	b.Gateway.outputPinger(actor, finished)
+}
+
+func (b *Battle) onActorUpdateEquipment(equipment *battleAPI.Equipment) {
+	b.Gateway.outputEquipment(equipment)
 }
