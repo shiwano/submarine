@@ -3,6 +3,8 @@ package component
 import (
 	"time"
 
+	"github.com/shiwano/submarine/server/battle/lib/currentmillis"
+	battleAPI "github.com/shiwano/submarine/server/battle/lib/typhenapi/type/submarine/battle"
 	"github.com/shiwano/submarine/server/battle/server/battle/context"
 )
 
@@ -26,6 +28,16 @@ func NewEquipment(params *context.SubmarineParams) *Equipment {
 	return e
 }
 
+// ToAPIType returns a Equipment message.
+func (e *Equipment) ToAPIType() *battleAPI.Equipment {
+	message := new(battleAPI.Equipment)
+	for _, i := range e.torpedos {
+		message.Torpedos = append(message.Torpedos, i.toAPIType())
+	}
+	message.Pinger = e.pinger.toAPIType()
+	return message
+}
+
 // TryConsumeTorpedo try to consume a torpedo item, and returns whether it succeed.
 func (e *Equipment) TryConsumeTorpedo(now time.Time) bool {
 	for _, t := range e.torpedos {
@@ -44,6 +56,13 @@ func (e *Equipment) TryConsumePinger(now time.Time) bool {
 type equipmentItem struct {
 	cooldownStartedAt time.Time
 	cooldownDuration  time.Duration
+}
+
+func (i *equipmentItem) toAPIType() *battleAPI.EquipmentItem {
+	return &battleAPI.EquipmentItem{
+		CooldownStartedAt: currentmillis.Millis(i.cooldownStartedAt),
+		CooldownDuration:  currentmillis.DurationMillis(i.cooldownDuration),
+	}
 }
 
 func (i *equipmentItem) tryConsume(now time.Time) bool {

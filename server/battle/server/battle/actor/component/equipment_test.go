@@ -19,6 +19,14 @@ func TestEquipmentItem(t *testing.T) {
 		}
 		e := NewEquipment(params)
 
+		Convey("#ToApiType", func() {
+			Convey("should returns a Equipment message", func() {
+				m := e.ToAPIType()
+				So(m, ShouldNotBeNil)
+				So(m.Coerce(), ShouldBeNil)
+			})
+		})
+
 		Convey("#TryConsumeTorpedo", func() {
 			Convey("should consume torpedo", func() {
 				So(e.TryConsumeTorpedo(startTime), ShouldBeTrue)
