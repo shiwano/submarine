@@ -36,8 +36,8 @@ declare module Submarine.Battle {
     movement: Movement;
     isVisible: boolean;
     submarine?: {
-      equipment: Equipment;
       isUsingPinger: boolean;
+      equipment?: Equipment;
     }
   }
 
