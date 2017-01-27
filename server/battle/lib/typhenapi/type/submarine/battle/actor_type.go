@@ -16,8 +16,8 @@ func (i ActorType) String() string {
 		return "Torpedo"
 	case ActorType_Decoy:
 		return "Decoy"
-	case ActorType_Lookout:
-		return "Lookout"
+	case ActorType_Watcher:
+		return "Watcher"
 	}
 	return ""
 }
@@ -30,7 +30,7 @@ func (i ActorType) Coerce() error {
 		return nil
 	case ActorType_Decoy:
 		return nil
-	case ActorType_Lookout:
+	case ActorType_Watcher:
 		return nil
 	}
 	return errors.New("No ActorType")
@@ -40,5 +40,5 @@ const (
 	ActorType_Submarine ActorType = 0
 	ActorType_Torpedo   ActorType = 1
 	ActorType_Decoy     ActorType = 2
-	ActorType_Lookout   ActorType = 3
+	ActorType_Watcher   ActorType = 3
 )

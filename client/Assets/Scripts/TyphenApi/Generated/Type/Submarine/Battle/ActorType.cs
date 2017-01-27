@@ -7,6 +7,6 @@ namespace TyphenApi.Type.Submarine.Battle
         Submarine = 0,
         Torpedo = 1,
         Decoy = 2,
-        Lookout = 3,
+        Watcher = 3,
     }
 }

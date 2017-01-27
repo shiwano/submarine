@@ -5,14 +5,14 @@ module TyphenApi::Model::Submarine::Battle
     Submarine = 0
     Torpedo = 1
     Decoy = 2
-    Lookout = 3
+    Watcher = 3
 
     def self.name_table
       @@name_table ||= {
         0 => 'Submarine',
         1 => 'Torpedo',
         2 => 'Decoy',
-        3 => 'Lookout'
+        3 => 'Watcher'
       }
     end
 
