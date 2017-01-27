@@ -17,11 +17,11 @@ func TestEquipmentItem(t *testing.T) {
 			TorpedoCooldownSeconds: 10,
 			PingerCooldownSeconds:  20,
 		}
-		e := NewEquipment(params)
+		e := NewEquipment(1, params)
 
 		Convey("#ToApiType", func() {
 			Convey("should returns a Equipment message", func() {
-				message := e.ToAPIType(1)
+				message := e.ToAPIType()
 				So(message.ActorId, ShouldEqual, 1)
 				So(message.Coerce(), ShouldBeNil)
 			})

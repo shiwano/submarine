@@ -10,13 +10,15 @@ import (
 
 // Equipment manages equipment items of the submarine.
 type Equipment struct {
+	actorID  int64
 	torpedos []*equipmentItem
 	pinger   *equipmentItem
 }
 
 // NewEquipment creates a Equipment.
-func NewEquipment(params *context.SubmarineParams) *Equipment {
+func NewEquipment(actorID int64, params *context.SubmarineParams) *Equipment {
 	e := new(Equipment)
+	e.actorID = actorID
 	for i := int64(0); i < params.TorpedoCount; i++ {
 		e.torpedos = append(e.torpedos, &equipmentItem{
 			cooldownDuration: time.Duration(float64(time.Second) * params.TorpedoCooldownSeconds),
@@ -29,9 +31,9 @@ func NewEquipment(params *context.SubmarineParams) *Equipment {
 }
 
 // ToAPIType returns a Equipment message.
-func (e *Equipment) ToAPIType(actorID int64) *battleAPI.Equipment {
+func (e *Equipment) ToAPIType() *battleAPI.Equipment {
 	message := new(battleAPI.Equipment)
-	message.ActorId = actorID
+	message.ActorId = e.actorID
 	for _, i := range e.torpedos {
 		message.Torpedos = append(message.Torpedos, i.toAPIType())
 	}

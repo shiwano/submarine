@@ -19,10 +19,11 @@ type submarine struct {
 // NewSubmarine creates a submarine.
 func NewSubmarine(ctx *context.Context, user *context.Player) context.Actor {
 	s := &submarine{
-		actor:     newActor(ctx, user, user.SubmarineParams, user.StartPosition, 0),
-		timer:     component.NewTimer(ctx.Now),
-		equipment: component.NewEquipment(user.SubmarineParams),
+		actor: newActor(ctx, user, user.SubmarineParams, user.StartPosition, 0),
 	}
+	s.timer = component.NewTimer(ctx.Now)
+	s.equipment = component.NewEquipment(s.ID(), user.SubmarineParams)
+
 	s.event.AddCollideWithOtherActorEventListener(s.onCollideWithOtherActor)
 	s.event.AddCollideWithStageEventListener(s.onCollideWithStage)
 	s.event.AddAccelerationRequestEventListener(s.onAccelerationRequest)
@@ -54,7 +55,7 @@ func (s *submarine) OnDestroy() {
 func (s *submarine) Submarine() *battleAPI.ActorSubmarineObject {
 	return &battleAPI.ActorSubmarineObject{
 		IsUsingPinger: s.isUsingPinger,
-		Equipment:     s.equipment.ToAPIType(s.ID()),
+		Equipment:     s.equipment.ToAPIType(),
 	}
 }
 
@@ -90,7 +91,7 @@ func (s *submarine) onPingerRequest(m *battleAPI.PingerRequestObject) {
 	}
 	if s.equipment.TryConsumePinger(s.ctx.Now) {
 		logger.Log.Debugf("%v uses pinger", s)
-		s.ctx.Event.EmitActorUpdateEquipmentEvent(s.equipment.ToAPIType(s.ID()))
+		s.ctx.Event.EmitActorUpdateEquipmentEvent(s.equipment.ToAPIType())
 		s.isUsingPinger = true
 		s.ctx.Event.EmitActorUsePingerEvent(s, false)
 		s.timer.Register(s.player.SubmarineParams.PingerIntervalSeconds, s.finishToUsePinger)
@@ -119,7 +120,7 @@ func (s *submarine) finishToUsePinger() {
 func (s *submarine) shootTorpedo() {
 	if s.equipment.TryConsumeTorpedo(s.ctx.Now) {
 		logger.Log.Debugf("%v shoots a torpedo", s)
-		s.ctx.Event.EmitActorUpdateEquipmentEvent(s.equipment.ToAPIType(s.ID()))
+		s.ctx.Event.EmitActorUpdateEquipmentEvent(s.equipment.ToAPIType())
 		normalizedVelocity := s.motor.NormalizedVelocity()
 		startOffsetValue := s.stageAgent.SizeRadius() * s.player.TorpedoParams.StartOffsetDistance
 		startPoint := normalizedVelocity.Scale(startOffsetValue).Add(s.Position())
