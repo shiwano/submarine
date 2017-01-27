@@ -5,7 +5,7 @@ declare module Submarine.Battle {
     Submarine,
     Torpedo,
     Decoy,
-    Lookout,
+    Watcher,
   }
 
   interface Point {
