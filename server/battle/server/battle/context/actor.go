@@ -43,8 +43,3 @@ func (rcv ActorSlice) GroupByLayer(fn func(Actor) navmesh.LayerMask) map[navmesh
 	}
 	return result
 }
-
-// Submarine represents additional actor data for a submarine.
-type Submarine interface {
-	IsUsingPinger() bool
-}

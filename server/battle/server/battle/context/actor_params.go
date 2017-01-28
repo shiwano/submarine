@@ -23,25 +23,11 @@ type actorParams struct {
 	accelDuration   time.Duration
 }
 
-func (a *actorParams) Type() battleAPI.ActorType {
-	return a.actorType
-}
-
-func (a *actorParams) HasLight() bool {
-	return a.hasLight
-}
-
-func (a *actorParams) IsAlwaysVisible() bool {
-	return a.isAlwaysVisible
-}
-
-func (a *actorParams) AccelMaxSpeed() float64 {
-	return a.accelMaxSpeed
-}
-
-func (a *actorParams) AccelDuration() time.Duration {
-	return a.accelDuration
-}
+func (a *actorParams) Type() battleAPI.ActorType    { return a.actorType }
+func (a *actorParams) HasLight() bool               { return a.hasLight }
+func (a *actorParams) IsAlwaysVisible() bool        { return a.isAlwaysVisible }
+func (a *actorParams) AccelMaxSpeed() float64       { return a.accelMaxSpeed }
+func (a *actorParams) AccelDuration() time.Duration { return a.accelDuration }
 
 // SubmarineParams represents submarine parameters.
 type SubmarineParams struct {
