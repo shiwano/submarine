@@ -12,13 +12,13 @@ type torpedo struct {
 }
 
 // NewTorpedo creates a torpedo.
-func NewTorpedo(ctx *context.Context, user *context.Player, position *vec2.T, direction float64) context.Actor {
+func NewTorpedo(ctx context.Context, user *context.Player, position *vec2.T, direction float64) context.Actor {
 	t := &torpedo{
 		actor: newActor(ctx, user, user.TorpedoParams, position, direction),
 	}
 	t.event.AddCollideWithStageEventListener(t.onCollideWithStage)
 	t.event.AddCollideWithOtherActorEventListener(t.onCollideWithOtherActor)
-	t.ctx.Event.EmitActorCreateEvent(t)
+	t.ctx.Event().EmitActorCreateEvent(t)
 	t.accelerate(direction)
 	return t
 }

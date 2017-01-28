@@ -11,7 +11,7 @@ import (
 )
 
 func TestContextTest(t *testing.T) {
-	Convey("Context", t, func() {
+	Convey("context", t, func() {
 		stageMesh, _ := resource.Loader.LoadMesh(1)
 		lightMap, _ := resource.Loader.LoadLightMap(1)
 		c := NewContext(stageMesh, lightMap)
@@ -29,7 +29,7 @@ func TestContextTest(t *testing.T) {
 
 			Convey("should emit the ActorAdded event", func() {
 				isCalled := false
-				c.Event.AddActorAddEventListener(func(a Actor) { isCalled = true })
+				c.Event().AddActorAddEventListener(func(a Actor) { isCalled = true })
 				newSubmarine(c, true)
 				So(isCalled, ShouldBeTrue)
 			})
@@ -56,15 +56,17 @@ func TestContextTest(t *testing.T) {
 
 			Convey("should emit the ActorRemoved event", func() {
 				isCalled := false
-				c.Event.AddActorRemoveEventListener(func(a Actor) { isCalled = true })
+				c.Event().AddActorRemoveEventListener(func(a Actor) { isCalled = true })
 				actor.Destroy()
 				So(isCalled, ShouldBeTrue)
 			})
 		})
 
 		Convey("#ElapsedTime", func() {
-			c.StartedAt, _ = time.Parse(time.RFC3339, "2016-01-01T12:00:00+00:00")
-			c.Now, _ = time.Parse(time.RFC3339, "2016-01-01T12:00:40+00:00")
+			now, _ := time.Parse(time.RFC3339, "2016-01-01T12:00:00+00:00")
+			c.Start(now)
+			now, _ = time.Parse(time.RFC3339, "2016-01-01T12:00:40+00:00")
+			c.Update(now)
 
 			Convey("should return the elapsed time since start of battle", func() {
 				So(c.ElapsedTime(), ShouldEqual, time.Second*40)

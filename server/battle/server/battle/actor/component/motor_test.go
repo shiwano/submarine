@@ -18,7 +18,8 @@ func TestMotor(t *testing.T) {
 		stageMesh, _ := resource.Loader.LoadMesh(1)
 		lightMap, _ := resource.Loader.LoadLightMap(1)
 		c := context.NewContext(stageMesh, lightMap)
-		c.Now, _ = time.Parse(timeLayout, "00:00:00.000")
+		now, _ := time.Parse(timeLayout, "00:00:00.000")
+		c.Start(now)
 		m := NewMotor(c, &vec2.T{1, 1}, 0, 3, 5*time.Second)
 
 		Convey("#ToAPIType", func() {
@@ -36,7 +37,8 @@ func TestMotor(t *testing.T) {
 				})
 
 				Convey("1 second later", func() {
-					c.Now, _ = time.Parse(timeLayout, "00:00:01.000")
+					now, _ = time.Parse(timeLayout, "00:00:01.000")
+					c.Update(now)
 
 					Convey("should return the initial position", func() {
 						So(m.Position(), ShouldResemble, &vec2.T{1, 1})
@@ -44,7 +46,8 @@ func TestMotor(t *testing.T) {
 				})
 
 				Convey("5 seconds later", func() {
-					c.Now, _ = time.Parse(timeLayout, "00:00:05.000")
+					now, _ = time.Parse(timeLayout, "00:00:05.000")
+					c.Update(now)
 
 					Convey("should return the initial position", func() {
 						So(m.Position(), ShouldResemble, &vec2.T{1, 1})
@@ -52,7 +55,8 @@ func TestMotor(t *testing.T) {
 				})
 
 				Convey("10 seconds later", func() {
-					c.Now, _ = time.Parse(timeLayout, "00:00:10.000")
+					now, _ = time.Parse(timeLayout, "00:00:10.000")
+					c.Update(now)
 
 					Convey("should return the initial position", func() {
 						So(m.Position(), ShouldResemble, &vec2.T{1, 1})
@@ -68,7 +72,8 @@ func TestMotor(t *testing.T) {
 				})
 
 				Convey("1 second later", func() {
-					c.Now, _ = time.Parse(timeLayout, "00:00:01.000")
+					now, _ = time.Parse(timeLayout, "00:00:01.000")
+					c.Update(now)
 
 					Convey("should return the calculated position", func() {
 						So(m.Position()[0], ShouldAlmostEqual, 1+0.3)
@@ -77,7 +82,8 @@ func TestMotor(t *testing.T) {
 				})
 
 				Convey("5 seconds later", func() {
-					c.Now, _ = time.Parse(timeLayout, "00:00:05.000")
+					now, _ = time.Parse(timeLayout, "00:00:05.000")
+					c.Update(now)
 
 					Convey("should return the calculated position", func() {
 						So(m.Position()[0], ShouldAlmostEqual, 1+7.5)
@@ -86,7 +92,8 @@ func TestMotor(t *testing.T) {
 				})
 
 				Convey("10 seconds later", func() {
-					c.Now, _ = time.Parse(timeLayout, "00:00:10.000")
+					now, _ = time.Parse(timeLayout, "00:00:10.000")
+					c.Update(now)
 
 					Convey("should return the calculated position", func() {
 						So(m.Position()[0], ShouldAlmostEqual, 1+7.5+3*5)
@@ -97,7 +104,8 @@ func TestMotor(t *testing.T) {
 
 			Convey("when the accelerator is stopping", func() {
 				m.Accelerate(m.Position())
-				c.Now, _ = time.Parse(timeLayout, "00:00:05.000")
+				now, _ = time.Parse(timeLayout, "00:00:05.000")
+				c.Update(now)
 				m.Brake(m.Position())
 
 				Convey("should return the initial position", func() {
@@ -105,7 +113,8 @@ func TestMotor(t *testing.T) {
 				})
 
 				Convey("1 second later", func() {
-					c.Now, _ = time.Parse(timeLayout, "00:00:06.000")
+					now, _ = time.Parse(timeLayout, "00:00:06.000")
+					c.Update(now)
 
 					Convey("should return the calculated position", func() {
 						So(m.Position()[0], ShouldAlmostEqual, 8.5+2.7)
@@ -114,7 +123,8 @@ func TestMotor(t *testing.T) {
 				})
 
 				Convey("5 seconds later", func() {
-					c.Now, _ = time.Parse(timeLayout, "00:00:10.000")
+					now, _ = time.Parse(timeLayout, "00:00:10.000")
+					c.Update(now)
 
 					Convey("should return the calculated position", func() {
 						So(m.Position()[0], ShouldAlmostEqual, 8.5+7.5)
@@ -123,7 +133,8 @@ func TestMotor(t *testing.T) {
 				})
 
 				Convey("10 seconds later", func() {
-					c.Now, _ = time.Parse(timeLayout, "00:00:15.000")
+					now, _ = time.Parse(timeLayout, "00:00:15.000")
+					c.Update(now)
 
 					Convey("should return the calculated position", func() {
 						So(m.Position()[0], ShouldAlmostEqual, 8.5+7.5)
@@ -134,9 +145,11 @@ func TestMotor(t *testing.T) {
 
 			Convey("when the accelerator is accelerating from the middle", func() {
 				m.Accelerate(m.Position())
-				c.Now, _ = time.Parse(timeLayout, "00:00:03.000")
+				now, _ = time.Parse(timeLayout, "00:00:03.000")
+				c.Update(now)
 				m.Brake(m.Position())
-				c.Now, _ = time.Parse(timeLayout, "00:00:05.000")
+				now, _ = time.Parse(timeLayout, "00:00:05.000")
+				c.Update(now)
 				m.Accelerate(m.Position())
 
 				Convey("should return the initial position", func() {
@@ -145,7 +158,8 @@ func TestMotor(t *testing.T) {
 				})
 
 				Convey("4 seconds later", func() {
-					c.Now, _ = time.Parse(timeLayout, "00:00:09.000")
+					now, _ = time.Parse(timeLayout, "00:00:09.000")
+					c.Update(now)
 
 					Convey("should return the calculated position", func() {
 						So(m.Position()[0], ShouldAlmostEqual, 13.3)
@@ -154,7 +168,8 @@ func TestMotor(t *testing.T) {
 				})
 
 				Convey("9 seconds later", func() {
-					c.Now, _ = time.Parse(timeLayout, "00:00:14.000")
+					now, _ = time.Parse(timeLayout, "00:00:14.000")
+					c.Update(now)
 
 					Convey("should return the calculated position", func() {
 						So(m.Position()[0], ShouldAlmostEqual, 13.3+3*5)
@@ -165,7 +180,8 @@ func TestMotor(t *testing.T) {
 
 			Convey("when the accelerator is stopping from the middle", func() {
 				m.Accelerate(m.Position())
-				c.Now, _ = time.Parse(timeLayout, "00:00:03.000")
+				now, _ = time.Parse(timeLayout, "00:00:03.000")
+				c.Update(now)
 				m.Brake(m.Position())
 
 				Convey("should return the initial position", func() {
@@ -174,7 +190,8 @@ func TestMotor(t *testing.T) {
 				})
 
 				Convey("3 seconds later", func() {
-					c.Now, _ = time.Parse(timeLayout, "00:00:06.000")
+					now, _ = time.Parse(timeLayout, "00:00:06.000")
+					c.Update(now)
 
 					Convey("should return the calculated position", func() {
 						So(m.Position()[0], ShouldAlmostEqual, 6.4)
@@ -183,7 +200,8 @@ func TestMotor(t *testing.T) {
 				})
 
 				Convey("8 seconds later", func() {
-					c.Now, _ = time.Parse(timeLayout, "00:00:11.000")
+					now, _ = time.Parse(timeLayout, "00:00:11.000")
+					c.Update(now)
 
 					Convey("should return the calculated position", func() {
 						So(m.Position()[0], ShouldAlmostEqual, 6.4)
@@ -195,7 +213,8 @@ func TestMotor(t *testing.T) {
 			Convey("when the direction changed", func() {
 				m.Turn(m.Position(), 90)
 				m.Accelerate(m.Position())
-				c.Now, _ = time.Parse(timeLayout, "00:00:01.000")
+				now, _ = time.Parse(timeLayout, "00:00:01.000")
+				c.Update(now)
 
 				Convey("should return the calculated position", func() {
 					So(m.Position()[0], ShouldAlmostEqual, 1)
@@ -204,7 +223,8 @@ func TestMotor(t *testing.T) {
 
 				Convey("and the direction changed once more", func() {
 					m.Turn(m.Position(), 0)
-					c.Now, _ = time.Parse(timeLayout, "00:00:06.000")
+					now, _ = time.Parse(timeLayout, "00:00:06.000")
+					c.Update(now)
 
 					Convey("should return the calculated position", func() {
 						So(m.Position()[0], ShouldAlmostEqual, 11.2)
@@ -215,7 +235,8 @@ func TestMotor(t *testing.T) {
 
 			Convey("when the accelerator is idling", func() {
 				m.Accelerate(m.Position())
-				c.Now, _ = time.Parse(timeLayout, "00:00:01.000")
+				now, _ = time.Parse(timeLayout, "00:00:01.000")
+				c.Update(now)
 				m.Idle(m.Position())
 
 				Convey("should return the idling position", func() {
@@ -224,7 +245,8 @@ func TestMotor(t *testing.T) {
 				})
 
 				Convey("some seconds later", func() {
-					c.Now, _ = time.Parse(timeLayout, "00:00:05.000")
+					now, _ = time.Parse(timeLayout, "00:00:05.000")
+					c.Update(now)
 
 					Convey("should return the idling position", func() {
 						So(m.Position()[0], ShouldAlmostEqual, 1+0.3)
@@ -233,9 +255,11 @@ func TestMotor(t *testing.T) {
 				})
 
 				Convey("when the motor stop idling", func() {
-					c.Now, _ = time.Parse(timeLayout, "00:00:05.000")
+					now, _ = time.Parse(timeLayout, "00:00:05.000")
+					c.Update(now)
 					m.Accelerate(m.Position())
-					c.Now, _ = time.Parse(timeLayout, "00:00:06.000")
+					now, _ = time.Parse(timeLayout, "00:00:06.000")
+					c.Update(now)
 
 					Convey("should keep accelerating", func() {
 						So(m.Position()[0], ShouldAlmostEqual, 1+0.3+3)

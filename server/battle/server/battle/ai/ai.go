@@ -6,11 +6,11 @@ import (
 )
 
 type ai struct {
-	ctx       *context.Context
+	ctx       context.Context
 	navigator *navigator
 }
 
-func newAI(ctx *context.Context) *ai {
+func newAI(ctx context.Context) *ai {
 	return &ai{
 		ctx:       ctx,
 		navigator: new(navigator),

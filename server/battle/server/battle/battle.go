@@ -19,7 +19,7 @@ import (
 // Battle represents a battle.
 type Battle struct {
 	Gateway       *Gateway
-	ctx           *context.Context
+	ctx           context.Updater
 	judge         *judge
 	isStarted     bool
 	isFighting    *abool.AtomicBool
@@ -133,23 +133,23 @@ loop:
 
 func (b *Battle) start() {
 	b.isFighting.SetTo(true)
-	b.ctx.StartedAt = time.Now()
-	b.Gateway.outputStart(b.ctx.Players(), b.ctx.StartedAt)
+	b.ctx.Start(time.Now())
+	b.Gateway.outputStart(b.ctx.Players(), b.ctx.StartedAt())
 	for _, actor := range b.ctx.Actors() {
 		b.Gateway.outputActor(b.ctx.UserPlayersByTeam(), actor)
 	}
-	b.ctx.Event.AddActorAddEventListener(b.onActorAdd)
-	b.ctx.Event.AddActorMoveEventListener(b.onActorMove)
-	b.ctx.Event.AddActorChangeVisibilityEventListener(b.onActorChangeVisibility)
-	b.ctx.Event.AddActorDestroyEventListener(b.onActorDestroy)
-	b.ctx.Event.AddActorUsePingerEventListener(b.onActorUsePinger)
-	b.ctx.Event.AddActorUpdateEquipmentEventListener(b.onActorUpdateEquipment)
+	b.ctx.Event().AddActorAddEventListener(b.onActorAdd)
+	b.ctx.Event().AddActorMoveEventListener(b.onActorMove)
+	b.ctx.Event().AddActorChangeVisibilityEventListener(b.onActorChangeVisibility)
+	b.ctx.Event().AddActorDestroyEventListener(b.onActorDestroy)
+	b.ctx.Event().AddActorUsePingerEventListener(b.onActorUsePinger)
+	b.ctx.Event().AddActorUpdateEquipmentEventListener(b.onActorUpdateEquipment)
 }
 
 func (b *Battle) update(now time.Time) bool {
 	b.ctx.Update(now)
 	if debug.Debug {
-		debug.Debugger.Update(b.ctx.Stage, debug.SortedSights(b.ctx.SightsByTeam))
+		debug.Debugger.Update(b.ctx.Stage(), debug.SortedSights(b.ctx.SightsByTeam()))
 	}
 	return b.judge.isBattleFinished()
 }
@@ -157,9 +157,9 @@ func (b *Battle) update(now time.Time) bool {
 func (b *Battle) finish() {
 	b.isFighting.SetTo(false)
 	if winner := b.judge.winner(); winner != nil {
-		b.Gateway.outputFinish(&winner.ID, b.ctx.Now)
+		b.Gateway.outputFinish(&winner.ID, b.ctx.Now())
 	} else {
-		b.Gateway.outputFinish(nil, b.ctx.Now)
+		b.Gateway.outputFinish(nil, b.ctx.Now())
 	}
 	if debug.Debug {
 		debug.Debugger.Update(nil, nil)
@@ -169,7 +169,7 @@ func (b *Battle) finish() {
 func (b *Battle) reenterUser(userID int64) {
 	if s, ok := b.ctx.SubmarineByPlayerID(userID); ok {
 		players := context.PlayerSlice{s.Player()}
-		b.Gateway.outputStart(players, b.ctx.StartedAt)
+		b.Gateway.outputStart(players, b.ctx.StartedAt())
 		for _, actor := range b.ctx.Actors() {
 			b.Gateway.outputActor(players.GroupByTeam(), actor)
 		}

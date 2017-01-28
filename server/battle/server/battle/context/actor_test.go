@@ -13,7 +13,7 @@ type actor struct {
 	id          int64
 	player      *Player
 	actorType   battleAPI.ActorType
-	ctx         *Context
+	ctx         Context
 	event       *ActorEventEmitter
 	isDestroyed bool
 
@@ -21,7 +21,7 @@ type actor struct {
 	isCalledOnDestroy bool
 }
 
-func newSubmarine(ctx *Context, isUser bool) *actor {
+func newSubmarine(ctx Context, isUser bool) *actor {
 	lastCreateActorID++
 	id := lastCreateActorID
 	player := &Player{ID: id * 100, IsUser: isUser, StartPosition: &vec2.Zero}
@@ -32,7 +32,7 @@ func newSubmarine(ctx *Context, isUser bool) *actor {
 		ctx:       ctx,
 		event:     NewActorEventEmitter(),
 	}
-	a.ctx.Event.EmitActorCreateEvent(a)
+	a.ctx.Event().EmitActorCreateEvent(a)
 	return a
 }
 
@@ -51,7 +51,7 @@ func (a *actor) Submarine() *battleAPI.ActorSubmarineObject { return nil }
 
 func (a *actor) Destroy() {
 	a.isDestroyed = true
-	a.ctx.Event.EmitActorDestroyEvent(a)
+	a.ctx.Event().EmitActorDestroyEvent(a)
 }
 
 func (a *actor) Start()        { a.isCalledStart = true }

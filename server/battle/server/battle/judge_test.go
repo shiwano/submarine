@@ -19,18 +19,23 @@ func TestJudge(t *testing.T) {
 		j := newJudge(context.NewContext(stageMesh, lightMap), time.Second*10)
 
 		Convey("#isBattleFinished", func() {
-			j.context.StartedAt, _ = time.Parse(time.RFC3339, "2016-01-01T12:00:00+00:00")
+			now, _ := time.Parse(time.RFC3339, "2016-01-01T12:00:00+00:00")
+			j.context.Start(now)
 
 			Convey("when the elapsed time is over the time limit", func() {
 				Convey("should return the elapsed time since start of battle", func() {
-					j.context.Now, _ = time.Parse(time.RFC3339, "2016-01-01T12:00:10+00:00")
+					now, _ = time.Parse(time.RFC3339, "2016-01-01T12:00:10+00:00")
+					j.context.Update(now)
+
 					So(j.isBattleFinished(), ShouldBeTrue)
 				})
 			})
 
 			Convey("when the elapsed time is not over the time limit", func() {
 				Convey("should return the elapsed time since start of battle", func() {
-					j.context.Now, _ = time.Parse(time.RFC3339, "2016-01-01T12:00:05+00:00")
+					now, _ = time.Parse(time.RFC3339, "2016-01-01T12:00:05+00:00")
+					j.context.Update(now)
+
 					So(j.isBattleFinished(), ShouldBeFalse)
 				})
 			})

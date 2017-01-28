@@ -18,7 +18,7 @@ const (
 
 // Motor represents a motor for actor moving.
 type Motor struct {
-	ctx                *context.Context
+	ctx                context.Context
 	accelerator        *accelerator
 	initialPosition    *vec2.T
 	initialSpeed       float64
@@ -28,7 +28,7 @@ type Motor struct {
 }
 
 // NewMotor creates a motor.
-func NewMotor(ctx *context.Context, position *vec2.T, direction float64,
+func NewMotor(ctx context.Context, position *vec2.T, direction float64,
 	maxSpeed float64, duration time.Duration) *Motor {
 	return &Motor{
 		ctx:             ctx,
@@ -38,7 +38,7 @@ func NewMotor(ctx *context.Context, position *vec2.T, direction float64,
 			math.Cos(direction * deg2Rad),
 			math.Sin(direction * deg2Rad),
 		},
-		changedAt: ctx.Now,
+		changedAt: ctx.Now(),
 		accelerator: &accelerator{
 			ctx:        ctx,
 			maxSpeed:   maxSpeed,
@@ -73,7 +73,7 @@ func (m *Motor) Accelerate(position *vec2.T) {
 	m.initialPosition = position
 	m.initialSpeed = m.accelerator.speed()
 	m.accelerator.refresh(true, false)
-	m.changedAt = m.ctx.Now
+	m.changedAt = m.ctx.Now()
 }
 
 // Brake the motor.
@@ -81,7 +81,7 @@ func (m *Motor) Brake(position *vec2.T) {
 	m.initialPosition = m.Position()
 	m.initialSpeed = m.accelerator.speed()
 	m.accelerator.refresh(false, false)
-	m.changedAt = m.ctx.Now
+	m.changedAt = m.ctx.Now()
 }
 
 // Turn the direction of the motor.
@@ -94,7 +94,7 @@ func (m *Motor) Turn(position *vec2.T, direction float64) {
 		math.Cos(direction * deg2Rad),
 		math.Sin(direction * deg2Rad),
 	}
-	m.changedAt = m.ctx.Now
+	m.changedAt = m.ctx.Now()
 }
 
 // Idle the motor.
@@ -102,7 +102,7 @@ func (m *Motor) Idle(position *vec2.T) {
 	m.initialPosition = position
 	m.initialSpeed = m.accelerator.speed()
 	m.accelerator.refresh(m.accelerator.isAccelerating, true)
-	m.changedAt = m.ctx.Now
+	m.changedAt = m.ctx.Now()
 }
 
 // Position returns the current position.
@@ -112,11 +112,11 @@ func (m *Motor) Position() *vec2.T {
 	}
 
 	var t1, t2 float64
-	if m.ctx.Now.After(m.accelerator.reachedMaxSpeedAt) {
+	if m.ctx.Now().After(m.accelerator.reachedMaxSpeedAt) {
 		t1 = m.accelerator.reachedMaxSpeedAt.Sub(m.changedAt).Seconds()
-		t2 = m.ctx.Now.Sub(m.accelerator.reachedMaxSpeedAt).Seconds()
+		t2 = m.ctx.Now().Sub(m.accelerator.reachedMaxSpeedAt).Seconds()
 	} else {
-		t1 = m.ctx.Now.Sub(m.changedAt).Seconds()
+		t1 = m.ctx.Now().Sub(m.changedAt).Seconds()
 	}
 
 	p := *m.initialPosition
@@ -131,7 +131,7 @@ func (m *Motor) Position() *vec2.T {
 }
 
 type accelerator struct {
-	ctx               *context.Context
+	ctx               context.Context
 	maxSpeed          float64
 	duration          time.Duration
 	startRate         float64
@@ -159,7 +159,7 @@ func (a *accelerator) refresh(isAccelerating bool, isIdling bool) {
 	a.isShutdown = false
 	a.isIdling = isIdling
 	a.isAccelerating = isAccelerating
-	a.changedAt = a.ctx.Now
+	a.changedAt = a.ctx.Now()
 	remainingRate := a.startRate
 	if a.isAccelerating {
 		remainingRate = 1 - remainingRate
@@ -172,7 +172,7 @@ func (a *accelerator) rate() float64 {
 	if a.isShutdown {
 		return 0
 	}
-	rate := a.ctx.Now.Sub(a.changedAt).Seconds() / a.duration.Seconds()
+	rate := a.ctx.Now().Sub(a.changedAt).Seconds() / a.duration.Seconds()
 	if !a.isAccelerating {
 		rate = -rate
 	}

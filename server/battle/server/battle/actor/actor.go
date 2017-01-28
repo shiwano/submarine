@@ -15,7 +15,7 @@ import (
 type actor struct {
 	player       *context.Player
 	actorType    battleAPI.ActorType
-	ctx          *context.Context
+	ctx          context.Context
 	event        *context.ActorEventEmitter
 	isDestroyed  bool
 	motor        *component.Motor
@@ -26,7 +26,7 @@ type actor struct {
 	isLitByTeam  map[navmesh.LayerMask]bool
 }
 
-func newActor(ctx *context.Context, player *context.Player, params context.ActorParams,
+func newActor(ctx context.Context, player *context.Player, params context.ActorParams,
 	position *vec2.T, direction float64) *actor {
 	a := &actor{
 		player:       player,
@@ -34,7 +34,7 @@ func newActor(ctx *context.Context, player *context.Player, params context.Actor
 		ctx:          ctx,
 		event:        context.NewActorEventEmitter(),
 		motor:        component.NewMotor(ctx, position, direction, params.AccelMaxSpeed(), params.AccelDuration()),
-		stageAgent:   ctx.Stage.CreateAgent(21, position),
+		stageAgent:   ctx.Stage().CreateAgent(21, position),
 		ignoredLayer: player.TeamLayer,
 		hasLight:     params.HasLight(),
 		visibility:   component.NewVisibility(),
@@ -78,7 +78,7 @@ func (a *actor) Submarine() *battleAPI.ActorSubmarineObject { return nil }
 func (a *actor) Destroy() {
 	a.isDestroyed = true
 	a.stageAgent.Destroy()
-	a.ctx.Event.EmitActorDestroyEvent(a)
+	a.ctx.Event().EmitActorDestroyEvent(a)
 }
 
 func (a *actor) BeforeUpdate() {
@@ -88,7 +88,7 @@ func (a *actor) BeforeUpdate() {
 	}
 
 	if a.hasLight {
-		a.ctx.SightsByTeam[a.Player().TeamLayer].PutLight(a.Position())
+		a.ctx.SightsByTeam()[a.Player().TeamLayer].PutLight(a.Position())
 	}
 }
 
@@ -105,25 +105,25 @@ func (a *actor) accelerate(direction float64) {
 	logger.Log.Debugf("%v accelerates to %v", a, direction)
 	a.motor.Accelerate(a.stageAgent.Position())
 	a.motor.Turn(a.stageAgent.Position(), direction)
-	a.ctx.Event.EmitActorMoveEvent(a)
+	a.ctx.Event().EmitActorMoveEvent(a)
 }
 
 func (a *actor) brake(direction float64) {
 	logger.Log.Debugf("%v brakes", a)
 	a.motor.Brake(a.stageAgent.Position())
 	a.motor.Turn(a.stageAgent.Position(), direction)
-	a.ctx.Event.EmitActorMoveEvent(a)
+	a.ctx.Event().EmitActorMoveEvent(a)
 }
 
 func (a *actor) turn(direction float64) {
 	logger.Log.Debugf("%v turns to %v", a, direction)
 	a.motor.Turn(a.stageAgent.Position(), direction)
-	a.ctx.Event.EmitActorMoveEvent(a)
+	a.ctx.Event().EmitActorMoveEvent(a)
 }
 
 func (a *actor) idle() {
 	a.motor.Idle(a.stageAgent.Position())
-	a.ctx.Event.EmitActorMoveEvent(a)
+	a.ctx.Event().EmitActorMoveEvent(a)
 }
 
 func (a *actor) onStageAgentCollide(obj navmesh.Object, point vec2.T) {
@@ -140,12 +140,12 @@ func (a *actor) onStageAgentCollide(obj navmesh.Object, point vec2.T) {
 }
 
 func (a *actor) onVisibilityChange(layer navmesh.LayerMask) {
-	a.ctx.Event.EmitActorChangeVisibilityEvent(a, layer)
+	a.ctx.Event().EmitActorChangeVisibilityEvent(a, layer)
 }
 
 func (a *actor) refreshVisibilities() {
 	for _, l := range context.TeamLayers {
-		isLit := a.ctx.SightsByTeam[l].IsLitPoint(a.Position())
+		isLit := a.ctx.SightsByTeam()[l].IsLitPoint(a.Position())
 		if isLit != a.isLitByTeam[l] {
 			a.isLitByTeam[l] = isLit
 			a.visibility.Set(l, isLit)

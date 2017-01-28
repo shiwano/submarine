@@ -17,11 +17,11 @@ type submarine struct {
 }
 
 // NewSubmarine creates a submarine.
-func NewSubmarine(ctx *context.Context, user *context.Player) context.Actor {
+func NewSubmarine(ctx context.Context, user *context.Player) context.Actor {
 	s := &submarine{
 		actor: newActor(ctx, user, user.SubmarineParams, user.StartPosition, 0),
 	}
-	s.timer = component.NewTimer(ctx.Now)
+	s.timer = component.NewTimer(ctx.Now())
 	s.equipment = component.NewEquipment(s.ID(), user.SubmarineParams)
 
 	s.event.AddCollideWithOtherActorEventListener(s.onCollideWithOtherActor)
@@ -33,13 +33,13 @@ func NewSubmarine(ctx *context.Context, user *context.Player) context.Actor {
 	s.event.AddPingerRequestEventListener(s.onPingerRequest)
 	s.event.AddUserLeaveEventListener(s.onUserLeave)
 
-	s.ctx.Event.AddActorUsePingerEventListener(s.onActorUsePinger)
-	s.ctx.Event.EmitActorCreateEvent(s)
+	s.ctx.Event().AddActorUsePingerEventListener(s.onActorUsePinger)
+	s.ctx.Event().EmitActorCreateEvent(s)
 	return s
 }
 
 func (s *submarine) Update() {
-	s.timer.Update(s.ctx.Now)
+	s.timer.Update(s.ctx.Now())
 
 	if s.player.AI != nil {
 		s.player.AI.Update(s)
@@ -89,11 +89,11 @@ func (s *submarine) onPingerRequest(m *battleAPI.PingerRequestObject) {
 	if s.isUsingPinger {
 		return
 	}
-	if s.equipment.TryConsumePinger(s.ctx.Now) {
+	if s.equipment.TryConsumePinger(s.ctx.Now()) {
 		logger.Log.Debugf("%v uses pinger", s)
-		s.ctx.Event.EmitActorUpdateEquipmentEvent(s.equipment.ToAPIType())
+		s.ctx.Event().EmitActorUpdateEquipmentEvent(s.equipment.ToAPIType())
 		s.isUsingPinger = true
-		s.ctx.Event.EmitActorUsePingerEvent(s, false)
+		s.ctx.Event().EmitActorUsePingerEvent(s, false)
 		s.timer.Register(s.player.SubmarineParams.PingerIntervalSeconds, s.finishToUsePinger)
 	}
 }
@@ -112,15 +112,15 @@ func (s *submarine) onActorUsePinger(a context.Actor, finished bool) {
 
 func (s *submarine) finishToUsePinger() {
 	if s.isUsingPinger {
-		s.ctx.Event.EmitActorUsePingerEvent(s, true)
+		s.ctx.Event().EmitActorUsePingerEvent(s, true)
 		s.isUsingPinger = false
 	}
 }
 
 func (s *submarine) shootTorpedo() {
-	if s.equipment.TryConsumeTorpedo(s.ctx.Now) {
+	if s.equipment.TryConsumeTorpedo(s.ctx.Now()) {
 		logger.Log.Debugf("%v shoots a torpedo", s)
-		s.ctx.Event.EmitActorUpdateEquipmentEvent(s.equipment.ToAPIType())
+		s.ctx.Event().EmitActorUpdateEquipmentEvent(s.equipment.ToAPIType())
 		normalizedVelocity := s.motor.NormalizedVelocity()
 		startOffsetValue := s.stageAgent.SizeRadius() * s.player.TorpedoParams.StartOffsetDistance
 		startPoint := normalizedVelocity.Scale(startOffsetValue).Add(s.Position())

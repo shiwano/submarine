@@ -15,7 +15,7 @@ type SimpleAI struct {
 }
 
 // NewSimpleAI creates a SimpleAI.
-func NewSimpleAI(ctx *context.Context) *SimpleAI {
+func NewSimpleAI(ctx context.Context) *SimpleAI {
 	return &SimpleAI{ai: newAI(ctx)}
 }
 
@@ -23,7 +23,7 @@ func NewSimpleAI(ctx *context.Context) *SimpleAI {
 func (a *SimpleAI) Update(submarine context.Actor) {
 	if !a.navigator.isStarted() {
 		nextDest := a.nextDest(submarine.Player().StartPosition)
-		path := a.ctx.Stage.FindPath(submarine.Position(), nextDest)
+		path := a.ctx.Stage().FindPath(submarine.Position(), nextDest)
 		a.navigator.start(path, submarine.Position())
 	}
 

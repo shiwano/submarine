@@ -8,37 +8,71 @@ import (
 )
 
 // Context represents a battle context.
-type Context struct {
-	CreatedAt    time.Time
-	StartedAt    time.Time
-	Now          time.Time
-	Event        *EventEmitter
-	Stage        *navmesh.NavMesh
-	SightsByTeam map[navmesh.LayerMask]*sight.Sight
+type Context interface {
+	Event() *EventEmitter
+	Stage() *navmesh.NavMesh
+	SightsByTeam() map[navmesh.LayerMask]*sight.Sight
+	Now() time.Time
+	StartedAt() time.Time
+	ElapsedTime() time.Duration
+	Actors() ActorSlice
+	Actor(actorID int64) (Actor, bool)
+	HasActor(actorID int64) bool
+}
+
+// Updater represents a battle context with methods that update itself.
+type Updater interface {
+	Context
+	Start(now time.Time)
+	Update(now time.Time)
+	Players() PlayerSlice
+	UserPlayersByTeam() PlayersByTeam
+	SubmarineByPlayerID(userID int64) (Actor, bool)
+}
+
+type context struct {
+	event        *EventEmitter
+	stage        *navmesh.NavMesh
+	sightsByTeam map[navmesh.LayerMask]*sight.Sight
+	startedAt    time.Time
+	now          time.Time
 	container    *container
 }
 
 // NewContext creates a battle context.
-func NewContext(stageMesh *navmesh.Mesh, lightMap *sight.LightMap) *Context {
-	c := &Context{
-		CreatedAt:    time.Now(),
-		Event:        NewEventEmitter(),
-		Stage:        navmesh.New(stageMesh),
-		SightsByTeam: make(map[navmesh.LayerMask]*sight.Sight),
+func NewContext(stageMesh *navmesh.Mesh, lightMap *sight.LightMap) Updater {
+	c := &context{
+		event:        NewEventEmitter(),
+		stage:        navmesh.New(stageMesh),
+		sightsByTeam: make(map[navmesh.LayerMask]*sight.Sight),
 		container:    newContainer(),
 	}
 	for _, layer := range TeamLayers {
-		c.SightsByTeam[layer] = sight.New(lightMap)
+		c.sightsByTeam[layer] = sight.New(lightMap)
 	}
-	c.Event.AddActorCreateEventListener(c.onActorCreate)
-	c.Event.AddActorDestroyEventListener(c.onActorDestroy)
+	c.event.AddActorCreateEventListener(c.onActorCreate)
+	c.event.AddActorDestroyEventListener(c.onActorDestroy)
 	return c
 }
 
-// Update the battle.
-func (c *Context) Update(now time.Time) {
-	c.Now = now
-	for _, sight := range c.SightsByTeam {
+func (c *context) Now() time.Time                                   { return c.now }
+func (c *context) StartedAt() time.Time                             { return c.startedAt }
+func (c *context) ElapsedTime() time.Duration                       { return c.now.Sub(c.startedAt) }
+func (c *context) Event() *EventEmitter                             { return c.event }
+func (c *context) Stage() *navmesh.NavMesh                          { return c.stage }
+func (c *context) SightsByTeam() map[navmesh.LayerMask]*sight.Sight { return c.sightsByTeam }
+
+func (c *context) Players() PlayerSlice             { return c.container.players }
+func (c *context) UserPlayersByTeam() PlayersByTeam { return c.container.userPlayersByTeam }
+
+func (c *context) Start(now time.Time) {
+	c.startedAt = now
+	c.now = now
+}
+
+func (c *context) Update(now time.Time) {
+	c.now = now
+	for _, sight := range c.sightsByTeam {
 		sight.Clear()
 	}
 	for _, actor := range c.Actors() {
@@ -58,60 +92,41 @@ func (c *Context) Update(now time.Time) {
 	}
 }
 
-// ElapsedTime returns the elapsed time since start of battle.
-func (c *Context) ElapsedTime() time.Duration {
-	return c.Now.Sub(c.StartedAt)
-}
-
-// SubmarineByPlayerID returns the submarine which has the given player id.
-func (c *Context) SubmarineByPlayerID(userID int64) (Actor, bool) {
+func (c *context) SubmarineByPlayerID(userID int64) (Actor, bool) {
 	if s, ok := c.container.submarinesByPlayerID[userID]; ok {
 		return s, true
 	}
 	return nil, false
 }
 
-// Actors returns all actors.
-func (c *Context) Actors() ActorSlice {
+func (c *context) Actors() ActorSlice {
 	actors := make(ActorSlice, len(c.container.actors))
 	copy(actors, c.container.actors)
 	return actors
 }
 
-// Actor returns the actor that has the actor id.
-func (c *Context) Actor(actorID int64) (Actor, bool) {
+func (c *context) Actor(actorID int64) (Actor, bool) {
 	if a, ok := c.container.actorsByID[actorID]; ok {
 		return a, true
 	}
 	return nil, false
 }
 
-// HasActor determines whether the specified actor exists.
-func (c *Context) HasActor(actorID int64) bool {
+func (c *context) HasActor(actorID int64) bool {
 	_, ok := c.container.actorsByID[actorID]
 	return ok
 }
 
-// Players returns players in the battle.
-func (c *Context) Players() PlayerSlice {
-	return c.container.players
-}
-
-// UserPlayersByTeam returns user's players by team layer of the battle.
-func (c *Context) UserPlayersByTeam() PlayersByTeam {
-	return c.container.userPlayersByTeam
-}
-
-func (c *Context) onActorCreate(actor Actor) {
+func (c *context) onActorCreate(actor Actor) {
 	c.container.addActor(actor)
 	actor.Start()
-	c.Event.EmitActorAddEvent(actor)
+	c.event.EmitActorAddEvent(actor)
 }
 
-func (c *Context) onActorDestroy(actor Actor) {
+func (c *context) onActorDestroy(actor Actor) {
 	removedActor := c.container.removeActor(actor)
 	if removedActor != nil {
 		removedActor.OnDestroy()
-		c.Event.EmitActorRemoveEvent(removedActor)
+		c.event.EmitActorRemoveEvent(removedActor)
 	}
 }
