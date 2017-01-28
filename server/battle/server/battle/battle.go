@@ -19,7 +19,7 @@ import (
 // Battle represents a battle.
 type Battle struct {
 	Gateway       *Gateway
-	ctx           context.Updater
+	ctx           context.FullContext
 	judge         *judge
 	isStarted     bool
 	isFighting    *abool.AtomicBool

@@ -20,8 +20,8 @@ type Context interface {
 	HasActor(actorID int64) bool
 }
 
-// Updater represents a battle context with methods that update itself.
-type Updater interface {
+// FullContext represents a battle context, includes methods that manages itself.
+type FullContext interface {
 	Context
 	Start(now time.Time)
 	Update(now time.Time)
@@ -40,7 +40,7 @@ type context struct {
 }
 
 // NewContext creates a battle context.
-func NewContext(stageMesh *navmesh.Mesh, lightMap *sight.LightMap) Updater {
+func NewContext(stageMesh *navmesh.Mesh, lightMap *sight.LightMap) FullContext {
 	c := &context{
 		event:        NewEventEmitter(),
 		stage:        navmesh.New(stageMesh),

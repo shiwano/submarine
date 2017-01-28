@@ -7,11 +7,11 @@ import (
 )
 
 type judge struct {
-	context   context.Updater
+	context   context.FullContext
 	timeLimit time.Duration
 }
 
-func newJudge(context context.Updater, timeLimit time.Duration) *judge {
+func newJudge(context context.FullContext, timeLimit time.Duration) *judge {
 	return &judge{
 		context:   context,
 		timeLimit: timeLimit,
