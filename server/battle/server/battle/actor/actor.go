@@ -62,31 +62,24 @@ func (a *actor) String() string {
 	return fmt.Sprintf("%v's %v(%v)", a.player, a.actorType, a.stageAgent.ID())
 }
 
-func (a *actor) ID() int64                         { return a.stageAgent.ID() }
-func (a *actor) Player() *context.Player           { return a.player }
-func (a *actor) Type() battleAPI.ActorType         { return a.actorType }
-func (a *actor) Event() *context.ActorEventEmitter { return a.event }
-
+func (a *actor) ID() int64                                  { return a.stageAgent.ID() }
+func (a *actor) Player() *context.Player                    { return a.player }
+func (a *actor) Type() battleAPI.ActorType                  { return a.actorType }
+func (a *actor) Event() *context.ActorEventEmitter          { return a.event }
 func (a *actor) IsDestroyed() bool                          { return a.isDestroyed }
 func (a *actor) Movement() *battleAPI.Movement              { return a.motor.ToAPIType(a.ID()) }
 func (a *actor) Position() *vec2.T                          { return a.stageAgent.Position() }
 func (a *actor) Direction() float64                         { return a.motor.Direction() }
 func (a *actor) IsAccelerating() bool                       { return a.motor.IsAccelerating() }
 func (a *actor) IsVisibleFrom(layer navmesh.LayerMask) bool { return a.visibility.IsVisibleFrom(layer) }
-func (a *actor) Submarine() *battleAPI.ActorSubmarineObject { return nil }
 
-func (a *actor) Destroy() {
-	a.isDestroyed = true
-	a.stageAgent.Destroy()
-	a.ctx.Event().EmitActorDestroyEvent(a)
-}
+func (a *actor) Submarine(navmesh.LayerMask) *battleAPI.ActorSubmarineObject { return nil }
 
 func (a *actor) BeforeUpdate() {
 	position := a.motor.Position()
 	if hitInfo := a.stageAgent.Move(position, a.ignoredLayer); hitInfo != nil {
 		a.onStageAgentCollide(hitInfo.Object, hitInfo.Point)
 	}
-
 	if a.hasLight {
 		a.ctx.SightsByTeam()[a.Player().TeamLayer].PutLight(a.Position())
 	}
@@ -100,6 +93,12 @@ func (a *actor) AfterUpdate() {
 func (a *actor) Start()     {}
 func (a *actor) Update()    {}
 func (a *actor) OnDestroy() {}
+
+func (a *actor) Destroy() {
+	a.isDestroyed = true
+	a.stageAgent.Destroy()
+	a.ctx.Event().EmitActorDestroyEvent(a)
+}
 
 func (a *actor) accelerate(direction float64) {
 	logger.Log.Debugf("%v accelerates to %v", a, direction)

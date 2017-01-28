@@ -1,6 +1,7 @@
 package actor
 
 import (
+	"github.com/shiwano/submarine/server/battle/lib/navmesh"
 	battleAPI "github.com/shiwano/submarine/server/battle/lib/typhenapi/type/submarine/battle"
 	"github.com/shiwano/submarine/server/battle/server/battle/actor/component"
 	"github.com/shiwano/submarine/server/battle/server/battle/context"
@@ -52,11 +53,14 @@ func (s *submarine) OnDestroy() {
 	}
 }
 
-func (s *submarine) Submarine() *battleAPI.ActorSubmarineObject {
-	return &battleAPI.ActorSubmarineObject{
+func (s *submarine) Submarine(layer navmesh.LayerMask) *battleAPI.ActorSubmarineObject {
+	e := &battleAPI.ActorSubmarineObject{
 		IsUsingPinger: s.isUsingPinger,
-		Equipment:     s.equipment.ToAPIType(),
 	}
+	if layer == s.player.TeamLayer {
+		e.Equipment = s.equipment.ToAPIType()
+	}
+	return e
 }
 
 func (s *submarine) onCollideWithOtherActor(actor context.Actor, point vec2.T) {
@@ -91,7 +95,7 @@ func (s *submarine) onPingerRequest(m *battleAPI.PingerRequestObject) {
 	}
 	if s.equipment.TryConsumePinger(s.ctx.Now()) {
 		logger.Log.Debugf("%v uses pinger", s)
-		s.ctx.Event().EmitActorUpdateEquipmentEvent(s.equipment.ToAPIType())
+		s.ctx.Event().EmitActorUpdateEquipmentEvent(s, s.equipment.ToAPIType())
 		s.isUsingPinger = true
 		s.ctx.Event().EmitActorUsePingerEvent(s, false)
 		s.timer.Register(s.player.SubmarineParams.PingerIntervalSeconds, s.finishToUsePinger)
@@ -120,7 +124,7 @@ func (s *submarine) finishToUsePinger() {
 func (s *submarine) shootTorpedo() {
 	if s.equipment.TryConsumeTorpedo(s.ctx.Now()) {
 		logger.Log.Debugf("%v shoots a torpedo", s)
-		s.ctx.Event().EmitActorUpdateEquipmentEvent(s.equipment.ToAPIType())
+		s.ctx.Event().EmitActorUpdateEquipmentEvent(s, s.equipment.ToAPIType())
 		normalizedVelocity := s.motor.NormalizedVelocity()
 		startOffsetValue := s.stageAgent.SizeRadius() * s.player.TorpedoParams.StartOffsetDistance
 		startPoint := normalizedVelocity.Scale(startOffsetValue).Add(s.Position())

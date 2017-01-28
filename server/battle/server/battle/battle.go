@@ -234,6 +234,7 @@ func (b *Battle) onActorUsePinger(actor context.Actor, finished bool) {
 	b.Gateway.outputPinger(actor, finished)
 }
 
-func (b *Battle) onActorUpdateEquipment(equipment *battleAPI.Equipment) {
-	b.Gateway.outputEquipment(equipment)
+func (b *Battle) onActorUpdateEquipment(actor context.Actor, equipment *battleAPI.Equipment) {
+	players := b.ctx.UserPlayersByTeam()[actor.Player().TeamLayer]
+	b.Gateway.outputEquipment(players, equipment)
 }

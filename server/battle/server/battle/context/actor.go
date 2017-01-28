@@ -16,22 +16,21 @@ type Actor interface {
 	Player() *Player
 	Type() battleAPI.ActorType
 	Event() *ActorEventEmitter
-
 	IsDestroyed() bool
 	Movement() *battleAPI.Movement
 	Position() *vec2.T
 	Direction() float64
 	IsAccelerating() bool
 	IsVisibleFrom(navmesh.LayerMask) bool
-	Submarine() *battleAPI.ActorSubmarineObject
-
-	Destroy()
+	Submarine(navmesh.LayerMask) *battleAPI.ActorSubmarineObject
 
 	Start()
 	BeforeUpdate()
 	Update()
 	AfterUpdate()
 	OnDestroy()
+
+	Destroy()
 }
 
 // GroupByLayer groups elements into a map keyed by navmesh layer.

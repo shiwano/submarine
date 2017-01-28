@@ -60,7 +60,7 @@ func (g *Gateway) outputActor(receiversByTeam context.PlayersByTeam, actor conte
 				Type:      actor.Type(),
 				Movement:  actor.Movement(),
 				IsVisible: actor.IsVisibleFrom(teamLayer),
-				Submarine: actor.Submarine(),
+				Submarine: actor.Submarine(teamLayer),
 			},
 		}
 	}
@@ -100,8 +100,9 @@ func (g *Gateway) outputPinger(actor context.Actor, finished bool) {
 	}
 }
 
-func (g *Gateway) outputEquipment(equipment *battleAPI.Equipment) {
+func (g *Gateway) outputEquipment(players context.PlayerSlice, equipment *battleAPI.Equipment) {
 	g.Output <- &GatewayOutput{
+		UserIDs: players.SelectInt64(func(p *context.Player) int64 { return p.ID }),
 		Message: equipment,
 	}
 }
