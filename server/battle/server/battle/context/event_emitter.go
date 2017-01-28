@@ -42,8 +42,8 @@ type EventEmitter struct {
 	actorUsePingerEventListenersOnce []func(actor Actor, finished bool)
 
 	actorUpdateEquipmentEventMu            *sync.Mutex
-	actorUpdateEquipmentEventListeners     []func(equipment *battleAPI.Equipment)
-	actorUpdateEquipmentEventListenersOnce []func(equipment *battleAPI.Equipment)
+	actorUpdateEquipmentEventListeners     []func(actor Actor, equipment *battleAPI.Equipment)
+	actorUpdateEquipmentEventListenersOnce []func(actor Actor, equipment *battleAPI.Equipment)
 }
 
 // NewEventEmitter creates an event emitter.
@@ -426,37 +426,37 @@ func (_e *EventEmitter) RemoveActorUsePingerEventListener(listener func(actor Ac
 }
 
 // EmitActorUpdateEquipmentEvent emits the specified event.
-func (_e *EventEmitter) EmitActorUpdateEquipmentEvent(equipment *battleAPI.Equipment) {
+func (_e *EventEmitter) EmitActorUpdateEquipmentEvent(actor Actor, equipment *battleAPI.Equipment) {
 	_e.actorUpdateEquipmentEventMu.Lock()
-	listeners := make([]func(equipment *battleAPI.Equipment), len(_e.actorUpdateEquipmentEventListeners))
+	listeners := make([]func(actor Actor, equipment *battleAPI.Equipment), len(_e.actorUpdateEquipmentEventListeners))
 	copy(listeners, _e.actorUpdateEquipmentEventListeners)
 	listenersOnce := _e.actorUpdateEquipmentEventListenersOnce
-	_e.actorUpdateEquipmentEventListenersOnce = make([]func(equipment *battleAPI.Equipment), 0)
+	_e.actorUpdateEquipmentEventListenersOnce = make([]func(actor Actor, equipment *battleAPI.Equipment), 0)
 	_e.actorUpdateEquipmentEventMu.Unlock()
 	for _, l := range listeners {
-		l(equipment)
+		l(actor, equipment)
 	}
 	for _, l := range listenersOnce {
-		l(equipment)
+		l(actor, equipment)
 	}
 }
 
 // AddActorUpdateEquipmentEventListener registers the specified event listener.
-func (_e *EventEmitter) AddActorUpdateEquipmentEventListener(listener func(equipment *battleAPI.Equipment)) {
+func (_e *EventEmitter) AddActorUpdateEquipmentEventListener(listener func(actor Actor, equipment *battleAPI.Equipment)) {
 	_e.actorUpdateEquipmentEventMu.Lock()
 	_e.actorUpdateEquipmentEventListeners = append(_e.actorUpdateEquipmentEventListeners, listener)
 	_e.actorUpdateEquipmentEventMu.Unlock()
 }
 
 // AddActorUpdateEquipmentEventListenerOnce registers the specified event listener that is invoked only once.
-func (_e *EventEmitter) AddActorUpdateEquipmentEventListenerOnce(listener func(equipment *battleAPI.Equipment)) {
+func (_e *EventEmitter) AddActorUpdateEquipmentEventListenerOnce(listener func(actor Actor, equipment *battleAPI.Equipment)) {
 	_e.actorUpdateEquipmentEventMu.Lock()
 	_e.actorUpdateEquipmentEventListenersOnce = append(_e.actorUpdateEquipmentEventListenersOnce, listener)
 	_e.actorUpdateEquipmentEventMu.Unlock()
 }
 
 // RemoveActorUpdateEquipmentEventListener removes the event listener previously registered.
-func (_e *EventEmitter) RemoveActorUpdateEquipmentEventListener(listener func(equipment *battleAPI.Equipment)) {
+func (_e *EventEmitter) RemoveActorUpdateEquipmentEventListener(listener func(actor Actor, equipment *battleAPI.Equipment)) {
 	listenerPtr := reflect.ValueOf(listener).Pointer()
 	_e.actorUpdateEquipmentEventMu.Lock()
 	listeners := _e.actorUpdateEquipmentEventListeners[:0]

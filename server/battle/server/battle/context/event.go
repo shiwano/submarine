@@ -39,5 +39,6 @@ type actorUsePingerEvent struct {
 }
 
 type actorUpdateEquipmentEvent struct {
+	actor     Actor
 	equipment *battleAPI.Equipment
 }
