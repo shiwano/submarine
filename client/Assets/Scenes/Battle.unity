@@ -221,7 +221,7 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1728480318}
-  m_RootOrder: 3
+  m_RootOrder: 1
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: -137.5, y: -32.5}
@@ -268,8 +268,9 @@ GameObject:
   serializedVersion: 4
   m_Component:
   - 224: {fileID: 149638297}
+  - 114: {fileID: 149638298}
   m_Layer: 5
-  m_Name: ActionButtons
+  m_Name: Equipment
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -288,6 +289,7 @@ RectTransform:
   - {fileID: 2104265936}
   - {fileID: 931344148}
   - {fileID: 430998922}
+  - {fileID: 2030338452}
   m_Father: {fileID: 606471102}
   m_RootOrder: 1
   m_AnchorMin: {x: 0, y: 0}
@@ -295,6 +297,23 @@ RectTransform:
   m_AnchoredPosition: {x: 65, y: 72}
   m_SizeDelta: {x: -65, y: 0}
   m_Pivot: {x: 0, y: 0}
+--- !u!114 &149638298
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 149638296}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 829ee0cc74d3c4b1f842cf15ede69bbe, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  decoy: {fileID: 2104265943}
+  pinger: {fileID: 931344155}
+  watcher: {fileID: 430998929}
+  torpedoResourceImageTemplate: {fileID: 1158632068}
+  torpedoResourceImageRoot: {fileID: 2030338452}
+  torpedoResourceImageOffset: {x: 0, y: -24, z: 0}
 --- !u!1 &222863168
 GameObject:
   m_ObjectHideFlags: 0
@@ -755,8 +774,9 @@ GameObject:
   - 114: {fileID: 430998925}
   - 114: {fileID: 430998924}
   - 114: {fileID: 430998923}
+  - 114: {fileID: 430998929}
   m_Layer: 5
-  m_Name: LookoutButton
+  m_Name: WatcherButton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -921,6 +941,18 @@ CanvasRenderer:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 430998921}
+--- !u!114 &430998929
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 430998921}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 81d22bcc131714833b72585ca4ffb932, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  cooldownText: {fileID: 1744810120}
 --- !u!1 &480431353
 GameObject:
   m_ObjectHideFlags: 0
@@ -949,7 +981,7 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1728480318}
-  m_RootOrder: 2
+  m_RootOrder: 0
   m_AnchorMin: {x: 1, y: 0.5}
   m_AnchorMax: {x: 1, y: 0.5}
   m_AnchoredPosition: {x: -232, y: -9.5}
@@ -1237,73 +1269,6 @@ MonoBehaviour:
   from: {x: 0, y: 0, z: 0}
   to: {x: 0, y: 0, z: -360}
   target: {fileID: 0}
---- !u!1 &816947647
-GameObject:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  serializedVersion: 4
-  m_Component:
-  - 224: {fileID: 816947648}
-  - 222: {fileID: 816947650}
-  - 114: {fileID: 816947649}
-  m_Layer: 5
-  m_Name: TorpedoResourceImage2
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!224 &816947648
-RectTransform:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 816947647}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 1728480318}
-  m_RootOrder: 1
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -41.5, y: -48}
-  m_SizeDelta: {x: 65, y: 19}
-  m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &816947649
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 816947647}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: -765806418, guid: f5f67c52d1564df4a8936ccd202a3bd8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_RaycastTarget: 1
-  m_OnCullStateChanged:
-    m_PersistentCalls:
-      m_Calls: []
-    m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
-      Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
-  m_Sprite: {fileID: 21300000, guid: 095291b97323848e9b8a4b8b1bdbc802, type: 3}
-  m_Type: 0
-  m_PreserveAspect: 0
-  m_FillCenter: 1
-  m_FillMethod: 4
-  m_FillAmount: 1
-  m_FillClockwise: 1
-  m_FillOrigin: 0
---- !u!222 &816947650
-CanvasRenderer:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 816947647}
 --- !u!1 &843265877
 GameObject:
   m_ObjectHideFlags: 0
@@ -1386,7 +1351,6 @@ GameObject:
   m_Component:
   - 4: {fileID: 918348793}
   - 114: {fileID: 918348794}
-  - 114: {fileID: 918348796}
   - 114: {fileID: 918348795}
   m_Layer: 0
   m_Name: Battle
@@ -1422,11 +1386,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8f6dbeae0adc740889367a77a4f43034, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  battleInputService: {fileID: 918348796}
   battleView: {fileID: 918348795}
   radarView: {fileID: 1256337061}
   roomView: {fileID: 2090596833}
   resultView: {fileID: 1877354477}
+  equipmentView: {fileID: 149638298}
 --- !u!114 &918348795
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1440,28 +1404,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   battleLogText: {fileID: 1572298333}
   timerText: {fileID: 480431355}
-  torpedoResourceImages:
-  - {fileID: 1158632068}
-  - {fileID: 816947649}
   pingerAlertImage: {fileID: 62360095}
   dangerAlertImage: {fileID: 1554210984}
-  decoyCoolDownText: {fileID: 289237022}
-  pingerCoolDownText: {fileID: 222863170}
-  lookoutCoolDownText: {fileID: 1744810120}
---- !u!114 &918348796
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 918348792}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fdf755d2493c44a9193f5af668b460cc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  decoyButton: {fileID: 2104265937}
-  pingerButton: {fileID: 931344152}
-  lookoutButton: {fileID: 430998926}
 --- !u!1 &931344147
 GameObject:
   m_ObjectHideFlags: 0
@@ -1476,6 +1420,7 @@ GameObject:
   - 114: {fileID: 931344151}
   - 114: {fileID: 931344150}
   - 114: {fileID: 931344149}
+  - 114: {fileID: 931344155}
   m_Layer: 5
   m_Name: PingerButton
   m_TagString: Untagged
@@ -1642,6 +1587,18 @@ CanvasRenderer:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 931344147}
+--- !u!114 &931344155
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 931344147}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 81d22bcc131714833b72585ca4ffb932, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  cooldownText: {fileID: 222863170}
 --- !u!1 &1045994830
 GameObject:
   m_ObjectHideFlags: 0
@@ -1920,7 +1877,7 @@ GameObject:
   - 222: {fileID: 1158632069}
   - 114: {fileID: 1158632068}
   m_Layer: 5
-  m_Name: TorpedoResourceImage
+  m_Name: TorpedoResourceImageTemplate
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1936,11 +1893,11 @@ RectTransform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
-  m_Father: {fileID: 1728480318}
+  m_Father: {fileID: 2030338452}
   m_RootOrder: 0
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -41.5, y: -24}
+  m_AnchoredPosition: {x: 0.000061035156, y: 0}
   m_SizeDelta: {x: 65, y: 19}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1158632068
@@ -3075,8 +3032,6 @@ RectTransform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
-  - {fileID: 1158632067}
-  - {fileID: 816947648}
   - {fileID: 480431354}
   - {fileID: 64298457}
   m_Father: {fileID: 606471102}
@@ -3610,6 +3565,39 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 640, y: 1136}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!1 &2030338451
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 4
+  m_Component:
+  - 224: {fileID: 2030338452}
+  m_Layer: 5
+  m_Name: TorpedoResources
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &2030338452
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 2030338451}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children:
+  - {fileID: 1158632067}
+  m_Father: {fileID: 149638297}
+  m_RootOrder: 3
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 234, y: 1030}
+  m_SizeDelta: {x: 100, y: 100}
+  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &2056954964
 GameObject:
   m_ObjectHideFlags: 0
@@ -3738,6 +3726,7 @@ GameObject:
   - 114: {fileID: 2104265940}
   - 114: {fileID: 2104265941}
   - 114: {fileID: 2104265942}
+  - 114: {fileID: 2104265943}
   m_Layer: 5
   m_Name: DecoyButton
   m_TagString: Untagged
@@ -3904,3 +3893,15 @@ MonoBehaviour:
   tweenTarget: {fileID: 2104265940}
   playDirection: -1
   trigger: 3
+--- !u!114 &2104265943
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 2104265935}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 81d22bcc131714833b72585ca4ffb932, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  cooldownText: {fileID: 289237022}
