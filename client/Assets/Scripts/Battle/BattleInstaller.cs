@@ -9,8 +9,6 @@ namespace Submarine.Battle
     public class BattleInstaller : MonoInstaller
     {
         [SerializeField]
-        BattleInputService battleInputService;
-        [SerializeField]
         BattleView battleView;
         [SerializeField]
         RadarView radarView;
@@ -18,6 +16,8 @@ namespace Submarine.Battle
         RoomView roomView;
         [SerializeField]
         ResultView resultView;
+        [SerializeField]
+        EquipmentView equipmentView;
 
         public override void InstallBindings()
         {
@@ -27,7 +27,6 @@ namespace Submarine.Battle
             Container.Bind<BattleModel>().ToSingle();
             Container.Bind<BattleService>().ToSingle();
             Container.Bind<IDisposable>().ToSingle<BattleService>();
-            Container.Bind<BattleInputService>().ToSingleInstance(battleInputService);
 
             Container.BindCommand<InitializeBattleCommand>().HandleWithSingle<InitializeBattleCommand.Handler>();
             Container.BindCommand<StartBattleCommand>().HandleWithSingle<StartBattleCommand.Handler>();
@@ -76,6 +75,11 @@ namespace Submarine.Battle
                 subContainer.Bind<IInitializable>().ToSingle<PlayerSubmarineMediator>();
                 subContainer.Bind<ITickable>().ToSingle<PlayerSubmarineMediator>();
                 subContainer.Bind<IDisposable>().ToSingle<PlayerSubmarineMediator>();
+
+                subContainer.Bind<EquipmentView>().ToSingleInstance(equipmentView);
+                subContainer.Bind<BattleInputService.IEquipmentInput>().ToSingle<EquipmentView>();
+                subContainer.Bind<BattleInputService>().ToSingle();
+                subContainer.Bind<IDisposable>().ToSingle<BattleInputService>();
             }
         }
 

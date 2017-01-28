@@ -1,19 +1,21 @@
 ﻿using UnityEngine;
-using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using System;
 using UniRx;
 
 namespace Submarine.Battle
 {
-    public class BattleInputService : MonoBehaviour
+    public class BattleInputService : IDisposable
     {
-        [SerializeField]
-        Button decoyButton;
-        [SerializeField]
-        Button pingerButton;
-        [SerializeField]
-        Button lookoutButton;
+        public interface IEquipmentInput
+        {
+            IObservable<Unit> OnDecoyUseAsObservable();
+            IObservable<Unit> OnPingerUseAsObservable();
+            IObservable<Unit> OnWatcherUseAsObservable();
+        }
+
+        readonly IEquipmentInput equipmentInput;
+        readonly CompositeDisposable disposables = new CompositeDisposable();
 
         const float SqrDragAmountThresholdForClick = 10f * 10f;
         readonly TimeSpan touchTimeThresholdForClick = TimeSpan.FromSeconds(1.5d);
@@ -43,24 +45,19 @@ namespace Submarine.Battle
             get { return Mathf.Clamp(DragAmount.x / halfScreenWidth, -1f, 1f); }
         }
 
-        public IObservable<Unit> OnTorpadeShootAsObservable()
+        public BattleInputService(IEquipmentInput equipmentInput)
         {
-            return onClickAsObservable();
+            this.equipmentInput = equipmentInput;
         }
 
-        public IObservable<Unit> OnDecoyShootAsObservable()
-        {
-            return decoyButton.OnClickAsObservable();
-        }
+        public IObservable<Unit> OnTorpadeUseAsObservable() { return onClickAsObservable(); }
+        public IObservable<Unit> OnDecoyUseAsObservable()   { return equipmentInput.OnDecoyUseAsObservable(); }
+        public IObservable<Unit> OnPingerUseAsObservable()  { return equipmentInput.OnPingerUseAsObservable(); }
+        public IObservable<Unit> OnWatcherUseAsObservable() { return equipmentInput.OnWatcherUseAsObservable(); }
 
-        public IObservable<Unit> OnPingerUseAsObservable()
+        public void Dispose()
         {
-            return pingerButton.OnClickAsObservable();
-        }
-
-        public IObservable<Unit> OnLookoutShootAsObservable()
-        {
-            return lookoutButton.OnClickAsObservable();
+            disposables.Dispose();
         }
 
         void Awake()
@@ -69,15 +66,15 @@ namespace Submarine.Battle
                 .Select(_ => Input.GetMouseButton(0))
                 .Where(_ => !IsTouchingUI)
                 .ToReactiveProperty()
-                .AddTo(this);
+                .AddTo(disposables);
 
             isTouched.Where(b => b)
                 .Subscribe(_ => touchStartPosition = Input.mousePosition)
-                .AddTo(this);
+                .AddTo(disposables);
 
             isTouched.Where(b => b)
                 .Subscribe(_ => touchStartTime = DateTime.Now)
-                .AddTo(this);
+                .AddTo(disposables);
         }
 
         IObservable<Unit> onClickAsObservable()

@@ -13,18 +13,9 @@ namespace Submarine.Battle
         Text timerText;
 
         [SerializeField]
-        List<Image> torpedoResourceImages;
-        [SerializeField]
         Image pingerAlertImage;
         [SerializeField]
         Image dangerAlertImage;
-
-        [SerializeField]
-        Text decoyCoolDownText;
-        [SerializeField]
-        Text pingerCoolDownText;
-        [SerializeField]
-        Text lookoutCoolDownText;
 
         public bool IsUsingPinger
         {

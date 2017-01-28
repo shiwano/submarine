@@ -35,19 +35,19 @@ namespace Submarine.Battle
                 .Subscribe(OnAcceleratingChange)
                 .AddTo(disposables);
 
-            battleInputService.OnTorpadeShootAsObservable()
+            battleInputService.OnTorpadeUseAsObservable()
                 .Where(_ => battleModel.IsInBattle)
-                .Subscribe(_ => OnTorpedoShoot())
+                .Subscribe(_ => OnTorpedoUse())
                 .AddTo(disposables);
 
-            battleInputService.OnDecoyShootAsObservable()
+            battleInputService.OnDecoyUseAsObservable()
                 .Where(_ => battleModel.IsInBattle)
-                .Subscribe(_ => OnDecoyShoot())
+                .Subscribe(_ => OnDecoyUse())
                 .AddTo(disposables);
 
-            battleInputService.OnLookoutShootAsObservable()
+            battleInputService.OnWatcherUseAsObservable()
                 .Where(_ => battleModel.IsInBattle)
-                .Subscribe(_ => OnLookoutShoot())
+                .Subscribe(_ => OnWatcherUse())
                 .AddTo(disposables);
 
             battleInputService.OnPingerUseAsObservable()
@@ -104,20 +104,20 @@ namespace Submarine.Battle
             }
         }
 
-        void OnTorpedoShoot()
+        void OnTorpedoUse()
         {
             Logger.Log("Submarine shoots a torpedo");
             battleService.Api.SendTorpedoRequest();
         }
 
-        void OnDecoyShoot()
+        void OnDecoyUse()
         {
             Logger.Log("Sumarine shoots a decoy");
         }
 
-        void OnLookoutShoot()
+        void OnWatcherUse()
         {
-            Logger.Log("Submarine shoots a lookout");
+            Logger.Log("Submarine shoots a watcher");
         }
 
         void OnPingerUse()
