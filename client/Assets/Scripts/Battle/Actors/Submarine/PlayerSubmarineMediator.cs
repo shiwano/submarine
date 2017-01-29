@@ -1,7 +1,7 @@
-﻿using UnityEngine;
-using System;
+﻿using System;
 using UniRx;
 using Zenject;
+using Type = TyphenApi.Type.Submarine;
 
 namespace Submarine.Battle
 {
@@ -16,7 +16,11 @@ namespace Submarine.Battle
         [Inject]
         ThirdPersonCamera thirdPersonCamera;
         [Inject]
+        Type.Battle.Actor actor;
+        [Inject]
         SubmarineView submarineView;
+        [Inject]
+        EquipmentView equipmentView;
 
         readonly CompositeDisposable disposables = new CompositeDisposable();
 
@@ -60,6 +64,7 @@ namespace Submarine.Battle
         {
             if (battleModel.IsInBattle)
             {
+                equipmentView.Refresh(battleModel.Now, actor.Submarine.Equipment);
                 submarineView.Turn(battleInputService.TurningRate);
                 SendDirectionIfNeeded(submarineView.ActorDirection);
             }

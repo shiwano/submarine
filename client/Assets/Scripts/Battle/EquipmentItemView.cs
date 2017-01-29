@@ -1,6 +1,8 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 using UnityEngine.UI;
 using UniRx;
+using Type = TyphenApi.Type.Submarine;
 
 namespace Submarine.Battle
 {
@@ -17,9 +19,19 @@ namespace Submarine.Battle
             return button.OnSingleClickAsObservable();
         }
 
+        public void Refresh(DateTime now, Type.Battle.EquipmentItem equipmentItem)
+        {
+            var finishedAt = equipmentItem.CooldownFinishedAtAsDateTime;
+            button.interactable = now >= finishedAt;
+            cooldownText.text = button.interactable ?
+                string.Empty :
+                string.Format("{0:00}", (finishedAt - now).TotalSeconds);
+        }
+
         void Awake()
         {
             button = GetComponent<Button>();
+            button.interactable = false;
         }
     }
 }

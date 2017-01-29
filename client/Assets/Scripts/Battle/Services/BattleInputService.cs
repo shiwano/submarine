@@ -21,7 +21,7 @@ namespace Submarine.Battle
         readonly TimeSpan touchTimeThresholdForClick = TimeSpan.FromSeconds(1.5d);
         readonly float halfScreenWidth = Screen.width / 2f;
 
-        IReadOnlyReactiveProperty<bool> isTouched;
+        readonly IReadOnlyReactiveProperty<bool> isTouched;
         Vector3 touchStartPosition;
         DateTime touchStartTime;
 
@@ -48,20 +48,7 @@ namespace Submarine.Battle
         public BattleInputService(IEquipmentInput equipmentInput)
         {
             this.equipmentInput = equipmentInput;
-        }
 
-        public IObservable<Unit> OnTorpadeUseAsObservable() { return onClickAsObservable(); }
-        public IObservable<Unit> OnDecoyUseAsObservable()   { return equipmentInput.OnDecoyUseAsObservable(); }
-        public IObservable<Unit> OnPingerUseAsObservable()  { return equipmentInput.OnPingerUseAsObservable(); }
-        public IObservable<Unit> OnWatcherUseAsObservable() { return equipmentInput.OnWatcherUseAsObservable(); }
-
-        public void Dispose()
-        {
-            disposables.Dispose();
-        }
-
-        void Awake()
-        {
             isTouched = Observable.EveryUpdate()
                 .Select(_ => Input.GetMouseButton(0))
                 .Where(_ => !IsTouchingUI)
@@ -76,6 +63,16 @@ namespace Submarine.Battle
                 .Subscribe(_ => touchStartTime = DateTime.Now)
                 .AddTo(disposables);
         }
+
+        public void Dispose()
+        {
+            disposables.Dispose();
+        }
+
+        public IObservable<Unit> OnTorpadeUseAsObservable() { return onClickAsObservable(); }
+        public IObservable<Unit> OnDecoyUseAsObservable()   { return equipmentInput.OnDecoyUseAsObservable(); }
+        public IObservable<Unit> OnPingerUseAsObservable()  { return equipmentInput.OnPingerUseAsObservable(); }
+        public IObservable<Unit> OnWatcherUseAsObservable() { return equipmentInput.OnWatcherUseAsObservable(); }
 
         IObservable<Unit> onClickAsObservable()
         {

@@ -77,7 +77,7 @@ namespace Submarine.Battle
                 subContainer.Bind<IDisposable>().ToSingle<PlayerSubmarineMediator>();
 
                 subContainer.Bind<EquipmentView>().ToSingleInstance(equipmentView);
-                subContainer.Bind<BattleInputService.IEquipmentInput>().ToSingle<EquipmentView>();
+                subContainer.Bind<BattleInputService.IEquipmentInput>().ToSingleInstance(equipmentView);
                 subContainer.Bind<BattleInputService>().ToSingle();
                 subContainer.Bind<IDisposable>().ToSingle<BattleInputService>();
             }
