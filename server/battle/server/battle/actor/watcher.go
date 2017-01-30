@@ -13,8 +13,7 @@ type watcher struct {
 	timer *component.Timer
 }
 
-// NewWatcher creates a watcher.
-func NewWatcher(ctx context.Context, user *context.Player, position *vec2.T, direction float64) context.Actor {
+func newWatcher(ctx context.Context, user *context.Player, position *vec2.T, direction float64) context.Actor {
 	w := &watcher{
 		actor: newActor(ctx, user, user.WatcherParams, position, direction),
 	}

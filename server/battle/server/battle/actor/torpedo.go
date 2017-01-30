@@ -11,8 +11,7 @@ type torpedo struct {
 	*actor
 }
 
-// NewTorpedo creates a torpedo.
-func NewTorpedo(ctx context.Context, user *context.Player, position *vec2.T, direction float64) context.Actor {
+func newTorpedo(ctx context.Context, user *context.Player, position *vec2.T, direction float64) context.Actor {
 	t := &torpedo{
 		actor: newActor(ctx, user, user.TorpedoParams, position, direction),
 	}

@@ -93,7 +93,7 @@ func (s *submarine) onTorpedoRequest(m *battleAPI.TorpedoRequestObject) {
 		normalizedVelocity := s.motor.NormalizedVelocity()
 		startOffsetValue := s.stageAgent.SizeRadius() * s.player.TorpedoParams.StartOffsetDistance
 		startPoint := normalizedVelocity.Scale(startOffsetValue).Add(s.Position())
-		NewTorpedo(s.ctx, s.player, startPoint, s.motor.Direction())
+		newTorpedo(s.ctx, s.player, startPoint, s.motor.Direction())
 	}
 }
 
@@ -111,7 +111,7 @@ func (s *submarine) onWatcherRequest(m *battleAPI.WatcherRequestObject) {
 	if s.equipment.Watcher.TryConsume(s.ctx.Now()) {
 		logger.Log.Debugf("%v uses watcher", s)
 		s.ctx.Event().EmitActorUpdateEquipmentEvent(s, s.equipment.ToAPIType())
-		NewWatcher(s.ctx, s.player, s.Position(), s.motor.Direction())
+		newWatcher(s.ctx, s.player, s.Position(), s.motor.Direction())
 	}
 }
 
