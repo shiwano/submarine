@@ -37,5 +37,9 @@ type pingerRequestEvent struct {
 	message *battleAPI.PingerRequestObject
 }
 
+type watcherRequestEvent struct {
+	message *battleAPI.WatcherRequestObject
+}
+
 type userLeaveEvent struct {
 }

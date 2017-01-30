@@ -41,6 +41,10 @@ type ActorEventEmitter struct {
 	pingerRequestEventListeners     []func(message *battleAPI.PingerRequestObject)
 	pingerRequestEventListenersOnce []func(message *battleAPI.PingerRequestObject)
 
+	watcherRequestEventMu            *sync.Mutex
+	watcherRequestEventListeners     []func(message *battleAPI.WatcherRequestObject)
+	watcherRequestEventListenersOnce []func(message *battleAPI.WatcherRequestObject)
+
 	userLeaveEventMu            *sync.Mutex
 	userLeaveEventListeners     []func()
 	userLeaveEventListenersOnce []func()
@@ -63,6 +67,8 @@ func NewActorEventEmitter() *ActorEventEmitter {
 		torpedoRequestEventMu: new(sync.Mutex),
 
 		pingerRequestEventMu: new(sync.Mutex),
+
+		watcherRequestEventMu: new(sync.Mutex),
 
 		userLeaveEventMu: new(sync.Mutex),
 	}
@@ -423,6 +429,57 @@ func (_e *ActorEventEmitter) RemovePingerRequestEventListener(listener func(mess
 	}
 	_e.pingerRequestEventListenersOnce = listenersOnce
 	_e.pingerRequestEventMu.Unlock()
+}
+
+// EmitWatcherRequestEvent emits the specified event.
+func (_e *ActorEventEmitter) EmitWatcherRequestEvent(message *battleAPI.WatcherRequestObject) {
+	_e.watcherRequestEventMu.Lock()
+	listeners := make([]func(message *battleAPI.WatcherRequestObject), len(_e.watcherRequestEventListeners))
+	copy(listeners, _e.watcherRequestEventListeners)
+	listenersOnce := _e.watcherRequestEventListenersOnce
+	_e.watcherRequestEventListenersOnce = make([]func(message *battleAPI.WatcherRequestObject), 0)
+	_e.watcherRequestEventMu.Unlock()
+	for _, l := range listeners {
+		l(message)
+	}
+	for _, l := range listenersOnce {
+		l(message)
+	}
+}
+
+// AddWatcherRequestEventListener registers the specified event listener.
+func (_e *ActorEventEmitter) AddWatcherRequestEventListener(listener func(message *battleAPI.WatcherRequestObject)) {
+	_e.watcherRequestEventMu.Lock()
+	_e.watcherRequestEventListeners = append(_e.watcherRequestEventListeners, listener)
+	_e.watcherRequestEventMu.Unlock()
+}
+
+// AddWatcherRequestEventListenerOnce registers the specified event listener that is invoked only once.
+func (_e *ActorEventEmitter) AddWatcherRequestEventListenerOnce(listener func(message *battleAPI.WatcherRequestObject)) {
+	_e.watcherRequestEventMu.Lock()
+	_e.watcherRequestEventListenersOnce = append(_e.watcherRequestEventListenersOnce, listener)
+	_e.watcherRequestEventMu.Unlock()
+}
+
+// RemoveWatcherRequestEventListener removes the event listener previously registered.
+func (_e *ActorEventEmitter) RemoveWatcherRequestEventListener(listener func(message *battleAPI.WatcherRequestObject)) {
+	listenerPtr := reflect.ValueOf(listener).Pointer()
+	_e.watcherRequestEventMu.Lock()
+	listeners := _e.watcherRequestEventListeners[:0]
+	for _, l := range _e.watcherRequestEventListeners {
+		if reflect.ValueOf(l).Pointer() != listenerPtr {
+			listeners = append(listeners, l)
+		}
+	}
+	_e.watcherRequestEventListeners = listeners
+	listenersOnce := _e.watcherRequestEventListenersOnce[:0]
+	for _, l := range _e.watcherRequestEventListenersOnce {
+		if reflect.ValueOf(l).Pointer() != listenerPtr {
+			listenersOnce = append(listenersOnce, l)
+		}
+	}
+	_e.watcherRequestEventListenersOnce = listenersOnce
+	_e.watcherRequestEventMu.Unlock()
 }
 
 // EmitUserLeaveEvent emits the specified event.
