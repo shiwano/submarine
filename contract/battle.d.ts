@@ -95,6 +95,7 @@ declare module Submarine.Battle {
   var turnRequest: { direction: degrees; };
   var pingerRequest: {};
   var torpedoRequest: {};
+  var watcherRequest: {};
 
   var addBotRequest: {};
   var removeBotRequest: { botId: integer; };
