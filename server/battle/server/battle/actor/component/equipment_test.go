@@ -9,13 +9,14 @@ import (
 	"github.com/shiwano/submarine/server/battle/server/battle/context"
 )
 
-func TestEquipmentItem(t *testing.T) {
+func TestEquipment(t *testing.T) {
 	Convey("Equipment", t, func() {
 		startTime := time.Now()
 		params := &context.SubmarineParams{
 			TorpedoCount:           2,
 			TorpedoCooldownSeconds: 10,
 			PingerCooldownSeconds:  20,
+			WatcherCooldownSeconds: 20,
 		}
 		e := NewEquipment(1, params)
 
@@ -34,23 +35,30 @@ func TestEquipmentItem(t *testing.T) {
 				So(e.TryConsumeTorpedo(startTime), ShouldBeFalse)
 			})
 
-			Convey("should start cool-down of consumed torpedo", func() {
+			Convey("should start cooldown of the consumed torpedo", func() {
 				So(e.TryConsumeTorpedo(startTime), ShouldBeTrue)
 				So(e.TryConsumeTorpedo(startTime), ShouldBeTrue)
 				So(e.TryConsumeTorpedo(startTime.Add(time.Second*10)), ShouldBeTrue)
 			})
 		})
+	})
+}
 
-		Convey("#TryConsumePinger", func() {
-			Convey("should consume torpedo", func() {
-				So(e.TryConsumePinger(startTime), ShouldBeTrue)
-				So(e.TryConsumePinger(startTime), ShouldBeFalse)
+func TestEquipmentItem(t *testing.T) {
+	Convey("EquipmentItem", t, func() {
+		startTime := time.Now()
+		i := &EquipmentItem{cooldownDuration: time.Second * 20}
+
+		Convey("#TryConsume", func() {
+			Convey("should consume the item", func() {
+				So(i.TryConsume(startTime), ShouldBeTrue)
+				So(i.TryConsume(startTime), ShouldBeFalse)
 			})
 
-			Convey("should start cool-down of consumed torpedo", func() {
-				So(e.TryConsumePinger(startTime), ShouldBeTrue)
-				So(e.TryConsumePinger(startTime.Add(time.Second*10)), ShouldBeFalse)
-				So(e.TryConsumePinger(startTime.Add(time.Second*20)), ShouldBeTrue)
+			Convey("should start cooldown of the consumed item", func() {
+				So(i.TryConsume(startTime), ShouldBeTrue)
+				So(i.TryConsume(startTime.Add(time.Second*10)), ShouldBeFalse)
+				So(i.TryConsume(startTime.Add(time.Second*20)), ShouldBeTrue)
 			})
 		})
 	})
