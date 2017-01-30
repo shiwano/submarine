@@ -32,6 +32,7 @@ func NewSubmarine(ctx context.Context, user *context.Player) context.Actor {
 	s.event.AddTurnRequestEventListener(s.onTurnRequest)
 	s.event.AddTorpedoRequestEventListener(s.onTorpedoRequest)
 	s.event.AddPingerRequestEventListener(s.onPingerRequest)
+	s.event.AddWatcherRequestEventListener(s.onWatcherRequest)
 	s.event.AddUserLeaveEventListener(s.onUserLeave)
 
 	s.ctx.Event().AddActorUsePingerEventListener(s.onActorUsePinger)
@@ -106,6 +107,14 @@ func (s *submarine) onPingerRequest(m *battleAPI.PingerRequestObject) {
 		s.isUsingPinger = true
 		s.ctx.Event().EmitActorUsePingerEvent(s, false)
 		s.timer.Register(s.player.SubmarineParams.PingerIntervalSeconds, s.finishToUsePinger)
+	}
+}
+
+func (s *submarine) onWatcherRequest(m *battleAPI.WatcherRequestObject) {
+	if s.equipment.Watcher.TryConsume(s.ctx.Now()) {
+		logger.Log.Debugf("%v uses watcher", s)
+		s.ctx.Event().EmitActorUpdateEquipmentEvent(s, s.equipment.ToAPIType())
+		NewWatcher(s.ctx, s.player, s.Position(), s.motor.Direction())
 	}
 }
 
