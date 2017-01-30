@@ -14,6 +14,7 @@ type Equipment struct {
 	ActorId  int64            `codec:"actor_id"`
 	Torpedos []*EquipmentItem `codec:"torpedos"`
 	Pinger   *EquipmentItem   `codec:"pinger"`
+	Watcher  *EquipmentItem   `codec:"watcher"`
 }
 
 // Coerce the fields.
@@ -23,6 +24,9 @@ func (t *Equipment) Coerce() error {
 	}
 	if t.Pinger == nil {
 		return errors.New("Pinger should not be empty")
+	}
+	if t.Watcher == nil {
+		return errors.New("Watcher should not be empty")
 	}
 	return nil
 }

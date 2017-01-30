@@ -7,5 +7,6 @@ module TyphenApi::Model::Submarine::Battle
     attribute :actor_id, Integer, :required => true
     attribute :torpedos, Array[TyphenApi::Model::Submarine::Battle::EquipmentItem], :required => true
     attribute :pinger, TyphenApi::Model::Submarine::Battle::EquipmentItem, :required => true
+    attribute :watcher, TyphenApi::Model::Submarine::Battle::EquipmentItem, :required => true
   end
 end

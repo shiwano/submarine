@@ -26,6 +26,7 @@ namespace TyphenApi.WebSocketApi.Parts.Submarine
             TurnRequest = 698416554,
             PingerRequest = 110864488,
             TorpedoRequest = 1327463172,
+            WatcherRequest = 1664921436,
             AddBotRequest = 1859155646,
             RemoveBotRequest = -1928553516,
         }
@@ -49,6 +50,7 @@ namespace TyphenApi.WebSocketApi.Parts.Submarine
         public event Action<TyphenApi.Type.Submarine.Battle.TurnRequestObject> OnTurnRequestReceive;
         public event Action<TyphenApi.Type.Submarine.Battle.PingerRequestObject> OnPingerRequestReceive;
         public event Action<TyphenApi.Type.Submarine.Battle.TorpedoRequestObject> OnTorpedoRequestReceive;
+        public event Action<TyphenApi.Type.Submarine.Battle.WatcherRequestObject> OnWatcherRequestReceive;
         public event Action<TyphenApi.Type.Submarine.Battle.AddBotRequestObject> OnAddBotRequestReceive;
         public event Action<TyphenApi.Type.Submarine.Battle.RemoveBotRequestObject> OnRemoveBotRequestReceive;
 
@@ -199,13 +201,14 @@ namespace TyphenApi.WebSocketApi.Parts.Submarine
             session.Send((int)MessageType.Equipment, equipment);
         }
 
-        public void SendEquipment(long actorId, List<TyphenApi.Type.Submarine.Battle.EquipmentItem> torpedos, TyphenApi.Type.Submarine.Battle.EquipmentItem pinger)
+        public void SendEquipment(long actorId, List<TyphenApi.Type.Submarine.Battle.EquipmentItem> torpedos, TyphenApi.Type.Submarine.Battle.EquipmentItem pinger, TyphenApi.Type.Submarine.Battle.EquipmentItem watcher)
         {
             session.Send((int)MessageType.Equipment, new TyphenApi.Type.Submarine.Battle.Equipment()
             {
                 ActorId = actorId,
                 Torpedos = torpedos,
                 Pinger = pinger,
+                Watcher = watcher,
             });
         }
         public void SendStartRequest(TyphenApi.Type.Submarine.Battle.StartRequestObject startRequest)
@@ -274,6 +277,17 @@ namespace TyphenApi.WebSocketApi.Parts.Submarine
         public void SendTorpedoRequest()
         {
             session.Send((int)MessageType.TorpedoRequest, new TyphenApi.Type.Submarine.Battle.TorpedoRequestObject()
+            {
+            });
+        }
+        public void SendWatcherRequest(TyphenApi.Type.Submarine.Battle.WatcherRequestObject watcherRequest)
+        {
+            session.Send((int)MessageType.WatcherRequest, watcherRequest);
+        }
+
+        public void SendWatcherRequest()
+        {
+            session.Send((int)MessageType.WatcherRequest, new TyphenApi.Type.Submarine.Battle.WatcherRequestObject()
             {
             });
         }
@@ -488,6 +502,17 @@ namespace TyphenApi.WebSocketApi.Parts.Submarine
                     if (OnTorpedoRequestReceive != null)
                     {
                         OnTorpedoRequestReceive(message);
+                    }
+
+                    return message;
+                }
+                case MessageType.WatcherRequest:
+                {
+                    var message = session.MessageDeserializer.Deserialize<TyphenApi.Type.Submarine.Battle.WatcherRequestObject>(messageData);
+
+                    if (OnWatcherRequestReceive != null)
+                    {
+                        OnWatcherRequestReceive(message);
                     }
 
                     return message;

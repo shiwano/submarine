@@ -12,5 +12,7 @@ namespace TyphenApi.Type.Submarine.Battle
         public List<TyphenApi.Type.Submarine.Battle.EquipmentItem> Torpedos { get; set; }
         protected static readonly SerializationInfo<Equipment, TyphenApi.Type.Submarine.Battle.EquipmentItem> pinger = new SerializationInfo<Equipment, TyphenApi.Type.Submarine.Battle.EquipmentItem>("pinger", false, (x) => x.Pinger, (x, v) => x.Pinger = v);
         public TyphenApi.Type.Submarine.Battle.EquipmentItem Pinger { get; set; }
+        protected static readonly SerializationInfo<Equipment, TyphenApi.Type.Submarine.Battle.EquipmentItem> watcher = new SerializationInfo<Equipment, TyphenApi.Type.Submarine.Battle.EquipmentItem>("watcher", false, (x) => x.Watcher, (x, v) => x.Watcher = v);
+        public TyphenApi.Type.Submarine.Battle.EquipmentItem Watcher { get; set; }
     }
 }
