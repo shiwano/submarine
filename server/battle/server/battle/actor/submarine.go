@@ -98,10 +98,7 @@ func (s *submarine) onTorpedoRequest(m *battleAPI.TorpedoRequestObject) {
 }
 
 func (s *submarine) onPingerRequest(m *battleAPI.PingerRequestObject) {
-	if s.isUsingPinger {
-		return
-	}
-	if s.equipment.Pinger.TryConsume(s.ctx.Now()) {
+	if !s.isUsingPinger && s.equipment.Pinger.TryConsume(s.ctx.Now()) {
 		logger.Log.Debugf("%v uses pinger", s)
 		s.ctx.Event().EmitActorUpdateEquipmentEvent(s, s.equipment.ToAPIType())
 		s.isUsingPinger = true
