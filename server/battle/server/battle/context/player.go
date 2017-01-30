@@ -25,6 +25,7 @@ type Player struct {
 	StartPosition   *vec2.T
 	SubmarineParams *SubmarineParams
 	TorpedoParams   *TorpedoParams
+	WatcherParams   *WatcherParams
 }
 
 // NewPlayer creates a player.
@@ -47,6 +48,7 @@ func NewPlayer(playerID int64, isUser bool, teamLayer navmesh.LayerMask,
 			TorpedoCooldownSeconds: 15,
 			PingerCooldownSeconds:  60,
 			PingerIntervalSeconds:  10,
+			WatcherCooldownSeconds: 80,
 		},
 		TorpedoParams: &TorpedoParams{
 			actorParams: &actorParams{
@@ -57,6 +59,16 @@ func NewPlayer(playerID int64, isUser bool, teamLayer navmesh.LayerMask,
 				accelDuration:   1 * time.Second,
 			},
 			StartOffsetDistance: 1.2,
+		},
+		WatcherParams: &WatcherParams{
+			actorParams: &actorParams{
+				actorType:       battleAPI.ActorType_Watcher,
+				hasLight:        true,
+				isAlwaysVisible: false,
+				accelMaxSpeed:   0,
+				accelDuration:   0,
+			},
+			UptimeSeconds: 60,
 		},
 	}
 }

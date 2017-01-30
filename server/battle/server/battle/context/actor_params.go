@@ -36,10 +36,17 @@ type SubmarineParams struct {
 	TorpedoCooldownSeconds float64
 	PingerIntervalSeconds  float64
 	PingerCooldownSeconds  float64
+	WatcherCooldownSeconds float64
 }
 
 // TorpedoParams represents torpedo parameters.
 type TorpedoParams struct {
 	*actorParams
 	StartOffsetDistance float64
+}
+
+// WatcherParams represents watcher parameters.
+type WatcherParams struct {
+	*actorParams
+	UptimeSeconds float64
 }
