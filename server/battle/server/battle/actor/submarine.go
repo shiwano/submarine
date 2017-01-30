@@ -86,7 +86,14 @@ func (s *submarine) onTurnRequest(m *battleAPI.TurnRequestObject) {
 }
 
 func (s *submarine) onTorpedoRequest(m *battleAPI.TorpedoRequestObject) {
-	s.shootTorpedo()
+	if s.equipment.TryConsumeTorpedo(s.ctx.Now()) {
+		logger.Log.Debugf("%v shoots a torpedo", s)
+		s.ctx.Event().EmitActorUpdateEquipmentEvent(s, s.equipment.ToAPIType())
+		normalizedVelocity := s.motor.NormalizedVelocity()
+		startOffsetValue := s.stageAgent.SizeRadius() * s.player.TorpedoParams.StartOffsetDistance
+		startPoint := normalizedVelocity.Scale(startOffsetValue).Add(s.Position())
+		NewTorpedo(s.ctx, s.player, startPoint, s.motor.Direction())
+	}
 }
 
 func (s *submarine) onPingerRequest(m *battleAPI.PingerRequestObject) {
@@ -118,16 +125,5 @@ func (s *submarine) finishToUsePinger() {
 	if s.isUsingPinger {
 		s.ctx.Event().EmitActorUsePingerEvent(s, true)
 		s.isUsingPinger = false
-	}
-}
-
-func (s *submarine) shootTorpedo() {
-	if s.equipment.TryConsumeTorpedo(s.ctx.Now()) {
-		logger.Log.Debugf("%v shoots a torpedo", s)
-		s.ctx.Event().EmitActorUpdateEquipmentEvent(s, s.equipment.ToAPIType())
-		normalizedVelocity := s.motor.NormalizedVelocity()
-		startOffsetValue := s.stageAgent.SizeRadius() * s.player.TorpedoParams.StartOffsetDistance
-		startPoint := normalizedVelocity.Scale(startOffsetValue).Add(s.Position())
-		NewTorpedo(s.ctx, s.player, startPoint, s.motor.Direction())
 	}
 }
