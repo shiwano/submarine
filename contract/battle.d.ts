@@ -68,6 +68,7 @@ declare module Submarine.Battle {
     actorId: integer;
     torpedos: EquipmentItem[];
     pinger: EquipmentItem;
+    watcher: EquipmentItem;
   }
 
   interface EquipmentItem {
