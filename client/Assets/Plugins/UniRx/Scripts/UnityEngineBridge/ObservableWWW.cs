@@ -8,6 +8,7 @@ using ObservableUnity = UniRx.Observable;
 
 namespace UniRx
 {
+    using System.Threading;
 #if !(UNITY_METRO || UNITY_WP8) && (UNITY_4_4 || UNITY_4_3 || UNITY_4_2 || UNITY_4_1 || UNITY_4_0_1 || UNITY_4_0 || UNITY_3_5 || UNITY_3_4 || UNITY_3_3 || UNITY_3_2 || UNITY_3_1 || UNITY_3_0_0 || UNITY_3_0 || UNITY_2_6_1 || UNITY_2_6)
     // Fallback for Unity versions below 4.5
     using Hash = System.Collections.Hashtable;
@@ -181,7 +182,6 @@ namespace UniRx
 
                 if (cancel.IsCancellationRequested)
                 {
-                    if (!www.isDone) yield return www; // workaround for freeze bug of dispose WWW when WWW is not completed
                     yield break;
                 }
 
@@ -200,7 +200,7 @@ namespace UniRx
 
                 if (!string.IsNullOrEmpty(www.error))
                 {
-                    observer.OnError(new WWWErrorException(www));
+                    observer.OnError(new WWWErrorException(www, www.text));
                 }
                 else
                 {
@@ -240,7 +240,6 @@ namespace UniRx
 
                 if (cancel.IsCancellationRequested)
                 {
-                    if (!www.isDone) yield return www; // workaround for freeze bug of dispose WWW when WWW is not completed
                     yield break;
                 }
 
@@ -259,7 +258,7 @@ namespace UniRx
 
                 if (!string.IsNullOrEmpty(www.error))
                 {
-                    observer.OnError(new WWWErrorException(www));
+                    observer.OnError(new WWWErrorException(www, www.text));
                 }
                 else
                 {
@@ -299,7 +298,6 @@ namespace UniRx
 
                 if (cancel.IsCancellationRequested)
                 {
-                    if (!www.isDone) yield return www; // workaround for freeze bug of dispose WWW when WWW is not completed
                     yield break;
                 }
 
@@ -318,7 +316,7 @@ namespace UniRx
 
                 if (!string.IsNullOrEmpty(www.error))
                 {
-                    observer.OnError(new WWWErrorException(www));
+                    observer.OnError(new WWWErrorException(www, www.text));
                 }
                 else
                 {
@@ -358,7 +356,6 @@ namespace UniRx
 
                 if (cancel.IsCancellationRequested)
                 {
-                    if (!www.isDone) yield return www; // workaround for freeze bug of dispose WWW when WWW is not completed
                     yield break;
                 }
 
@@ -377,7 +374,7 @@ namespace UniRx
 
                 if (!string.IsNullOrEmpty(www.error))
                 {
-                    observer.OnError(new WWWErrorException(www));
+                    observer.OnError(new WWWErrorException(www, ""));
                 }
                 else
                 {
@@ -397,13 +394,14 @@ namespace UniRx
         public System.Collections.Generic.Dictionary<string, string> ResponseHeaders { get; private set; }
         public WWW WWW { get; private set; }
 
-        public WWWErrorException(WWW www)
+        // cache the text because if www was disposed, can't access it.
+        public WWWErrorException(WWW www, string text)
         {
             this.WWW = www;
             this.RawErrorMessage = www.error;
             this.ResponseHeaders = www.responseHeaders;
             this.HasResponse = false;
-            this.Text = www.text; // cache the text because if www was disposed, can't access it.
+            this.Text = text; 
 
             var splitted = RawErrorMessage.Split(' ', ':');
             if (splitted.Length != 0)

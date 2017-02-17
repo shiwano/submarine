@@ -126,7 +126,7 @@ namespace UniRx
     public interface IReadOnlyReactiveCollection<T> : IEnumerable<T>
     {
         int Count { get; }
-        T this[int index] { get; set; }
+        T this[int index] { get; }
         IObservable<CollectionAddEvent<T>> ObserveAdd();
         IObservable<int> ObserveCountChanged(bool notifyCurrentCount = false);
         IObservable<CollectionMoveEvent<T>> ObserveMove();
@@ -137,6 +137,8 @@ namespace UniRx
 
     public interface IReactiveCollection<T> : IList<T>, IReadOnlyReactiveCollection<T>
     {
+        new int Count { get; }
+        new T this[int index] { get; set; }
         void Move(int oldIndex, int newIndex);
     }
 
@@ -291,17 +293,33 @@ namespace UniRx
             }
         }
 
+        #region IDisposable Support
+
+        private bool disposedValue = false;
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!disposedValue)
+            {
+                if (disposing)
+                {
+                    DisposeSubject(ref collectionReset);
+                    DisposeSubject(ref collectionAdd);
+                    DisposeSubject(ref collectionMove);
+                    DisposeSubject(ref collectionRemove);
+                    DisposeSubject(ref collectionReplace);
+                }
+
+                disposedValue = true;
+            }
+        }
+
         public void Dispose()
         {
-            if (isDisposed) return;
-            isDisposed = true;
-
-            DisposeSubject(ref collectionReset);
-            DisposeSubject(ref collectionAdd);
-            DisposeSubject(ref collectionMove);
-            DisposeSubject(ref collectionRemove);
-            DisposeSubject(ref collectionReplace);
+            Dispose(true);
         }
+        
+        #endregion
     }
 
     public static partial class ReactiveCollectionExtensions
