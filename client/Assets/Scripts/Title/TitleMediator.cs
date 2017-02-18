@@ -31,7 +31,7 @@ namespace Submarine.Title
         {
             if (dataStore.HasSignedUp)
             {
-                loginCommand.Execute();
+                loginCommand.Fire();
             }
             else
             {
@@ -41,12 +41,12 @@ namespace Submarine.Title
 
         void OnDeleteLoginDataButton()
         {
-            deleteLoginDataCommand.Execute();
+            deleteLoginDataCommand.Fire();
         }
 
         void OnUserLogin()
         {
-            sceneChangeCommand.Execute(SceneNames.Lobby);
+            sceneChangeCommand.Fire(SceneNames.Lobby);
         }
     }
 }

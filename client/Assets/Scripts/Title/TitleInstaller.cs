@@ -1,6 +1,5 @@
 ﻿using UnityEngine;
 using Zenject;
-using Zenject.Commands;
 
 namespace Submarine.Title
 {
@@ -13,21 +12,22 @@ namespace Submarine.Title
 
         public override void InstallBindings()
         {
-            Container.Bind<TitleEvent.SignUpStart>().ToSingle();
+            Container.Bind<TitleEvent.SignUpStart>().AsSingle();
 
-            Container.Bind<AuthenticationService>().ToSingle();
+            Container.Bind<AuthenticationService>().AsSingle();
 
-            Container.BindCommand<LoginCommand>().HandleWithSingle<LoginCommand.Handler>();
-            Container.BindCommand<SignUpCommand, string>().HandleWithSingle<SignUpCommand.Handler>();
-            Container.BindCommand<DeleteLoginDataCommand>().HandleWithSingle<DeleteLoginDataCommand.Handler>();
+            Container.DeclareSignal<LoginCommand>().RequireHandler();
+            Container.BindSignal<LoginCommand>().To<LoginCommand.Handler>(x => x.Execute).AsSingle();
+            Container.DeclareSignal<SignUpCommand>().RequireHandler();
+            Container.BindSignal<string, SignUpCommand>().To<SignUpCommand.Handler>(x => x.Execute).AsSingle();
+            Container.DeclareSignal<DeleteLoginDataCommand>().RequireHandler();
+            Container.BindSignal<DeleteLoginDataCommand>().To<DeleteLoginDataCommand.Handler>(x => x.Execute).AsSingle();
 
-            Container.Bind<TitleView>().ToSingleInstance(titleView);
-            Container.Bind<TitleMediator>().ToSingle();
-            Container.Bind<IInitializable>().ToSingle<TitleMediator>();
+            Container.BindInstance(titleView);
+            Container.BindInterfacesAndSelfTo<TitleMediator>().AsSingle();
 
-            Container.Bind<SignUpView>().ToSingleInstance(signUpView);
-            Container.Bind<SignUpMediator>().ToSingle();
-            Container.Bind<IInitializable>().ToSingle<SignUpMediator>();
+            Container.BindInstance(signUpView);
+            Container.BindInterfacesAndSelfTo<SignUpMediator>().AsSingle();
         }
     }
 }

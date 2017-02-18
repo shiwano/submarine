@@ -27,12 +27,12 @@ namespace Submarine.Lobby
 
         void OnCreateRoomButtonClick()
         {
-            createRoomCommand.Execute();
+            createRoomCommand.Fire();
         }
 
         void OnUpdateRoomsButtonClick()
         {
-            getRoomsCommand.Execute();
+            getRoomsCommand.Fire();
         }
 
         void OnRoomsChange(List<Type.Room> rooms)
@@ -43,7 +43,7 @@ namespace Submarine.Lobby
 
         void OnRoomClick(Type.Room room)
         {
-            joinIntoRoomCommand.Execute(room);
+            joinIntoRoomCommand.Fire(room);
         }
     }
 }

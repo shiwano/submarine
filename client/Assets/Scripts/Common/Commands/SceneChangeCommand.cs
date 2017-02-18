@@ -1,16 +1,16 @@
 ﻿using UnityEngine;
+using UnityEngine.SceneManagement;
 using Zenject;
-using Zenject.Commands;
 
 namespace Submarine
 {
-    public class SceneChangeCommand : Command<SceneNames>
+    public class SceneChangeCommand : Signal<SceneNames, SceneChangeCommand>
     {
-        public class Handler : ICommandHandler<SceneNames>
+        public class Handler
         {
             public void Execute(SceneNames sceneName)
             {
-                ZenUtil.LoadScene(sceneName.ToString());
+                SceneManager.LoadScene(sceneName.ToString());
                 Debug.Log("Loaded " + sceneName + " scene");
             }
         }

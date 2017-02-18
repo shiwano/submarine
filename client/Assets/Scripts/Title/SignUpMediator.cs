@@ -29,7 +29,7 @@ namespace Submarine.Title
         {
             if (!string.IsNullOrEmpty(view.InputtedName))
             {
-                signUpCommand.Execute(view.InputtedName);
+                signUpCommand.Fire(view.InputtedName);
             }
         }
     }

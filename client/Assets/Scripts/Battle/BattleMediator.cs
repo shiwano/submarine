@@ -27,7 +27,7 @@ namespace Submarine.Battle
             battleModel.ActorsById.ObserveAdd().Subscribe(e => OnActorAdd(e.Value)).AddTo(view);
             battleModel.ActorsById.ObserveRemove().Subscribe(x => OnActorRemove(x.Value)).AddTo(view);
 
-            initializeBattleCommand.Execute();
+            initializeBattleCommand.Fire();
         }
 
         public void Tick()

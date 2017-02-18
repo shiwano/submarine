@@ -43,17 +43,17 @@ namespace Submarine.Battle
 
         void OnBattleStartButtonClick()
         {
-            startBattleCommand.Execute();
+            startBattleCommand.Fire();
         }
 
         void OnAddBotButtonClick()
         {
-            addBotCommand.Execute();
+            addBotCommand.Fire();
         }
 
         void OnRemoveBotButtonClick(Type.Bot bot)
         {
-            removeBotCommand.Execute(bot.Id);
+            removeBotCommand.Fire(bot.Id);
         }
     }
 }

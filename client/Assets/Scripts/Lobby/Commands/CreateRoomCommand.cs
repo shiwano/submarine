@@ -1,12 +1,11 @@
 ﻿using UniRx;
 using Zenject;
-using Zenject.Commands;
 
 namespace Submarine.Lobby
 {
-    public class CreateRoomCommand : Command
+    public class CreateRoomCommand : Signal<CreateRoomCommand>
     {
-        public class Handler : ICommandHandler
+        public class Handler
         {
             [Inject]
             LobbyModel lobbyModel;

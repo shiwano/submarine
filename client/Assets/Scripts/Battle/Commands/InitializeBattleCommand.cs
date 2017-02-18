@@ -1,15 +1,14 @@
 ﻿using System;
 using System.Linq;
 using Zenject;
-using Zenject.Commands;
 using UniRx;
 using Type = TyphenApi.Type.Submarine;
 
 namespace Submarine.Battle
 {
-    public class InitializeBattleCommand : Command
+    public class InitializeBattleCommand : Signal<InitializeBattleCommand>
     {
-        public class Handler : ICommandHandler
+        public class Handler
         {
             [Inject]
             BattleService battleService;

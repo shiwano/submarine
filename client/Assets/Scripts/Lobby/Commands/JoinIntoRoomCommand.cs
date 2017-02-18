@@ -1,13 +1,12 @@
 ﻿using UniRx;
 using Zenject;
-using Zenject.Commands;
 using Type = TyphenApi.Type.Submarine;
 
 namespace Submarine.Lobby
 {
-    public class JoinIntoRoomCommand : Command<Type.Room>
+    public class JoinIntoRoomCommand : Signal<Type.Room, JoinIntoRoomCommand>
     {
-        public class Handler : ICommandHandler<Type.Room>
+        public class Handler
         {
             [Inject]
             LobbyModel lobbyModel;

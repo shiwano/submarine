@@ -1,11 +1,10 @@
 ﻿using Zenject;
-using Zenject.Commands;
 
 namespace Submarine.Battle
 {
-    public class RemoveBotCommand : Command<long>
+    public class RemoveBotCommand : Signal<long, RemoveBotCommand>
     {
-        public class Handler : ICommandHandler<long>
+        public class Handler
         {
             [Inject]
             BattleService battleService;

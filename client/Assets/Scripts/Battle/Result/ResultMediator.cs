@@ -29,7 +29,7 @@ namespace Submarine.Battle
 
         void OnClose()
         {
-            sceneChangeCommand.Execute(SceneNames.Lobby);
+            sceneChangeCommand.Fire(SceneNames.Lobby);
         }
     }
 }

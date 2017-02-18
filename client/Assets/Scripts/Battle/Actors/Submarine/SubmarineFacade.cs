@@ -5,7 +5,7 @@ namespace Submarine.Battle
 {
     public class SubmarineFacade : ActorFacade
     {
-        public class Factory : FacadeFactory<Type.Battle.Actor, bool, SubmarineFacade> { }
+        public class Factory : Factory<Type.Battle.Actor, bool, SubmarineFacade> { }
 
         [Inject]
         SubmarineView view;

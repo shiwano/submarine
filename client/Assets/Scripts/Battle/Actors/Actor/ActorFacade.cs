@@ -1,10 +1,11 @@
-﻿using Zenject;
+﻿using System;
+using Zenject;
 using Type = TyphenApi.Type.Submarine;
 using UniRx;
 
 namespace Submarine.Battle
 {
-    public abstract class ActorFacade : Facade
+    public abstract class ActorFacade : IInitializable, ITickable, IDisposable
     {
         [Inject]
         UserModel userModel;
@@ -21,9 +22,8 @@ namespace Submarine.Battle
 
         public virtual bool WillIgnoreMotorDirection { get { return false; } }
 
-        public override void Initialize()
+        public void Initialize()
         {
-            base.Initialize();
             motor.SetMovement(Actor.Movement);
             UpdatePositionAndDirection();
 
@@ -35,10 +35,14 @@ namespace Submarine.Battle
             Actor.OnMoveAsObservable().Subscribe(motor.SetMovement).AddTo(view);
         }
 
-        public override void Tick()
+        public void Tick()
         {
-            base.Tick();
             UpdatePositionAndDirection();
+        }
+
+        public void Dispose()
+        {
+            view.Dispose();
         }
 
         void UpdatePositionAndDirection()

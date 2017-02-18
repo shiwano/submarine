@@ -1,6 +1,5 @@
 ﻿using UnityEngine;
 using Zenject;
-using Zenject.Commands;
 using Type = TyphenApi.Type.Submarine;
 
 namespace Submarine.Lobby
@@ -14,19 +13,20 @@ namespace Submarine.Lobby
 
         public override void InstallBindings()
         {
-            Container.Bind<RoomService>().ToSingle();
+            Container.Bind<RoomService>().AsSingle();
 
-            Container.BindCommand<CreateRoomCommand>().HandleWithSingle<CreateRoomCommand.Handler>();
-            Container.BindCommand<GetRoomsCommand>().HandleWithSingle<GetRoomsCommand.Handler>();
-            Container.BindCommand<JoinIntoRoomCommand, Type.Room>().HandleWithSingle<JoinIntoRoomCommand.Handler>();
+            Container.DeclareSignal<CreateRoomCommand>().RequireHandler();
+            Container.BindSignal<CreateRoomCommand>().To<CreateRoomCommand.Handler>(x => x.Execute).AsSingle();
+            Container.DeclareSignal<GetRoomsCommand>().RequireHandler();
+            Container.BindSignal<GetRoomsCommand>().To<GetRoomsCommand.Handler>(x => x.Execute).AsSingle();
+            Container.DeclareSignal<JoinIntoRoomCommand>().RequireHandler();
+            Container.BindSignal<Type.Room, JoinIntoRoomCommand>().To<JoinIntoRoomCommand.Handler>(x => x.Execute).AsSingle();
 
-            Container.Bind<LobbyView>().ToSingleInstance(lobbyView);
-            Container.Bind<LobbyMediator>().ToSingle();
-            Container.Bind<IInitializable>().ToSingle<LobbyMediator>();
+            Container.BindInstance(lobbyView);
+            Container.BindInterfacesAndSelfTo<LobbyMediator>().AsSingle();
 
-            Container.Bind<RoomListView>().ToSingleInstance(roomListView);
-            Container.Bind<RoomListMediator>().ToSingle();
-            Container.Bind<IInitializable>().ToSingle<RoomListMediator>();
+            Container.BindInstance(roomListView);
+            Container.BindInterfacesAndSelfTo<RoomListMediator>().AsSingle();
         }
     }
 }

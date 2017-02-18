@@ -1,5 +1,4 @@
 ﻿using Zenject;
-using Zenject.Commands;
 using Type = TyphenApi.Type.Submarine;
 
 namespace Submarine
@@ -8,20 +7,25 @@ namespace Submarine
     {
         public override void InstallBindings()
         {
-            Container.Bind<Type.Configuration.Client>().ToSingleInstance(Type.Configuration.Client.Load());
-            Container.Bind<TyphenApi.WebApi.Submarine>().ToSingle();
+            Container.Bind<SignalManager>().AsSingle();
 
-            Container.Bind<UserModel>().ToSingle();
-            Container.Bind<LobbyModel>().ToSingle();
-            Container.Bind<PermanentDataStoreService>().ToSingle();
+            Container.Bind<Type.Configuration.Client>().FromInstance(Type.Configuration.Client.Load()).AsSingle();
+            Container.Bind<TyphenApi.WebApi.Submarine>().AsSingle();
 
-            Container.BindCommand<SceneChangeCommand, SceneNames>().HandleWithSingle<SceneChangeCommand.Handler>();
-            Container.BindCommand<ApplicationStartCommand>().HandleWithSingle<ApplicationStartCommand.Handler>();
-            Container.BindCommand<ApplicationPauseCommand>().HandleWithSingle<ApplicationPauseCommand.Handler>();
-            Container.BindCommand<ApplicationQuitCommand>().HandleWithSingle<ApplicationQuitCommand.Handler>();
+            Container.Bind<UserModel>().AsSingle();
+            Container.Bind<LobbyModel>().AsSingle();
+            Container.Bind<PermanentDataStoreService>().AsSingle();
 
-            Container.Bind<CommonMediator>().ToSingle();
-            Container.Bind<IInitializable>().ToSingle<CommonMediator>();
+            Container.DeclareSignal<SceneChangeCommand>().RequireHandler();
+            Container.BindSignal<SceneNames, SceneChangeCommand>().To<SceneChangeCommand.Handler>(x => x.Execute).AsSingle();
+            Container.DeclareSignal<ApplicationStartCommand>().RequireHandler();
+            Container.BindSignal<ApplicationStartCommand>().To<ApplicationStartCommand.Handler>(x => x.Execute).AsSingle();
+            Container.DeclareSignal<ApplicationPauseCommand>().RequireHandler();
+            Container.BindSignal<ApplicationPauseCommand>().To<ApplicationPauseCommand.Handler>(x => x.Execute).AsSingle();
+            Container.DeclareSignal<ApplicationQuitCommand>().RequireHandler();
+            Container.BindSignal<ApplicationQuitCommand>().To<ApplicationQuitCommand.Handler>(x => x.Execute).AsSingle();
+
+            Container.BindInterfacesAndSelfTo<CommonMediator>().AsSingle();
         }
     }
 }

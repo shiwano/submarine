@@ -14,10 +14,10 @@ namespace Submarine
 
         public void Initialize()
         {
-            startCommand.Execute();
+            startCommand.Fire();
 
-            Observable.OnceApplicationQuit().Subscribe(_ => quitCommand.Execute());
-            Observable.EveryApplicationPause().Subscribe(_ => pauseCommand.Execute());
+            Observable.OnceApplicationQuit().Subscribe(_ => quitCommand.Fire());
+            Observable.EveryApplicationPause().Subscribe(_ => pauseCommand.Fire());
         }
     }
 }

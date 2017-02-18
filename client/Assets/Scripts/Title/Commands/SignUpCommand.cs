@@ -2,13 +2,12 @@
 using System;
 using UniRx;
 using Zenject;
-using Zenject.Commands;
 
 namespace Submarine.Title
 {
-    public class SignUpCommand : Command<string>
+    public class SignUpCommand : Signal<string, SignUpCommand>
     {
-        public class Handler : ICommandHandler<string>
+        public class Handler
         {
             [Inject]
             UserModel user;

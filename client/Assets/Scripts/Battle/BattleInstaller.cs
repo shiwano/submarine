@@ -1,7 +1,6 @@
 ﻿using UnityEngine;
 using System;
 using Zenject;
-using Zenject.Commands;
 using Type = TyphenApi.Type.Submarine;
 
 namespace Submarine.Battle
@@ -21,76 +20,50 @@ namespace Submarine.Battle
 
         public override void InstallBindings()
         {
-            Container.Bind<BattleEvent.ActorCreate>().ToSingle();
-            Container.Bind<BattleEvent.ActorDestroy>().ToSingle();
+            Container.Bind<BattleEvent.ActorCreate>().AsSingle();
+            Container.Bind<BattleEvent.ActorDestroy>().AsSingle();
 
-            Container.Bind<BattleModel>().ToSingle();
-            Container.Bind<BattleService>().ToSingle();
-            Container.Bind<IDisposable>().ToSingle<BattleService>();
+            Container.Bind<BattleModel>().AsSingle();
+            Container.BindInterfacesAndSelfTo<BattleService>().AsSingle();
 
-            Container.BindCommand<InitializeBattleCommand>().HandleWithSingle<InitializeBattleCommand.Handler>();
-            Container.BindCommand<StartBattleCommand>().HandleWithSingle<StartBattleCommand.Handler>();
-            Container.BindCommand<AddBotCommand>().HandleWithSingle<AddBotCommand.Handler>();
-            Container.BindCommand<RemoveBotCommand, long>().HandleWithSingle<RemoveBotCommand.Handler>();
+            Container.DeclareSignal<InitializeBattleCommand>().RequireHandler();
+            Container.BindSignal<InitializeBattleCommand>().To<InitializeBattleCommand.Handler>(x => x.Execute).AsSingle();
+            Container.DeclareSignal<StartBattleCommand>().RequireHandler();
+            Container.BindSignal<StartBattleCommand>().To<StartBattleCommand.Handler>(x => x.Execute).AsSingle();
+            Container.DeclareSignal<AddBotCommand>().RequireHandler();
+            Container.BindSignal<AddBotCommand>().To<AddBotCommand.Handler>(x => x.Execute).AsSingle();
+            Container.DeclareSignal<RemoveBotCommand>().RequireHandler();
+            Container.BindSignal<long, RemoveBotCommand>().To<RemoveBotCommand.Handler>(x => x.Execute).AsSingle();
 
-            Container.Bind<BattleView>().ToSingleInstance(battleView);
-            Container.Bind<BattleMediator>().ToSingle();
-            Container.Bind<IInitializable>().ToSingle<BattleMediator>();
-            Container.Bind<ITickable>().ToSingle<BattleMediator>();
+            Container.Bind<BattleView>().FromInstance(battleView).AsSingle();
+            Container.BindInterfacesAndSelfTo<BattleMediator>().AsSingle();
 
-            Container.Bind<RadarView>().ToSingleInstance(radarView);
-            Container.Bind<RadarMediator>().ToSingle();
-            Container.Bind<IInitializable>().ToSingle<RadarMediator>();
+            Container.Bind<RadarView>().FromInstance(radarView).AsSingle();
+            Container.BindInterfacesAndSelfTo<RadarMediator>().AsSingle();
 
-            Container.Bind<ThirdPersonCamera>().ToSingle();
-            Container.Bind<ITickable>().ToSingle<ThirdPersonCamera>();
+            Container.BindInterfacesAndSelfTo<ThirdPersonCamera>().AsSingle();
 
-            Container.Bind<ActorContainer>().ToSingle();
-            Container.Bind<ITickable>().ToSingle<ActorContainer>();
+            Container.BindInterfacesAndSelfTo<ActorContainer>().AsSingle();
 
-            Container.Bind<RoomView>().ToSingleInstance(roomView);
-            Container.Bind<RoomMediator>().ToSingle();
-            Container.Bind<IInitializable>().ToSingle<RoomMediator>();
+            Container.Bind<RoomView>().FromInstance(roomView).AsSingle();
+            Container.BindInterfacesAndSelfTo<RoomMediator>().AsSingle();
 
-            Container.Bind<ResultView>().ToSingleInstance(resultView);
-            Container.Bind<ResultMediator>().ToSingle();
-            Container.Bind<IInitializable>().ToSingle<ResultMediator>();
+            Container.Bind<ResultView>().FromInstance(resultView).AsSingle();
+            Container.BindInterfacesAndSelfTo<ResultMediator>().AsSingle();
 
-            Container.BindFacadeFactory<Type.Battle.Actor, bool, SubmarineFacade, SubmarineFacade.Factory>(InstallSubmarineFacade);
-            Container.BindFacadeFactory<Type.Battle.Actor, TorpedoFacade, TorpedoFacade.Factory>(InstallTorpedoFacade);
-        }
+            Container.Bind<EquipmentView>().FromInstance(equipmentView).AsSingle();
+            Container.Bind<BattleInputService.IEquipmentInput>().FromInstance(equipmentView).AsSingle();
+            Container.BindInterfacesAndSelfTo<BattleInputService>().AsSingle();
 
-        void InstallSubmarineFacade(DiContainer subContainer, Type.Battle.Actor actor, bool isPlayerSubmarine)
-        {
-            var submarinePrefab = Resources.Load<GameObject>(Constants.SubmarinePrefab);
-            subContainer.Bind<ActorMotor>().ToSingle();
-            subContainer.Bind<SubmarineView>().ToSinglePrefab(submarinePrefab);
-            subContainer.Bind<ActorView>().ToSinglePrefab(submarinePrefab);
-            subContainer.Bind<IDisposable>().ToSinglePrefab(submarinePrefab);
-            subContainer.BindInstance(actor);
+            Container.BindFactory<Type.Battle.Actor, bool, SubmarineFacade, SubmarineFacade.Factory>()
+                .FromSubContainerResolve()
+                .ByNewPrefabResource<SubmarineInstaller>(Constants.SubmarinePrefab)
+                .UnderTransform(transform);
 
-            if (isPlayerSubmarine)
-            {
-                subContainer.Bind<PlayerSubmarineMediator>().ToSingle();
-                subContainer.Bind<IInitializable>().ToSingle<PlayerSubmarineMediator>();
-                subContainer.Bind<ITickable>().ToSingle<PlayerSubmarineMediator>();
-                subContainer.Bind<IDisposable>().ToSingle<PlayerSubmarineMediator>();
-
-                subContainer.Bind<EquipmentView>().ToSingleInstance(equipmentView);
-                subContainer.Bind<BattleInputService.IEquipmentInput>().ToSingleInstance(equipmentView);
-                subContainer.Bind<BattleInputService>().ToSingle();
-                subContainer.Bind<IDisposable>().ToSingle<BattleInputService>();
-            }
-        }
-
-        void InstallTorpedoFacade(DiContainer subContainer, Type.Battle.Actor actor)
-        {
-            var torpedoPrefab = Resources.Load<GameObject>(Constants.TorpedoPrefab);
-            subContainer.Bind<ActorMotor>().ToSingle();
-            subContainer.Bind<TorpedoView>().ToSinglePrefab(torpedoPrefab);
-            subContainer.Bind<ActorView>().ToSinglePrefab(torpedoPrefab);
-            subContainer.Bind<IDisposable>().ToSinglePrefab(torpedoPrefab);
-            subContainer.BindInstance(actor);
+            Container.BindFactory<Type.Battle.Actor, TorpedoFacade, TorpedoFacade.Factory>()
+                .FromSubContainerResolve()
+                .ByNewPrefabResource<TorpedoInstaller>(Constants.TorpedoPrefab)
+                .UnderTransform(transform);
         }
     }
 }

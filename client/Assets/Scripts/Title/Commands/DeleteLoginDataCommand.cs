@@ -1,12 +1,11 @@
 ﻿using UnityEngine;
 using Zenject;
-using Zenject.Commands;
 
 namespace Submarine.Title
 {
-    public class DeleteLoginDataCommand : Command
+    public class DeleteLoginDataCommand : Signal<DeleteLoginDataCommand>
     {
-        public class Handler : ICommandHandler
+        public class Handler
         {
             [Inject]
             PermanentDataStoreService dataStore;

@@ -19,7 +19,7 @@ namespace Submarine.Lobby
 
         void OnJoinIntoRoom()
         {
-            sceneChangeCommand.Execute(SceneNames.Battle);
+            sceneChangeCommand.Fire(SceneNames.Battle);
         }
     }
 }

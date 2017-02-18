@@ -1,11 +1,11 @@
 ﻿using UnityEngine;
-using Zenject.Commands;
+using Zenject;
 
 namespace Submarine
 {
-    public class ApplicationStartCommand : Command
+    public class ApplicationStartCommand : Signal<ApplicationStartCommand>
     {
-        public class Handler : ICommandHandler
+        public class Handler
         {
             public void Execute()
             {
