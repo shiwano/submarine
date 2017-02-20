@@ -15,7 +15,7 @@ namespace Submarine
             effect.transform.SetParent(transform, false);
             var particle = effect.GetComponent<ParticleSystem>();
 
-            Observable.Interval(TimeSpan.FromSeconds(particle.duration))
+            Observable.Interval(TimeSpan.FromSeconds(particle.main.duration))
                 .Take(1)
                 .Subscribe(_ => Destroy(gameObject))
                 .AddTo(this);
