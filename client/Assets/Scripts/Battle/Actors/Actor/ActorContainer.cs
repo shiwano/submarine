@@ -5,7 +5,7 @@ using Type = TyphenApi.Type.Submarine;
 
 namespace Submarine.Battle
 {
-    public class ActorContainer : ITickable
+    public class ActorContainer
     {
         [Inject]
         UserModel userModel;
@@ -15,14 +15,6 @@ namespace Submarine.Battle
         TorpedoFacade.Factory torpedoFactory;
 
         readonly Dictionary<long, ActorFacade> actors = new Dictionary<long, ActorFacade>();
-
-        public void Tick()
-        {
-            foreach (var actor in actors.Values)
-            {
-                actor.Tick();
-            }
-        }
 
         public bool TryGet(long actorId, out ActorFacade actorFacade)
         {
