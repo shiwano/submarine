@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace Submarine.Battle
 {
-    public class RadarView : MonoBehaviour
+    public class RadarView : MonoBehaviour, IView
     {
         [SerializeField]
         GameObject pinger;

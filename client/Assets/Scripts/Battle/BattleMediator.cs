@@ -4,7 +4,7 @@ using Type = TyphenApi.Type.Submarine;
 
 namespace Submarine.Battle
 {
-    public class BattleMediator : IInitializable, ITickable
+    public class BattleMediator : MediatorBase<BattleView>, IInitializable, ITickable
     {
         [Inject]
         BattleEvent.ActorCreate actorCreateEvent;
@@ -12,8 +12,6 @@ namespace Submarine.Battle
         BattleEvent.ActorDestroy actorDestroyEvent;
         [Inject]
         BattleModel battleModel;
-        [Inject]
-        BattleView view;
         [Inject]
         InitializeBattleCommand initializeBattleCommand;
         [Inject]

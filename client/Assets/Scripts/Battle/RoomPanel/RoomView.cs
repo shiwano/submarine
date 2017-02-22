@@ -6,7 +6,7 @@ using Type = TyphenApi.Type.Submarine;
 
 namespace Submarine.Battle
 {
-    public class RoomView : MonoBehaviour
+    public class RoomView : MonoBehaviour, IView
     {
         [SerializeField]
         RectTransform roomMemberGroup;

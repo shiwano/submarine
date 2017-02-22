@@ -7,7 +7,7 @@ using Type = TyphenApi.Type.Submarine;
 
 namespace Submarine.Lobby
 {
-    public class RoomListView : MonoBehaviour
+    public class RoomListView : MonoBehaviour, IView
     {
         [SerializeField]
         RectTransform content;

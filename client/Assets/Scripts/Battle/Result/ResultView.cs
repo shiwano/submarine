@@ -4,7 +4,7 @@ using UniRx;
 
 namespace Submarine.Battle
 {
-    public class ResultView : MonoBehaviour
+    public class ResultView : MonoBehaviour, IView
     {
         [SerializeField]
         GameObject victoryEffect;

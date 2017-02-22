@@ -4,7 +4,7 @@ using UniRx;
 
 namespace Submarine.Title
 {
-    public class SignUpView : MonoBehaviour
+    public class SignUpView : MonoBehaviour, IView
     {
         [SerializeField]
         Button signUpButton;

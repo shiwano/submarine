@@ -4,7 +4,7 @@ using Type = TyphenApi.Type.Submarine;
 
 namespace Submarine.Battle
 {
-    public class RoomMediator : IInitializable
+    public class RoomMediator : MediatorBase<RoomView>, IInitializable
     {
         [Inject]
         BattleModel battleModel;
@@ -16,8 +16,6 @@ namespace Submarine.Battle
         AddBotCommand addBotCommand;
         [Inject]
         RemoveBotCommand removeBotCommand;
-        [Inject]
-        RoomView view;
 
         public void Initialize()
         {

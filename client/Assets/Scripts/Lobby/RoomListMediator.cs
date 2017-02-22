@@ -5,7 +5,7 @@ using Type = TyphenApi.Type.Submarine;
 
 namespace Submarine.Lobby
 {
-    public class RoomListMediator : IInitializable
+    public class RoomListMediator : MediatorBase<RoomListView>, IInitializable
     {
         [Inject]
         LobbyModel lobbyModel;
@@ -15,8 +15,6 @@ namespace Submarine.Lobby
         GetRoomsCommand getRoomsCommand;
         [Inject]
         JoinIntoRoomCommand joinIntoRoomCommand;
-        [Inject]
-        RoomListView view;
 
         public void Initialize()
         {

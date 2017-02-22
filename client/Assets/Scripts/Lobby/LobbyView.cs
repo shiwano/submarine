@@ -2,7 +2,7 @@
 
 namespace Submarine.Lobby
 {
-    public class LobbyView : MonoBehaviour
+    public class LobbyView : MonoBehaviour, IView
     {
     }
 }

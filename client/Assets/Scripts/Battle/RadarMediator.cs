@@ -3,14 +3,12 @@ using Zenject;
 
 namespace Submarine.Battle
 {
-    public class RadarMediator : IInitializable
+    public class RadarMediator : MediatorBase<RadarView>, IInitializable
     {
         [Inject]
         BattleEvent.ActorCreate actorCreateEvent;
         [Inject]
         BattleEvent.ActorDestroy actorDestroyEvent;
-        [Inject]
-        RadarView view;
 
         public void Initialize()
         {

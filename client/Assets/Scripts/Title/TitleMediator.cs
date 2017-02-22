@@ -3,7 +3,7 @@ using Zenject;
 
 namespace Submarine.Title
 {
-    public class TitleMediator : IInitializable
+    public class TitleMediator : MediatorBase<TitleView>, IInitializable
     {
         [Inject]
         TitleEvent.SignUpStart signUpStartEvent;
@@ -17,8 +17,6 @@ namespace Submarine.Title
         SceneChangeCommand sceneChangeCommand;
         [Inject]
         DeleteLoginDataCommand deleteLoginDataCommand;
-        [Inject]
-        TitleView view;
 
         public void Initialize()
         {

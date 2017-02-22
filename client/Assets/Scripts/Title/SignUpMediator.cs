@@ -3,14 +3,12 @@ using Zenject;
 
 namespace Submarine.Title
 {
-    public class SignUpMediator : IInitializable
+    public class SignUpMediator : MediatorBase<SignUpView>, IInitializable
     {
         [Inject]
         TitleEvent.SignUpStart signUpStartEvent;
         [Inject]
         SignUpCommand signUpCommand;
-        [Inject]
-        SignUpView view;
 
         public void Initialize()
         {

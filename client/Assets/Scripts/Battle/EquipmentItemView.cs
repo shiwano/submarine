@@ -7,7 +7,7 @@ using Type = TyphenApi.Type.Submarine;
 namespace Submarine.Battle
 {
     [RequireComponent(typeof(Button))]
-    public class EquipmentItemView : MonoBehaviour
+    public class EquipmentItemView : MonoBehaviour, IView
     {
         [SerializeField]
         Text cooldownText;

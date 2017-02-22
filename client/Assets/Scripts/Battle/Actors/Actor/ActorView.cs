@@ -4,7 +4,7 @@ using DG.Tweening;
 
 namespace Submarine.Battle
 {
-    public abstract class ActorView : MonoBehaviour, IDisposable
+    public abstract class ActorView : MonoBehaviour, IView, IDisposable
     {
         const float PositionY = 30f;
         const float RotationTweenDuration = 1.5f;

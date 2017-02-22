@@ -3,14 +3,12 @@ using Zenject;
 
 namespace Submarine.Lobby
 {
-    public class LobbyMediator : IInitializable
+    public class LobbyMediator : MediatorBase<LobbyView>, IInitializable
     {
         [Inject]
         LobbyModel lobbyModel;
         [Inject]
         SceneChangeCommand sceneChangeCommand;
-        [Inject]
-        LobbyView view;
 
         public void Initialize()
         {

@@ -23,11 +23,8 @@ namespace Submarine.Title
             Container.DeclareSignal<DeleteLoginDataCommand>().RequireHandler();
             Container.BindSignal<DeleteLoginDataCommand>().To<DeleteLoginDataCommand.Handler>(x => x.Execute).AsSingle();
 
-            Container.BindInstance(titleView);
-            Container.BindInterfacesAndSelfTo<TitleMediator>().AsSingle();
-
-            Container.BindInstance(signUpView);
-            Container.BindInterfacesAndSelfTo<SignUpMediator>().AsSingle();
+            Container.BindMediatorAndViewAsSingle<TitleMediator, TitleView>(titleView);
+            Container.BindMediatorAndViewAsSingle<SignUpMediator, SignUpView>(signUpView);
         }
     }
 }

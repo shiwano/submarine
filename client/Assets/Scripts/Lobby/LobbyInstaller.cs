@@ -22,11 +22,8 @@ namespace Submarine.Lobby
             Container.DeclareSignal<JoinIntoRoomCommand>().RequireHandler();
             Container.BindSignal<Type.Room, JoinIntoRoomCommand>().To<JoinIntoRoomCommand.Handler>(x => x.Execute).AsSingle();
 
-            Container.BindInstance(lobbyView);
-            Container.BindInterfacesAndSelfTo<LobbyMediator>().AsSingle();
-
-            Container.BindInstance(roomListView);
-            Container.BindInterfacesAndSelfTo<RoomListMediator>().AsSingle();
+            Container.BindMediatorAndViewAsSingle<LobbyMediator, LobbyView>(lobbyView);
+            Container.BindMediatorAndViewAsSingle<RoomListMediator, RoomListView>(roomListView);
         }
     }
 }

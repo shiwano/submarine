@@ -35,21 +35,13 @@ namespace Submarine.Battle
             Container.DeclareSignal<RemoveBotCommand>().RequireHandler();
             Container.BindSignal<long, RemoveBotCommand>().To<RemoveBotCommand.Handler>(x => x.Execute).AsSingle();
 
-            Container.Bind<BattleView>().FromInstance(battleView).AsSingle();
-            Container.BindInterfacesAndSelfTo<BattleMediator>().AsSingle();
-
-            Container.Bind<RadarView>().FromInstance(radarView).AsSingle();
-            Container.BindInterfacesAndSelfTo<RadarMediator>().AsSingle();
+            Container.BindMediatorAndViewAsSingle<BattleMediator, BattleView>(battleView);
+            Container.BindMediatorAndViewAsSingle<RadarMediator, RadarView>(radarView);
+            Container.BindMediatorAndViewAsSingle<RoomMediator, RoomView>(roomView);
+            Container.BindMediatorAndViewAsSingle<ResultMediator, ResultView>(resultView);
 
             Container.BindInterfacesAndSelfTo<ThirdPersonCamera>().AsSingle();
-
             Container.BindInterfacesAndSelfTo<ActorContainer>().AsSingle();
-
-            Container.Bind<RoomView>().FromInstance(roomView).AsSingle();
-            Container.BindInterfacesAndSelfTo<RoomMediator>().AsSingle();
-
-            Container.Bind<ResultView>().FromInstance(resultView).AsSingle();
-            Container.BindInterfacesAndSelfTo<ResultMediator>().AsSingle();
 
             Container.Bind<EquipmentView>().FromInstance(equipmentView).AsSingle();
             Container.Bind<BattleInputService.IEquipmentInput>().FromInstance(equipmentView).AsSingle();

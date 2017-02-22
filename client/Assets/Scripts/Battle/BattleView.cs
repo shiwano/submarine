@@ -1,11 +1,10 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 using System;
-using System.Collections.Generic;
 
 namespace Submarine.Battle
 {
-    public class BattleView : MonoBehaviour
+    public class BattleView : MonoBehaviour, IView
     {
         [SerializeField]
         Text battleLogText;

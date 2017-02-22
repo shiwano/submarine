@@ -7,7 +7,7 @@ using Type = TyphenApi.Type.Submarine;
 
 namespace Submarine.Battle
 {
-    public class EquipmentView : MonoBehaviour, BattleInputService.IEquipmentInput
+    public class EquipmentView : MonoBehaviour, IView, BattleInputService.IEquipmentInput
     {
         [SerializeField]
         EquipmentItemView decoy;

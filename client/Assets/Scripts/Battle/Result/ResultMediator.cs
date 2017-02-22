@@ -4,14 +4,12 @@ using Type = TyphenApi.Type.Submarine;
 
 namespace Submarine.Battle
 {
-    public class ResultMediator : IInitializable
+    public class ResultMediator : MediatorBase<ResultView>, IInitializable
     {
         [Inject]
         UserModel userModel;
         [Inject]
         BattleModel battleModel;
-        [Inject]
-        ResultView view;
         [Inject]
         SceneChangeCommand sceneChangeCommand;
 

@@ -5,7 +5,7 @@ using Type = TyphenApi.Type.Submarine;
 
 namespace Submarine.Battle
 {
-    public class RoomMemberView : MonoBehaviour
+    public class RoomMemberView : MonoBehaviour, IView
     {
         [SerializeField]
         Text nameText;
