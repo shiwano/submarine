@@ -14,7 +14,7 @@ namespace Submarine.Battle
         Finish,
     }
 
-    public class BattleModel
+    public class BattleModel : IClock
     {
         [Inject]
         UserModel userModel;

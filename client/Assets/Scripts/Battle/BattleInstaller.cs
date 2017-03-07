@@ -23,7 +23,7 @@ namespace Submarine.Battle
             Container.Bind<BattleEvent.ActorCreate>().AsSingle();
             Container.Bind<BattleEvent.ActorDestroy>().AsSingle();
 
-            Container.Bind<BattleModel>().AsSingle();
+            Container.BindInterfacesAndSelfTo<BattleModel>().AsSingle();
             Container.BindInterfacesAndSelfTo<BattleService>().AsSingle();
 
             Container.DeclareSignal<InitializeBattleCommand>().RequireHandler();
