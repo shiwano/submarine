@@ -13,6 +13,8 @@ namespace Submarine.Battle
         SubmarineFacade.Factory submarineFactory;
         [Inject]
         TorpedoFacade.Factory torpedoFactory;
+        [Inject]
+        WatcherFacade.Factory watcherFactory;
 
         readonly Dictionary<long, ActorFacade> actors = new Dictionary<long, ActorFacade>();
 
@@ -29,6 +31,8 @@ namespace Submarine.Battle
                     return CreateSubmarine(actor);
                 case Type.Battle.ActorType.Torpedo:
                     return CreateTorpedo(actor);
+                case Type.Battle.ActorType.Watcher:
+                    return CreateWatcher(actor);
                 default:
                     throw new NotImplementedException("Unsupported actor type: " + actor.Type);
             }
@@ -58,6 +62,13 @@ namespace Submarine.Battle
             var torpedo = torpedoFactory.Create(actor);
             actors.Add(actor.Id, torpedo);
             return torpedo;
+        }
+
+        WatcherFacade CreateWatcher(Type.Battle.Actor actor)
+        {
+            var watcher = watcherFactory.Create(actor);
+            actors.Add(actor.Id, watcher);
+            return watcher;
         }
     }
 }

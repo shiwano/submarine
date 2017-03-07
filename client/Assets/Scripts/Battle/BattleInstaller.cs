@@ -56,6 +56,11 @@ namespace Submarine.Battle
                 .FromSubContainerResolve()
                 .ByNewPrefabResource<TorpedoInstaller>(Constants.TorpedoPrefab)
                 .UnderTransform(transform);
+
+            Container.BindFactory<Type.Battle.Actor, WatcherFacade, WatcherFacade.Factory>()
+                .FromSubContainerResolve()
+                .ByNewPrefabResource<WatcherInstaller>(Constants.WatcherPrefab)
+                .UnderTransform(transform);
         }
     }
 }
