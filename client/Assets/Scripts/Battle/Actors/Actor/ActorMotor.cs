@@ -50,7 +50,7 @@ namespace Submarine.Battle
             }
         }
 
-        readonly BattleModel battleModel;
+        readonly IClock clock;
 
         Type.Battle.Movement movement;
         Accelerator accelerator;
@@ -60,9 +60,9 @@ namespace Submarine.Battle
         Vector2 convergenceStartPosition;
         Vector2 convergenceFinishPosition;
 
-        public ActorMotor(BattleModel battleModel, Type.Battle.Actor actor)
+        public ActorMotor(IClock clock, Type.Battle.Actor actor)
         {
-            this.battleModel = battleModel;
+            this.clock = clock;
             SetMovement(actor.Movement);
         }
 
@@ -74,7 +74,7 @@ namespace Submarine.Battle
             accelerator = movement.Accelerator == null ?
                 null : new Accelerator(movement.Accelerator, movement.MovedAtAsDateTime);
 
-            convergenceFinishesAt = battleModel.Now + convergenceTime;
+            convergenceFinishesAt = clock.Now + convergenceTime;
             convergenceFinishPosition = GetPosition(convergenceFinishesAt);
         }
 
@@ -85,21 +85,21 @@ namespace Submarine.Battle
 
         public Vector2 GetCurrentPosition()
         {
-            return battleModel.Now < convergenceFinishesAt ?
+            return clock.Now < convergenceFinishesAt ?
                 GetConvergencePosition() :
                 GetPosition();
         }
 
         Vector2 GetConvergencePosition()
         {
-            var t = (convergenceFinishesAt - battleModel.Now).TotalSeconds;
+            var t = (convergenceFinishesAt - clock.Now).TotalSeconds;
             var rate = 1f - (float)(t / convergenceTime.TotalSeconds);
             return (convergenceFinishPosition - convergenceStartPosition) * rate + convergenceStartPosition;
         }
 
         Vector2 GetPosition()
         {
-            return GetPosition(battleModel.Now);
+            return GetPosition(clock.Now);
         }
 
         Vector2 GetPosition(DateTime now)
