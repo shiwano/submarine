@@ -9,7 +9,7 @@ namespace Submarine.Battle
         const float PositionY = 30f;
         const float RotationTweenDuration = 1.5f;
 
-        public abstract void ChangeToEnemyColor();
+        public virtual void ChangeToEnemyColor() { }
 
         public Vector2 ActorPosition
         {

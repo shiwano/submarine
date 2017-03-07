@@ -10,8 +10,6 @@ namespace Submarine.Battle
         [SerializeField]
         GameObject explosionEffectPrefab;
 
-        public override void ChangeToEnemyColor() { }
-
         public override void Dispose()
         {
             base.Dispose();
