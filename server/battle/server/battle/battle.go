@@ -211,6 +211,8 @@ func (b *Battle) onInputReceive(input *gatewayInput) {
 		s.Event().EmitTorpedoRequestEvent(m)
 	case *battleAPI.PingerRequestObject:
 		s.Event().EmitPingerRequestEvent(m)
+	case *battleAPI.WatcherRequestObject:
+		s.Event().EmitWatcherRequestEvent(m)
 	}
 }
 

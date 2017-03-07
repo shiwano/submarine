@@ -42,11 +42,12 @@ func newSession(info *battleAPI.RoomMember, roomID int64) *session {
 	s.api.Battle.StartRequestHandler = s.onStartRequestReceive
 	s.api.Battle.AddBotRequestHandler = s.onAddBotRequestReceive
 	s.api.Battle.RemoveBotRequestHandler = s.onRemoveBotRequestReceive
-	s.api.Battle.AccelerationRequestHandler = s.onAccelerationRequestReceive
-	s.api.Battle.BrakeRequestHandler = s.onBrakeRequestReceive
-	s.api.Battle.TurnRequestHandler = s.onTurnRequestReceive
-	s.api.Battle.TorpedoRequestHandler = s.onTorpedoRequestReceive
-	s.api.Battle.PingerRequestHandler = s.onPingerRequestReceive
+	s.api.Battle.AccelerationRequestHandler = func(m *battleAPI.AccelerationRequestObject) { s.onBattleMessageReceive(m) }
+	s.api.Battle.BrakeRequestHandler = func(m *battleAPI.BrakeRequestObject) { s.onBattleMessageReceive(m) }
+	s.api.Battle.TurnRequestHandler = func(m *battleAPI.TurnRequestObject) { s.onBattleMessageReceive(m) }
+	s.api.Battle.TorpedoRequestHandler = func(m *battleAPI.TorpedoRequestObject) { s.onBattleMessageReceive(m) }
+	s.api.Battle.PingerRequestHandler = func(m *battleAPI.PingerRequestObject) { s.onBattleMessageReceive(m) }
+	s.api.Battle.WatcherRequestHandler = func(m *battleAPI.WatcherRequestObject) { s.onBattleMessageReceive(m) }
 	return s
 }
 
@@ -102,26 +103,6 @@ func (s *session) onAddBotRequestReceive(m *battleAPI.AddBotRequestObject) {
 
 func (s *session) onRemoveBotRequestReceive(m *battleAPI.RemoveBotRequestObject) {
 	s.room.removeBotCh <- m.BotId
-}
-
-func (s *session) onAccelerationRequestReceive(m *battleAPI.AccelerationRequestObject) {
-	s.onBattleMessageReceive(m)
-}
-
-func (s *session) onBrakeRequestReceive(m *battleAPI.BrakeRequestObject) {
-	s.onBattleMessageReceive(m)
-}
-
-func (s *session) onTurnRequestReceive(m *battleAPI.TurnRequestObject) {
-	s.onBattleMessageReceive(m)
-}
-
-func (s *session) onPingerRequestReceive(m *battleAPI.PingerRequestObject) {
-	s.onBattleMessageReceive(m)
-}
-
-func (s *session) onTorpedoRequestReceive(m *battleAPI.TorpedoRequestObject) {
-	s.onBattleMessageReceive(m)
 }
 
 func (s *session) onBattleMessageReceive(m typhenapi.Type) {
