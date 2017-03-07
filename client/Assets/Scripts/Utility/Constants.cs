@@ -10,7 +10,7 @@ namespace Submarine
         public const string SubmarinePrefab = "Battle/Submarines/Submarine";
         public const string TorpedoPrefab = "Battle/Torpedos/Torpedo";
         public const string DecoyPrefab = "Battle/Decoys/Decoy";
-        public const string LookoutPrefab = "Battle/Lookouts/Lookout";
+        public const string WatcherPrefab = "Battle/Watchers/Watcher";
         public const string ExplosionEffectPrefab = "Battle/Effects/Explosion";
 
         public static float Fps { get { return 1f / Time.deltaTime; } }
