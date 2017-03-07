@@ -122,7 +122,8 @@ namespace Submarine.Battle
 
         void OnWatcherUse()
         {
-            Logger.Log("Submarine shoots a watcher");
+            Logger.Log("Submarine uses a watcher");
+            battleService.Api.SendWatcherRequest();
         }
 
         void OnPingerUse()

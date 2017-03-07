@@ -33,6 +33,7 @@ namespace Submarine.Battle
         {
             RefreshTorpedos(now, equipment);
             pinger.Refresh(now, equipment.Pinger);
+            watcher.Refresh(now, equipment.Watcher);
         }
 
         void Awake()
@@ -42,7 +43,7 @@ namespace Submarine.Battle
 
         void RefreshTorpedos(DateTime now, Type.Battle.Equipment equipment)
         {
-            RefreshTorpedoResourceImagesIfNeeded(equipment);
+            ResetTorpedoResourceImagesIfNeeded(equipment);
 
             equipment.Torpedos.ForEach((torpedo, i) =>
             {
@@ -52,7 +53,7 @@ namespace Submarine.Battle
             });
         }
 
-        void RefreshTorpedoResourceImagesIfNeeded(Type.Battle.Equipment equipment)
+        void ResetTorpedoResourceImagesIfNeeded(Type.Battle.Equipment equipment)
         {
             if (torpedoResourceImages.Count == equipment.Torpedos.Count) return;
 
