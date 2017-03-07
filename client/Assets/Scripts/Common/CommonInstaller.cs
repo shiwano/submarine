@@ -18,12 +18,6 @@ namespace Submarine
 
             Container.DeclareSignal<SceneChangeCommand>().RequireHandler();
             Container.BindSignal<SceneNames, SceneChangeCommand>().To<SceneChangeCommand.Handler>(x => x.Execute).AsSingle();
-            Container.DeclareSignal<ApplicationStartCommand>().RequireHandler();
-            Container.BindSignal<ApplicationStartCommand>().To<ApplicationStartCommand.Handler>(x => x.Execute).AsSingle();
-            Container.DeclareSignal<ApplicationPauseCommand>().RequireHandler();
-            Container.BindSignal<ApplicationPauseCommand>().To<ApplicationPauseCommand.Handler>(x => x.Execute).AsSingle();
-            Container.DeclareSignal<ApplicationQuitCommand>().RequireHandler();
-            Container.BindSignal<ApplicationQuitCommand>().To<ApplicationQuitCommand.Handler>(x => x.Execute).AsSingle();
 
             Container.BindInterfacesAndSelfTo<CommonMediator>().AsSingle();
         }
