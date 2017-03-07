@@ -16,7 +16,7 @@ namespace Submarine.Battle
         [SerializeField]
         GameObject torpedoPinPrefab;
         [SerializeField]
-        GameObject lookoutPinPrefab;
+        GameObject watcherPinPrefab;
         [SerializeField]
         GameObject decoyPinPrefab;
         [SerializeField]
@@ -39,6 +39,9 @@ namespace Submarine.Battle
                     break;
                 case Type.Battle.ActorType.Torpedo:
                     pinPrefab = torpedoPinPrefab;
+                    break;
+                case Type.Battle.ActorType.Watcher:
+                    pinPrefab = watcherPinPrefab;
                     break;
                 default:
                     throw new NotImplementedException("Unsupported actor type: " + actorFacade.Actor.Type);
