@@ -2156,7 +2156,7 @@ GameObject:
   - component: {fileID: 1262540244}
   - component: {fileID: 1262540245}
   m_Layer: 0
-  m_Name: CompositionRoot
+  m_Name: SceneContext
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
