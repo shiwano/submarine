@@ -1,7 +1,7 @@
 module ResponseTestHelpers
   module Integration
     def parsed_response
-      @parsed_response ||= Hashie::Mash.new(JSON.parse(response.body, :symbolize_names => true))
+      @parsed_response ||= Hashie::Mash.new(response.parsed_body)
     end
   end
 end
