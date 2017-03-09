@@ -115,6 +115,7 @@ GEM
     mime-types-data (3.2016.0521)
     mini_portile2 (2.1.0)
     minitest (5.9.0)
+    msgpack (1.1.0)
     mysql2 (0.4.4)
     nenv (0.3.0)
     nio4r (1.2.1)
@@ -241,6 +242,7 @@ DEPENDENCIES
   hashie
   hirb
   hirb-unicode
+  msgpack
   mysql2
   pry-rails
   rails (= 5.0.0)
