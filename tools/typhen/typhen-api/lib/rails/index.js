@@ -35,8 +35,8 @@ module.exports = function(typhen, options, helpers) {
     generate: function(g, types, modules, targetModule) {
       fs.removeSync(path.join(g.outputDirectory, 'lib/typhen_api'));
 
-      g.generateUnlessExist('lib/rails/templates/config/initializer.hbs', 'config/initializers/typhen_api.rb');
       g.generateUnlessExist('lib/rails/templates/controller/respondable.hbs', 'app/controllers/concerns/typhen_api_respondable.rb');
+      g.generate('lib/rails/templates/config/initializer.hbs', 'config/initializers/typhen_api.rb');
       g.generate('lib/rails/templates/typhen_api.hbs', 'lib/typhen_api/typhen_api.rb');
       g.generate('lib/rails/templates/controller.hbs', 'lib/typhen_api/typhen_api/controller.rb');
       g.generate('lib/rails/templates/model.hbs', 'lib/typhen_api/typhen_api/model.rb');
@@ -48,7 +48,7 @@ module.exports = function(typhen, options, helpers) {
       g.generate('lib/rails/templates/routes.hbs', 'lib/typhen_api/typhen_api/routes.rb', functions);
 
       if (options.spec) {
-        g.generateUnlessExist('lib/rails/templates/spec/support.hbs', 'spec/support/typhen_api.rb');
+        g.generate('lib/rails/templates/spec/support.hbs', 'spec/support/typhen_api.rb');
         g.generate('lib/rails/templates/spec/routing.hbs', 'spec/routing/generated_routing_spec.rb', functions);
       }
 
