@@ -9,7 +9,7 @@ module TyphenApiTestHelpers
   module Integration
     def post(path, options=nil)
       options ||= {}
-      options[:as] ||= :msgpack
+      options[:as] ||= TyphenApiRespondable::RENDER_FORMAT
       super(path, options)
     end
   end
