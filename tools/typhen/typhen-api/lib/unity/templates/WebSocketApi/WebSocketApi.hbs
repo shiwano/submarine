@@ -60,7 +60,7 @@ namespace TyphenApi.WebSocketApi{{#if namespace}}.Parts.{{upperCamelCase namespa
         }
         {{/each}}
 
-        public TyphenApi.TypeBase DispatchMessageEvent(int messageType, byte[] messageData)
+        public TyphenApi.IType DispatchMessageEvent(int messageType, byte[] messageData)
         {
             {{#if variables}}
             switch ((MessageType)messageType)
@@ -83,7 +83,7 @@ namespace TyphenApi.WebSocketApi{{#if namespace}}.Parts.{{upperCamelCase namespa
 
             {{#each modules}}
             {{#if @first}}
-            TyphenApi.TypeBase message;
+            TyphenApi.IType message;
             {{/if}}
 
             {{#if variables}}

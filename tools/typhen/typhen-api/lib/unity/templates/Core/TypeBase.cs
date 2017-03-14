@@ -4,32 +4,53 @@ using System.Text;
 
 namespace TyphenApi
 {
-    public abstract class TypeBase
+    public abstract class TypeBase : IType
     {
         protected static readonly JSONSerializer jsonSerializer = new JSONSerializer();
+        protected static readonly MessagePackSerializer messagePackSerializer = new MessagePackSerializer();
         protected static readonly QueryStringSerializer queryStringSerializer = new QueryStringSerializer();
 
+        public abstract byte[] Serialize(ISerializer serializer);
+        public abstract string ToJSON();
+        public abstract byte[] ToMessagePack();
+        public abstract string ToQueryString();
+    }
+
+    public abstract class TypeBase<T> : TypeBase where T : TypeBase, new()
+    {
         public override string ToString()
         {
             return ToJSON();
         }
 
-        public string ToJSON()
+        public override byte[] Serialize(ISerializer serializer)
+        {
+            return serializer.Serialize(this as T);
+        }
+
+        public override string ToJSON()
         {
             return Encoding.UTF8.GetString(jsonSerializer.Serialize(this));
         }
 
-        public string ToQueryString()
+        public override byte[] ToMessagePack()
+        {
+            return messagePackSerializer.Serialize(this as T);
+        }
+
+        public override string ToQueryString()
         {
             return Encoding.UTF8.GetString(queryStringSerializer.Serialize(this));
         }
-    }
 
-    public abstract class TypeBase<T> : TypeBase where T : new()
-    {
         public static T FromJSON(string text)
         {
             return jsonSerializer.Deserialize<T>(Encoding.UTF8.GetBytes(text));
+        }
+
+        public static T FromMessagePack(byte[] data)
+        {
+            return messagePackSerializer.Deserialize<T>(data);
         }
     }
 }

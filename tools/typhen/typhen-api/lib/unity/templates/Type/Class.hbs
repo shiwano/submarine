@@ -4,6 +4,7 @@ using System.Collections.Generic;
 
 namespace TyphenApi.Type{{#if namespace}}.{{upperCamelCase namespace}}{{/if}}
 {
+    [MessagePack.MessagePackObject]
     [Newtonsoft.Json.JsonObject(Newtonsoft.Json.MemberSerialization.OptIn)]
     public partial class {{{upperCamelCase name}}} : {{#if baseTypes}}{{{typeName baseTypes.[0]}}}{{else}}TyphenApi.TypeBase<{{{upperCamelCase name}}}>{{/if}}{{#if typeParameters}}{{{typeConstraint typeParameters}}}{{/if}}
     {
@@ -12,6 +13,7 @@ namespace TyphenApi.Type{{#if namespace}}.{{upperCamelCase namespace}}{{/if}}
         /// <summary>{{comment}}</summary>
         {{/if}}
         [TyphenApi.QueryStringProperty("{{serializablePropertyName this}}", {{isOptional}})]
+        [MessagePack.Key("{{serializablePropertyName this}}")]
         [Newtonsoft.Json.JsonProperty("{{serializablePropertyName this}}")]
         {{#unless isOptional}}
         [Newtonsoft.Json.JsonRequired]

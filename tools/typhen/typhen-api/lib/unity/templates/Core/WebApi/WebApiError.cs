@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace TyphenApi
 {
-    public class WebApiError<T> : SystemException where T : TypeBase
+    public class WebApiError<T> : SystemException where T : class, IType, new()
     {
         public Dictionary<string, string> Headers { get; private set; }
 

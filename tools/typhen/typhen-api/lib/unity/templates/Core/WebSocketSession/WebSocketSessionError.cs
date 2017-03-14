@@ -4,7 +4,7 @@ using System;
 
 namespace TyphenApi
 {
-    public class WebSocketSessionError<T> : SystemException where T : TypeBase
+    public class WebSocketSessionError<T> : SystemException where T : IType, new()
     {
         public T Error { get; private set; }
         public Exception RawError { get; private set; }

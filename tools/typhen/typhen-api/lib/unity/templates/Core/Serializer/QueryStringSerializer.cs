@@ -23,7 +23,7 @@ namespace TyphenApi
 
     public class QueryStringSerializer : ISerializer
     {
-        public byte[] Serialize(object obj)
+        public byte[] Serialize<T>(T obj)
         {
             var texts = new List<string>();
 

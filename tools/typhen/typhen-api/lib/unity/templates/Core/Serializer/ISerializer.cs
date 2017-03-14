@@ -4,6 +4,6 @@ namespace TyphenApi
 {
     public interface ISerializer
     {
-        byte[] Serialize(object type);
+        byte[] Serialize<T>(T obj);
     }
 }

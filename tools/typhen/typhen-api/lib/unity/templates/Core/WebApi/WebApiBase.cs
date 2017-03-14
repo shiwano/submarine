@@ -4,7 +4,7 @@ using System;
 
 namespace TyphenApi
 {
-    public interface IWebApi<ErrorT> where ErrorT : TypeBase, new()
+    public interface IWebApi<ErrorT> where ErrorT : class, IType, new()
     {
         IWebApiRequestSender RequestSender { get; }
         ISerializer RequestSerializer { get; }
@@ -15,7 +15,7 @@ namespace TyphenApi
         void OnRequestSuccess(IWebApiRequest request, IWebApiResponse response);
     }
 
-    public abstract class WebApiBase<ErrorT> : IWebApi<ErrorT> where ErrorT : TypeBase, new()
+    public abstract class WebApiBase<ErrorT> : IWebApi<ErrorT> where ErrorT : class, IType, new()
     {
         public Uri BaseUri { get; private set; }
 

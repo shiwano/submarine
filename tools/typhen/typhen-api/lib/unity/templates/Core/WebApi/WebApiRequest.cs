@@ -20,7 +20,7 @@ namespace TyphenApi
         HttpMethod Method { get; set; }
         Dictionary<string, string> Headers { get; set; }
         bool NoAuthenticationRequired { get; set; }
-        TypeBase Body { get; }
+        IType Body { get; }
         byte[] BodyBytes { get; }
         bool IsSending { get; }
 
@@ -28,8 +28,8 @@ namespace TyphenApi
     }
 
     public partial class WebApiRequest<ResponseT, ErrorT> : IWebApiRequest
-        where ResponseT : TypeBase, new()
-        where ErrorT : TypeBase, new()
+        where ResponseT : IType, new()
+        where ErrorT : class, IType, new()
     {
         readonly IWebApi<ErrorT> api;
         IEnumerator sendingRoutine;
@@ -38,8 +38,8 @@ namespace TyphenApi
         public HttpMethod Method { get; set; }
         public Dictionary<string, string> Headers { get; set; }
         public bool NoAuthenticationRequired { get; set; }
-        public TypeBase Body { get; set; }
-        public byte[] BodyBytes { get { return api.RequestSerializer.Serialize(Body); } }
+        public IType Body { get; set; }
+        public byte[] BodyBytes { get { return Body.Serialize(api.RequestSerializer); } }
         public bool IsSending { get { return sendingRoutine != null; } }
 
         public WebApiResponse<ResponseT> Response { get; private set; }

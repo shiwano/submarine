@@ -7,8 +7,8 @@ using System.Collections;
 namespace TyphenApi
 {
     public partial class WebApiRequest<ResponseT, ErrorT>
-        where ResponseT : TypeBase, new()
-        where ErrorT : TypeBase, new()
+        where ResponseT : IType, new()
+        where ErrorT : class, IType, new()
     {
         public Coroutine Send(Func<IEnumerator, Coroutine> startCorotineFunc,
             Action<WebApiResponse<ResponseT>> onSuccess,

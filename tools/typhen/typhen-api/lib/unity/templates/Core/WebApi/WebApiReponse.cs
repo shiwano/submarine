@@ -7,13 +7,13 @@ namespace TyphenApi
     public interface IWebApiResponse
     {
         Dictionary<string,string> Headers { get; }
-        TypeBase Body { get; }
+        IType Body { get; }
     }
 
-    public class WebApiResponse<T> : IWebApiResponse where T : TypeBase
+    public class WebApiResponse<T> : IWebApiResponse where T : IType
     {
         public Dictionary<string, string> Headers { get; private set; }
-        public TypeBase Body { get { return Data; } }
+        public IType Body { get { return Data; } }
 
         public T Data { get; private set; }
 

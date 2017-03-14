@@ -8,7 +8,7 @@ namespace TyphenApi
 {
     public class JSONSerializer : ISerializer, IDeserializer
     {
-        public byte[] Serialize(object obj)
+        public byte[] Serialize<T>(T obj)
         {
             try
             {
