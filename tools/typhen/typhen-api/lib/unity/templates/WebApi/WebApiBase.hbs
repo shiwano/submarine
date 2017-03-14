@@ -23,17 +23,18 @@ namespace TyphenApi.WebApi.{{#if namespace}}Parts.{{upperCamelCase namespace}}{{
         }
 
         {{#each functions}}
+        [Newtonsoft.Json.JsonObject(Newtonsoft.Json.MemberSerialization.OptIn)]
         class {{upperCamelCase name}}RequestBody : TyphenApi.TypeBase<{{upperCamelCase name}}RequestBody>
         {
             {{#each callSignatures.0.parameters}}
             {{#if comment}}
             /// <summary>{{comment}}</summary>
             {{/if}}
-            {{#if type.isArray}}
-            protected static readonly SerializationInfoForInfo<{{upperCamelCase ../name}}RequestBody, {{{typeName type.type}}}> {{lowerCamelCase name}} = new SerializationInfoForList<{{upperCamelCase ../name}}RequestBody, {{{typeName type.type}}}>("{{serializablePropertyName this}}", {{isOptional}}, (x) => x.{{upperCamelCase name}}, (x, v) => x.{{upperCamelCase name}} = v);
-            {{else}}
-            protected static readonly SerializationInfo<{{upperCamelCase ../name}}RequestBody, {{{typeName type}}}{{{nullableToken type isOptional}}}> {{lowerCamelCase name}} = new SerializationInfo<{{upperCamelCase ../name}}RequestBody, {{{typeName type}}}{{{nullableToken type isOptional}}}>("{{serializablePropertyName this}}", {{isOptional}}, (x) => x.{{upperCamelCase name}}, (x, v) => x.{{upperCamelCase name}} = v);
-            {{/if}}
+            [TyphenApi.QueryStringProperty("{{serializablePropertyName this}}", {{isOptional}})]
+            [Newtonsoft.Json.JsonProperty("{{serializablePropertyName this}}")]
+            {{#unless isOptional}}
+            [Newtonsoft.Json.JsonRequired]
+            {{/unless}}
             public {{{typeName type}}}{{{nullableToken type isOptional}}} {{upperCamelCase name}} { get; set; }
             {{/each}}
         }

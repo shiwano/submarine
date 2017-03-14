@@ -112,18 +112,12 @@ module.exports = function(typhen, options, helpers) {
       });
 
       if (!options.excludeUnityFiles) {
-        g.generate('lib/unity/templates/Unity/WebApiRequestSenderWWW.cs', 'TyphenApi/Generated/Core/Unity/WebApiRequestSenderWWW.cs');
         g.generate('lib/unity/templates/Unity/WebApiRequestSenderUnity.cs', 'TyphenApi/Generated/Core/Unity/WebApiRequestSenderUnity.cs');
         g.generate('lib/unity/templates/Unity/WebApiRequest.Unity.cs', 'TyphenApi/Generated/Core/Unity/WebApiRequest.Unity.cs');
-        g.generate('lib/unity/templates/Unity/FormDataSerializer.cs', 'TyphenApi/Generated/Core/Unity/FormDataSerializer.cs');
 
         if (options.includeUniRxFiles) {
           g.generate('lib/unity/templates/Unity/WebApiRequest.UniRx.cs', 'TyphenApi/Generated/Core/Unity/WebApiRequest.UniRx.cs');
         }
-      }
-
-      if (!options.excludeMiniJSON) {
-        g.generateUnlessExist('lib/unity/templates/Import/MiniJSON.cs', 'TyphenApi/Import/MiniJSON.cs');
       }
     }
   };

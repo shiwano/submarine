@@ -4,17 +4,18 @@ using System.Collections.Generic;
 
 namespace TyphenApi.Type{{#if namespace}}.{{upperCamelCase namespace}}{{/if}}
 {
+    [Newtonsoft.Json.JsonObject(Newtonsoft.Json.MemberSerialization.OptIn)]
     public partial class {{{upperCamelCase name}}} : {{#if baseTypes}}{{{typeName baseTypes.[0]}}}{{else}}TyphenApi.TypeBase<{{{upperCamelCase name}}}>{{/if}}{{#if typeParameters}}{{{typeConstraint typeParameters}}}{{/if}}
     {
         {{#each ownProperties}}
         {{#if comment}}
         /// <summary>{{comment}}</summary>
         {{/if}}
-        {{#if type.isArray}}
-        protected static readonly SerializationInfoForList<{{{upperCamelCase ../name}}}, {{{typeName type.type}}}> {{lowerCamelCase name}} = new SerializationInfoForList<{{{upperCamelCase ../name}}}, {{{typeName type.type}}}>("{{serializablePropertyName this}}", {{isOptional}}, (x) => x.{{upperCamelCase name}}, (x, v) => x.{{upperCamelCase name}} = v);
-        {{else}}
-        protected static readonly SerializationInfo<{{{upperCamelCase ../name}}}, {{{typeName type}}}{{{nullableToken type isOptional}}}> {{lowerCamelCase name}} = new SerializationInfo<{{{upperCamelCase ../name}}}, {{{typeName type}}}{{{nullableToken type isOptional}}}>("{{serializablePropertyName this}}", {{isOptional}}, (x) => x.{{upperCamelCase name}}, (x, v) => x.{{upperCamelCase name}} = v);
-        {{/if}}
+        [TyphenApi.QueryStringProperty("{{serializablePropertyName this}}", {{isOptional}})]
+        [Newtonsoft.Json.JsonProperty("{{serializablePropertyName this}}")]
+        {{#unless isOptional}}
+        [Newtonsoft.Json.JsonRequired]
+        {{/unless}}
         public {{{typeName type}}}{{{nullableToken type isOptional}}} {{upperCamelCase name}} { get; set; }
         {{/each}}
     }

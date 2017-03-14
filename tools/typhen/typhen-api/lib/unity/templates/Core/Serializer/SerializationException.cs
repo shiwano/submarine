@@ -9,18 +9,13 @@ namespace TyphenApi
         protected SerializationException(string message, Exception innerException = null) : base(message, innerException) {}
     }
 
-    public class NoNullAllowedException : SerializationException
+    public class SerializationFailureException : SerializationException
     {
-        public NoNullAllowedException(string message, Exception innerException = null) : base(message, innerException) {}
+        public SerializationFailureException(string message, Exception innerException = null) : base(message, innerException) {}
     }
 
-    public class SerializeFailedException : SerializationException
+    public class DeserializationFailureException : SerializationException
     {
-        public SerializeFailedException(string message, Exception innerException = null) : base(message, innerException) {}
-    }
-
-    public class DeserializeFailedException : SerializationException
-    {
-        public DeserializeFailedException(string message, Exception innerException = null) : base(message, innerException) {}
+        public DeserializationFailureException(string message, Exception innerException = null) : base(message, innerException) {}
     }
 }
