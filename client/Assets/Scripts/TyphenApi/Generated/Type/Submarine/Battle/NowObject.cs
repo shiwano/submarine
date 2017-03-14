@@ -4,9 +4,14 @@ using System.Collections.Generic;
 
 namespace TyphenApi.Type.Submarine.Battle
 {
+    [MessagePack.MessagePackObject]
+    [Newtonsoft.Json.JsonObject(Newtonsoft.Json.MemberSerialization.OptIn)]
     public partial class NowObject : TyphenApi.TypeBase<NowObject>
     {
-        protected static readonly SerializationInfo<NowObject, long> time = new SerializationInfo<NowObject, long>("time", false, (x) => x.Time, (x, v) => x.Time = v);
+        [TyphenApi.QueryStringProperty("time", false)]
+        [MessagePack.Key("time")]
+        [Newtonsoft.Json.JsonProperty("time")]
+        [Newtonsoft.Json.JsonRequired]
         public long Time { get; set; }
     }
 }

@@ -4,15 +4,29 @@ using System.Collections.Generic;
 
 namespace TyphenApi.Type.Submarine.Battle
 {
+    [MessagePack.MessagePackObject]
+    [Newtonsoft.Json.JsonObject(Newtonsoft.Json.MemberSerialization.OptIn)]
     public partial class Accelerator : TyphenApi.TypeBase<Accelerator>
     {
-        protected static readonly SerializationInfo<Accelerator, double> maxSpeed = new SerializationInfo<Accelerator, double>("max_speed", false, (x) => x.MaxSpeed, (x, v) => x.MaxSpeed = v);
+        [TyphenApi.QueryStringProperty("max_speed", false)]
+        [MessagePack.Key("max_speed")]
+        [Newtonsoft.Json.JsonProperty("max_speed")]
+        [Newtonsoft.Json.JsonRequired]
         public double MaxSpeed { get; set; }
-        protected static readonly SerializationInfo<Accelerator, long> duration = new SerializationInfo<Accelerator, long>("duration", false, (x) => x.Duration, (x, v) => x.Duration = v);
+        [TyphenApi.QueryStringProperty("duration", false)]
+        [MessagePack.Key("duration")]
+        [Newtonsoft.Json.JsonProperty("duration")]
+        [Newtonsoft.Json.JsonRequired]
         public long Duration { get; set; }
-        protected static readonly SerializationInfo<Accelerator, double> startRate = new SerializationInfo<Accelerator, double>("start_rate", false, (x) => x.StartRate, (x, v) => x.StartRate = v);
+        [TyphenApi.QueryStringProperty("start_rate", false)]
+        [MessagePack.Key("start_rate")]
+        [Newtonsoft.Json.JsonProperty("start_rate")]
+        [Newtonsoft.Json.JsonRequired]
         public double StartRate { get; set; }
-        protected static readonly SerializationInfo<Accelerator, bool> isAccelerating = new SerializationInfo<Accelerator, bool>("is_accelerating", false, (x) => x.IsAccelerating, (x, v) => x.IsAccelerating = v);
+        [TyphenApi.QueryStringProperty("is_accelerating", false)]
+        [MessagePack.Key("is_accelerating")]
+        [Newtonsoft.Json.JsonProperty("is_accelerating")]
+        [Newtonsoft.Json.JsonRequired]
         public bool IsAccelerating { get; set; }
     }
 }

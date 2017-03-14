@@ -14,9 +14,9 @@ namespace TyphenApi.WebApi
         {
             RequestSender = new WebApiRequestSenderUnity();
 
-            var jsonSerializer = new JSONSerializer();
-            RequestSerializer = jsonSerializer;
-            ResponseDeserializer = jsonSerializer;
+            var serializer = new MessagePackSerializer();
+            RequestSerializer = serializer;
+            ResponseDeserializer = serializer;
         }
 
         public override void OnBeforeRequestSend(IWebApiRequest request)
@@ -25,7 +25,7 @@ namespace TyphenApi.WebApi
             Game.Logger.LogWithBlue("[WebAPI] Request: " + request.Uri, request.Body);
             #endif
 
-            request.Headers["Content-Type"] = "application/json";
+            request.Headers["Content-Type"] = "application/x-msgpack";
 
             if (IsAuthenticated)
             {

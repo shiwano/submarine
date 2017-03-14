@@ -2,5 +2,7 @@
 
 namespace TyphenApi.Type
 {
-    public class Void : TyphenApi.TypeBase { }
+    [MessagePack.MessagePackObject]
+    [Newtonsoft.Json.JsonObject]
+    public class Void : TyphenApi.TypeBase<Void> { }
 }

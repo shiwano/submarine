@@ -12,9 +12,14 @@ namespace TyphenApi.WebApi.Base
         {
         }
 
+        [MessagePack.MessagePackObject]
+        [Newtonsoft.Json.JsonObject(Newtonsoft.Json.MemberSerialization.OptIn)]
         class PingRequestBody : TyphenApi.TypeBase<PingRequestBody>
         {
-            protected static readonly SerializationInfo<PingRequestBody, string> message = new SerializationInfo<PingRequestBody, string>("message", false, (x) => x.Message, (x, v) => x.Message = v);
+            [TyphenApi.QueryStringProperty("message", false)]
+            [MessagePack.Key("message")]
+            [Newtonsoft.Json.JsonProperty("message")]
+            [Newtonsoft.Json.JsonRequired]
             public string Message { get; set; }
         }
 
@@ -31,9 +36,14 @@ namespace TyphenApi.WebApi.Base
             return request;
         }
 
+        [MessagePack.MessagePackObject]
+        [Newtonsoft.Json.JsonObject(Newtonsoft.Json.MemberSerialization.OptIn)]
         class SignUpRequestBody : TyphenApi.TypeBase<SignUpRequestBody>
         {
-            protected static readonly SerializationInfo<SignUpRequestBody, string> name = new SerializationInfo<SignUpRequestBody, string>("name", false, (x) => x.Name, (x, v) => x.Name = v);
+            [TyphenApi.QueryStringProperty("name", false)]
+            [MessagePack.Key("name")]
+            [Newtonsoft.Json.JsonProperty("name")]
+            [Newtonsoft.Json.JsonRequired]
             public string Name { get; set; }
         }
 
@@ -50,9 +60,14 @@ namespace TyphenApi.WebApi.Base
             return request;
         }
 
+        [MessagePack.MessagePackObject]
+        [Newtonsoft.Json.JsonObject(Newtonsoft.Json.MemberSerialization.OptIn)]
         class LoginRequestBody : TyphenApi.TypeBase<LoginRequestBody>
         {
-            protected static readonly SerializationInfo<LoginRequestBody, string> authToken = new SerializationInfo<LoginRequestBody, string>("auth_token", false, (x) => x.AuthToken, (x, v) => x.AuthToken = v);
+            [TyphenApi.QueryStringProperty("auth_token", false)]
+            [MessagePack.Key("auth_token")]
+            [Newtonsoft.Json.JsonProperty("auth_token")]
+            [Newtonsoft.Json.JsonRequired]
             public string AuthToken { get; set; }
         }
 
@@ -69,9 +84,14 @@ namespace TyphenApi.WebApi.Base
             return request;
         }
 
+        [MessagePack.MessagePackObject]
+        [Newtonsoft.Json.JsonObject(Newtonsoft.Json.MemberSerialization.OptIn)]
         class FindUserRequestBody : TyphenApi.TypeBase<FindUserRequestBody>
         {
-            protected static readonly SerializationInfo<FindUserRequestBody, string> name = new SerializationInfo<FindUserRequestBody, string>("name", false, (x) => x.Name, (x, v) => x.Name = v);
+            [TyphenApi.QueryStringProperty("name", false)]
+            [MessagePack.Key("name")]
+            [Newtonsoft.Json.JsonProperty("name")]
+            [Newtonsoft.Json.JsonRequired]
             public string Name { get; set; }
         }
 
@@ -88,6 +108,8 @@ namespace TyphenApi.WebApi.Base
             return request;
         }
 
+        [MessagePack.MessagePackObject]
+        [Newtonsoft.Json.JsonObject(Newtonsoft.Json.MemberSerialization.OptIn)]
         class CreateRoomRequestBody : TyphenApi.TypeBase<CreateRoomRequestBody>
         {
         }
@@ -104,6 +126,8 @@ namespace TyphenApi.WebApi.Base
             return request;
         }
 
+        [MessagePack.MessagePackObject]
+        [Newtonsoft.Json.JsonObject(Newtonsoft.Json.MemberSerialization.OptIn)]
         class GetRoomsRequestBody : TyphenApi.TypeBase<GetRoomsRequestBody>
         {
         }
@@ -120,9 +144,14 @@ namespace TyphenApi.WebApi.Base
             return request;
         }
 
+        [MessagePack.MessagePackObject]
+        [Newtonsoft.Json.JsonObject(Newtonsoft.Json.MemberSerialization.OptIn)]
         class JoinIntoRoomRequestBody : TyphenApi.TypeBase<JoinIntoRoomRequestBody>
         {
-            protected static readonly SerializationInfo<JoinIntoRoomRequestBody, long> roomId = new SerializationInfo<JoinIntoRoomRequestBody, long>("room_id", false, (x) => x.RoomId, (x, v) => x.RoomId = v);
+            [TyphenApi.QueryStringProperty("room_id", false)]
+            [MessagePack.Key("room_id")]
+            [Newtonsoft.Json.JsonProperty("room_id")]
+            [Newtonsoft.Json.JsonRequired]
             public long RoomId { get; set; }
         }
 

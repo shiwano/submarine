@@ -4,19 +4,38 @@ using System.Collections.Generic;
 
 namespace TyphenApi.Type.Submarine.Battle
 {
+    [MessagePack.MessagePackObject]
+    [Newtonsoft.Json.JsonObject(Newtonsoft.Json.MemberSerialization.OptIn)]
     public partial class Actor : TyphenApi.TypeBase<Actor>
     {
-        protected static readonly SerializationInfo<Actor, long> id = new SerializationInfo<Actor, long>("id", false, (x) => x.Id, (x, v) => x.Id = v);
+        [TyphenApi.QueryStringProperty("id", false)]
+        [MessagePack.Key("id")]
+        [Newtonsoft.Json.JsonProperty("id")]
+        [Newtonsoft.Json.JsonRequired]
         public long Id { get; set; }
-        protected static readonly SerializationInfo<Actor, long> userId = new SerializationInfo<Actor, long>("user_id", false, (x) => x.UserId, (x, v) => x.UserId = v);
+        [TyphenApi.QueryStringProperty("user_id", false)]
+        [MessagePack.Key("user_id")]
+        [Newtonsoft.Json.JsonProperty("user_id")]
+        [Newtonsoft.Json.JsonRequired]
         public long UserId { get; set; }
-        protected static readonly SerializationInfo<Actor, TyphenApi.Type.Submarine.Battle.ActorType> type = new SerializationInfo<Actor, TyphenApi.Type.Submarine.Battle.ActorType>("type", false, (x) => x.Type, (x, v) => x.Type = v);
+        [TyphenApi.QueryStringProperty("type", false)]
+        [MessagePack.Key("type")]
+        [Newtonsoft.Json.JsonProperty("type")]
+        [Newtonsoft.Json.JsonRequired]
         public TyphenApi.Type.Submarine.Battle.ActorType Type { get; set; }
-        protected static readonly SerializationInfo<Actor, TyphenApi.Type.Submarine.Battle.Movement> movement = new SerializationInfo<Actor, TyphenApi.Type.Submarine.Battle.Movement>("movement", false, (x) => x.Movement, (x, v) => x.Movement = v);
+        [TyphenApi.QueryStringProperty("movement", false)]
+        [MessagePack.Key("movement")]
+        [Newtonsoft.Json.JsonProperty("movement")]
+        [Newtonsoft.Json.JsonRequired]
         public TyphenApi.Type.Submarine.Battle.Movement Movement { get; set; }
-        protected static readonly SerializationInfo<Actor, bool> isVisible = new SerializationInfo<Actor, bool>("is_visible", false, (x) => x.IsVisible, (x, v) => x.IsVisible = v);
+        [TyphenApi.QueryStringProperty("is_visible", false)]
+        [MessagePack.Key("is_visible")]
+        [Newtonsoft.Json.JsonProperty("is_visible")]
+        [Newtonsoft.Json.JsonRequired]
         public bool IsVisible { get; set; }
-        protected static readonly SerializationInfo<Actor, TyphenApi.Type.Submarine.Battle.ActorSubmarineObject> submarine = new SerializationInfo<Actor, TyphenApi.Type.Submarine.Battle.ActorSubmarineObject>("submarine", true, (x) => x.Submarine, (x, v) => x.Submarine = v);
+        [TyphenApi.QueryStringProperty("submarine", true)]
+        [MessagePack.Key("submarine")]
+        [Newtonsoft.Json.JsonProperty("submarine")]
         public TyphenApi.Type.Submarine.Battle.ActorSubmarineObject Submarine { get; set; }
     }
 }

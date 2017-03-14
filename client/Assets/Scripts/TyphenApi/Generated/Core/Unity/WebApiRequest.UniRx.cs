@@ -5,8 +5,8 @@ using UniRx;
 namespace TyphenApi
 {
     public partial class WebApiRequest<ResponseT, ErrorT>
-        where ResponseT : TypeBase, new()
-        where ErrorT : TypeBase, new()
+        where ResponseT : IType, new()
+        where ErrorT : class, IType, new()
     {
         public IObservable<WebApiResponse<ResponseT>> Send()
         {

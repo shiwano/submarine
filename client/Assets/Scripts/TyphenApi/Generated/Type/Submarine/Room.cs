@@ -4,13 +4,23 @@ using System.Collections.Generic;
 
 namespace TyphenApi.Type.Submarine
 {
+    [MessagePack.MessagePackObject]
+    [Newtonsoft.Json.JsonObject(Newtonsoft.Json.MemberSerialization.OptIn)]
     public partial class Room : TyphenApi.TypeBase<Room>
     {
-        protected static readonly SerializationInfo<Room, long> id = new SerializationInfo<Room, long>("id", false, (x) => x.Id, (x, v) => x.Id = v);
+        [TyphenApi.QueryStringProperty("id", false)]
+        [MessagePack.Key("id")]
+        [Newtonsoft.Json.JsonProperty("id")]
+        [Newtonsoft.Json.JsonRequired]
         public long Id { get; set; }
-        protected static readonly SerializationInfoForList<Room, TyphenApi.Type.Submarine.User> members = new SerializationInfoForList<Room, TyphenApi.Type.Submarine.User>("members", false, (x) => x.Members, (x, v) => x.Members = v);
+        [TyphenApi.QueryStringProperty("members", false)]
+        [MessagePack.Key("members")]
+        [Newtonsoft.Json.JsonProperty("members")]
+        [Newtonsoft.Json.JsonRequired]
         public List<TyphenApi.Type.Submarine.User> Members { get; set; }
-        protected static readonly SerializationInfoForList<Room, TyphenApi.Type.Submarine.Bot> bots = new SerializationInfoForList<Room, TyphenApi.Type.Submarine.Bot>("bots", true, (x) => x.Bots, (x, v) => x.Bots = v);
+        [TyphenApi.QueryStringProperty("bots", true)]
+        [MessagePack.Key("bots")]
+        [Newtonsoft.Json.JsonProperty("bots")]
         public List<TyphenApi.Type.Submarine.Bot> Bots { get; set; }
     }
 }

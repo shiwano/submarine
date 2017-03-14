@@ -40,14 +40,14 @@ namespace TyphenApi.WebSocketSession
             Game.Logger.Log("[WebSocketApi] Session closed");
         }
 
-        public override void OnBeforeMessageSend(TyphenApi.TypeBase message)
+        public override void OnBeforeMessageSend(TyphenApi.IType message)
         {
             #if UNITY_EDITOR
             Game.Logger.LogWithBlue("[WebSocketApi] Send " + message.GetType().Name + " Message:", message);
             #endif
         }
 
-        public override void OnMessageReceive(TyphenApi.TypeBase message)
+        public override void OnMessageReceive(TyphenApi.IType message)
         {
             #if UNITY_EDITOR
             Game.Logger.LogWithGreen("[WebSocketApi] Receive " + message.GetType().Name + " Message:", message);

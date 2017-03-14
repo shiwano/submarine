@@ -4,13 +4,24 @@ using System.Collections.Generic;
 
 namespace TyphenApi.Type.Submarine.Battle
 {
+    [MessagePack.MessagePackObject]
+    [Newtonsoft.Json.JsonObject(Newtonsoft.Json.MemberSerialization.OptIn)]
     public partial class Visibility : TyphenApi.TypeBase<Visibility>
     {
-        protected static readonly SerializationInfo<Visibility, long> actorId = new SerializationInfo<Visibility, long>("actor_id", false, (x) => x.ActorId, (x, v) => x.ActorId = v);
+        [TyphenApi.QueryStringProperty("actor_id", false)]
+        [MessagePack.Key("actor_id")]
+        [Newtonsoft.Json.JsonProperty("actor_id")]
+        [Newtonsoft.Json.JsonRequired]
         public long ActorId { get; set; }
-        protected static readonly SerializationInfo<Visibility, bool> isVisible = new SerializationInfo<Visibility, bool>("is_visible", false, (x) => x.IsVisible, (x, v) => x.IsVisible = v);
+        [TyphenApi.QueryStringProperty("is_visible", false)]
+        [MessagePack.Key("is_visible")]
+        [Newtonsoft.Json.JsonProperty("is_visible")]
+        [Newtonsoft.Json.JsonRequired]
         public bool IsVisible { get; set; }
-        protected static readonly SerializationInfo<Visibility, TyphenApi.Type.Submarine.Battle.Movement> movement = new SerializationInfo<Visibility, TyphenApi.Type.Submarine.Battle.Movement>("movement", false, (x) => x.Movement, (x, v) => x.Movement = v);
+        [TyphenApi.QueryStringProperty("movement", false)]
+        [MessagePack.Key("movement")]
+        [Newtonsoft.Json.JsonProperty("movement")]
+        [Newtonsoft.Json.JsonRequired]
         public TyphenApi.Type.Submarine.Battle.Movement Movement { get; set; }
     }
 }

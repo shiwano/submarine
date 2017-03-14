@@ -4,11 +4,19 @@ using System.Collections.Generic;
 
 namespace TyphenApi.Type.Submarine
 {
+    [MessagePack.MessagePackObject]
+    [Newtonsoft.Json.JsonObject(Newtonsoft.Json.MemberSerialization.OptIn)]
     public partial class JoinedRoom : TyphenApi.Type.Submarine.Room
     {
-        protected static readonly SerializationInfo<JoinedRoom, string> battleServerBaseUri = new SerializationInfo<JoinedRoom, string>("battle_server_base_uri", false, (x) => x.BattleServerBaseUri, (x, v) => x.BattleServerBaseUri = v);
+        [TyphenApi.QueryStringProperty("battle_server_base_uri", false)]
+        [MessagePack.Key("battle_server_base_uri")]
+        [Newtonsoft.Json.JsonProperty("battle_server_base_uri")]
+        [Newtonsoft.Json.JsonRequired]
         public string BattleServerBaseUri { get; set; }
-        protected static readonly SerializationInfo<JoinedRoom, string> roomKey = new SerializationInfo<JoinedRoom, string>("room_key", false, (x) => x.RoomKey, (x, v) => x.RoomKey = v);
+        [TyphenApi.QueryStringProperty("room_key", false)]
+        [MessagePack.Key("room_key")]
+        [Newtonsoft.Json.JsonProperty("room_key")]
+        [Newtonsoft.Json.JsonRequired]
         public string RoomKey { get; set; }
     }
 }

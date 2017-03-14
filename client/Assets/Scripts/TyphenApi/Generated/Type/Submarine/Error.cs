@@ -4,13 +4,24 @@ using System.Collections.Generic;
 
 namespace TyphenApi.Type.Submarine
 {
+    [MessagePack.MessagePackObject]
+    [Newtonsoft.Json.JsonObject(Newtonsoft.Json.MemberSerialization.OptIn)]
     public partial class Error : TyphenApi.TypeBase<Error>
     {
-        protected static readonly SerializationInfo<Error, long> code = new SerializationInfo<Error, long>("code", false, (x) => x.Code, (x, v) => x.Code = v);
+        [TyphenApi.QueryStringProperty("code", false)]
+        [MessagePack.Key("code")]
+        [Newtonsoft.Json.JsonProperty("code")]
+        [Newtonsoft.Json.JsonRequired]
         public long Code { get; set; }
-        protected static readonly SerializationInfo<Error, string> name = new SerializationInfo<Error, string>("name", false, (x) => x.Name, (x, v) => x.Name = v);
+        [TyphenApi.QueryStringProperty("name", false)]
+        [MessagePack.Key("name")]
+        [Newtonsoft.Json.JsonProperty("name")]
+        [Newtonsoft.Json.JsonRequired]
         public string Name { get; set; }
-        protected static readonly SerializationInfo<Error, string> message = new SerializationInfo<Error, string>("message", false, (x) => x.Message, (x, v) => x.Message = v);
+        [TyphenApi.QueryStringProperty("message", false)]
+        [MessagePack.Key("message")]
+        [Newtonsoft.Json.JsonProperty("message")]
+        [Newtonsoft.Json.JsonRequired]
         public string Message { get; set; }
     }
 }

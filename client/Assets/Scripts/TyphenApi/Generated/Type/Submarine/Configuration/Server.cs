@@ -4,13 +4,24 @@ using System.Collections.Generic;
 
 namespace TyphenApi.Type.Submarine.Configuration
 {
+    [MessagePack.MessagePackObject]
+    [Newtonsoft.Json.JsonObject(Newtonsoft.Json.MemberSerialization.OptIn)]
     public partial class Server : TyphenApi.TypeBase<Server>
     {
-        protected static readonly SerializationInfo<Server, string> apiServerBaseUri = new SerializationInfo<Server, string>("api_server_base_uri", false, (x) => x.ApiServerBaseUri, (x, v) => x.ApiServerBaseUri = v);
+        [TyphenApi.QueryStringProperty("api_server_base_uri", false)]
+        [MessagePack.Key("api_server_base_uri")]
+        [Newtonsoft.Json.JsonProperty("api_server_base_uri")]
+        [Newtonsoft.Json.JsonRequired]
         public string ApiServerBaseUri { get; set; }
-        protected static readonly SerializationInfo<Server, string> battleServerBaseUri = new SerializationInfo<Server, string>("battle_server_base_uri", false, (x) => x.BattleServerBaseUri, (x, v) => x.BattleServerBaseUri = v);
+        [TyphenApi.QueryStringProperty("battle_server_base_uri", false)]
+        [MessagePack.Key("battle_server_base_uri")]
+        [Newtonsoft.Json.JsonProperty("battle_server_base_uri")]
+        [Newtonsoft.Json.JsonRequired]
         public string BattleServerBaseUri { get; set; }
-        protected static readonly SerializationInfo<Server, TyphenApi.Type.Submarine.Configuration.ServerDatabaseObject> database = new SerializationInfo<Server, TyphenApi.Type.Submarine.Configuration.ServerDatabaseObject>("database", false, (x) => x.Database, (x, v) => x.Database = v);
+        [TyphenApi.QueryStringProperty("database", false)]
+        [MessagePack.Key("database")]
+        [Newtonsoft.Json.JsonProperty("database")]
+        [Newtonsoft.Json.JsonRequired]
         public TyphenApi.Type.Submarine.Configuration.ServerDatabaseObject Database { get; set; }
     }
 }

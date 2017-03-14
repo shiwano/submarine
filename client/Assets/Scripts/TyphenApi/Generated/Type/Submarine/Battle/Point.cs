@@ -4,11 +4,19 @@ using System.Collections.Generic;
 
 namespace TyphenApi.Type.Submarine.Battle
 {
+    [MessagePack.MessagePackObject]
+    [Newtonsoft.Json.JsonObject(Newtonsoft.Json.MemberSerialization.OptIn)]
     public partial class Point : TyphenApi.TypeBase<Point>
     {
-        protected static readonly SerializationInfo<Point, double> x = new SerializationInfo<Point, double>("x", false, (x) => x.X, (x, v) => x.X = v);
+        [TyphenApi.QueryStringProperty("x", false)]
+        [MessagePack.Key("x")]
+        [Newtonsoft.Json.JsonProperty("x")]
+        [Newtonsoft.Json.JsonRequired]
         public double X { get; set; }
-        protected static readonly SerializationInfo<Point, double> y = new SerializationInfo<Point, double>("y", false, (x) => x.Y, (x, v) => x.Y = v);
+        [TyphenApi.QueryStringProperty("y", false)]
+        [MessagePack.Key("y")]
+        [Newtonsoft.Json.JsonProperty("y")]
+        [Newtonsoft.Json.JsonRequired]
         public double Y { get; set; }
     }
 }

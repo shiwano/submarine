@@ -4,9 +4,14 @@ using System.Collections.Generic;
 
 namespace TyphenApi.Type.Submarine.Battle
 {
+    [MessagePack.MessagePackObject]
+    [Newtonsoft.Json.JsonObject(Newtonsoft.Json.MemberSerialization.OptIn)]
     public partial class BrakeRequestObject : TyphenApi.TypeBase<BrakeRequestObject>
     {
-        protected static readonly SerializationInfo<BrakeRequestObject, double> direction = new SerializationInfo<BrakeRequestObject, double>("direction", false, (x) => x.Direction, (x, v) => x.Direction = v);
+        [TyphenApi.QueryStringProperty("direction", false)]
+        [MessagePack.Key("direction")]
+        [Newtonsoft.Json.JsonProperty("direction")]
+        [Newtonsoft.Json.JsonRequired]
         public double Direction { get; set; }
     }
 }

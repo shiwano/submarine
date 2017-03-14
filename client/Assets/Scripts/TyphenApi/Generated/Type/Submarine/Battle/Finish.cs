@@ -4,11 +4,18 @@ using System.Collections.Generic;
 
 namespace TyphenApi.Type.Submarine.Battle
 {
+    [MessagePack.MessagePackObject]
+    [Newtonsoft.Json.JsonObject(Newtonsoft.Json.MemberSerialization.OptIn)]
     public partial class Finish : TyphenApi.TypeBase<Finish>
     {
-        protected static readonly SerializationInfo<Finish, long?> winnerUserId = new SerializationInfo<Finish, long?>("winner_user_id", true, (x) => x.WinnerUserId, (x, v) => x.WinnerUserId = v);
+        [TyphenApi.QueryStringProperty("winner_user_id", true)]
+        [MessagePack.Key("winner_user_id")]
+        [Newtonsoft.Json.JsonProperty("winner_user_id")]
         public long? WinnerUserId { get; set; }
-        protected static readonly SerializationInfo<Finish, long> finishedAt = new SerializationInfo<Finish, long>("finished_at", false, (x) => x.FinishedAt, (x, v) => x.FinishedAt = v);
+        [TyphenApi.QueryStringProperty("finished_at", false)]
+        [MessagePack.Key("finished_at")]
+        [Newtonsoft.Json.JsonProperty("finished_at")]
+        [Newtonsoft.Json.JsonRequired]
         public long FinishedAt { get; set; }
     }
 }

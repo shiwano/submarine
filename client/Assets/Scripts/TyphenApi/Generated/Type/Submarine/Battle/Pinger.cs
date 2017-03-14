@@ -4,11 +4,19 @@ using System.Collections.Generic;
 
 namespace TyphenApi.Type.Submarine.Battle
 {
+    [MessagePack.MessagePackObject]
+    [Newtonsoft.Json.JsonObject(Newtonsoft.Json.MemberSerialization.OptIn)]
     public partial class Pinger : TyphenApi.TypeBase<Pinger>
     {
-        protected static readonly SerializationInfo<Pinger, long> actorId = new SerializationInfo<Pinger, long>("actor_id", false, (x) => x.ActorId, (x, v) => x.ActorId = v);
+        [TyphenApi.QueryStringProperty("actor_id", false)]
+        [MessagePack.Key("actor_id")]
+        [Newtonsoft.Json.JsonProperty("actor_id")]
+        [Newtonsoft.Json.JsonRequired]
         public long ActorId { get; set; }
-        protected static readonly SerializationInfo<Pinger, bool> isFinished = new SerializationInfo<Pinger, bool>("is_finished", false, (x) => x.IsFinished, (x, v) => x.IsFinished = v);
+        [TyphenApi.QueryStringProperty("is_finished", false)]
+        [MessagePack.Key("is_finished")]
+        [Newtonsoft.Json.JsonProperty("is_finished")]
+        [Newtonsoft.Json.JsonRequired]
         public bool IsFinished { get; set; }
     }
 }

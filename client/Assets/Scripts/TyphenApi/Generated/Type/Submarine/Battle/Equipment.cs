@@ -4,15 +4,29 @@ using System.Collections.Generic;
 
 namespace TyphenApi.Type.Submarine.Battle
 {
+    [MessagePack.MessagePackObject]
+    [Newtonsoft.Json.JsonObject(Newtonsoft.Json.MemberSerialization.OptIn)]
     public partial class Equipment : TyphenApi.TypeBase<Equipment>
     {
-        protected static readonly SerializationInfo<Equipment, long> actorId = new SerializationInfo<Equipment, long>("actor_id", false, (x) => x.ActorId, (x, v) => x.ActorId = v);
+        [TyphenApi.QueryStringProperty("actor_id", false)]
+        [MessagePack.Key("actor_id")]
+        [Newtonsoft.Json.JsonProperty("actor_id")]
+        [Newtonsoft.Json.JsonRequired]
         public long ActorId { get; set; }
-        protected static readonly SerializationInfoForList<Equipment, TyphenApi.Type.Submarine.Battle.EquipmentItem> torpedos = new SerializationInfoForList<Equipment, TyphenApi.Type.Submarine.Battle.EquipmentItem>("torpedos", false, (x) => x.Torpedos, (x, v) => x.Torpedos = v);
+        [TyphenApi.QueryStringProperty("torpedos", false)]
+        [MessagePack.Key("torpedos")]
+        [Newtonsoft.Json.JsonProperty("torpedos")]
+        [Newtonsoft.Json.JsonRequired]
         public List<TyphenApi.Type.Submarine.Battle.EquipmentItem> Torpedos { get; set; }
-        protected static readonly SerializationInfo<Equipment, TyphenApi.Type.Submarine.Battle.EquipmentItem> pinger = new SerializationInfo<Equipment, TyphenApi.Type.Submarine.Battle.EquipmentItem>("pinger", false, (x) => x.Pinger, (x, v) => x.Pinger = v);
+        [TyphenApi.QueryStringProperty("pinger", false)]
+        [MessagePack.Key("pinger")]
+        [Newtonsoft.Json.JsonProperty("pinger")]
+        [Newtonsoft.Json.JsonRequired]
         public TyphenApi.Type.Submarine.Battle.EquipmentItem Pinger { get; set; }
-        protected static readonly SerializationInfo<Equipment, TyphenApi.Type.Submarine.Battle.EquipmentItem> watcher = new SerializationInfo<Equipment, TyphenApi.Type.Submarine.Battle.EquipmentItem>("watcher", false, (x) => x.Watcher, (x, v) => x.Watcher = v);
+        [TyphenApi.QueryStringProperty("watcher", false)]
+        [MessagePack.Key("watcher")]
+        [Newtonsoft.Json.JsonProperty("watcher")]
+        [Newtonsoft.Json.JsonRequired]
         public TyphenApi.Type.Submarine.Battle.EquipmentItem Watcher { get; set; }
     }
 }

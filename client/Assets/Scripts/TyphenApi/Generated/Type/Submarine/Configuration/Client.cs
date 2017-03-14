@@ -4,11 +4,19 @@ using System.Collections.Generic;
 
 namespace TyphenApi.Type.Submarine.Configuration
 {
+    [MessagePack.MessagePackObject]
+    [Newtonsoft.Json.JsonObject(Newtonsoft.Json.MemberSerialization.OptIn)]
     public partial class Client : TyphenApi.TypeBase<Client>
     {
-        protected static readonly SerializationInfo<Client, string> version = new SerializationInfo<Client, string>("version", false, (x) => x.Version, (x, v) => x.Version = v);
+        [TyphenApi.QueryStringProperty("version", false)]
+        [MessagePack.Key("version")]
+        [Newtonsoft.Json.JsonProperty("version")]
+        [Newtonsoft.Json.JsonRequired]
         public string Version { get; set; }
-        protected static readonly SerializationInfo<Client, string> apiServerBaseUri = new SerializationInfo<Client, string>("api_server_base_uri", false, (x) => x.ApiServerBaseUri, (x, v) => x.ApiServerBaseUri = v);
+        [TyphenApi.QueryStringProperty("api_server_base_uri", false)]
+        [MessagePack.Key("api_server_base_uri")]
+        [Newtonsoft.Json.JsonProperty("api_server_base_uri")]
+        [Newtonsoft.Json.JsonRequired]
         public string ApiServerBaseUri { get; set; }
     }
 }

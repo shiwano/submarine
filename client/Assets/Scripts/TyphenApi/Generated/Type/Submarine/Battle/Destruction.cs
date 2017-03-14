@@ -4,9 +4,14 @@ using System.Collections.Generic;
 
 namespace TyphenApi.Type.Submarine.Battle
 {
+    [MessagePack.MessagePackObject]
+    [Newtonsoft.Json.JsonObject(Newtonsoft.Json.MemberSerialization.OptIn)]
     public partial class Destruction : TyphenApi.TypeBase<Destruction>
     {
-        protected static readonly SerializationInfo<Destruction, long> actorId = new SerializationInfo<Destruction, long>("actor_id", false, (x) => x.ActorId, (x, v) => x.ActorId = v);
+        [TyphenApi.QueryStringProperty("actor_id", false)]
+        [MessagePack.Key("actor_id")]
+        [Newtonsoft.Json.JsonProperty("actor_id")]
+        [Newtonsoft.Json.JsonRequired]
         public long ActorId { get; set; }
     }
 }

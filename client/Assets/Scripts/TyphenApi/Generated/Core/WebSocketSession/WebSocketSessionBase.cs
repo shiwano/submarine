@@ -11,12 +11,12 @@ namespace TyphenApi
     {
         ISerializer MessageSerializer { get; }
         IDeserializer MessageDeserializer { get; }
-        void Send(int messageType, TypeBase message);
+        void Send(int messageType, IType message);
     }
 
     public abstract class WebSocketSessionBase<ApiT, ErrorT> : IWebSocketSession, IDisposable
         where ApiT : IWebSocketApi
-        where ErrorT : TypeBase
+        where ErrorT : class, IType, new()
     {
         const byte MessageTypeBytesLength = 4;
         volatile bool isOpened;
@@ -34,8 +34,8 @@ namespace TyphenApi
         public abstract void OnConnectionCreate(WebSocket connection);
         public abstract void OnConnectionOpen();
         public abstract void OnConnectionClose(ushort code, string reason, bool wasClean);
-        public abstract void OnBeforeMessageSend(TypeBase message);
-        public abstract void OnMessageReceive(TypeBase message);
+        public abstract void OnBeforeMessageSend(IType message);
+        public abstract void OnMessageReceive(IType message);
         public abstract void OnError(WebSocketSessionError<ErrorT> error);
 
         protected WebSocketSessionBase(string requestUri)
@@ -86,7 +86,7 @@ namespace TyphenApi
             connection.Close();
         }
 
-        public void Send(int messageType, TypeBase message)
+        public void Send(int messageType, IType message)
         {
             OnBeforeMessageSend(message);
             var messageData = MessageSerializer.Serialize(message);
@@ -138,7 +138,7 @@ namespace TyphenApi
         {
             return () =>
             {
-                TypeBase message;
+                IType message;
 
                 try
                 {

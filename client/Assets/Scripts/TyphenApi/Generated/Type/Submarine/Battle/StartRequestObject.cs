@@ -4,6 +4,8 @@ using System.Collections.Generic;
 
 namespace TyphenApi.Type.Submarine.Battle
 {
+    [MessagePack.MessagePackObject]
+    [Newtonsoft.Json.JsonObject(Newtonsoft.Json.MemberSerialization.OptIn)]
     public partial class StartRequestObject : TyphenApi.TypeBase<StartRequestObject>
     {
     }

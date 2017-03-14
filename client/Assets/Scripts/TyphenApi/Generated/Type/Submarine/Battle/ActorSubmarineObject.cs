@@ -4,11 +4,18 @@ using System.Collections.Generic;
 
 namespace TyphenApi.Type.Submarine.Battle
 {
+    [MessagePack.MessagePackObject]
+    [Newtonsoft.Json.JsonObject(Newtonsoft.Json.MemberSerialization.OptIn)]
     public partial class ActorSubmarineObject : TyphenApi.TypeBase<ActorSubmarineObject>
     {
-        protected static readonly SerializationInfo<ActorSubmarineObject, bool> isUsingPinger = new SerializationInfo<ActorSubmarineObject, bool>("is_using_pinger", false, (x) => x.IsUsingPinger, (x, v) => x.IsUsingPinger = v);
+        [TyphenApi.QueryStringProperty("is_using_pinger", false)]
+        [MessagePack.Key("is_using_pinger")]
+        [Newtonsoft.Json.JsonProperty("is_using_pinger")]
+        [Newtonsoft.Json.JsonRequired]
         public bool IsUsingPinger { get; set; }
-        protected static readonly SerializationInfo<ActorSubmarineObject, TyphenApi.Type.Submarine.Battle.Equipment> equipment = new SerializationInfo<ActorSubmarineObject, TyphenApi.Type.Submarine.Battle.Equipment>("equipment", true, (x) => x.Equipment, (x, v) => x.Equipment = v);
+        [TyphenApi.QueryStringProperty("equipment", true)]
+        [MessagePack.Key("equipment")]
+        [Newtonsoft.Json.JsonProperty("equipment")]
         public TyphenApi.Type.Submarine.Battle.Equipment Equipment { get; set; }
     }
 }

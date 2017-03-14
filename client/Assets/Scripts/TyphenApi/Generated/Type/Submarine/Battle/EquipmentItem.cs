@@ -4,11 +4,19 @@ using System.Collections.Generic;
 
 namespace TyphenApi.Type.Submarine.Battle
 {
+    [MessagePack.MessagePackObject]
+    [Newtonsoft.Json.JsonObject(Newtonsoft.Json.MemberSerialization.OptIn)]
     public partial class EquipmentItem : TyphenApi.TypeBase<EquipmentItem>
     {
-        protected static readonly SerializationInfo<EquipmentItem, long> cooldownStartedAt = new SerializationInfo<EquipmentItem, long>("cooldown_started_at", false, (x) => x.CooldownStartedAt, (x, v) => x.CooldownStartedAt = v);
+        [TyphenApi.QueryStringProperty("cooldown_started_at", false)]
+        [MessagePack.Key("cooldown_started_at")]
+        [Newtonsoft.Json.JsonProperty("cooldown_started_at")]
+        [Newtonsoft.Json.JsonRequired]
         public long CooldownStartedAt { get; set; }
-        protected static readonly SerializationInfo<EquipmentItem, long> cooldownDuration = new SerializationInfo<EquipmentItem, long>("cooldown_duration", false, (x) => x.CooldownDuration, (x, v) => x.CooldownDuration = v);
+        [TyphenApi.QueryStringProperty("cooldown_duration", false)]
+        [MessagePack.Key("cooldown_duration")]
+        [Newtonsoft.Json.JsonProperty("cooldown_duration")]
+        [Newtonsoft.Json.JsonRequired]
         public long CooldownDuration { get; set; }
     }
 }

@@ -6,6 +6,6 @@ namespace TyphenApi
 {
     public interface IWebSocketApi
     {
-        TyphenApi.TypeBase DispatchMessageEvent(int messageType, byte[] messageData);
+        TyphenApi.IType DispatchMessageEvent(int messageType, byte[] messageData);
     }
 }

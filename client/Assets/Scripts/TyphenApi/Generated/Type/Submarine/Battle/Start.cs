@@ -4,9 +4,14 @@ using System.Collections.Generic;
 
 namespace TyphenApi.Type.Submarine.Battle
 {
+    [MessagePack.MessagePackObject]
+    [Newtonsoft.Json.JsonObject(Newtonsoft.Json.MemberSerialization.OptIn)]
     public partial class Start : TyphenApi.TypeBase<Start>
     {
-        protected static readonly SerializationInfo<Start, long> startedAt = new SerializationInfo<Start, long>("started_at", false, (x) => x.StartedAt, (x, v) => x.StartedAt = v);
+        [TyphenApi.QueryStringProperty("started_at", false)]
+        [MessagePack.Key("started_at")]
+        [Newtonsoft.Json.JsonProperty("started_at")]
+        [Newtonsoft.Json.JsonRequired]
         public long StartedAt { get; set; }
     }
 }

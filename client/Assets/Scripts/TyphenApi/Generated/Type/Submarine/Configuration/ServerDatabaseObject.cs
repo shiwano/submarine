@@ -4,15 +4,29 @@ using System.Collections.Generic;
 
 namespace TyphenApi.Type.Submarine.Configuration
 {
+    [MessagePack.MessagePackObject]
+    [Newtonsoft.Json.JsonObject(Newtonsoft.Json.MemberSerialization.OptIn)]
     public partial class ServerDatabaseObject : TyphenApi.TypeBase<ServerDatabaseObject>
     {
-        protected static readonly SerializationInfo<ServerDatabaseObject, string> host = new SerializationInfo<ServerDatabaseObject, string>("host", false, (x) => x.Host, (x, v) => x.Host = v);
+        [TyphenApi.QueryStringProperty("host", false)]
+        [MessagePack.Key("host")]
+        [Newtonsoft.Json.JsonProperty("host")]
+        [Newtonsoft.Json.JsonRequired]
         public string Host { get; set; }
-        protected static readonly SerializationInfo<ServerDatabaseObject, long> port = new SerializationInfo<ServerDatabaseObject, long>("port", false, (x) => x.Port, (x, v) => x.Port = v);
+        [TyphenApi.QueryStringProperty("port", false)]
+        [MessagePack.Key("port")]
+        [Newtonsoft.Json.JsonProperty("port")]
+        [Newtonsoft.Json.JsonRequired]
         public long Port { get; set; }
-        protected static readonly SerializationInfo<ServerDatabaseObject, string> user = new SerializationInfo<ServerDatabaseObject, string>("user", false, (x) => x.User, (x, v) => x.User = v);
+        [TyphenApi.QueryStringProperty("user", false)]
+        [MessagePack.Key("user")]
+        [Newtonsoft.Json.JsonProperty("user")]
+        [Newtonsoft.Json.JsonRequired]
         public string User { get; set; }
-        protected static readonly SerializationInfo<ServerDatabaseObject, string> password = new SerializationInfo<ServerDatabaseObject, string>("password", false, (x) => x.Password, (x, v) => x.Password = v);
+        [TyphenApi.QueryStringProperty("password", false)]
+        [MessagePack.Key("password")]
+        [Newtonsoft.Json.JsonProperty("password")]
+        [Newtonsoft.Json.JsonRequired]
         public string Password { get; set; }
     }
 }

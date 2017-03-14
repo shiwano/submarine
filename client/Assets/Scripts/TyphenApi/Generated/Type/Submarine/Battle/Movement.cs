@@ -4,17 +4,33 @@ using System.Collections.Generic;
 
 namespace TyphenApi.Type.Submarine.Battle
 {
+    [MessagePack.MessagePackObject]
+    [Newtonsoft.Json.JsonObject(Newtonsoft.Json.MemberSerialization.OptIn)]
     public partial class Movement : TyphenApi.TypeBase<Movement>
     {
-        protected static readonly SerializationInfo<Movement, long> actorId = new SerializationInfo<Movement, long>("actor_id", false, (x) => x.ActorId, (x, v) => x.ActorId = v);
+        [TyphenApi.QueryStringProperty("actor_id", false)]
+        [MessagePack.Key("actor_id")]
+        [Newtonsoft.Json.JsonProperty("actor_id")]
+        [Newtonsoft.Json.JsonRequired]
         public long ActorId { get; set; }
-        protected static readonly SerializationInfo<Movement, TyphenApi.Type.Submarine.Battle.Point> position = new SerializationInfo<Movement, TyphenApi.Type.Submarine.Battle.Point>("position", false, (x) => x.Position, (x, v) => x.Position = v);
+        [TyphenApi.QueryStringProperty("position", false)]
+        [MessagePack.Key("position")]
+        [Newtonsoft.Json.JsonProperty("position")]
+        [Newtonsoft.Json.JsonRequired]
         public TyphenApi.Type.Submarine.Battle.Point Position { get; set; }
-        protected static readonly SerializationInfo<Movement, double> direction = new SerializationInfo<Movement, double>("direction", false, (x) => x.Direction, (x, v) => x.Direction = v);
+        [TyphenApi.QueryStringProperty("direction", false)]
+        [MessagePack.Key("direction")]
+        [Newtonsoft.Json.JsonProperty("direction")]
+        [Newtonsoft.Json.JsonRequired]
         public double Direction { get; set; }
-        protected static readonly SerializationInfo<Movement, long> movedAt = new SerializationInfo<Movement, long>("moved_at", false, (x) => x.MovedAt, (x, v) => x.MovedAt = v);
+        [TyphenApi.QueryStringProperty("moved_at", false)]
+        [MessagePack.Key("moved_at")]
+        [Newtonsoft.Json.JsonProperty("moved_at")]
+        [Newtonsoft.Json.JsonRequired]
         public long MovedAt { get; set; }
-        protected static readonly SerializationInfo<Movement, TyphenApi.Type.Submarine.Battle.Accelerator> accelerator = new SerializationInfo<Movement, TyphenApi.Type.Submarine.Battle.Accelerator>("accelerator", true, (x) => x.Accelerator, (x, v) => x.Accelerator = v);
+        [TyphenApi.QueryStringProperty("accelerator", true)]
+        [MessagePack.Key("accelerator")]
+        [Newtonsoft.Json.JsonProperty("accelerator")]
         public TyphenApi.Type.Submarine.Battle.Accelerator Accelerator { get; set; }
     }
 }

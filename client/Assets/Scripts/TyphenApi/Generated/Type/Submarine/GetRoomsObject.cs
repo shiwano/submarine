@@ -4,9 +4,14 @@ using System.Collections.Generic;
 
 namespace TyphenApi.Type.Submarine
 {
+    [MessagePack.MessagePackObject]
+    [Newtonsoft.Json.JsonObject(Newtonsoft.Json.MemberSerialization.OptIn)]
     public partial class GetRoomsObject : TyphenApi.TypeBase<GetRoomsObject>
     {
-        protected static readonly SerializationInfoForList<GetRoomsObject, TyphenApi.Type.Submarine.Room> rooms = new SerializationInfoForList<GetRoomsObject, TyphenApi.Type.Submarine.Room>("rooms", false, (x) => x.Rooms, (x, v) => x.Rooms = v);
+        [TyphenApi.QueryStringProperty("rooms", false)]
+        [MessagePack.Key("rooms")]
+        [Newtonsoft.Json.JsonProperty("rooms")]
+        [Newtonsoft.Json.JsonRequired]
         public List<TyphenApi.Type.Submarine.Room> Rooms { get; set; }
     }
 }

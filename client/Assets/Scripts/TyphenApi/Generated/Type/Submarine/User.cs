@@ -4,11 +4,19 @@ using System.Collections.Generic;
 
 namespace TyphenApi.Type.Submarine
 {
+    [MessagePack.MessagePackObject]
+    [Newtonsoft.Json.JsonObject(Newtonsoft.Json.MemberSerialization.OptIn)]
     public partial class User : TyphenApi.TypeBase<User>
     {
-        protected static readonly SerializationInfo<User, long> id = new SerializationInfo<User, long>("id", false, (x) => x.Id, (x, v) => x.Id = v);
+        [TyphenApi.QueryStringProperty("id", false)]
+        [MessagePack.Key("id")]
+        [Newtonsoft.Json.JsonProperty("id")]
+        [Newtonsoft.Json.JsonRequired]
         public long Id { get; set; }
-        protected static readonly SerializationInfo<User, string> name = new SerializationInfo<User, string>("name", false, (x) => x.Name, (x, v) => x.Name = v);
+        [TyphenApi.QueryStringProperty("name", false)]
+        [MessagePack.Key("name")]
+        [Newtonsoft.Json.JsonProperty("name")]
+        [Newtonsoft.Json.JsonRequired]
         public string Name { get; set; }
     }
 }

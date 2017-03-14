@@ -4,9 +4,14 @@ using System.Collections.Generic;
 
 namespace TyphenApi.Type.Submarine.Battle
 {
+    [MessagePack.MessagePackObject]
+    [Newtonsoft.Json.JsonObject(Newtonsoft.Json.MemberSerialization.OptIn)]
     public partial class PingObject : TyphenApi.TypeBase<PingObject>
     {
-        protected static readonly SerializationInfo<PingObject, string> message = new SerializationInfo<PingObject, string>("message", false, (x) => x.Message, (x, v) => x.Message = v);
+        [TyphenApi.QueryStringProperty("message", false)]
+        [MessagePack.Key("message")]
+        [Newtonsoft.Json.JsonProperty("message")]
+        [Newtonsoft.Json.JsonRequired]
         public string Message { get; set; }
     }
 }
