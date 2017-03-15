@@ -18,7 +18,7 @@ var _ = errors.New;
 // {{upperCamelCase name}} is a kind of TyphenAPI type.
 type {{upperCamelCase name}} struct {
 	{{#each properties}}
-	{{upperCamelCase name}} {{typeName type ../parentModule isOptional true}} `codec:"{{serializablePropertyName this}}"`
+	{{upperCamelCase name}} {{typeName type ../parentModule isOptional true}} `json:"{{serializablePropertyName this}}"`
 	{{/each}}
 }
 

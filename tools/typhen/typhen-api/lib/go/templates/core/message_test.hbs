@@ -8,7 +8,7 @@ import (
 )
 
 func TestNewMessage(t *testing.T) {
-	serializer := typhenapi.NewJSONSerializer()
+	serializer := new(typhenapi.JSONSerializer)
 	message, err := typhenapi.NewMessage(serializer, 1, &testType{"Foobar"})
 
 	if err != nil {
@@ -52,7 +52,7 @@ func TestNewMessageFromBytes(t *testing.T) {
 }
 
 func TestMessageBytes(t *testing.T) {
-	serializer := typhenapi.NewJSONSerializer()
+	serializer := new(typhenapi.JSONSerializer)
 	messageA, _ := typhenapi.NewMessage(serializer, 1, &testType{"Foobar"})
 	message, _ := typhenapi.NewMessageFromBytes(messageA.Bytes())
 
@@ -70,7 +70,7 @@ func TestMessageBytes(t *testing.T) {
 }
 
 type testType struct {
-	Message string `codec:"message"`
+	Message string `json:"message"`
 }
 
 func (t *testType) Coerce() error {
