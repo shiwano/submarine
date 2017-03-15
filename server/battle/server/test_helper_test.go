@@ -84,12 +84,12 @@ func (m *webAPITransporter) RoundTrip(request *http.Request) (*http.Response, er
 }
 
 func newWebAPIMock(url string) *webapi.WebAPI {
-	WebAPIRoundTripper = &webAPITransporter{new(typhenapi.JSONSerializer)}
+	WebAPIRoundTripper = &webAPITransporter{new(typhenapi.MessagePackSerializer)}
 	return newWebAPI(url)
 }
 
 func newTestServer() *httptest.Server {
-	WebAPIRoundTripper = &webAPITransporter{new(typhenapi.JSONSerializer)}
+	WebAPIRoundTripper = &webAPITransporter{new(typhenapi.MessagePackSerializer)}
 	gin.SetMode(gin.TestMode)
 	s := httptest.NewServer(New())
 	return s

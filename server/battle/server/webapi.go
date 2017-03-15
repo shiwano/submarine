@@ -11,7 +11,7 @@ import (
 var WebAPIRoundTripper http.RoundTripper
 
 func newWebAPI(baseURI string) *webapi.WebAPI {
-	serializer := new(typhenapi.JSONSerializer)
+	serializer := new(typhenapi.MessagePackSerializer)
 	api := webapi.New(baseURI, serializer, nil)
 	api.Client.Transport = WebAPIRoundTripper
 	api.SetBeforeRequestHandler(onBeforeWebAPIRequest)
@@ -19,5 +19,5 @@ func newWebAPI(baseURI string) *webapi.WebAPI {
 }
 
 func onBeforeWebAPIRequest(req *http.Request) {
-	req.Header.Add("Content-Type", "application/json")
+	req.Header.Add("Content-Type", "application/x-msgpack")
 }
