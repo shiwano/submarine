@@ -4,17 +4,17 @@ package battle
 
 import (
 	"errors"
-	"github.com/shiwano/submarine/server/battle/lib/typhenapi/core"
+	"github.com/shiwano/submarine/server/battle/lib/typhenapi"
 )
 
 var _ = errors.New
 
 // Accelerator is a kind of TyphenAPI type.
 type Accelerator struct {
-	MaxSpeed       float64 `codec:"max_speed"`
-	Duration       int64   `codec:"duration"`
-	StartRate      float64 `codec:"start_rate"`
-	IsAccelerating bool    `codec:"is_accelerating"`
+	MaxSpeed       float64 `json:"max_speed" msgpack:"max_speed"`
+	Duration       int64   `json:"duration" msgpack:"duration"`
+	StartRate      float64 `json:"start_rate" msgpack:"start_rate"`
+	IsAccelerating bool    `json:"is_accelerating" msgpack:"is_accelerating"`
 }
 
 // Coerce the fields.

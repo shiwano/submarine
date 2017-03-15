@@ -4,14 +4,14 @@ package submarine
 
 import (
 	"errors"
-	"github.com/shiwano/submarine/server/battle/lib/typhenapi/core"
+	"github.com/shiwano/submarine/server/battle/lib/typhenapi"
 )
 
 var _ = errors.New
 
 // GetRoomsObject is a kind of TyphenAPI type.
 type GetRoomsObject struct {
-	Rooms []*Room `codec:"rooms"`
+	Rooms []*Room `json:"rooms" msgpack:"rooms"`
 }
 
 // Coerce the fields.

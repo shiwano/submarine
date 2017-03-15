@@ -4,17 +4,17 @@ package battle
 
 import (
 	"errors"
-	"github.com/shiwano/submarine/server/battle/lib/typhenapi/core"
+	"github.com/shiwano/submarine/server/battle/lib/typhenapi"
 )
 
 var _ = errors.New
 
 // Equipment is a kind of TyphenAPI type.
 type Equipment struct {
-	ActorId  int64            `codec:"actor_id"`
-	Torpedos []*EquipmentItem `codec:"torpedos"`
-	Pinger   *EquipmentItem   `codec:"pinger"`
-	Watcher  *EquipmentItem   `codec:"watcher"`
+	ActorId  int64            `json:"actor_id" msgpack:"actor_id"`
+	Torpedos []*EquipmentItem `json:"torpedos" msgpack:"torpedos"`
+	Pinger   *EquipmentItem   `json:"pinger" msgpack:"pinger"`
+	Watcher  *EquipmentItem   `json:"watcher" msgpack:"watcher"`
 }
 
 // Coerce the fields.

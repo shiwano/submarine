@@ -3,7 +3,7 @@
 package submarine
 
 import (
-	"github.com/shiwano/submarine/server/battle/lib/typhenapi/core"
+	"github.com/shiwano/submarine/server/battle/lib/typhenapi"
 	_submarine_battle "github.com/shiwano/submarine/server/battle/lib/typhenapi/websocket/submarine/battle"
 )
 

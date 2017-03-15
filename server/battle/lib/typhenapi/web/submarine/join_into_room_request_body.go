@@ -5,14 +5,14 @@ package submarine
 import (
 	"errors"
 	"fmt"
-	"github.com/shiwano/submarine/server/battle/lib/typhenapi/core"
+	"github.com/shiwano/submarine/server/battle/lib/typhenapi"
 	"net/url"
 )
 
 var _ = errors.New
 
 type JoinIntoRoomRequestBody struct {
-	RoomId int64 `codec:"room_id"`
+	RoomId int64 `json:"room_id" msgpack:"room_id"`
 }
 
 // Coerce the fields.

@@ -4,16 +4,16 @@ package battle
 
 import (
 	"errors"
-	"github.com/shiwano/submarine/server/battle/lib/typhenapi/core"
+	"github.com/shiwano/submarine/server/battle/lib/typhenapi"
 )
 
 var _ = errors.New
 
 // RoomMember is a kind of TyphenAPI type.
 type RoomMember struct {
-	Id     int64  `codec:"id"`
-	RoomId int64  `codec:"room_id"`
-	Name   string `codec:"name"`
+	Id     int64  `json:"id" msgpack:"id"`
+	RoomId int64  `json:"room_id" msgpack:"room_id"`
+	Name   string `json:"name" msgpack:"name"`
 }
 
 // Coerce the fields.

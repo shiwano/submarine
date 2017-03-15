@@ -4,14 +4,14 @@ package battle
 
 import (
 	"errors"
-	"github.com/shiwano/submarine/server/battle/lib/typhenapi/core"
+	"github.com/shiwano/submarine/server/battle/lib/typhenapi"
 )
 
 var _ = errors.New
 
 // RemoveBotRequestObject is a kind of TyphenAPI type.
 type RemoveBotRequestObject struct {
-	BotId int64 `codec:"bot_id"`
+	BotId int64 `json:"bot_id" msgpack:"bot_id"`
 }
 
 // Coerce the fields.

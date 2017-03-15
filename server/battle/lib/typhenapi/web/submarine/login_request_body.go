@@ -5,14 +5,14 @@ package submarine
 import (
 	"errors"
 	"fmt"
-	"github.com/shiwano/submarine/server/battle/lib/typhenapi/core"
+	"github.com/shiwano/submarine/server/battle/lib/typhenapi"
 	"net/url"
 )
 
 var _ = errors.New
 
 type LoginRequestBody struct {
-	AuthToken string `codec:"auth_token"`
+	AuthToken string `json:"auth_token" msgpack:"auth_token"`
 }
 
 // Coerce the fields.

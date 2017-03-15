@@ -4,15 +4,15 @@ package configuration
 
 import (
 	"errors"
-	"github.com/shiwano/submarine/server/battle/lib/typhenapi/core"
+	"github.com/shiwano/submarine/server/battle/lib/typhenapi"
 )
 
 var _ = errors.New
 
 // Client is a kind of TyphenAPI type.
 type Client struct {
-	Version          string `codec:"version"`
-	ApiServerBaseUri string `codec:"api_server_base_uri"`
+	Version          string `json:"version" msgpack:"version"`
+	ApiServerBaseUri string `json:"api_server_base_uri" msgpack:"api_server_base_uri"`
 }
 
 // Coerce the fields.

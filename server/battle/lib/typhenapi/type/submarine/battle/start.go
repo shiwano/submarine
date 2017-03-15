@@ -4,14 +4,14 @@ package battle
 
 import (
 	"errors"
-	"github.com/shiwano/submarine/server/battle/lib/typhenapi/core"
+	"github.com/shiwano/submarine/server/battle/lib/typhenapi"
 )
 
 var _ = errors.New
 
 // Start is a kind of TyphenAPI type.
 type Start struct {
-	StartedAt int64 `codec:"started_at"`
+	StartedAt int64 `json:"started_at" msgpack:"started_at"`
 }
 
 // Coerce the fields.

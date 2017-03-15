@@ -5,14 +5,14 @@ package battle
 import (
 	"errors"
 	"fmt"
-	"github.com/shiwano/submarine/server/battle/lib/typhenapi/core"
+	"github.com/shiwano/submarine/server/battle/lib/typhenapi"
 	"net/url"
 )
 
 var _ = errors.New
 
 type FindRoomMemberRequestBody struct {
-	RoomKey string `codec:"room_key"`
+	RoomKey string `json:"room_key" msgpack:"room_key"`
 }
 
 // Coerce the fields.

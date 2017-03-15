@@ -4,14 +4,14 @@ package battle
 
 import (
 	"errors"
-	"github.com/shiwano/submarine/server/battle/lib/typhenapi/core"
+	"github.com/shiwano/submarine/server/battle/lib/typhenapi"
 )
 
 var _ = errors.New
 
 // AccelerationRequestObject is a kind of TyphenAPI type.
 type AccelerationRequestObject struct {
-	Direction float64 `codec:"direction"`
+	Direction float64 `json:"direction" msgpack:"direction"`
 }
 
 // Coerce the fields.

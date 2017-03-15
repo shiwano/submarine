@@ -4,14 +4,14 @@ package battle
 
 import (
 	"errors"
-	"github.com/shiwano/submarine/server/battle/lib/typhenapi/core"
+	"github.com/shiwano/submarine/server/battle/lib/typhenapi"
 )
 
 var _ = errors.New
 
 // NowObject is a kind of TyphenAPI type.
 type NowObject struct {
-	Time int64 `codec:"time"`
+	Time int64 `json:"time" msgpack:"time"`
 }
 
 // Coerce the fields.

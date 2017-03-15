@@ -1,15 +1,14 @@
-package typhenapi_test
+package typhenapi
 
 import (
 	"bytes"
 	"errors"
-	"github.com/shiwano/submarine/server/battle/lib/typhenapi/core"
 	"testing"
 )
 
 func TestNewMessage(t *testing.T) {
-	serializer := typhenapi.NewJSONSerializer()
-	message, err := typhenapi.NewMessage(serializer, 1, &testType{"Foobar"})
+	serializer := new(JSONSerializer)
+	message, err := NewMessage(serializer, 1, &testType{"Foobar"})
 
 	if err != nil {
 		t.Error(err)
@@ -35,7 +34,7 @@ func TestNewMessage(t *testing.T) {
 
 func TestNewMessageFromBytes(t *testing.T) {
 	data := []byte{0xF0, 0xFF, 0x00, 0x00, 2, 3, 5, 7, 11}
-	message, err := typhenapi.NewMessageFromBytes(data)
+	message, err := NewMessageFromBytes(data)
 
 	if err != nil {
 		t.Error(err)
@@ -52,9 +51,9 @@ func TestNewMessageFromBytes(t *testing.T) {
 }
 
 func TestMessageBytes(t *testing.T) {
-	serializer := typhenapi.NewJSONSerializer()
-	messageA, _ := typhenapi.NewMessage(serializer, 1, &testType{"Foobar"})
-	message, _ := typhenapi.NewMessageFromBytes(messageA.Bytes())
+	serializer := new(JSONSerializer)
+	messageA, _ := NewMessage(serializer, 1, &testType{"Foobar"})
+	message, _ := NewMessageFromBytes(messageA.Bytes())
 
 	deserialized := &testType{}
 	err := serializer.Deserialize(message.Body, deserialized)
@@ -70,7 +69,7 @@ func TestMessageBytes(t *testing.T) {
 }
 
 type testType struct {
-	Message string `codec:"message"`
+	Message string `json:"message"`
 }
 
 func (t *testType) Coerce() error {
@@ -81,7 +80,7 @@ func (t *testType) Coerce() error {
 	return nil
 }
 
-func (t *testType) Bytes(serializer typhenapi.Serializer) ([]byte, error) {
+func (t *testType) Bytes(serializer Serializer) ([]byte, error) {
 	if err := t.Coerce(); err != nil {
 		return nil, err
 	}

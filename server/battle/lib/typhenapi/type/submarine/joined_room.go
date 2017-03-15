@@ -4,18 +4,18 @@ package submarine
 
 import (
 	"errors"
-	"github.com/shiwano/submarine/server/battle/lib/typhenapi/core"
+	"github.com/shiwano/submarine/server/battle/lib/typhenapi"
 )
 
 var _ = errors.New
 
 // JoinedRoom is a kind of TyphenAPI type.
 type JoinedRoom struct {
-	BattleServerBaseUri string  `codec:"battle_server_base_uri"`
-	RoomKey             string  `codec:"room_key"`
-	Id                  int64   `codec:"id"`
-	Members             []*User `codec:"members"`
-	Bots                []*Bot  `codec:"bots"`
+	BattleServerBaseUri string  `json:"battle_server_base_uri" msgpack:"battle_server_base_uri"`
+	RoomKey             string  `json:"room_key" msgpack:"room_key"`
+	Id                  int64   `json:"id" msgpack:"id"`
+	Members             []*User `json:"members" msgpack:"members"`
+	Bots                []*Bot  `json:"bots" msgpack:"bots"`
 }
 
 // Coerce the fields.

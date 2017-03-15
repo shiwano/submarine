@@ -4,15 +4,15 @@ package battle
 
 import (
 	"errors"
-	"github.com/shiwano/submarine/server/battle/lib/typhenapi/core"
+	"github.com/shiwano/submarine/server/battle/lib/typhenapi"
 )
 
 var _ = errors.New
 
 // Pinger is a kind of TyphenAPI type.
 type Pinger struct {
-	ActorId    int64 `codec:"actor_id"`
-	IsFinished bool  `codec:"is_finished"`
+	ActorId    int64 `json:"actor_id" msgpack:"actor_id"`
+	IsFinished bool  `json:"is_finished" msgpack:"is_finished"`
 }
 
 // Coerce the fields.

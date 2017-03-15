@@ -4,19 +4,19 @@ package battle
 
 import (
 	"errors"
-	"github.com/shiwano/submarine/server/battle/lib/typhenapi/core"
+	"github.com/shiwano/submarine/server/battle/lib/typhenapi"
 )
 
 var _ = errors.New
 
 // Actor is a kind of TyphenAPI type.
 type Actor struct {
-	Id        int64                 `codec:"id"`
-	UserId    int64                 `codec:"user_id"`
-	Type      ActorType             `codec:"type"`
-	Movement  *Movement             `codec:"movement"`
-	IsVisible bool                  `codec:"is_visible"`
-	Submarine *ActorSubmarineObject `codec:"submarine"`
+	Id        int64                 `json:"id" msgpack:"id"`
+	UserId    int64                 `json:"user_id" msgpack:"user_id"`
+	Type      ActorType             `json:"type" msgpack:"type"`
+	Movement  *Movement             `json:"movement" msgpack:"movement"`
+	IsVisible bool                  `json:"is_visible" msgpack:"is_visible"`
+	Submarine *ActorSubmarineObject `json:"submarine" msgpack:"submarine"`
 }
 
 // Coerce the fields.

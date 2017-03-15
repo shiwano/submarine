@@ -5,7 +5,7 @@ package submarine
 import (
 	"errors"
 	"fmt"
-	"github.com/shiwano/submarine/server/battle/lib/typhenapi/core"
+	"github.com/shiwano/submarine/server/battle/lib/typhenapi"
 	"net/url"
 )
 

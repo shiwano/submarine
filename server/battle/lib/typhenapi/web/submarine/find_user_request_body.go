@@ -5,14 +5,14 @@ package submarine
 import (
 	"errors"
 	"fmt"
-	"github.com/shiwano/submarine/server/battle/lib/typhenapi/core"
+	"github.com/shiwano/submarine/server/battle/lib/typhenapi"
 	"net/url"
 )
 
 var _ = errors.New
 
 type FindUserRequestBody struct {
-	Name string `codec:"name"`
+	Name string `json:"name" msgpack:"name"`
 }
 
 // Coerce the fields.

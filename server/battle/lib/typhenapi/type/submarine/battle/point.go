@@ -4,15 +4,15 @@ package battle
 
 import (
 	"errors"
-	"github.com/shiwano/submarine/server/battle/lib/typhenapi/core"
+	"github.com/shiwano/submarine/server/battle/lib/typhenapi"
 )
 
 var _ = errors.New
 
 // Point is a kind of TyphenAPI type.
 type Point struct {
-	X float64 `codec:"x"`
-	Y float64 `codec:"y"`
+	X float64 `json:"x" msgpack:"x"`
+	Y float64 `json:"y" msgpack:"y"`
 }
 
 // Coerce the fields.

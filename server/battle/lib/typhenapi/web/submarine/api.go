@@ -4,7 +4,7 @@ package submarine
 
 import (
 	"bytes"
-	"github.com/shiwano/submarine/server/battle/lib/typhenapi/core"
+	"github.com/shiwano/submarine/server/battle/lib/typhenapi"
 	submarine "github.com/shiwano/submarine/server/battle/lib/typhenapi/type/submarine"
 	_submarine_battle "github.com/shiwano/submarine/server/battle/lib/typhenapi/web/submarine/battle"
 	"io"

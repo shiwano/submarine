@@ -4,17 +4,17 @@ package configuration
 
 import (
 	"errors"
-	"github.com/shiwano/submarine/server/battle/lib/typhenapi/core"
+	"github.com/shiwano/submarine/server/battle/lib/typhenapi"
 )
 
 var _ = errors.New
 
 // ServerDatabaseObject is a kind of TyphenAPI type.
 type ServerDatabaseObject struct {
-	Host     string `codec:"host"`
-	Port     int64  `codec:"port"`
-	User     string `codec:"user"`
-	Password string `codec:"password"`
+	Host     string `json:"host" msgpack:"host"`
+	Port     int64  `json:"port" msgpack:"port"`
+	User     string `json:"user" msgpack:"user"`
+	Password string `json:"password" msgpack:"password"`
 }
 
 // Coerce the fields.

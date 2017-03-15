@@ -4,15 +4,15 @@ package battle
 
 import (
 	"errors"
-	"github.com/shiwano/submarine/server/battle/lib/typhenapi/core"
+	"github.com/shiwano/submarine/server/battle/lib/typhenapi"
 )
 
 var _ = errors.New
 
 // Finish is a kind of TyphenAPI type.
 type Finish struct {
-	WinnerUserId *int64 `codec:"winner_user_id"`
-	FinishedAt   int64  `codec:"finished_at"`
+	WinnerUserId *int64 `json:"winner_user_id" msgpack:"winner_user_id"`
+	FinishedAt   int64  `json:"finished_at" msgpack:"finished_at"`
 }
 
 // Coerce the fields.

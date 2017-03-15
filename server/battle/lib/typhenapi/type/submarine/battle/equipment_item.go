@@ -4,15 +4,15 @@ package battle
 
 import (
 	"errors"
-	"github.com/shiwano/submarine/server/battle/lib/typhenapi/core"
+	"github.com/shiwano/submarine/server/battle/lib/typhenapi"
 )
 
 var _ = errors.New
 
 // EquipmentItem is a kind of TyphenAPI type.
 type EquipmentItem struct {
-	CooldownStartedAt int64 `codec:"cooldown_started_at"`
-	CooldownDuration  int64 `codec:"cooldown_duration"`
+	CooldownStartedAt int64 `json:"cooldown_started_at" msgpack:"cooldown_started_at"`
+	CooldownDuration  int64 `json:"cooldown_duration" msgpack:"cooldown_duration"`
 }
 
 // Coerce the fields.

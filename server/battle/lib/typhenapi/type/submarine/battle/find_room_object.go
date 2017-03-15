@@ -4,14 +4,14 @@ package battle
 
 import (
 	"errors"
-	"github.com/shiwano/submarine/server/battle/lib/typhenapi/core"
+	"github.com/shiwano/submarine/server/battle/lib/typhenapi"
 )
 
 var _ = errors.New
 
 // FindRoomObject is a kind of TyphenAPI type.
 type FindRoomObject struct {
-	Room *Room `codec:"room"`
+	Room *Room `json:"room" msgpack:"room"`
 }
 
 // Coerce the fields.

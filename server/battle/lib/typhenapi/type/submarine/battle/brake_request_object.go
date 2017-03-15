@@ -4,14 +4,14 @@ package battle
 
 import (
 	"errors"
-	"github.com/shiwano/submarine/server/battle/lib/typhenapi/core"
+	"github.com/shiwano/submarine/server/battle/lib/typhenapi"
 )
 
 var _ = errors.New
 
 // BrakeRequestObject is a kind of TyphenAPI type.
 type BrakeRequestObject struct {
-	Direction float64 `codec:"direction"`
+	Direction float64 `json:"direction" msgpack:"direction"`
 }
 
 // Coerce the fields.

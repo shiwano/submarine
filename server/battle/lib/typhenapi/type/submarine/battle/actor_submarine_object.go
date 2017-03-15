@@ -4,15 +4,15 @@ package battle
 
 import (
 	"errors"
-	"github.com/shiwano/submarine/server/battle/lib/typhenapi/core"
+	"github.com/shiwano/submarine/server/battle/lib/typhenapi"
 )
 
 var _ = errors.New
 
 // ActorSubmarineObject is a kind of TyphenAPI type.
 type ActorSubmarineObject struct {
-	IsUsingPinger bool       `codec:"is_using_pinger"`
-	Equipment     *Equipment `codec:"equipment"`
+	IsUsingPinger bool       `json:"is_using_pinger" msgpack:"is_using_pinger"`
+	Equipment     *Equipment `json:"equipment" msgpack:"equipment"`
 }
 
 // Coerce the fields.

@@ -4,18 +4,18 @@ package battle
 
 import (
 	"errors"
-	"github.com/shiwano/submarine/server/battle/lib/typhenapi/core"
+	"github.com/shiwano/submarine/server/battle/lib/typhenapi"
 )
 
 var _ = errors.New
 
 // Movement is a kind of TyphenAPI type.
 type Movement struct {
-	ActorId     int64        `codec:"actor_id"`
-	Position    *Point       `codec:"position"`
-	Direction   float64      `codec:"direction"`
-	MovedAt     int64        `codec:"moved_at"`
-	Accelerator *Accelerator `codec:"accelerator"`
+	ActorId     int64        `json:"actor_id" msgpack:"actor_id"`
+	Position    *Point       `json:"position" msgpack:"position"`
+	Direction   float64      `json:"direction" msgpack:"direction"`
+	MovedAt     int64        `json:"moved_at" msgpack:"moved_at"`
+	Accelerator *Accelerator `json:"accelerator" msgpack:"accelerator"`
 }
 
 // Coerce the fields.

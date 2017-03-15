@@ -5,16 +5,16 @@ package submarine
 import (
 	"errors"
 	"fmt"
-	"github.com/shiwano/submarine/server/battle/lib/typhenapi/core"
+	"github.com/shiwano/submarine/server/battle/lib/typhenapi"
 )
 
 var _ = errors.New
 
 // Error is a kind of TyphenAPI type.
 type Error struct {
-	Code    int64  `codec:"code"`
-	Name    string `codec:"name"`
-	Message string `codec:"message"`
+	Code    int64  `json:"code" msgpack:"code"`
+	Name    string `json:"name" msgpack:"name"`
+	Message string `json:"message" msgpack:"message"`
 }
 
 // Coerce the fields.

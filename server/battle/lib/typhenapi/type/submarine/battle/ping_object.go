@@ -4,14 +4,14 @@ package battle
 
 import (
 	"errors"
-	"github.com/shiwano/submarine/server/battle/lib/typhenapi/core"
+	"github.com/shiwano/submarine/server/battle/lib/typhenapi"
 )
 
 var _ = errors.New
 
 // PingObject is a kind of TyphenAPI type.
 type PingObject struct {
-	Message string `codec:"message"`
+	Message string `json:"message" msgpack:"message"`
 }
 
 // Coerce the fields.

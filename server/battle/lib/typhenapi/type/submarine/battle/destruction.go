@@ -4,14 +4,14 @@ package battle
 
 import (
 	"errors"
-	"github.com/shiwano/submarine/server/battle/lib/typhenapi/core"
+	"github.com/shiwano/submarine/server/battle/lib/typhenapi"
 )
 
 var _ = errors.New
 
 // Destruction is a kind of TyphenAPI type.
 type Destruction struct {
-	ActorId int64 `codec:"actor_id"`
+	ActorId int64 `json:"actor_id" msgpack:"actor_id"`
 }
 
 // Coerce the fields.

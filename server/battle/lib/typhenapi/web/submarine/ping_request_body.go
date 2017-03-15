@@ -5,14 +5,14 @@ package submarine
 import (
 	"errors"
 	"fmt"
-	"github.com/shiwano/submarine/server/battle/lib/typhenapi/core"
+	"github.com/shiwano/submarine/server/battle/lib/typhenapi"
 	"net/url"
 )
 
 var _ = errors.New
 
 type PingRequestBody struct {
-	Message string `codec:"message"`
+	Message string `json:"message" msgpack:"message"`
 }
 
 // Coerce the fields.

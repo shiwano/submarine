@@ -4,15 +4,15 @@ package submarine
 
 import (
 	"errors"
-	"github.com/shiwano/submarine/server/battle/lib/typhenapi/core"
+	"github.com/shiwano/submarine/server/battle/lib/typhenapi"
 )
 
 var _ = errors.New
 
 // User is a kind of TyphenAPI type.
 type User struct {
-	Id   int64  `codec:"id"`
-	Name string `codec:"name"`
+	Id   int64  `json:"id" msgpack:"id"`
+	Name string `json:"name" msgpack:"name"`
 }
 
 // Coerce the fields.

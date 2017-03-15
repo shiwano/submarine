@@ -4,14 +4,14 @@ package submarine
 
 import (
 	"errors"
-	"github.com/shiwano/submarine/server/battle/lib/typhenapi/core"
+	"github.com/shiwano/submarine/server/battle/lib/typhenapi"
 )
 
 var _ = errors.New
 
 // FindUserObject is a kind of TyphenAPI type.
 type FindUserObject struct {
-	User *User `codec:"user"`
+	User *User `json:"user" msgpack:"user"`
 }
 
 // Coerce the fields.

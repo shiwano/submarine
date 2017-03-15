@@ -4,16 +4,16 @@ package configuration
 
 import (
 	"errors"
-	"github.com/shiwano/submarine/server/battle/lib/typhenapi/core"
+	"github.com/shiwano/submarine/server/battle/lib/typhenapi"
 )
 
 var _ = errors.New
 
 // Server is a kind of TyphenAPI type.
 type Server struct {
-	ApiServerBaseUri    string                `codec:"api_server_base_uri"`
-	BattleServerBaseUri string                `codec:"battle_server_base_uri"`
-	Database            *ServerDatabaseObject `codec:"database"`
+	ApiServerBaseUri    string                `json:"api_server_base_uri" msgpack:"api_server_base_uri"`
+	BattleServerBaseUri string                `json:"battle_server_base_uri" msgpack:"battle_server_base_uri"`
+	Database            *ServerDatabaseObject `json:"database" msgpack:"database"`
 }
 
 // Coerce the fields.

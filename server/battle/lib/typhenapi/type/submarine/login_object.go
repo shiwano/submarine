@@ -4,14 +4,14 @@ package submarine
 
 import (
 	"errors"
-	"github.com/shiwano/submarine/server/battle/lib/typhenapi/core"
+	"github.com/shiwano/submarine/server/battle/lib/typhenapi"
 )
 
 var _ = errors.New
 
 // LoginObject is a kind of TyphenAPI type.
 type LoginObject struct {
-	User *LoggedInUser `codec:"user"`
+	User *LoggedInUser `json:"user" msgpack:"user"`
 }
 
 // Coerce the fields.

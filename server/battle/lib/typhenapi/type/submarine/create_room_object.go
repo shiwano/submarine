@@ -4,14 +4,14 @@ package submarine
 
 import (
 	"errors"
-	"github.com/shiwano/submarine/server/battle/lib/typhenapi/core"
+	"github.com/shiwano/submarine/server/battle/lib/typhenapi"
 )
 
 var _ = errors.New
 
 // CreateRoomObject is a kind of TyphenAPI type.
 type CreateRoomObject struct {
-	Room *JoinedRoom `codec:"room"`
+	Room *JoinedRoom `json:"room" msgpack:"room"`
 }
 
 // Coerce the fields.

@@ -4,16 +4,16 @@ package submarine
 
 import (
 	"errors"
-	"github.com/shiwano/submarine/server/battle/lib/typhenapi/core"
+	"github.com/shiwano/submarine/server/battle/lib/typhenapi"
 )
 
 var _ = errors.New
 
 // Room is a kind of TyphenAPI type.
 type Room struct {
-	Id      int64   `codec:"id"`
-	Members []*User `codec:"members"`
-	Bots    []*Bot  `codec:"bots"`
+	Id      int64   `json:"id" msgpack:"id"`
+	Members []*User `json:"members" msgpack:"members"`
+	Bots    []*Bot  `json:"bots" msgpack:"bots"`
 }
 
 // Coerce the fields.

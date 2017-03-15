@@ -4,14 +4,14 @@ package battle
 
 import (
 	"errors"
-	"github.com/shiwano/submarine/server/battle/lib/typhenapi/core"
+	"github.com/shiwano/submarine/server/battle/lib/typhenapi"
 )
 
 var _ = errors.New
 
 // Room is a kind of TyphenAPI type.
 type Room struct {
-	Id int64 `codec:"id"`
+	Id int64 `json:"id" msgpack:"id"`
 }
 
 // Coerce the fields.

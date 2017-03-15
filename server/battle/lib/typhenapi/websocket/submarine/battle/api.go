@@ -4,7 +4,7 @@ package battle
 
 import (
 	"fmt"
-	"github.com/shiwano/submarine/server/battle/lib/typhenapi/core"
+	"github.com/shiwano/submarine/server/battle/lib/typhenapi"
 	submarine "github.com/shiwano/submarine/server/battle/lib/typhenapi/type/submarine"
 	submarine_battle "github.com/shiwano/submarine/server/battle/lib/typhenapi/type/submarine/battle"
 )
