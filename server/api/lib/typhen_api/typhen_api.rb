@@ -15,7 +15,7 @@ module TyphenApi
     if msgpack_enabled?
       Mime::Type.register "application/x-msgpack", :msgpack
       ActionDispatch::Request.parameter_parsers[:msgpack] = -> (raw_post) do
-        result = MessagePack.unpack(raw_post).compact
+        result = MessagePack.unpack(raw_post)
         result.empty? ? {} : result
       end
       ActionController::Renderers.add :msgpack do |body, options|
