@@ -11,7 +11,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/shiwano/websocket-conn"
 
-	"github.com/shiwano/submarine/server/battle/lib/typhenapi/core"
+	"github.com/shiwano/submarine/server/battle/lib/typhenapi"
 	webapi "github.com/shiwano/submarine/server/battle/lib/typhenapi/web/submarine"
 	websocketapi "github.com/shiwano/submarine/server/battle/lib/typhenapi/websocket/submarine"
 	"github.com/shiwano/submarine/server/battle/server/logger"
@@ -24,7 +24,7 @@ type clientSession struct {
 }
 
 func newClientSession() *clientSession {
-	serializer := typhenapi.NewJSONSerializer()
+	serializer := new(typhenapi.JSONSerializer)
 	session := &clientSession{
 		conn: conn.New(),
 	}
@@ -84,12 +84,12 @@ func (m *webAPITransporter) RoundTrip(request *http.Request) (*http.Response, er
 }
 
 func newWebAPIMock(url string) *webapi.WebAPI {
-	WebAPIRoundTripper = &webAPITransporter{typhenapi.NewJSONSerializer()}
+	WebAPIRoundTripper = &webAPITransporter{new(typhenapi.JSONSerializer)}
 	return newWebAPI(url)
 }
 
 func newTestServer() *httptest.Server {
-	WebAPIRoundTripper = &webAPITransporter{typhenapi.NewJSONSerializer()}
+	WebAPIRoundTripper = &webAPITransporter{new(typhenapi.JSONSerializer)}
 	gin.SetMode(gin.TestMode)
 	s := httptest.NewServer(New())
 	return s

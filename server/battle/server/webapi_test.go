@@ -6,7 +6,7 @@ import (
 
 	. "github.com/smartystreets/goconvey/convey"
 
-	"github.com/shiwano/submarine/server/battle/lib/typhenapi/core"
+	"github.com/shiwano/submarine/server/battle/lib/typhenapi"
 	api "github.com/shiwano/submarine/server/battle/lib/typhenapi/type/submarine"
 	battleAPI "github.com/shiwano/submarine/server/battle/lib/typhenapi/type/submarine/battle"
 	webAPI "github.com/shiwano/submarine/server/battle/lib/typhenapi/web/submarine"

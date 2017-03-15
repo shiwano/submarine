@@ -3,7 +3,7 @@ package server
 import (
 	"net/http"
 
-	"github.com/shiwano/submarine/server/battle/lib/typhenapi/core"
+	"github.com/shiwano/submarine/server/battle/lib/typhenapi"
 	webapi "github.com/shiwano/submarine/server/battle/lib/typhenapi/web/submarine"
 )
 
@@ -11,7 +11,7 @@ import (
 var WebAPIRoundTripper http.RoundTripper
 
 func newWebAPI(baseURI string) *webapi.WebAPI {
-	serializer := typhenapi.NewJSONSerializer()
+	serializer := new(typhenapi.JSONSerializer)
 	api := webapi.New(baseURI, serializer, nil)
 	api.Client.Transport = WebAPIRoundTripper
 	api.SetBeforeRequestHandler(onBeforeWebAPIRequest)

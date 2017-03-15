@@ -8,7 +8,7 @@ import (
 	"github.com/shiwano/websocket-conn"
 
 	"github.com/shiwano/submarine/server/battle/lib/currentmillis"
-	"github.com/shiwano/submarine/server/battle/lib/typhenapi/core"
+	"github.com/shiwano/submarine/server/battle/lib/typhenapi"
 	api "github.com/shiwano/submarine/server/battle/lib/typhenapi/type/submarine"
 	battleAPI "github.com/shiwano/submarine/server/battle/lib/typhenapi/type/submarine/battle"
 	rtmAPI "github.com/shiwano/submarine/server/battle/lib/typhenapi/websocket/submarine"
@@ -26,7 +26,7 @@ type session struct {
 }
 
 func newSession(info *battleAPI.RoomMember, roomID int64) *session {
-	serializer := typhenapi.NewJSONSerializer()
+	serializer := new(typhenapi.JSONSerializer)
 	s := &session{
 		id:     info.Id,
 		info:   info,

@@ -5,7 +5,7 @@ import (
 	"path/filepath"
 	"runtime"
 
-	"github.com/shiwano/submarine/server/battle/lib/typhenapi/core"
+	"github.com/shiwano/submarine/server/battle/lib/typhenapi"
 	configAPI "github.com/shiwano/submarine/server/battle/lib/typhenapi/type/submarine/configuration"
 )
 
@@ -32,7 +32,7 @@ func newServerConfig() (*configAPI.Server, error) {
 		return nil, err
 	}
 
-	serializer := typhenapi.NewJSONSerializer()
+	serializer := new(typhenapi.JSONSerializer)
 	c := new(configAPI.Server)
 	err = serializer.Deserialize(data, c)
 	if err != nil {

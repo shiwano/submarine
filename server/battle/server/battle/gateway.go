@@ -5,7 +5,7 @@ import (
 
 	"github.com/shiwano/submarine/server/battle/lib/currentmillis"
 	"github.com/shiwano/submarine/server/battle/lib/navmesh"
-	"github.com/shiwano/submarine/server/battle/lib/typhenapi/core"
+	"github.com/shiwano/submarine/server/battle/lib/typhenapi"
 	battleAPI "github.com/shiwano/submarine/server/battle/lib/typhenapi/type/submarine/battle"
 	"github.com/shiwano/submarine/server/battle/server/battle/context"
 )
