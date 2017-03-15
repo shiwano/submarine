@@ -2,18 +2,19 @@ package typhenapi
 
 import (
 	"bytes"
-	"encoding/json"
 	"errors"
+
+	"gopkg.in/vmihailenco/msgpack.v2"
 )
 
-// JSONSerializer is JSON Serializer/Deserializer for TyphenAPI types.
-type JSONSerializer struct{}
+// MessagePackSerializer is MessagePack Serializer/Deserializer for TyphenAPI types.
+type MessagePackSerializer struct{}
 
 // Serialize a TyphenAPI type to bytes.
-func (s *JSONSerializer) Serialize(v interface{}) (data []byte, err error) {
+func (s *MessagePackSerializer) Serialize(v interface{}) (data []byte, err error) {
 	b := &bytes.Buffer{}
 
-	encoder := json.NewEncoder(b)
+	encoder := msgpack.NewEncoder(b)
 	if err := encoder.Encode(v); err != nil {
 		return nil, err
 	}
@@ -21,10 +22,10 @@ func (s *JSONSerializer) Serialize(v interface{}) (data []byte, err error) {
 }
 
 // Deserialize bytes to a TyphenAPI type.
-func (s *JSONSerializer) Deserialize(b []byte, v interface{}) error {
+func (s *MessagePackSerializer) Deserialize(b []byte, v interface{}) error {
 	r := bytes.NewReader(b)
 
-	decoder := json.NewDecoder(r)
+	decoder := msgpack.NewDecoder(r)
 	if err := decoder.Decode(v); err != nil {
 		return err
 	}

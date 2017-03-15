@@ -16,7 +16,7 @@ var _ = errors.New;
 
 type {{upperCamelCase name}}RequestBody struct {
 	{{#each callSignatures.0.parameters}}
-	{{upperCamelCase name}} {{typeName type null isOptional true}} `json:"{{serializablePropertyName this}}"`
+	{{upperCamelCase name}} {{typeName type null isOptional true}} `json:"{{serializablePropertyName this}}" msgpack:"{{serializablePropertyName this}}"`
 	{{/each}}
 }
 
