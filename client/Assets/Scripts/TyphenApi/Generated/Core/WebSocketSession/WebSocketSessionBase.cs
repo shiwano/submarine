@@ -89,7 +89,7 @@ namespace TyphenApi
         public void Send(int messageType, IType message)
         {
             OnBeforeMessageSend(message);
-            var messageData = MessageSerializer.Serialize(message);
+            var messageData = message.Serialize(MessageSerializer);
             var messageTypeBytes = BitConverter.GetBytes(messageType);
 
             if (!BitConverter.IsLittleEndian)
