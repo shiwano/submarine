@@ -9,6 +9,7 @@ namespace TyphenApi.Type.Submarine.Battle
         float directionForNormalizedVelocity;
         Vector2 normalizedVelocity;
 
+        [MessagePack.IgnoreMember]
         public Vector2 NormalizedVelocity
         {
             get
@@ -26,6 +27,7 @@ namespace TyphenApi.Type.Submarine.Battle
             }
         }
 
+        [MessagePack.IgnoreMember]
         public DateTime MovedAtAsDateTime
         {
             get { return CurrentMillis.FromMilliseconds(MovedAt); }
