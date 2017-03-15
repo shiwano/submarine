@@ -540,6 +540,14 @@
 			"notests": true
 		},
 		{
+			"importpath": "google.golang.org/appengine",
+			"repository": "https://github.com/golang/appengine",
+			"vcs": "git",
+			"revision": "b79c28f0197795b4050bfcd7c4c2209136c594b1",
+			"branch": "master",
+			"notests": true
+		},
+		{
 			"importpath": "gopkg.in/airbrake/gobrake.v2",
 			"repository": "https://gopkg.in/airbrake/gobrake.v2",
 			"vcs": "git",
@@ -560,6 +568,14 @@
 			"repository": "https://gopkg.in/go-playground/validator.v8",
 			"vcs": "git",
 			"revision": "5f57d2222ad794d0dffb07e664ea05e2ee07d60c",
+			"branch": "master",
+			"notests": true
+		},
+		{
+			"importpath": "gopkg.in/vmihailenco/msgpack.v2",
+			"repository": "https://gopkg.in/vmihailenco/msgpack.v2",
+			"vcs": "git",
+			"revision": "f784471e11a864303cc098fe5c48af8e79628f3e",
 			"branch": "master",
 			"notests": true
 		},
