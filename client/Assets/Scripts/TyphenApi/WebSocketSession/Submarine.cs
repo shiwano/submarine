@@ -14,9 +14,9 @@ namespace TyphenApi.WebSocketSession
 
         public Submarine(string requestUri) : base(requestUri)
         {
-            var jsonSerializer = new JSONSerializer();
-            MessageSerializer = jsonSerializer;
-            MessageDeserializer = jsonSerializer;
+            var serializer = new MessagePackSerializer();
+            MessageSerializer = serializer;
+            MessageDeserializer = serializer;
 
             IsConnected = new ReactiveProperty<bool>();
             Observable.EveryUpdate().Subscribe(_ => Update()).AddTo(disposables);
