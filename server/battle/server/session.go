@@ -26,7 +26,7 @@ type session struct {
 }
 
 func newSession(info *battleAPI.RoomMember, roomID int64) *session {
-	serializer := new(typhenapi.JSONSerializer)
+	serializer := new(typhenapi.MessagePackSerializer)
 	s := &session{
 		id:     info.Id,
 		info:   info,

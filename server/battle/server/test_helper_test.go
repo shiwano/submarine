@@ -24,7 +24,7 @@ type clientSession struct {
 }
 
 func newClientSession() *clientSession {
-	serializer := new(typhenapi.JSONSerializer)
+	serializer := new(typhenapi.MessagePackSerializer)
 	session := &clientSession{
 		conn: conn.New(),
 	}
