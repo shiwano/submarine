@@ -3,7 +3,7 @@
 package {{lowerCamelCase name}}
 
 import (
-	"{{@importBasePath}}/core"
+	"{{@importBasePath}}"
 	{{#each (webApiModules this)}}
 	_{{alias}} "{{@importBasePath}}/web/{{path}}"
 	{{/each}}

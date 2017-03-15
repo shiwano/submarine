@@ -4,7 +4,7 @@ package {{lowerCamelCase parentModule}}
 
 import (
 	"errors"
-	"{{@importBasePath}}/core"
+	"{{@importBasePath}}"
 	{{#each (requiredModules this false)}}
 	{{alias}} "{{@importBasePath}}/type/{{path}}"
 	{{/each}}

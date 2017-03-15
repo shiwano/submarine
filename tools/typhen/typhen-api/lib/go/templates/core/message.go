@@ -8,41 +8,39 @@ import (
 
 const messageTypeLength = 4
 
-// Message is a socket message for TyphenAPI.
+// Message is a realtime message for TyphenAPI.
 type Message struct {
 	Type int32
 	Body []byte
 }
 
-// NewMessage creates a Message from a TyphenAPI type
+// NewMessage creates a Message from a TyphenAPI type.
 func NewMessage(serializer Serializer, messageType int32, v interface{}) (message *Message, err error) {
 	typhenType := v.(Type)
-
 	if typhenType == nil {
-		return nil, errors.New("No TyphenAPI type")
+		return nil, errors.New("Not TyphenAPI type")
 	}
 
 	data, err := typhenType.Bytes(serializer)
 	if err != nil {
 		return nil, err
 	}
-
 	return &Message{messageType, data}, nil
 }
 
-// NewMessageFromBytes creates a Message from bytes
+// NewMessageFromBytes creates a Message from bytes.
 func NewMessageFromBytes(data []byte) (message *Message, err error) {
-	reader := bytes.NewReader(data)
+	r := bytes.NewReader(data)
 
 	messageTypeBytes := make([]byte, messageTypeLength)
-	if _, err := reader.Read(messageTypeBytes); err != nil {
+	if _, err := r.Read(messageTypeBytes); err != nil {
 		return nil, err
 	}
 
 	messageType := int32(binary.LittleEndian.Uint32(messageTypeBytes))
 
 	messageBody := make([]byte, len(data)-messageTypeLength)
-	if _, err := reader.Read(messageBody); err != nil {
+	if _, err := r.Read(messageBody); err != nil {
 		return nil, err
 	}
 

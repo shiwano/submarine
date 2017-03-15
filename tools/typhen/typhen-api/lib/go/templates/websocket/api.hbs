@@ -3,7 +3,7 @@
 package {{lowerCamelCase name}}
 
 import (
-	"{{@importBasePath}}/core"
+	"{{@importBasePath}}"
 	{{#each (webSocketApiModules this)}}
 	_{{alias}} "{{@importBasePath}}/websocket/{{path}}"
 	{{/each}}

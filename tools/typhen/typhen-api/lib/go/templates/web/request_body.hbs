@@ -6,7 +6,7 @@ import (
 	"errors"
 	"net/url"
 	"fmt"
-	"{{@importBasePath}}/core"
+	"{{@importBasePath}}"
 	{{#each (requiredModules this false)}}
 	{{alias}} "{{@importBasePath}}/type/{{path}}"
 	{{/each}}

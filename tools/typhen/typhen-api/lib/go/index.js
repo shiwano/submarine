@@ -115,9 +115,7 @@ module.exports = function(typhen, options, helpers) {
 
     generate: function(g, types, modules, targetModule) {
       fs.removeSync(path.join(g.outputDirectory, 'typhenapi'));
-
-      g.generateFiles('lib/go/templates/core', '**/*.go', 'typhenapi/core');
-      g.generate('lib/go/templates/core/message_test.hbs', 'typhenapi/core/message_test.go');
+      g.generateFiles('lib/go/templates/core', '**/*.go', 'typhenapi');
 
       types.forEach(function(type) {
         switch (type.kind) {
