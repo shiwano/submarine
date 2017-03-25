@@ -1,5 +1,5 @@
 {
-  "files": [ "contract/contract.d.ts" ],
+  "files": [ "contract/index.d.ts" ],
   "compilerOptions": {
     "module": "commonjs",
     "experimentalDecorators": true,
@@ -23,8 +23,8 @@
       },
       "outDir": "server/api",
       "files": [
-        "contract/contract.d.ts",
-        "contract/intranet/contract.d.ts"
+        "contract/index.d.ts",
+        "contract/intranet/index.d.ts"
       ]
     },
     {
@@ -35,8 +35,8 @@
       },
       "outDir": "server/battle/lib",
       "files": [
-        "contract/contract.d.ts",
-        "contract/intranet/contract.d.ts"
+        "contract/index.d.ts",
+        "contract/intranet/index.d.ts"
       ]
     }
   ]

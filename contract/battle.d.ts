@@ -1,4 +1,4 @@
-/// <reference path='./contract.d.ts' />
+/// <reference path='./index.d.ts' />
 
 declare module Submarine.Battle {
   enum ActorType {
