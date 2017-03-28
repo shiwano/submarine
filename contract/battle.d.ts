@@ -76,28 +76,28 @@ declare module Submarine.Battle {
     cooldownDuration: milliSeconds;
   }
 
-  var ping: { message: string; }
-  var room: Submarine.Room;
+  type ping = TyphenApi.RTMMessage<{ message: string }>;
+  type room = TyphenApi.RTMMessage<Submarine.Room>;
 
-  var now: { time: timeStamp; };
-  var start: Start;
-  var finish: Finish;
+  type now = TyphenApi.RTMMessage<{ time: timeStamp }>;
+  type start = TyphenApi.RTMMessage<Start>;
+  type finish = TyphenApi.RTMMessage<Finish>;
 
-  var actor: Actor;
-  var visibility: Visibility;
-  var movement: Movement;
-  var destruction: Destruction;
-  var pinger: Pinger;
-  var equipment: Equipment;
+  type actor = TyphenApi.RTMMessage<Actor>;
+  type visibility = TyphenApi.RTMMessage<Visibility>;
+  type movement = TyphenApi.RTMMessage<Movement>;
+  type destruction = TyphenApi.RTMMessage<Destruction>;
+  type pinger = TyphenApi.RTMMessage<Pinger>;
+  type equipment = TyphenApi.RTMMessage<Equipment>;
 
-  var startRequest: {};
-  var accelerationRequest: { direction: degrees; };
-  var brakeRequest: { direction: degrees; };
-  var turnRequest: { direction: degrees; };
-  var pingerRequest: {};
-  var torpedoRequest: {};
-  var watcherRequest: {};
+  type startRequest = TyphenApi.RTMMessage<{}>;
+  type accelerationRequest = TyphenApi.RTMMessage<{ direction: degrees; }>;
+  type brakeRequest = TyphenApi.RTMMessage<{ direction: degrees; }>;
+  type turnRequest = TyphenApi.RTMMessage<{ direction: degrees; }>;
+  type pingerRequest = TyphenApi.RTMMessage<{}>;
+  type torpedoRequest = TyphenApi.RTMMessage<{}>;
+  type watcherRequest = TyphenApi.RTMMessage<{}>;
 
-  var addBotRequest: {};
-  var removeBotRequest: { botId: integer; };
+  type addBotRequest = TyphenApi.RTMMessage<{}>;
+  type removeBotRequest = TyphenApi.RTMMessage<{botId: integer}>;
 }
