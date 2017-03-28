@@ -1,11 +1,11 @@
 /// <reference path='./battle.d.ts' />
 /// <reference path='./configuration.d.ts' />
-
-interface integer {}
+/// <reference path='../tools/typhen/typhen-api/index.d.ts' />
 
 declare module Submarine {
-  type degrees = number;       // 0-360
-  type timeStamp = integer;    // see http://currentmillis.com/
+  type integer = TyphenApi.integer;
+  type degrees = number;            // 0-360
+  type timeStamp = integer;         // see http://currentmillis.com/
   type milliSeconds = integer;
 
   interface Error {
