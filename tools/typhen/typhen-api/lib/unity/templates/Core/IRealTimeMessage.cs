@@ -2,5 +2,5 @@
 
 namespace TyphenApi
 {
-    public interface IRealTimeMessage { }
+    public interface IRealTimeMessage : IType { }
 }

@@ -60,7 +60,7 @@ namespace TyphenApi.WebSocketApi{{#if namespace}}.Parts.{{upperCamelCase namespa
         }
         {{/each}}
 
-        public TyphenApi.IType DispatchMessageEvent(int messageType, byte[] messageData)
+        public TyphenApi.IRealTimeMessage DispatchMessageEvent(int messageType, byte[] messageData)
         {
             {{#if (realTimeMessages types)}}
             switch ((MessageType)messageType)
@@ -83,7 +83,7 @@ namespace TyphenApi.WebSocketApi{{#if namespace}}.Parts.{{upperCamelCase namespa
 
             {{#each modules}}
             {{#if @first}}
-            TyphenApi.IType message;
+            TyphenApi.IRealTimeMessage message;
             {{/if}}
 
             {{#if (realTimeMessages types)}}
