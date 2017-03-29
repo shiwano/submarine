@@ -5,7 +5,6 @@ package battle
 import (
 	"fmt"
 	"github.com/shiwano/submarine/server/battle/lib/typhenapi"
-	submarine "github.com/shiwano/submarine/server/battle/lib/typhenapi/type/submarine"
 	submarine_battle "github.com/shiwano/submarine/server/battle/lib/typhenapi/type/submarine/battle"
 )
 
@@ -38,9 +37,9 @@ type WebSocketAPI struct {
 	serializer   typhenapi.Serializer
 	errorHandler func(error)
 
-	PingHandler                func(message *submarine_battle.PingObject)
-	RoomHandler                func(message *submarine.Room)
-	NowHandler                 func(message *submarine_battle.NowObject)
+	PingHandler                func(message *submarine_battle.Ping)
+	RoomHandler                func(message *submarine_battle.Room)
+	NowHandler                 func(message *submarine_battle.Now)
 	StartHandler               func(message *submarine_battle.Start)
 	FinishHandler              func(message *submarine_battle.Finish)
 	ActorHandler               func(message *submarine_battle.Actor)
@@ -49,15 +48,15 @@ type WebSocketAPI struct {
 	DestructionHandler         func(message *submarine_battle.Destruction)
 	PingerHandler              func(message *submarine_battle.Pinger)
 	EquipmentHandler           func(message *submarine_battle.Equipment)
-	StartRequestHandler        func(message *submarine_battle.StartRequestObject)
-	AccelerationRequestHandler func(message *submarine_battle.AccelerationRequestObject)
-	BrakeRequestHandler        func(message *submarine_battle.BrakeRequestObject)
-	TurnRequestHandler         func(message *submarine_battle.TurnRequestObject)
-	PingerRequestHandler       func(message *submarine_battle.PingerRequestObject)
-	TorpedoRequestHandler      func(message *submarine_battle.TorpedoRequestObject)
-	WatcherRequestHandler      func(message *submarine_battle.WatcherRequestObject)
-	AddBotRequestHandler       func(message *submarine_battle.AddBotRequestObject)
-	RemoveBotRequestHandler    func(message *submarine_battle.RemoveBotRequestObject)
+	StartRequestHandler        func(message *submarine_battle.StartRequest)
+	AccelerationRequestHandler func(message *submarine_battle.AccelerationRequest)
+	BrakeRequestHandler        func(message *submarine_battle.BrakeRequest)
+	TurnRequestHandler         func(message *submarine_battle.TurnRequest)
+	PingerRequestHandler       func(message *submarine_battle.PingerRequest)
+	TorpedoRequestHandler      func(message *submarine_battle.TorpedoRequest)
+	WatcherRequestHandler      func(message *submarine_battle.WatcherRequest)
+	AddBotRequestHandler       func(message *submarine_battle.AddBotRequest)
+	RemoveBotRequestHandler    func(message *submarine_battle.RemoveBotRequest)
 }
 
 // New creates a WebSocketAPI.
@@ -72,11 +71,11 @@ func New(session typhenapi.Session, serializer typhenapi.Serializer, errorHandle
 // Send sends a message.
 func (api *WebSocketAPI) Send(body typhenapi.Type) (message *typhenapi.Message, err error) {
 	switch messageBody := body.(type) {
-	case *submarine_battle.PingObject:
+	case *submarine_battle.Ping:
 		message, err = typhenapi.NewMessage(api.serializer, MessageType_Ping, messageBody)
-	case *submarine.Room:
+	case *submarine_battle.Room:
 		message, err = typhenapi.NewMessage(api.serializer, MessageType_Room, messageBody)
-	case *submarine_battle.NowObject:
+	case *submarine_battle.Now:
 		message, err = typhenapi.NewMessage(api.serializer, MessageType_Now, messageBody)
 	case *submarine_battle.Start:
 		message, err = typhenapi.NewMessage(api.serializer, MessageType_Start, messageBody)
@@ -94,23 +93,23 @@ func (api *WebSocketAPI) Send(body typhenapi.Type) (message *typhenapi.Message, 
 		message, err = typhenapi.NewMessage(api.serializer, MessageType_Pinger, messageBody)
 	case *submarine_battle.Equipment:
 		message, err = typhenapi.NewMessage(api.serializer, MessageType_Equipment, messageBody)
-	case *submarine_battle.StartRequestObject:
+	case *submarine_battle.StartRequest:
 		message, err = typhenapi.NewMessage(api.serializer, MessageType_StartRequest, messageBody)
-	case *submarine_battle.AccelerationRequestObject:
+	case *submarine_battle.AccelerationRequest:
 		message, err = typhenapi.NewMessage(api.serializer, MessageType_AccelerationRequest, messageBody)
-	case *submarine_battle.BrakeRequestObject:
+	case *submarine_battle.BrakeRequest:
 		message, err = typhenapi.NewMessage(api.serializer, MessageType_BrakeRequest, messageBody)
-	case *submarine_battle.TurnRequestObject:
+	case *submarine_battle.TurnRequest:
 		message, err = typhenapi.NewMessage(api.serializer, MessageType_TurnRequest, messageBody)
-	case *submarine_battle.PingerRequestObject:
+	case *submarine_battle.PingerRequest:
 		message, err = typhenapi.NewMessage(api.serializer, MessageType_PingerRequest, messageBody)
-	case *submarine_battle.TorpedoRequestObject:
+	case *submarine_battle.TorpedoRequest:
 		message, err = typhenapi.NewMessage(api.serializer, MessageType_TorpedoRequest, messageBody)
-	case *submarine_battle.WatcherRequestObject:
+	case *submarine_battle.WatcherRequest:
 		message, err = typhenapi.NewMessage(api.serializer, MessageType_WatcherRequest, messageBody)
-	case *submarine_battle.AddBotRequestObject:
+	case *submarine_battle.AddBotRequest:
 		message, err = typhenapi.NewMessage(api.serializer, MessageType_AddBotRequest, messageBody)
-	case *submarine_battle.RemoveBotRequestObject:
+	case *submarine_battle.RemoveBotRequest:
 		message, err = typhenapi.NewMessage(api.serializer, MessageType_RemoveBotRequest, messageBody)
 	default:
 		err = fmt.Errorf("Unsupported TyphenAPI type is given: %v", messageBody)
@@ -127,7 +126,7 @@ func (api *WebSocketAPI) Send(body typhenapi.Type) (message *typhenapi.Message, 
 }
 
 // SendPing sends a ping message.
-func (api *WebSocketAPI) SendPing(ping *submarine_battle.PingObject) error {
+func (api *WebSocketAPI) SendPing(ping *submarine_battle.Ping) error {
 	message, err := typhenapi.NewMessage(api.serializer, MessageType_Ping, ping)
 
 	if err != nil {
@@ -147,7 +146,7 @@ func (api *WebSocketAPI) SendPing(ping *submarine_battle.PingObject) error {
 }
 
 // SendRoom sends a room message.
-func (api *WebSocketAPI) SendRoom(room *submarine.Room) error {
+func (api *WebSocketAPI) SendRoom(room *submarine_battle.Room) error {
 	message, err := typhenapi.NewMessage(api.serializer, MessageType_Room, room)
 
 	if err != nil {
@@ -167,7 +166,7 @@ func (api *WebSocketAPI) SendRoom(room *submarine.Room) error {
 }
 
 // SendNow sends a now message.
-func (api *WebSocketAPI) SendNow(now *submarine_battle.NowObject) error {
+func (api *WebSocketAPI) SendNow(now *submarine_battle.Now) error {
 	message, err := typhenapi.NewMessage(api.serializer, MessageType_Now, now)
 
 	if err != nil {
@@ -347,7 +346,7 @@ func (api *WebSocketAPI) SendEquipment(equipment *submarine_battle.Equipment) er
 }
 
 // SendStartRequest sends a startRequest message.
-func (api *WebSocketAPI) SendStartRequest(startRequest *submarine_battle.StartRequestObject) error {
+func (api *WebSocketAPI) SendStartRequest(startRequest *submarine_battle.StartRequest) error {
 	message, err := typhenapi.NewMessage(api.serializer, MessageType_StartRequest, startRequest)
 
 	if err != nil {
@@ -367,7 +366,7 @@ func (api *WebSocketAPI) SendStartRequest(startRequest *submarine_battle.StartRe
 }
 
 // SendAccelerationRequest sends a accelerationRequest message.
-func (api *WebSocketAPI) SendAccelerationRequest(accelerationRequest *submarine_battle.AccelerationRequestObject) error {
+func (api *WebSocketAPI) SendAccelerationRequest(accelerationRequest *submarine_battle.AccelerationRequest) error {
 	message, err := typhenapi.NewMessage(api.serializer, MessageType_AccelerationRequest, accelerationRequest)
 
 	if err != nil {
@@ -387,7 +386,7 @@ func (api *WebSocketAPI) SendAccelerationRequest(accelerationRequest *submarine_
 }
 
 // SendBrakeRequest sends a brakeRequest message.
-func (api *WebSocketAPI) SendBrakeRequest(brakeRequest *submarine_battle.BrakeRequestObject) error {
+func (api *WebSocketAPI) SendBrakeRequest(brakeRequest *submarine_battle.BrakeRequest) error {
 	message, err := typhenapi.NewMessage(api.serializer, MessageType_BrakeRequest, brakeRequest)
 
 	if err != nil {
@@ -407,7 +406,7 @@ func (api *WebSocketAPI) SendBrakeRequest(brakeRequest *submarine_battle.BrakeRe
 }
 
 // SendTurnRequest sends a turnRequest message.
-func (api *WebSocketAPI) SendTurnRequest(turnRequest *submarine_battle.TurnRequestObject) error {
+func (api *WebSocketAPI) SendTurnRequest(turnRequest *submarine_battle.TurnRequest) error {
 	message, err := typhenapi.NewMessage(api.serializer, MessageType_TurnRequest, turnRequest)
 
 	if err != nil {
@@ -427,7 +426,7 @@ func (api *WebSocketAPI) SendTurnRequest(turnRequest *submarine_battle.TurnReque
 }
 
 // SendPingerRequest sends a pingerRequest message.
-func (api *WebSocketAPI) SendPingerRequest(pingerRequest *submarine_battle.PingerRequestObject) error {
+func (api *WebSocketAPI) SendPingerRequest(pingerRequest *submarine_battle.PingerRequest) error {
 	message, err := typhenapi.NewMessage(api.serializer, MessageType_PingerRequest, pingerRequest)
 
 	if err != nil {
@@ -447,7 +446,7 @@ func (api *WebSocketAPI) SendPingerRequest(pingerRequest *submarine_battle.Pinge
 }
 
 // SendTorpedoRequest sends a torpedoRequest message.
-func (api *WebSocketAPI) SendTorpedoRequest(torpedoRequest *submarine_battle.TorpedoRequestObject) error {
+func (api *WebSocketAPI) SendTorpedoRequest(torpedoRequest *submarine_battle.TorpedoRequest) error {
 	message, err := typhenapi.NewMessage(api.serializer, MessageType_TorpedoRequest, torpedoRequest)
 
 	if err != nil {
@@ -467,7 +466,7 @@ func (api *WebSocketAPI) SendTorpedoRequest(torpedoRequest *submarine_battle.Tor
 }
 
 // SendWatcherRequest sends a watcherRequest message.
-func (api *WebSocketAPI) SendWatcherRequest(watcherRequest *submarine_battle.WatcherRequestObject) error {
+func (api *WebSocketAPI) SendWatcherRequest(watcherRequest *submarine_battle.WatcherRequest) error {
 	message, err := typhenapi.NewMessage(api.serializer, MessageType_WatcherRequest, watcherRequest)
 
 	if err != nil {
@@ -487,7 +486,7 @@ func (api *WebSocketAPI) SendWatcherRequest(watcherRequest *submarine_battle.Wat
 }
 
 // SendAddBotRequest sends a addBotRequest message.
-func (api *WebSocketAPI) SendAddBotRequest(addBotRequest *submarine_battle.AddBotRequestObject) error {
+func (api *WebSocketAPI) SendAddBotRequest(addBotRequest *submarine_battle.AddBotRequest) error {
 	message, err := typhenapi.NewMessage(api.serializer, MessageType_AddBotRequest, addBotRequest)
 
 	if err != nil {
@@ -507,7 +506,7 @@ func (api *WebSocketAPI) SendAddBotRequest(addBotRequest *submarine_battle.AddBo
 }
 
 // SendRemoveBotRequest sends a removeBotRequest message.
-func (api *WebSocketAPI) SendRemoveBotRequest(removeBotRequest *submarine_battle.RemoveBotRequestObject) error {
+func (api *WebSocketAPI) SendRemoveBotRequest(removeBotRequest *submarine_battle.RemoveBotRequest) error {
 	message, err := typhenapi.NewMessage(api.serializer, MessageType_RemoveBotRequest, removeBotRequest)
 
 	if err != nil {
@@ -540,7 +539,7 @@ func (api *WebSocketAPI) DispatchMessageEvent(data []byte) error {
 
 	switch message.Type {
 	case MessageType_Ping:
-		typhenType := new(submarine_battle.PingObject)
+		typhenType := new(submarine_battle.Ping)
 		if err := api.serializer.Deserialize(message.Body, typhenType); err != nil {
 			if api.errorHandler != nil {
 				api.errorHandler(err)
@@ -559,7 +558,7 @@ func (api *WebSocketAPI) DispatchMessageEvent(data []byte) error {
 			api.PingHandler(typhenType)
 		}
 	case MessageType_Room:
-		typhenType := new(submarine.Room)
+		typhenType := new(submarine_battle.Room)
 		if err := api.serializer.Deserialize(message.Body, typhenType); err != nil {
 			if api.errorHandler != nil {
 				api.errorHandler(err)
@@ -578,7 +577,7 @@ func (api *WebSocketAPI) DispatchMessageEvent(data []byte) error {
 			api.RoomHandler(typhenType)
 		}
 	case MessageType_Now:
-		typhenType := new(submarine_battle.NowObject)
+		typhenType := new(submarine_battle.Now)
 		if err := api.serializer.Deserialize(message.Body, typhenType); err != nil {
 			if api.errorHandler != nil {
 				api.errorHandler(err)
@@ -749,7 +748,7 @@ func (api *WebSocketAPI) DispatchMessageEvent(data []byte) error {
 			api.EquipmentHandler(typhenType)
 		}
 	case MessageType_StartRequest:
-		typhenType := new(submarine_battle.StartRequestObject)
+		typhenType := new(submarine_battle.StartRequest)
 		if err := api.serializer.Deserialize(message.Body, typhenType); err != nil {
 			if api.errorHandler != nil {
 				api.errorHandler(err)
@@ -768,7 +767,7 @@ func (api *WebSocketAPI) DispatchMessageEvent(data []byte) error {
 			api.StartRequestHandler(typhenType)
 		}
 	case MessageType_AccelerationRequest:
-		typhenType := new(submarine_battle.AccelerationRequestObject)
+		typhenType := new(submarine_battle.AccelerationRequest)
 		if err := api.serializer.Deserialize(message.Body, typhenType); err != nil {
 			if api.errorHandler != nil {
 				api.errorHandler(err)
@@ -787,7 +786,7 @@ func (api *WebSocketAPI) DispatchMessageEvent(data []byte) error {
 			api.AccelerationRequestHandler(typhenType)
 		}
 	case MessageType_BrakeRequest:
-		typhenType := new(submarine_battle.BrakeRequestObject)
+		typhenType := new(submarine_battle.BrakeRequest)
 		if err := api.serializer.Deserialize(message.Body, typhenType); err != nil {
 			if api.errorHandler != nil {
 				api.errorHandler(err)
@@ -806,7 +805,7 @@ func (api *WebSocketAPI) DispatchMessageEvent(data []byte) error {
 			api.BrakeRequestHandler(typhenType)
 		}
 	case MessageType_TurnRequest:
-		typhenType := new(submarine_battle.TurnRequestObject)
+		typhenType := new(submarine_battle.TurnRequest)
 		if err := api.serializer.Deserialize(message.Body, typhenType); err != nil {
 			if api.errorHandler != nil {
 				api.errorHandler(err)
@@ -825,7 +824,7 @@ func (api *WebSocketAPI) DispatchMessageEvent(data []byte) error {
 			api.TurnRequestHandler(typhenType)
 		}
 	case MessageType_PingerRequest:
-		typhenType := new(submarine_battle.PingerRequestObject)
+		typhenType := new(submarine_battle.PingerRequest)
 		if err := api.serializer.Deserialize(message.Body, typhenType); err != nil {
 			if api.errorHandler != nil {
 				api.errorHandler(err)
@@ -844,7 +843,7 @@ func (api *WebSocketAPI) DispatchMessageEvent(data []byte) error {
 			api.PingerRequestHandler(typhenType)
 		}
 	case MessageType_TorpedoRequest:
-		typhenType := new(submarine_battle.TorpedoRequestObject)
+		typhenType := new(submarine_battle.TorpedoRequest)
 		if err := api.serializer.Deserialize(message.Body, typhenType); err != nil {
 			if api.errorHandler != nil {
 				api.errorHandler(err)
@@ -863,7 +862,7 @@ func (api *WebSocketAPI) DispatchMessageEvent(data []byte) error {
 			api.TorpedoRequestHandler(typhenType)
 		}
 	case MessageType_WatcherRequest:
-		typhenType := new(submarine_battle.WatcherRequestObject)
+		typhenType := new(submarine_battle.WatcherRequest)
 		if err := api.serializer.Deserialize(message.Body, typhenType); err != nil {
 			if api.errorHandler != nil {
 				api.errorHandler(err)
@@ -882,7 +881,7 @@ func (api *WebSocketAPI) DispatchMessageEvent(data []byte) error {
 			api.WatcherRequestHandler(typhenType)
 		}
 	case MessageType_AddBotRequest:
-		typhenType := new(submarine_battle.AddBotRequestObject)
+		typhenType := new(submarine_battle.AddBotRequest)
 		if err := api.serializer.Deserialize(message.Body, typhenType); err != nil {
 			if api.errorHandler != nil {
 				api.errorHandler(err)
@@ -901,7 +900,7 @@ func (api *WebSocketAPI) DispatchMessageEvent(data []byte) error {
 			api.AddBotRequestHandler(typhenType)
 		}
 	case MessageType_RemoveBotRequest:
-		typhenType := new(submarine_battle.RemoveBotRequestObject)
+		typhenType := new(submarine_battle.RemoveBotRequest)
 		if err := api.serializer.Deserialize(message.Body, typhenType); err != nil {
 			if api.errorHandler != nil {
 				api.errorHandler(err)

@@ -6,12 +6,12 @@ namespace TyphenApi.Type.Submarine.Battle
 {
     [MessagePack.MessagePackObject]
     [Newtonsoft.Json.JsonObject(Newtonsoft.Json.MemberSerialization.OptIn)]
-    public partial class Start : TyphenApi.TypeBase<Start>, TyphenApi.IRealTimeMessage
+    public partial class Now : TyphenApi.TypeBase<Now>, TyphenApi.IRealTimeMessage
     {
-        [TyphenApi.QueryStringProperty("started_at", false)]
-        [MessagePack.Key("started_at")]
-        [Newtonsoft.Json.JsonProperty("started_at")]
+        [TyphenApi.QueryStringProperty("time", false)]
+        [MessagePack.Key("time")]
+        [Newtonsoft.Json.JsonProperty("time")]
         [Newtonsoft.Json.JsonRequired]
-        public long StartedAt { get; set; }
+        public long Time { get; set; }
     }
 }

@@ -6,7 +6,7 @@ namespace TyphenApi.Type.Submarine.Battle
 {
     [MessagePack.MessagePackObject]
     [Newtonsoft.Json.JsonObject(Newtonsoft.Json.MemberSerialization.OptIn)]
-    public partial class Pinger : TyphenApi.TypeBase<Pinger>
+    public partial class Pinger : TyphenApi.TypeBase<Pinger>, TyphenApi.IRealTimeMessage
     {
         [TyphenApi.QueryStringProperty("actor_id", false)]
         [MessagePack.Key("actor_id")]

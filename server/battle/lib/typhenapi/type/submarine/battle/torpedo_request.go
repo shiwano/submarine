@@ -9,18 +9,17 @@ import (
 
 var _ = errors.New
 
-// FindRoomObject is a kind of TyphenAPI type.
-type FindRoomObject struct {
-	Room *PlayableRoom `json:"room" msgpack:"room"`
+// TorpedoRequest is a kind of TyphenAPI type.
+type TorpedoRequest struct {
 }
 
 // Coerce the fields.
-func (t *FindRoomObject) Coerce() error {
+func (t *TorpedoRequest) Coerce() error {
 	return nil
 }
 
 // Bytes creates the byte array.
-func (t *FindRoomObject) Bytes(serializer typhenapi.Serializer) ([]byte, error) {
+func (t *TorpedoRequest) Bytes(serializer typhenapi.Serializer) ([]byte, error) {
 	if err := t.Coerce(); err != nil {
 		return nil, err
 	}

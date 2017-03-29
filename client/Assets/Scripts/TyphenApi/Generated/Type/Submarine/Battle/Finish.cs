@@ -6,7 +6,7 @@ namespace TyphenApi.Type.Submarine.Battle
 {
     [MessagePack.MessagePackObject]
     [Newtonsoft.Json.JsonObject(Newtonsoft.Json.MemberSerialization.OptIn)]
-    public partial class Finish : TyphenApi.TypeBase<Finish>
+    public partial class Finish : TyphenApi.TypeBase<Finish>, TyphenApi.IRealTimeMessage
     {
         [TyphenApi.QueryStringProperty("winner_user_id", true)]
         [MessagePack.Key("winner_user_id")]

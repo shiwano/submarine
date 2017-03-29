@@ -6,7 +6,7 @@ namespace TyphenApi.Type.Submarine.Battle
 {
     [MessagePack.MessagePackObject]
     [Newtonsoft.Json.JsonObject(Newtonsoft.Json.MemberSerialization.OptIn)]
-    public partial class Actor : TyphenApi.TypeBase<Actor>
+    public partial class Actor : TyphenApi.TypeBase<Actor>, TyphenApi.IRealTimeMessage
     {
         [TyphenApi.QueryStringProperty("id", false)]
         [MessagePack.Key("id")]

@@ -9,18 +9,18 @@ import (
 
 var _ = errors.New
 
-// FindRoomObject is a kind of TyphenAPI type.
-type FindRoomObject struct {
-	Room *PlayableRoom `json:"room" msgpack:"room"`
+// BrakeRequest is a kind of TyphenAPI type.
+type BrakeRequest struct {
+	Direction float64 `json:"direction" msgpack:"direction"`
 }
 
 // Coerce the fields.
-func (t *FindRoomObject) Coerce() error {
+func (t *BrakeRequest) Coerce() error {
 	return nil
 }
 
 // Bytes creates the byte array.
-func (t *FindRoomObject) Bytes(serializer typhenapi.Serializer) ([]byte, error) {
+func (t *BrakeRequest) Bytes(serializer typhenapi.Serializer) ([]byte, error) {
 	if err := t.Coerce(); err != nil {
 		return nil, err
 	}

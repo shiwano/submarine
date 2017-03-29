@@ -7,17 +7,17 @@ namespace TyphenApi.WebSocketApi.Parts.Submarine
 {
     public partial class Battle : TyphenApi.IWebSocketApi
     {
-        public IObservable<TyphenApi.Type.Submarine.Battle.PingObject> OnPingReceiveAsObservable()
+        public IObservable<TyphenApi.Type.Submarine.Battle.Ping> OnPingReceiveAsObservable()
         {
-            return Observable.FromEvent<TyphenApi.Type.Submarine.Battle.PingObject>(h => OnPingReceive += h, h => OnPingReceive -= h);
+            return Observable.FromEvent<TyphenApi.Type.Submarine.Battle.Ping>(h => OnPingReceive += h, h => OnPingReceive -= h);
         }
-        public IObservable<TyphenApi.Type.Submarine.Room> OnRoomReceiveAsObservable()
+        public IObservable<TyphenApi.Type.Submarine.Battle.Room> OnRoomReceiveAsObservable()
         {
-            return Observable.FromEvent<TyphenApi.Type.Submarine.Room>(h => OnRoomReceive += h, h => OnRoomReceive -= h);
+            return Observable.FromEvent<TyphenApi.Type.Submarine.Battle.Room>(h => OnRoomReceive += h, h => OnRoomReceive -= h);
         }
-        public IObservable<TyphenApi.Type.Submarine.Battle.NowObject> OnNowReceiveAsObservable()
+        public IObservable<TyphenApi.Type.Submarine.Battle.Now> OnNowReceiveAsObservable()
         {
-            return Observable.FromEvent<TyphenApi.Type.Submarine.Battle.NowObject>(h => OnNowReceive += h, h => OnNowReceive -= h);
+            return Observable.FromEvent<TyphenApi.Type.Submarine.Battle.Now>(h => OnNowReceive += h, h => OnNowReceive -= h);
         }
         public IObservable<TyphenApi.Type.Submarine.Battle.Start> OnStartReceiveAsObservable()
         {
@@ -51,41 +51,41 @@ namespace TyphenApi.WebSocketApi.Parts.Submarine
         {
             return Observable.FromEvent<TyphenApi.Type.Submarine.Battle.Equipment>(h => OnEquipmentReceive += h, h => OnEquipmentReceive -= h);
         }
-        public IObservable<TyphenApi.Type.Submarine.Battle.StartRequestObject> OnStartRequestReceiveAsObservable()
+        public IObservable<TyphenApi.Type.Submarine.Battle.StartRequest> OnStartRequestReceiveAsObservable()
         {
-            return Observable.FromEvent<TyphenApi.Type.Submarine.Battle.StartRequestObject>(h => OnStartRequestReceive += h, h => OnStartRequestReceive -= h);
+            return Observable.FromEvent<TyphenApi.Type.Submarine.Battle.StartRequest>(h => OnStartRequestReceive += h, h => OnStartRequestReceive -= h);
         }
-        public IObservable<TyphenApi.Type.Submarine.Battle.AccelerationRequestObject> OnAccelerationRequestReceiveAsObservable()
+        public IObservable<TyphenApi.Type.Submarine.Battle.AccelerationRequest> OnAccelerationRequestReceiveAsObservable()
         {
-            return Observable.FromEvent<TyphenApi.Type.Submarine.Battle.AccelerationRequestObject>(h => OnAccelerationRequestReceive += h, h => OnAccelerationRequestReceive -= h);
+            return Observable.FromEvent<TyphenApi.Type.Submarine.Battle.AccelerationRequest>(h => OnAccelerationRequestReceive += h, h => OnAccelerationRequestReceive -= h);
         }
-        public IObservable<TyphenApi.Type.Submarine.Battle.BrakeRequestObject> OnBrakeRequestReceiveAsObservable()
+        public IObservable<TyphenApi.Type.Submarine.Battle.BrakeRequest> OnBrakeRequestReceiveAsObservable()
         {
-            return Observable.FromEvent<TyphenApi.Type.Submarine.Battle.BrakeRequestObject>(h => OnBrakeRequestReceive += h, h => OnBrakeRequestReceive -= h);
+            return Observable.FromEvent<TyphenApi.Type.Submarine.Battle.BrakeRequest>(h => OnBrakeRequestReceive += h, h => OnBrakeRequestReceive -= h);
         }
-        public IObservable<TyphenApi.Type.Submarine.Battle.TurnRequestObject> OnTurnRequestReceiveAsObservable()
+        public IObservable<TyphenApi.Type.Submarine.Battle.TurnRequest> OnTurnRequestReceiveAsObservable()
         {
-            return Observable.FromEvent<TyphenApi.Type.Submarine.Battle.TurnRequestObject>(h => OnTurnRequestReceive += h, h => OnTurnRequestReceive -= h);
+            return Observable.FromEvent<TyphenApi.Type.Submarine.Battle.TurnRequest>(h => OnTurnRequestReceive += h, h => OnTurnRequestReceive -= h);
         }
-        public IObservable<TyphenApi.Type.Submarine.Battle.PingerRequestObject> OnPingerRequestReceiveAsObservable()
+        public IObservable<TyphenApi.Type.Submarine.Battle.PingerRequest> OnPingerRequestReceiveAsObservable()
         {
-            return Observable.FromEvent<TyphenApi.Type.Submarine.Battle.PingerRequestObject>(h => OnPingerRequestReceive += h, h => OnPingerRequestReceive -= h);
+            return Observable.FromEvent<TyphenApi.Type.Submarine.Battle.PingerRequest>(h => OnPingerRequestReceive += h, h => OnPingerRequestReceive -= h);
         }
-        public IObservable<TyphenApi.Type.Submarine.Battle.TorpedoRequestObject> OnTorpedoRequestReceiveAsObservable()
+        public IObservable<TyphenApi.Type.Submarine.Battle.TorpedoRequest> OnTorpedoRequestReceiveAsObservable()
         {
-            return Observable.FromEvent<TyphenApi.Type.Submarine.Battle.TorpedoRequestObject>(h => OnTorpedoRequestReceive += h, h => OnTorpedoRequestReceive -= h);
+            return Observable.FromEvent<TyphenApi.Type.Submarine.Battle.TorpedoRequest>(h => OnTorpedoRequestReceive += h, h => OnTorpedoRequestReceive -= h);
         }
-        public IObservable<TyphenApi.Type.Submarine.Battle.WatcherRequestObject> OnWatcherRequestReceiveAsObservable()
+        public IObservable<TyphenApi.Type.Submarine.Battle.WatcherRequest> OnWatcherRequestReceiveAsObservable()
         {
-            return Observable.FromEvent<TyphenApi.Type.Submarine.Battle.WatcherRequestObject>(h => OnWatcherRequestReceive += h, h => OnWatcherRequestReceive -= h);
+            return Observable.FromEvent<TyphenApi.Type.Submarine.Battle.WatcherRequest>(h => OnWatcherRequestReceive += h, h => OnWatcherRequestReceive -= h);
         }
-        public IObservable<TyphenApi.Type.Submarine.Battle.AddBotRequestObject> OnAddBotRequestReceiveAsObservable()
+        public IObservable<TyphenApi.Type.Submarine.Battle.AddBotRequest> OnAddBotRequestReceiveAsObservable()
         {
-            return Observable.FromEvent<TyphenApi.Type.Submarine.Battle.AddBotRequestObject>(h => OnAddBotRequestReceive += h, h => OnAddBotRequestReceive -= h);
+            return Observable.FromEvent<TyphenApi.Type.Submarine.Battle.AddBotRequest>(h => OnAddBotRequestReceive += h, h => OnAddBotRequestReceive -= h);
         }
-        public IObservable<TyphenApi.Type.Submarine.Battle.RemoveBotRequestObject> OnRemoveBotRequestReceiveAsObservable()
+        public IObservable<TyphenApi.Type.Submarine.Battle.RemoveBotRequest> OnRemoveBotRequestReceiveAsObservable()
         {
-            return Observable.FromEvent<TyphenApi.Type.Submarine.Battle.RemoveBotRequestObject>(h => OnRemoveBotRequestReceive += h, h => OnRemoveBotRequestReceive -= h);
+            return Observable.FromEvent<TyphenApi.Type.Submarine.Battle.RemoveBotRequest>(h => OnRemoveBotRequestReceive += h, h => OnRemoveBotRequestReceive -= h);
         }
     }
 }

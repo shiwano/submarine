@@ -9,18 +9,17 @@ import (
 
 var _ = errors.New
 
-// FindRoomObject is a kind of TyphenAPI type.
-type FindRoomObject struct {
-	Room *PlayableRoom `json:"room" msgpack:"room"`
+// AddBotRequest is a kind of TyphenAPI type.
+type AddBotRequest struct {
 }
 
 // Coerce the fields.
-func (t *FindRoomObject) Coerce() error {
+func (t *AddBotRequest) Coerce() error {
 	return nil
 }
 
 // Bytes creates the byte array.
-func (t *FindRoomObject) Bytes(serializer typhenapi.Serializer) ([]byte, error) {
+func (t *AddBotRequest) Bytes(serializer typhenapi.Serializer) ([]byte, error) {
 	if err := t.Coerce(); err != nil {
 		return nil, err
 	}

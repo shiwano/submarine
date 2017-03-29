@@ -4,18 +4,25 @@ package battle
 
 import (
 	"errors"
+
 	"github.com/shiwano/submarine/server/battle/lib/typhenapi"
+	submarine "github.com/shiwano/submarine/server/battle/lib/typhenapi/type/submarine"
 )
 
 var _ = errors.New
 
 // Room is a kind of TyphenAPI type.
 type Room struct {
-	Id int64 `json:"id" msgpack:"id"`
+	Id      int64             `json:"id" msgpack:"id"`
+	Members []*submarine.User `json:"members" msgpack:"members"`
+	Bots    []*submarine.Bot  `json:"bots" msgpack:"bots"`
 }
 
 // Coerce the fields.
 func (t *Room) Coerce() error {
+	if t.Members == nil {
+		return errors.New("Members should not be empty")
+	}
 	return nil
 }
 

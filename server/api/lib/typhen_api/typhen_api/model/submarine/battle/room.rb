@@ -5,5 +5,7 @@ module TyphenApi::Model::Submarine::Battle
     include Virtus.model(:strict => true)
 
     attribute :id, Integer, :required => true
+    attribute :members, Array[TyphenApi::Model::Submarine::User], :required => true
+    attribute :bots, Array[TyphenApi::Model::Submarine::Bot], :required => false
   end
 end
