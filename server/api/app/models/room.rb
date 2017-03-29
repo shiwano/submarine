@@ -61,7 +61,7 @@ class Room < ApplicationRecord
   end
 
   def as_battle_room_api_type
-    TyphenApi::Model::Submarine::Battle::Room.new({
+    TyphenApi::Model::Submarine::Battle::PlayableRoom.new({
       id: id,
       members: room_members.includes(:user).map {|m| m.as_battle_room_member_api_type }
     })

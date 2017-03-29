@@ -56,7 +56,7 @@ RSpec.describe Room, type: :model do
 
   describe '#as_battle_room_api_type' do
     subject { room.as_battle_room_api_type }
-    it { should be_a_kind_of TyphenApi::Model::Submarine::Battle::Room }
+    it { should be_a_kind_of TyphenApi::Model::Submarine::Battle::PlayableRoom }
   end
 
   describe '#as_joined_room_api_type' do
