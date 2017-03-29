@@ -1,6 +1,6 @@
 # Submarine
 
-A mobile game that is made with Unity3D and RoR, WebSocket server written in Go.
+A mobile game that is made with Unity3D, RoR, and WebSocket server written in Go.
 
 **NOTE: This repository does not include fee-charging assets of the Asset Store.**
 
