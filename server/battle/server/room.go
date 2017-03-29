@@ -19,7 +19,7 @@ import (
 type room struct {
 	id               int64
 	webAPI           *webAPI.WebAPI
-	info             *battleAPI.Room
+	info             *battleAPI.PlayableRoom
 	sessions         map[int64]*session
 	bots             map[int64]*api.Bot
 	battle           *battle.Battle
@@ -111,7 +111,7 @@ loop:
 	}
 }
 
-func (r *room) toRoomAPIType() *api.Room {
+func (r *room) toRoomAPIType() *battleAPI.Room {
 	members := make([]*api.User, len(r.sessions))
 	i := 0
 	for _, s := range r.sessions {
@@ -124,7 +124,7 @@ func (r *room) toRoomAPIType() *api.Room {
 		bots[i] = b
 		i++
 	}
-	return &api.Room{Id: r.id, Members: members, Bots: bots}
+	return &battleAPI.Room{Id: r.id, Members: members, Bots: bots}
 }
 
 func (r *room) broadcastRoom() {

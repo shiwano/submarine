@@ -201,17 +201,17 @@ func (b *Battle) onInputReceive(input *gatewayInput) {
 		return
 	}
 	switch m := input.message.(type) {
-	case *battleAPI.AccelerationRequestObject:
+	case *battleAPI.AccelerationRequest:
 		s.Event().EmitAccelerationRequestEvent(m)
-	case *battleAPI.BrakeRequestObject:
+	case *battleAPI.BrakeRequest:
 		s.Event().EmitBrakeRequestEvent(m)
-	case *battleAPI.TurnRequestObject:
+	case *battleAPI.TurnRequest:
 		s.Event().EmitTurnRequestEvent(m)
-	case *battleAPI.TorpedoRequestObject:
+	case *battleAPI.TorpedoRequest:
 		s.Event().EmitTorpedoRequestEvent(m)
-	case *battleAPI.PingerRequestObject:
+	case *battleAPI.PingerRequest:
 		s.Event().EmitPingerRequestEvent(m)
-	case *battleAPI.WatcherRequestObject:
+	case *battleAPI.WatcherRequest:
 		s.Event().EmitWatcherRequestEvent(m)
 	}
 }

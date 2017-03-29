@@ -21,9 +21,9 @@ func newAI(ctx context.Context) *ai {
 func (a *ai) Update(submarine context.Actor) {}
 
 func (a *ai) accelerateActor(actor context.Actor, dir float64) {
-	actor.Event().EmitAccelerationRequestEvent(&battleAPI.AccelerationRequestObject{Direction: dir})
+	actor.Event().EmitAccelerationRequestEvent(&battleAPI.AccelerationRequest{Direction: dir})
 }
 
 func (a *ai) brakeActor(actor context.Actor, dir float64) {
-	actor.Event().EmitBrakeRequestEvent(&battleAPI.BrakeRequestObject{Direction: dir})
+	actor.Event().EmitBrakeRequestEvent(&battleAPI.BrakeRequest{Direction: dir})
 }

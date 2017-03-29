@@ -18,27 +18,27 @@ type collideWithOtherActorEvent struct {
 }
 
 type accelerationRequestEvent struct {
-	message *battleAPI.AccelerationRequestObject
+	message *battleAPI.AccelerationRequest
 }
 
 type brakeRequestEvent struct {
-	message *battleAPI.BrakeRequestObject
+	message *battleAPI.BrakeRequest
 }
 
 type turnRequestEvent struct {
-	message *battleAPI.TurnRequestObject
+	message *battleAPI.TurnRequest
 }
 
 type torpedoRequestEvent struct {
-	message *battleAPI.TorpedoRequestObject
+	message *battleAPI.TorpedoRequest
 }
 
 type pingerRequestEvent struct {
-	message *battleAPI.PingerRequestObject
+	message *battleAPI.PingerRequest
 }
 
 type watcherRequestEvent struct {
-	message *battleAPI.WatcherRequestObject
+	message *battleAPI.WatcherRequest
 }
 
 type userLeaveEvent struct {

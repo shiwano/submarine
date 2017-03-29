@@ -42,12 +42,12 @@ func newSession(info *battleAPI.RoomMember, roomID int64) *session {
 	s.api.Battle.StartRequestHandler = s.onStartRequestReceive
 	s.api.Battle.AddBotRequestHandler = s.onAddBotRequestReceive
 	s.api.Battle.RemoveBotRequestHandler = s.onRemoveBotRequestReceive
-	s.api.Battle.AccelerationRequestHandler = func(m *battleAPI.AccelerationRequestObject) { s.onBattleMessageReceive(m) }
-	s.api.Battle.BrakeRequestHandler = func(m *battleAPI.BrakeRequestObject) { s.onBattleMessageReceive(m) }
-	s.api.Battle.TurnRequestHandler = func(m *battleAPI.TurnRequestObject) { s.onBattleMessageReceive(m) }
-	s.api.Battle.TorpedoRequestHandler = func(m *battleAPI.TorpedoRequestObject) { s.onBattleMessageReceive(m) }
-	s.api.Battle.PingerRequestHandler = func(m *battleAPI.PingerRequestObject) { s.onBattleMessageReceive(m) }
-	s.api.Battle.WatcherRequestHandler = func(m *battleAPI.WatcherRequestObject) { s.onBattleMessageReceive(m) }
+	s.api.Battle.AccelerationRequestHandler = func(m *battleAPI.AccelerationRequest) { s.onBattleMessageReceive(m) }
+	s.api.Battle.BrakeRequestHandler = func(m *battleAPI.BrakeRequest) { s.onBattleMessageReceive(m) }
+	s.api.Battle.TurnRequestHandler = func(m *battleAPI.TurnRequest) { s.onBattleMessageReceive(m) }
+	s.api.Battle.TorpedoRequestHandler = func(m *battleAPI.TorpedoRequest) { s.onBattleMessageReceive(m) }
+	s.api.Battle.PingerRequestHandler = func(m *battleAPI.PingerRequest) { s.onBattleMessageReceive(m) }
+	s.api.Battle.WatcherRequestHandler = func(m *battleAPI.WatcherRequest) { s.onBattleMessageReceive(m) }
 	return s
 }
 
@@ -88,20 +88,20 @@ func (s *session) onError(err error) {
 	logger.Log.Errorf("%v received the error: %v", s, err)
 }
 
-func (s *session) onPingReceive(m *battleAPI.PingObject) {
+func (s *session) onPingReceive(m *battleAPI.Ping) {
 	m.Message += " " + m.Message
 	s.api.Battle.SendPing(m)
 }
 
-func (s *session) onStartRequestReceive(m *battleAPI.StartRequestObject) {
+func (s *session) onStartRequestReceive(m *battleAPI.StartRequest) {
 	s.room.startBattleCh <- s
 }
 
-func (s *session) onAddBotRequestReceive(m *battleAPI.AddBotRequestObject) {
+func (s *session) onAddBotRequestReceive(m *battleAPI.AddBotRequest) {
 	s.room.addBotCh <- struct{}{}
 }
 
-func (s *session) onRemoveBotRequestReceive(m *battleAPI.RemoveBotRequestObject) {
+func (s *session) onRemoveBotRequestReceive(m *battleAPI.RemoveBotRequest) {
 	s.room.removeBotCh <- m.BotId
 }
 
@@ -112,5 +112,5 @@ func (s *session) onBattleMessageReceive(m typhenapi.Type) {
 }
 
 func (s *session) synchronizeTime() {
-	s.api.Battle.SendNow(&battleAPI.NowObject{Time: currentmillis.Now()})
+	s.api.Battle.SendNow(&battleAPI.Now{Time: currentmillis.Now()})
 }

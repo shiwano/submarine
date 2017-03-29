@@ -74,19 +74,19 @@ func (s *submarine) onCollideWithStage(point vec2.T) {
 	s.idle()
 }
 
-func (s *submarine) onAccelerationRequest(m *battleAPI.AccelerationRequestObject) {
+func (s *submarine) onAccelerationRequest(m *battleAPI.AccelerationRequest) {
 	s.accelerate(m.Direction)
 }
 
-func (s *submarine) onBrakeRequest(m *battleAPI.BrakeRequestObject) {
+func (s *submarine) onBrakeRequest(m *battleAPI.BrakeRequest) {
 	s.brake(m.Direction)
 }
 
-func (s *submarine) onTurnRequest(m *battleAPI.TurnRequestObject) {
+func (s *submarine) onTurnRequest(m *battleAPI.TurnRequest) {
 	s.turn(m.Direction)
 }
 
-func (s *submarine) onTorpedoRequest(m *battleAPI.TorpedoRequestObject) {
+func (s *submarine) onTorpedoRequest(m *battleAPI.TorpedoRequest) {
 	if s.equipment.TryConsumeTorpedo(s.ctx.Now()) {
 		logger.Log.Debugf("%v shoots a torpedo", s)
 		s.ctx.Event().EmitActorUpdateEquipmentEvent(s, s.equipment.ToAPIType())
@@ -97,7 +97,7 @@ func (s *submarine) onTorpedoRequest(m *battleAPI.TorpedoRequestObject) {
 	}
 }
 
-func (s *submarine) onPingerRequest(m *battleAPI.PingerRequestObject) {
+func (s *submarine) onPingerRequest(m *battleAPI.PingerRequest) {
 	if !s.isUsingPinger && s.equipment.Pinger.TryConsume(s.ctx.Now()) {
 		logger.Log.Debugf("%v uses pinger", s)
 		s.ctx.Event().EmitActorUpdateEquipmentEvent(s, s.equipment.ToAPIType())
@@ -107,7 +107,7 @@ func (s *submarine) onPingerRequest(m *battleAPI.PingerRequestObject) {
 	}
 }
 
-func (s *submarine) onWatcherRequest(m *battleAPI.WatcherRequestObject) {
+func (s *submarine) onWatcherRequest(m *battleAPI.WatcherRequest) {
 	if s.equipment.Watcher.TryConsume(s.ctx.Now()) {
 		logger.Log.Debugf("%v uses watcher", s)
 		s.ctx.Event().EmitActorUpdateEquipmentEvent(s, s.equipment.ToAPIType())
