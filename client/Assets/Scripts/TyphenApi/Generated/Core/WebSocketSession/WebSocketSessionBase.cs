@@ -11,7 +11,7 @@ namespace TyphenApi
     {
         ISerializer MessageSerializer { get; }
         IDeserializer MessageDeserializer { get; }
-        void Send(int messageType, IType message);
+        void Send(int messageType, IRealTimeMessage message);
     }
 
     public abstract class WebSocketSessionBase<ApiT, ErrorT> : IWebSocketSession, IDisposable
@@ -21,7 +21,7 @@ namespace TyphenApi
         const byte MessageTypeBytesLength = 4;
         volatile bool isOpened;
 
-        protected readonly WebSocket connection;
+        protected WebSocket connection;
         protected readonly SynchronizedFunctionCaller synchronizedFunctionCaller = new SynchronizedFunctionCaller();
 
         public ISerializer MessageSerializer { get; protected set; }
@@ -34,21 +34,13 @@ namespace TyphenApi
         public abstract void OnConnectionCreate(WebSocket connection);
         public abstract void OnConnectionOpen();
         public abstract void OnConnectionClose(ushort code, string reason, bool wasClean);
-        public abstract void OnBeforeMessageSend(IType message);
-        public abstract void OnMessageReceive(IType message);
+        public abstract void OnBeforeMessageSend(IRealTimeMessage message);
+        public abstract void OnMessageReceive(IRealTimeMessage message);
         public abstract void OnError(WebSocketSessionError<ErrorT> error);
 
         protected WebSocketSessionBase(string requestUri)
         {
             RequestUri = new Uri(requestUri);
-
-            connection = new WebSocket(RequestUri.ToString());
-            connection.OnMessage += OnMessage;
-            connection.OnOpen += OnOpen;;
-            connection.OnClose += OnClose;
-            connection.OnError += OnError;
-
-            OnConnectionCreate(connection);
         }
 
         public void Dispose()
@@ -78,15 +70,29 @@ namespace TyphenApi
 
         public void Connect()
         {
+            if (connection != null)
+            {
+                throw new InvalidOperationException("Already connection exists");
+            }
+            connection = new WebSocket(RequestUri.ToString());
+            connection.OnMessage += OnMessage;
+            connection.OnOpen += OnOpen;;
+            connection.OnClose += OnClose;
+            connection.OnError += OnError;
+            OnConnectionCreate(connection);
+
             connection.Connect();
         }
 
         public void Close()
         {
-            connection.Close();
+            if (connection != null)
+            {
+                connection.Close();
+            }
         }
 
-        public void Send(int messageType, IType message)
+        public void Send(int messageType, IRealTimeMessage message)
         {
             OnBeforeMessageSend(message);
             var messageData = message.Serialize(MessageSerializer);
@@ -138,7 +144,7 @@ namespace TyphenApi
         {
             return () =>
             {
-                IType message;
+                IRealTimeMessage message;
 
                 try
                 {
@@ -177,6 +183,7 @@ namespace TyphenApi
         {
             isOpened = false;
             synchronizedFunctionCaller.ReserveCall(() => OnConnectionClose(e.Code, e.Reason, e.WasClean));
+            connection = null;
         }
 
         void OnError(object sender, WebSocketSharp.ErrorEventArgs e)

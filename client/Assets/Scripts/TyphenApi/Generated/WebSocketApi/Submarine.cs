@@ -19,10 +19,10 @@ namespace TyphenApi.WebSocketApi
         }
 
 
-        public TyphenApi.IType DispatchMessageEvent(int messageType, byte[] messageData)
+        public TyphenApi.IRealTimeMessage DispatchMessageEvent(int messageType, byte[] messageData)
         {
 
-            TyphenApi.IType message;
+            TyphenApi.IRealTimeMessage message;
 
             message = Battle.DispatchMessageEvent(messageType, messageData);
             if (message != null)

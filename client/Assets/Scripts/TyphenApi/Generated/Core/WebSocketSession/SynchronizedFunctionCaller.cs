@@ -9,29 +9,30 @@ namespace TyphenApi
     {
         public delegate void Function();
 
-        List<Function> reservedFunctions = new List<Function>();
+        readonly Queue<Function> reservedFunctions = new Queue<Function>();
+        readonly Queue<Function> callableFunctions = new Queue<Function>();
 
         public void ReserveCall(Function function)
         {
             lock (((ICollection)reservedFunctions).SyncRoot)
             {
-                reservedFunctions.Add(function);
+                reservedFunctions.Enqueue(function);
             }
         }
 
         public void Call()
         {
-            Function[] functions;
-
             lock (((ICollection)reservedFunctions).SyncRoot)
             {
-                functions = reservedFunctions.ToArray();
-                reservedFunctions.Clear();
+                while (reservedFunctions.Count > 0)
+                {
+                    callableFunctions.Enqueue(reservedFunctions.Dequeue());
+                }
             }
 
-            foreach (var function in functions)
+            while (callableFunctions.Count > 0)
             {
-                function();
+                callableFunctions.Dequeue()();
             }
         }
     }

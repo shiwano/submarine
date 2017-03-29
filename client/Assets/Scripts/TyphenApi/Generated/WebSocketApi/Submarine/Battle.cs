@@ -315,7 +315,7 @@ namespace TyphenApi.WebSocketApi.Parts.Submarine
             });
         }
 
-        public TyphenApi.IType DispatchMessageEvent(int messageType, byte[] messageData)
+        public TyphenApi.IRealTimeMessage DispatchMessageEvent(int messageType, byte[] messageData)
         {
             switch ((MessageType)messageType)
             {

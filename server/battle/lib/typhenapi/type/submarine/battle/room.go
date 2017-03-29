@@ -4,7 +4,6 @@ package battle
 
 import (
 	"errors"
-
 	"github.com/shiwano/submarine/server/battle/lib/typhenapi"
 	submarine "github.com/shiwano/submarine/server/battle/lib/typhenapi/type/submarine"
 )
