@@ -27,7 +27,7 @@ module.exports = function(typhen, options) {
 
     isWebSocketApiModule: function(module) {
       assert(module.isModule, 'should be a module');
-      if (module.variables.length > 0) {
+      if (helpers.realTimeMessages(module.types).length > 0) {
         return true;
       } else if (module.modules.length > 0) {
         return _.any(module.modules, function(m) { return helpers.isWebSocketApiModule(m); });
@@ -64,14 +64,23 @@ module.exports = function(typhen, options) {
       return typhen.helpers[helperName](symbol.name);
     },
 
-    webSocketMessageType: function(variable) {
-      assert(variable.isVariable, 'should be a variable');
-      var name = typhen.helpers.upperCamelCase(variable.fullName).replace(template.namespaceSeparator, '.');
+    webSocketMessageType: function(type) {
+      assert(helpers.isRealTimeMessage(type), 'should be extended from TyphenApi.RealTimeMessage');
+      var name = type.rawFullName;
       var hash = 0;
       for (var i = 0; i < name.length; i++) {
         hash = (((hash << 5) - hash) + name.charCodeAt(i)) & 0xFFFFFFFE;
       }
       return hash;
+    },
+
+    realTimeMessages: function(types) {
+      return types.filter(function(t) { return helpers.isRealTimeMessage(t); });
+    },
+
+    isRealTimeMessage: function(type) {
+      return (type.isInterface || type.isClass) &&
+        !type.baseTypes.every(function(t) { return t.rawFullName !== 'TyphenApi.RealTimeMessage'; });
     },
 
     errorType: function(module) {
@@ -109,41 +118,42 @@ module.exports = function(typhen, options) {
 
     generate: function(generator, types, modules) {
       var targetModule = null;
-
       if (template.requiredTargetModule) {
         targetModule = modules.find(function(m) { return m.fullName === options.targetModule; });
         assert(targetModule, options.targetModule + ' module is not found');
       }
 
-      var filteredTypes = types.filter(function(t) { return !t.tagTable.internal; });
-      var filteredModules = modules.filter(function(m) { return !m.isGlobalModule; });
+      var generatableTypes = types.filter(function(t) { return !t.tagTable.internal; });
+      var generatableModules = modules.filter(function(m) { return !m.isGlobalModule; });
 
-      filteredTypes.forEach(function(type) {
-        if (type.isFunction) {
+      generatableModules.forEach(function(module) {
+        helpers.realTimeMessages(module.types).forEach(function(type) {
           assert(
-            type.callSignatures.every(function(s) { return s.typeParameters.length === 0}),
-            type.fullName + ' can\'t have type parameters at ' + type.declarationInfos
-          );
-        }
-      });
-
-      filteredModules.forEach(function(module) {
-        if (module.parentModule === null && (helpers.isWebApiModule(module) || helpers.isWebSocketApiModule(module))) {
-          assert(
-            helpers.errorType(module),
-            'Undefined the Error type in ' + module.name + ' module'
-          );
-        }
-
-        module.variables.forEach(function(variable) {
-          assert(
-            variable.type.isObjectType || variable.type.isInterface || variable.type.isClass,
-            'Disallow to use ' + variable.type.name + ' as realtime message at ' + variable.declarationInfos
+            !type.isGenericType,
+            type.fullName + ' should not be generic type: ' + type.declarationInfos
           );
         });
       });
 
-      return template.generate(generator, filteredTypes, filteredModules, targetModule);
+      generatableTypes.forEach(function(type) {
+        if (type.isFunction) {
+          assert(
+            type.callSignatures.every(function(s) { return !s.isGenericSignature; }),
+            type.fullName + ' should not have generic signatures: ' + type.declarationInfos
+          );
+        }
+      });
+
+      generatableModules.forEach(function(module) {
+        if (module.parentModule === null && (helpers.isWebApiModule(module) || helpers.isWebSocketApiModule(module))) {
+          assert(
+            helpers.errorType(module),
+            'Not defined the Error type in ' + module.name + ' module'
+          );
+        }
+      });
+
+      return template.generate(generator, generatableTypes, generatableModules, targetModule);
     }
   });
 };

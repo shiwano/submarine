@@ -23,6 +23,11 @@ module.exports = function(typhen, options, helpers) {
         return '?';
       }
     },
+    baseType: function(type) {
+      assert(type.isType, 'should be a type');
+      if (!type.baseTypes) { return null; }
+      return type.baseTypes.filter(function(t) { return t.rawFullName !== 'TyphenApi.RealTimeMessage'; })[0] || null;
+    },
     typeName: function(type) {
       assert(type.isType, 'should be a type');
       return (type.isPrimitiveType && type.name !== 'void') || type.isArray || type.isTypeParameter ?
@@ -83,7 +88,7 @@ module.exports = function(typhen, options, helpers) {
         if (helpers.isWebSocketApiModule(module)) {
           g.generate('lib/unity/templates/WebSocketApi/WebSocketApi.hbs', 'upperCamelCase:TyphenApi/Generated/WebSocketApi/**/*.cs', module);
 
-          if (module.variables.length > 0 && !options.excludeUnityFiles && options.includeUniRxFiles) {
+          if (!options.excludeUnityFiles && options.includeUniRxFiles) {
             g.generate('lib/unity/templates/Unity/WebSocketApi.UniRx.hbs', 'upperCamelCase:TyphenApi/Generated/WebSocketApi/**/*.UniRx.cs', module);
           }
 

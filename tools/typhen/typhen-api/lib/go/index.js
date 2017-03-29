@@ -19,10 +19,12 @@ module.exports = function(typhen, options, helpers) {
         types = symbol.callSignatures[0].parameters.map(function(p) { return p.type; });
         currentModule = null;
       } else if (symbol.isType) {
-        types = symbol.properties.map(function(p) { return p.type; });
+        types = symbol.properties.map(function(p) {
+          return p.type.isArray ? p.type.type : p.type;
+        });
         currentModule = symbol.parentModule;
       } else { // symbol.isModule
-        types = symbol.variables.map(function(v) { return v.type; });
+        types = helpers.realTimeMessages(symbol.types);
         currentModule = null;
       }
 

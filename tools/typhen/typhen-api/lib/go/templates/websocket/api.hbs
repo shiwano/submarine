@@ -10,14 +10,14 @@ import (
 	{{#each (requiredModules this false)}}
 	{{alias}} "{{@importBasePath}}/type/{{path}}"
 	{{/each}}
-	{{#if variables}}
+	{{#if (realTimeMessages types)}}
 	"fmt"
 	{{/if}}
 )
 
-{{#if variables}}
+{{#if (realTimeMessages types)}}
 const (
-	{{#each variables}}
+	{{#each (realTimeMessages types)}}
 	MessageType_{{upperCamelCase name}} int32 = {{webSocketMessageType this}}
 	{{/each}}
 )
@@ -32,8 +32,8 @@ type WebSocketAPI struct {
 	{{upperCamelCase module.name}} *_{{moduleName module '_'}}.WebSocketAPI
 	{{/each}}
 
-	{{#each variables}}
-	{{upperCamelCase name}}Handler func(message {{typeName type null false true}})
+	{{#each (realTimeMessages types)}}
+	{{upperCamelCase name}}Handler func(message {{typeName this null false true}})
 	{{/each}}
 }
 
@@ -49,12 +49,12 @@ func New(session typhenapi.Session, serializer typhenapi.Serializer, errorHandle
 	return api
 }
 
-{{#if variables}}
+{{#if (realTimeMessages types)}}
 // Send sends a message.
 func (api *WebSocketAPI) Send(body typhenapi.Type) (message *typhenapi.Message, err error) {
 	switch messageBody := body.(type) {
-	{{#each variables}}
-	case {{typeName type null false true}}:
+	{{#each (realTimeMessages types)}}
+	case {{typeName this null false true}}:
 		message, err = typhenapi.NewMessage(api.serializer, MessageType_{{upperCamelCase name}}, messageBody)
 	{{/each}}
 	default:
@@ -72,9 +72,9 @@ func (api *WebSocketAPI) Send(body typhenapi.Type) (message *typhenapi.Message, 
 }
 {{/if}}
 
-{{#each variables}}
+{{#each (realTimeMessages types)}}
 // Send{{upperCamelCase name}} sends a {{lowerCamelCase name}} message.
-func (api *WebSocketAPI) Send{{upperCamelCase name}}({{lowerCamelCase name}} {{typeName type null false true}}) error {
+func (api *WebSocketAPI) Send{{upperCamelCase name}}({{lowerCamelCase name}} {{typeName this null false true}}) error {
 	message, err := typhenapi.NewMessage(api.serializer, MessageType_{{upperCamelCase name}}, {{lowerCamelCase name}})
 
 	if err != nil {
@@ -102,7 +102,7 @@ func (api *WebSocketAPI) DispatchMessageEvent(data []byte) error {
 	}
 	{{/each}}
 
-	{{#if variables}}
+	{{#if (realTimeMessages types)}}
 	message, err := typhenapi.NewMessageFromBytes(data)
 
 	if err != nil {
@@ -113,9 +113,9 @@ func (api *WebSocketAPI) DispatchMessageEvent(data []byte) error {
 	}
 
 	switch message.Type {
-	{{#each variables}}
+	{{#each (realTimeMessages types)}}
 	case MessageType_{{upperCamelCase name}}:
-		typhenType := new({{typeName type null false false}})
+		typhenType := new({{typeName this null false false}})
 		if err := api.serializer.Deserialize(message.Body, typhenType); err != nil {
 			if api.errorHandler != nil {
 				api.errorHandler(err)

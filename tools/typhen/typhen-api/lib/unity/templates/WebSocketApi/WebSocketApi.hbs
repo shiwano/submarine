@@ -7,53 +7,53 @@ namespace TyphenApi.WebSocketApi{{#if namespace}}.Parts.{{upperCamelCase namespa
 {
     public partial class {{upperCamelCase name}} : TyphenApi.IWebSocketApi
     {
-        {{#if variables}}
+        {{#if (realTimeMessages types)}}
         public enum MessageType
         {
-            {{#each variables}}
+            {{#each (realTimeMessages types)}}
             {{upperCamelCase name}} = {{webSocketMessageType this}},
             {{/each}}
         }
         {{/if}}
 
-        {{#if variables}}
+        {{#if (realTimeMessages types)}}
         readonly IWebSocketSession session;
         {{/if}}
 
-        {{#each variables}}
-        public event Action<{{{typeName type}}}> On{{upperCamelCase name}}Receive;
+        {{#each (realTimeMessages types)}}
+        public event Action<{{{typeName this}}}> On{{upperCamelCase name}}Receive;
         {{/each}}
 
         {{#each modules}}
-        {{#if variables}}
+        {{#if (realTimeMessages types)}}
         public TyphenApi.WebSocketApi.Parts.{{upperCamelCase fullName}} {{upperCamelCase name}} { get; private set; }
         {{/if}}
         {{/each}}
 
         public {{upperCamelCase name}}(IWebSocketSession session)
         {
-            {{#if variables}}
+            {{#if (realTimeMessages types)}}
             this.session = session;
             {{/if}}
 
             {{#each modules}}
-            {{#if variables}}
+            {{#if (realTimeMessages types)}}
             {{upperCamelCase name}} = new TyphenApi.WebSocketApi.Parts.{{upperCamelCase fullName}}(session);
             {{/if}}
             {{/each}}
         }
 
-        {{#each variables}}
-        public void Send{{upperCamelCase name}}({{{typeName type}}} {{lowerCamelCase name}})
+        {{#each (realTimeMessages types)}}
+        public void Send{{upperCamelCase name}}({{{typeName this}}} {{lowerCamelCase name}})
         {
             session.Send((int)MessageType.{{upperCamelCase name}}, {{lowerCamelCase name}});
         }
 
-        public void Send{{upperCamelCase name}}({{#each type.properties}}{{{typeName type}}} {{lowerCamelCase name}}{{#unless @last}}, {{/unless}}{{/each}})
+        public void Send{{upperCamelCase name}}({{#each properties}}{{{typeName type}}} {{lowerCamelCase name}}{{#unless @last}}, {{/unless}}{{/each}})
         {
-            session.Send((int)MessageType.{{upperCamelCase name}}, new {{{typeName type}}}()
+            session.Send((int)MessageType.{{upperCamelCase name}}, new {{{typeName this}}}()
             {
-                {{#each type.properties}}
+                {{#each properties}}
                 {{upperCamelCase name}} = {{lowerCamelCase name}},
                 {{/each}}
             });
@@ -62,13 +62,13 @@ namespace TyphenApi.WebSocketApi{{#if namespace}}.Parts.{{upperCamelCase namespa
 
         public TyphenApi.IType DispatchMessageEvent(int messageType, byte[] messageData)
         {
-            {{#if variables}}
+            {{#if (realTimeMessages types)}}
             switch ((MessageType)messageType)
             {
-                {{#each variables}}
+                {{#each (realTimeMessages types)}}
                 case MessageType.{{upperCamelCase name}}:
                 {
-                    var message = session.MessageDeserializer.Deserialize<{{{typeName type}}}>(messageData);
+                    var message = session.MessageDeserializer.Deserialize<{{{typeName this}}}>(messageData);
 
                     if (On{{upperCamelCase name}}Receive != null)
                     {
@@ -86,7 +86,7 @@ namespace TyphenApi.WebSocketApi{{#if namespace}}.Parts.{{upperCamelCase namespa
             TyphenApi.IType message;
             {{/if}}
 
-            {{#if variables}}
+            {{#if (realTimeMessages types)}}
             message = {{upperCamelCase name}}.DispatchMessageEvent(messageType, messageData);
             if (message != null)
             {
