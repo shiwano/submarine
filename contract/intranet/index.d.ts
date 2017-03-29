@@ -6,12 +6,12 @@ declare module Submarine.Battle {
     roomId: integer;
   }
 
-  interface Room {
+  interface PlayableRoom {
     id: integer;
   }
 
   /** @noAuthRequired */
-  function findRoom(roomId: integer): { room?: Room; }
+  function findRoom(roomId: integer): { room?: PlayableRoom; }
   /** @noAuthRequired */
   function findRoomMember(roomKey: string): { roomMember?: RoomMember; }
   /** @noAuthRequired */

@@ -20,16 +20,31 @@ declare module Submarine.Battle {
     isAccelerating: boolean;
   }
 
-  interface Start {
+  interface EquipmentItem {
+    cooldownStartedAt: timeStamp;
+    cooldownDuration: milliSeconds;
+  }
+
+  interface Ping extends TyphenApi.RealTimeMessage {
+    message: string;
+  }
+
+  interface Room extends TyphenApi.RealTimeMessage, Submarine.Room { }
+
+  interface Now extends TyphenApi.RealTimeMessage {
+    time: timeStamp
+  }
+
+  interface Start extends TyphenApi.RealTimeMessage {
     startedAt: timeStamp;
   }
 
-  interface Finish {
+  interface Finish extends TyphenApi.RealTimeMessage {
     winnerUserId?: integer;
     finishedAt: timeStamp;
   }
 
-  interface Actor {
+  interface Actor extends TyphenApi.RealTimeMessage {
     id: integer;
     userId: integer;
     type: ActorType;
@@ -41,13 +56,13 @@ declare module Submarine.Battle {
     }
   }
 
-  interface Visibility {
+  interface Visibility extends TyphenApi.RealTimeMessage {
     actorId: integer;
     isVisible: boolean;
     movement: Movement;
   }
 
-  interface Movement {
+  interface Movement extends TyphenApi.RealTimeMessage {
     actorId: integer;
     position: Point;
     direction: degrees;
@@ -55,49 +70,29 @@ declare module Submarine.Battle {
     accelerator?: Accelerator;
   }
 
-  interface Destruction {
+  interface Destruction extends TyphenApi.RealTimeMessage {
     actorId: integer;
   }
 
-  interface Pinger {
+  interface Pinger extends TyphenApi.RealTimeMessage {
     actorId: integer;
     isFinished: boolean;
   }
 
-  interface Equipment {
+  interface Equipment extends TyphenApi.RealTimeMessage {
     actorId: integer;
     torpedos: EquipmentItem[];
     pinger: EquipmentItem;
     watcher: EquipmentItem;
   }
 
-  interface EquipmentItem {
-    cooldownStartedAt: timeStamp;
-    cooldownDuration: milliSeconds;
-  }
-
-  type ping = TyphenApi.RTMMessage<{ message: string }>;
-  type room = TyphenApi.RTMMessage<Submarine.Room>;
-
-  type now = TyphenApi.RTMMessage<{ time: timeStamp }>;
-  type start = TyphenApi.RTMMessage<Start>;
-  type finish = TyphenApi.RTMMessage<Finish>;
-
-  type actor = TyphenApi.RTMMessage<Actor>;
-  type visibility = TyphenApi.RTMMessage<Visibility>;
-  type movement = TyphenApi.RTMMessage<Movement>;
-  type destruction = TyphenApi.RTMMessage<Destruction>;
-  type pinger = TyphenApi.RTMMessage<Pinger>;
-  type equipment = TyphenApi.RTMMessage<Equipment>;
-
-  type startRequest = TyphenApi.RTMMessage<{}>;
-  type accelerationRequest = TyphenApi.RTMMessage<{ direction: degrees; }>;
-  type brakeRequest = TyphenApi.RTMMessage<{ direction: degrees; }>;
-  type turnRequest = TyphenApi.RTMMessage<{ direction: degrees; }>;
-  type pingerRequest = TyphenApi.RTMMessage<{}>;
-  type torpedoRequest = TyphenApi.RTMMessage<{}>;
-  type watcherRequest = TyphenApi.RTMMessage<{}>;
-
-  type addBotRequest = TyphenApi.RTMMessage<{}>;
-  type removeBotRequest = TyphenApi.RTMMessage<{botId: integer}>;
+  interface StartRequest extends TyphenApi.RealTimeMessage { }
+  interface AccelerationRequest extends TyphenApi.RealTimeMessage { direction: degrees; }
+  interface BrakeRequest extends TyphenApi.RealTimeMessage { direction: degrees; }
+  interface TurnRequest extends TyphenApi.RealTimeMessage { direction: degrees; }
+  interface PingerRequest extends TyphenApi.RealTimeMessage { }
+  interface TorpedoRequest extends TyphenApi.RealTimeMessage { }
+  interface WatcherRequest extends TyphenApi.RealTimeMessage { }
+  interface AddBotRequest extends TyphenApi.RealTimeMessage { }
+  interface RemoveBotRequest extends TyphenApi.RealTimeMessage { botId: integer }
 }
