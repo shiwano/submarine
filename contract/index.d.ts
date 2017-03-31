@@ -1,5 +1,3 @@
-/// <reference path='./battle.d.ts' />
-/// <reference path='./configuration.d.ts' />
 /// <reference path='../tools/typhen/typhen-api/index.d.ts' />
 
 declare module Submarine {

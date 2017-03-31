@@ -1,12 +1,13 @@
 {
-  "files": [ "contract/index.d.ts" ],
   "compilerOptions": {
     "module": "commonjs",
     "experimentalDecorators": true,
     "target": "ES5"
   },
+  "include": [ "contract/**/*" ],
   "typhen": [
     {
+      "exclude": [ "contract/internal" ],
       "plugin": "./tools/typhen/typhen-api/index",
       "pluginOptions": {
         "templateName": "unity",
@@ -21,11 +22,7 @@
         "targetModule": "Submarine",
         "spec": true
       },
-      "outDir": "server/api",
-      "files": [
-        "contract/index.d.ts",
-        "contract/intranet/index.d.ts"
-      ]
+      "outDir": "server/api"
     },
     {
       "plugin": "./tools/typhen/typhen-api/index",
@@ -33,11 +30,7 @@
         "templateName": "go",
         "importBasePath": "github.com/shiwano/submarine/server/battle/lib/typhenapi"
       },
-      "outDir": "server/battle/lib",
-      "files": [
-        "contract/index.d.ts",
-        "contract/intranet/index.d.ts"
-      ]
+      "outDir": "server/battle/lib"
     }
   ]
 }
