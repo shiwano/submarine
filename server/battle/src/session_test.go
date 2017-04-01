@@ -14,10 +14,10 @@ func TestSession(t *testing.T) {
 		s := newClientSession()
 
 		Convey("should respond to a ping message", func() {
-			done := make(chan *battleAPI.PingObject)
+			done := make(chan *battleAPI.Ping)
 			s.connect(server.URL + "/rooms/1?room_key=key_1")
-			s.api.Battle.PingHandler = func(m *battleAPI.PingObject) { done <- m }
-			s.api.Battle.SendPing(&battleAPI.PingObject{Message: "Hey"})
+			s.api.Battle.PingHandler = func(m *battleAPI.Ping) { done <- m }
+			s.api.Battle.SendPing(&battleAPI.Ping{Message: "Hey"})
 			m := <-done
 			So(m.Message, ShouldEqual, "Hey Hey")
 		})

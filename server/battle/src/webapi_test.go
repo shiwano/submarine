@@ -86,7 +86,7 @@ func (m *webAPITransporter) FindRoom(params *webAPI_battle.FindRoomRequestBody) 
 	typhenType := new(battleAPI.FindRoomObject)
 
 	if params.RoomId == 1 {
-		typhenType.Room = &battleAPI.Room{
+		typhenType.Room = &battleAPI.PlayableRoom{
 			Id: params.RoomId,
 		}
 	}

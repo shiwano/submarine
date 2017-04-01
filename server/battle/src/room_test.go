@@ -6,7 +6,6 @@ import (
 	. "github.com/smartystreets/goconvey/convey"
 
 	"github.com/shiwano/submarine/server/battle/lib/currentmillis"
-	api "github.com/shiwano/submarine/server/battle/lib/typhenapi/type/submarine"
 	battleAPI "github.com/shiwano/submarine/server/battle/lib/typhenapi/type/submarine/battle"
 )
 
@@ -18,8 +17,8 @@ func TestRoom(t *testing.T) {
 
 		Convey("when a user join to the room", func() {
 			Convey("should send a room message", func() {
-				done := make(chan *api.Room)
-				s.api.Battle.RoomHandler = func(m *api.Room) { done <- m }
+				done := make(chan *battleAPI.Room)
+				s.api.Battle.RoomHandler = func(m *battleAPI.Room) { done <- m }
 				s.connect(server.URL + "/rooms/1?room_key=key_1")
 				m := <-done
 				So(m.Id, ShouldEqual, 1)
@@ -28,8 +27,8 @@ func TestRoom(t *testing.T) {
 
 			Convey("should send a now message", func() {
 				currentmillis.StubNow = func() int64 { return 123456 }
-				done := make(chan *battleAPI.NowObject)
-				s.api.Battle.NowHandler = func(m *battleAPI.NowObject) { done <- m }
+				done := make(chan *battleAPI.Now)
+				s.api.Battle.NowHandler = func(m *battleAPI.Now) { done <- m }
 				s.connect(server.URL + "/rooms/1?room_key=key_1")
 				m := <-done
 				currentmillis.StubNow = nil
@@ -39,8 +38,8 @@ func TestRoom(t *testing.T) {
 
 		Convey("when a new user join to the room", func() {
 			Convey("should send a room message to other users", func() {
-				done := make(chan *api.Room)
-				s.api.Battle.RoomHandler = func(m *api.Room) { done <- m }
+				done := make(chan *battleAPI.Room)
+				s.api.Battle.RoomHandler = func(m *battleAPI.Room) { done <- m }
 				s.connect(server.URL + "/rooms/1?room_key=key_1")
 				s2.connect(server.URL + "/rooms/1?room_key=key_2")
 				<-done
