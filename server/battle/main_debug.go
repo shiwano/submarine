@@ -6,8 +6,8 @@ import (
 	"runtime"
 
 	"github.com/shiwano/submarine/server/battle/lib/navmesh/debugger"
-	"github.com/shiwano/submarine/server/battle/server"
-	"github.com/shiwano/submarine/server/battle/server/debug"
+	"github.com/shiwano/submarine/server/battle/src"
+	"github.com/shiwano/submarine/server/battle/src/debug"
 )
 
 func main() {

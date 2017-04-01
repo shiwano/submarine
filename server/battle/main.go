@@ -2,9 +2,7 @@
 
 package main
 
-import (
-	"github.com/shiwano/submarine/server/battle/server"
-)
+import "github.com/shiwano/submarine/server/battle/src"
 
 func main() {
 	s := server.New()
