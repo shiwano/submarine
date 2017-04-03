@@ -2,6 +2,7 @@ package server
 
 import (
 	"bytes"
+	"context"
 	"errors"
 	"io/ioutil"
 	"net/http"
@@ -21,12 +22,15 @@ type clientSession struct {
 	conn         *conn.Conn
 	api          *websocketapi.WebSocketAPI
 	disconnected chan struct{}
+	cancel       context.CancelFunc
 }
 
 func newClientSession() *clientSession {
+	ctx, cancel := context.WithCancel(context.Background())
 	serializer := new(typhenapi.MessagePackSerializer)
 	session := &clientSession{
-		conn: conn.New(),
+		conn:   conn.New(ctx),
+		cancel: cancel,
 	}
 	session.api = websocketapi.New(session, serializer, nil)
 	session.conn.DisconnectHandler = func() {
@@ -51,7 +55,7 @@ func (s *clientSession) connect(url string) error {
 }
 
 func (s *clientSession) close() {
-	s.conn.Close()
+	s.cancel()
 }
 
 func (s *clientSession) waitForDisconnected() {

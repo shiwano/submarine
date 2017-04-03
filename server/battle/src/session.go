@@ -1,6 +1,7 @@
 package server
 
 import (
+	"context"
 	"fmt"
 	"net/http"
 
@@ -22,16 +23,19 @@ type session struct {
 	conn              *conn.Conn
 	api               *rtmAPI.WebSocketAPI
 	room              *room
+	cancel            context.CancelFunc
 	disconnectHandler func(*session)
 }
 
 func newSession(info *battleAPI.RoomMember, roomID int64) *session {
+	ctx, cancel := context.WithCancel(context.Background())
 	serializer := new(typhenapi.MessagePackSerializer)
 	s := &session{
 		id:     info.Id,
 		info:   info,
 		roomID: roomID,
-		conn:   conn.New(),
+		conn:   conn.New(ctx),
+		cancel: cancel,
 	}
 	s.conn.BinaryMessageHandler = s.onBinaryMessageReceive
 	s.conn.DisconnectHandler = s.onDisconnect
@@ -64,7 +68,7 @@ func (s *session) Send(data []byte) error {
 }
 
 func (s *session) close() {
-	s.conn.Close()
+	s.cancel()
 }
 
 func (s *session) toUserAPIType() *api.User {
@@ -72,6 +76,7 @@ func (s *session) toUserAPIType() *api.User {
 }
 
 func (s *session) onDisconnect() {
+	s.cancel()
 	if s.disconnectHandler != nil {
 		s.disconnectHandler(s)
 	}
