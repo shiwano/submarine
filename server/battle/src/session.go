@@ -87,8 +87,11 @@ func (s *session) onBinaryMessageReceive(data []byte) {
 }
 
 func (s *session) onError(err error) {
-	if closeError, ok := err.(*websocket.CloseError); ok && (closeError.Code == 1000 || closeError.Code == 1005) {
-		return
+	if closeError, ok := err.(*websocket.CloseError); ok {
+		if closeError.Code == 1000 || closeError.Code == 1005 {
+			return
+		}
+		logger.Log.Warnf("%v received the websocket close error: Code: %v Text: %v", s, closeError.Code, closeError.Text)
 	}
 	logger.Log.Errorf("%v received the error: %v", s, err)
 }
