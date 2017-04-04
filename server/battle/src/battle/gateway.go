@@ -7,7 +7,7 @@ import (
 	"github.com/shiwano/submarine/server/battle/lib/navmesh"
 	"github.com/shiwano/submarine/server/battle/lib/typhenapi"
 	battleAPI "github.com/shiwano/submarine/server/battle/lib/typhenapi/type/submarine/battle"
-	"github.com/shiwano/submarine/server/battle/src/battle/context"
+	"github.com/shiwano/submarine/server/battle/src/battle/scene"
 )
 
 // Gateway represents a battle input/output.
@@ -31,9 +31,9 @@ func (g *Gateway) InputMessage(userID int64, message typhenapi.Type) {
 	}
 }
 
-func (g *Gateway) outputStart(receivers context.PlayerSlice, startedAt time.Time) {
+func (g *Gateway) outputStart(receivers scene.PlayerSlice, startedAt time.Time) {
 	g.Output <- &GatewayOutput{
-		UserIDs: receivers.SelectInt64(func(p *context.Player) int64 { return p.ID }),
+		UserIDs: receivers.SelectInt64(func(p *scene.Player) int64 { return p.ID }),
 		Message: &battleAPI.Start{
 			StartedAt: currentmillis.Millis(startedAt),
 		},
@@ -50,10 +50,10 @@ func (g *Gateway) outputFinish(winnerUserID *int64, finishedAt time.Time) {
 	}
 }
 
-func (g *Gateway) outputActor(receiversByTeam context.PlayersByTeam, actor context.Actor) {
+func (g *Gateway) outputActor(receiversByTeam scene.PlayersByTeam, actor scene.Actor) {
 	for teamLayer, receivers := range receiversByTeam {
 		g.Output <- &GatewayOutput{
-			UserIDs: receivers.SelectInt64(func(p *context.Player) int64 { return p.ID }),
+			UserIDs: receivers.SelectInt64(func(p *scene.Player) int64 { return p.ID }),
 			Message: &battleAPI.Actor{
 				Id:        actor.ID(),
 				UserId:    actor.Player().ID,
@@ -66,12 +66,12 @@ func (g *Gateway) outputActor(receiversByTeam context.PlayersByTeam, actor conte
 	}
 }
 
-func (g *Gateway) outputVisibility(receiversByTeam context.PlayersByTeam, actor context.Actor,
+func (g *Gateway) outputVisibility(receiversByTeam scene.PlayersByTeam, actor scene.Actor,
 	targetTeamLayer navmesh.LayerMask) {
 	for teamLayer, receivers := range receiversByTeam {
 		if teamLayer == targetTeamLayer {
 			g.Output <- &GatewayOutput{
-				UserIDs: receivers.SelectInt64(func(p *context.Player) int64 { return p.ID }),
+				UserIDs: receivers.SelectInt64(func(p *scene.Player) int64 { return p.ID }),
 				Message: &battleAPI.Visibility{
 					ActorId:   actor.ID(),
 					IsVisible: actor.IsVisibleFrom(teamLayer),
@@ -82,27 +82,27 @@ func (g *Gateway) outputVisibility(receiversByTeam context.PlayersByTeam, actor 
 	}
 }
 
-func (g *Gateway) outputMovement(actor context.Actor) {
+func (g *Gateway) outputMovement(actor scene.Actor) {
 	g.Output <- &GatewayOutput{
 		Message: actor.Movement(),
 	}
 }
 
-func (g *Gateway) outputDestruction(actor context.Actor) {
+func (g *Gateway) outputDestruction(actor scene.Actor) {
 	g.Output <- &GatewayOutput{
 		Message: &battleAPI.Destruction{ActorId: actor.ID()},
 	}
 }
 
-func (g *Gateway) outputPinger(actor context.Actor, finished bool) {
+func (g *Gateway) outputPinger(actor scene.Actor, finished bool) {
 	g.Output <- &GatewayOutput{
 		Message: &battleAPI.Pinger{ActorId: actor.ID(), IsFinished: finished},
 	}
 }
 
-func (g *Gateway) outputEquipment(players context.PlayerSlice, equipment *battleAPI.Equipment) {
+func (g *Gateway) outputEquipment(players scene.PlayerSlice, equipment *battleAPI.Equipment) {
 	g.Output <- &GatewayOutput{
-		UserIDs: players.SelectInt64(func(p *context.Player) int64 { return p.ID }),
+		UserIDs: players.SelectInt64(func(p *scene.Player) int64 { return p.ID }),
 		Message: equipment,
 	}
 }

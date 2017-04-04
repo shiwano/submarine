@@ -1,4 +1,4 @@
-package context
+package scene
 
 import (
 	"github.com/shiwano/submarine/server/battle/lib/navmesh"

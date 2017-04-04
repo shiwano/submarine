@@ -1,4 +1,4 @@
-package context
+package scene
 
 import battleAPI "github.com/shiwano/submarine/server/battle/lib/typhenapi/type/submarine/battle"
 

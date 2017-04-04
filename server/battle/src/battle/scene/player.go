@@ -1,6 +1,6 @@
 //go:generate gen
 
-package context
+package scene
 
 import (
 	"fmt"

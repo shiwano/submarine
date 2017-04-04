@@ -2,7 +2,7 @@
 // TypeWriter: slice
 // Directive: +gen on *Player
 
-package context
+package scene
 
 import "errors"
 

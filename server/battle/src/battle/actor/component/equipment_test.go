@@ -6,13 +6,13 @@ import (
 
 	. "github.com/smartystreets/goconvey/convey"
 
-	"github.com/shiwano/submarine/server/battle/src/battle/context"
+	"github.com/shiwano/submarine/server/battle/src/battle/scene"
 )
 
 func TestEquipment(t *testing.T) {
 	Convey("Equipment", t, func() {
 		startTime := time.Now()
-		params := &context.SubmarineParams{
+		params := &scene.SubmarineParams{
 			TorpedoCount:           2,
 			TorpedoCooldownSeconds: 10,
 			PingerCooldownSeconds:  20,

@@ -4,7 +4,7 @@ import (
 	"github.com/shiwano/submarine/server/battle/lib/navmesh"
 	battleAPI "github.com/shiwano/submarine/server/battle/lib/typhenapi/type/submarine/battle"
 	"github.com/shiwano/submarine/server/battle/src/battle/actor/component"
-	"github.com/shiwano/submarine/server/battle/src/battle/context"
+	"github.com/shiwano/submarine/server/battle/src/battle/scene"
 	"github.com/shiwano/submarine/server/battle/src/logger"
 
 	"github.com/ungerik/go3d/float64/vec2"
@@ -18,11 +18,11 @@ type submarine struct {
 }
 
 // NewSubmarine creates a submarine.
-func NewSubmarine(ctx context.Context, user *context.Player) context.Actor {
+func NewSubmarine(scn scene.Scene, user *scene.Player) scene.Actor {
 	s := &submarine{
-		actor: newActor(ctx, user, user.SubmarineParams, user.StartPosition, 0),
+		actor: newActor(scn, user, user.SubmarineParams, user.StartPosition, 0),
 	}
-	s.timer = component.NewTimer(ctx.Now())
+	s.timer = component.NewTimer(scn.Now())
 	s.equipment = component.NewEquipment(s.ID(), user.SubmarineParams)
 
 	s.event.AddCollideWithOtherActorEventListener(s.onCollideWithOtherActor)
@@ -35,13 +35,13 @@ func NewSubmarine(ctx context.Context, user *context.Player) context.Actor {
 	s.event.AddWatcherRequestEventListener(s.onWatcherRequest)
 	s.event.AddUserLeaveEventListener(s.onUserLeave)
 
-	s.ctx.Event().AddActorUsePingerEventListener(s.onActorUsePinger)
-	s.ctx.Event().EmitActorCreateEvent(s)
+	s.scene.Event().AddActorUsePingerEventListener(s.onActorUsePinger)
+	s.scene.Event().EmitActorCreateEvent(s)
 	return s
 }
 
 func (s *submarine) Update() {
-	s.timer.Update(s.ctx.Now())
+	s.timer.Update(s.scene.Now())
 
 	if s.player.AI != nil {
 		s.player.AI.Update(s)
@@ -64,7 +64,7 @@ func (s *submarine) Submarine(layer navmesh.LayerMask) *battleAPI.ActorSubmarine
 	return e
 }
 
-func (s *submarine) onCollideWithOtherActor(actor context.Actor, point vec2.T) {
+func (s *submarine) onCollideWithOtherActor(actor scene.Actor, point vec2.T) {
 	if actor.Player() != s.player {
 		s.idle()
 	}
@@ -87,31 +87,31 @@ func (s *submarine) onTurnRequest(m *battleAPI.TurnRequest) {
 }
 
 func (s *submarine) onTorpedoRequest(m *battleAPI.TorpedoRequest) {
-	if s.equipment.TryConsumeTorpedo(s.ctx.Now()) {
+	if s.equipment.TryConsumeTorpedo(s.scene.Now()) {
 		logger.Log.Debugf("%v shoots a torpedo", s)
-		s.ctx.Event().EmitActorUpdateEquipmentEvent(s, s.equipment.ToAPIType())
+		s.scene.Event().EmitActorUpdateEquipmentEvent(s, s.equipment.ToAPIType())
 		normalizedVelocity := s.motor.NormalizedVelocity()
 		startOffsetValue := s.stageAgent.SizeRadius() * s.player.TorpedoParams.StartOffsetDistance
 		startPoint := normalizedVelocity.Scale(startOffsetValue).Add(s.Position())
-		newTorpedo(s.ctx, s.player, startPoint, s.motor.Direction())
+		newTorpedo(s.scene, s.player, startPoint, s.motor.Direction())
 	}
 }
 
 func (s *submarine) onPingerRequest(m *battleAPI.PingerRequest) {
-	if !s.isUsingPinger && s.equipment.Pinger.TryConsume(s.ctx.Now()) {
+	if !s.isUsingPinger && s.equipment.Pinger.TryConsume(s.scene.Now()) {
 		logger.Log.Debugf("%v uses pinger", s)
-		s.ctx.Event().EmitActorUpdateEquipmentEvent(s, s.equipment.ToAPIType())
+		s.scene.Event().EmitActorUpdateEquipmentEvent(s, s.equipment.ToAPIType())
 		s.isUsingPinger = true
-		s.ctx.Event().EmitActorUsePingerEvent(s, false)
+		s.scene.Event().EmitActorUsePingerEvent(s, false)
 		s.timer.Register(s.player.SubmarineParams.PingerIntervalSeconds, s.finishToUsePinger)
 	}
 }
 
 func (s *submarine) onWatcherRequest(m *battleAPI.WatcherRequest) {
-	if s.equipment.Watcher.TryConsume(s.ctx.Now()) {
+	if s.equipment.Watcher.TryConsume(s.scene.Now()) {
 		logger.Log.Debugf("%v uses watcher", s)
-		s.ctx.Event().EmitActorUpdateEquipmentEvent(s, s.equipment.ToAPIType())
-		newWatcher(s.ctx, s.player, s.Position(), s.motor.Direction())
+		s.scene.Event().EmitActorUpdateEquipmentEvent(s, s.equipment.ToAPIType())
+		newWatcher(s.scene, s.player, s.Position(), s.motor.Direction())
 	}
 }
 
@@ -119,7 +119,7 @@ func (s *submarine) onUserLeave() {
 	s.brake(s.motor.Direction())
 }
 
-func (s *submarine) onActorUsePinger(a context.Actor, finished bool) {
+func (s *submarine) onActorUsePinger(a scene.Actor, finished bool) {
 	pingerTeam := a.Player().TeamLayer
 	if s.Player().TeamLayer == pingerTeam {
 		return
@@ -129,7 +129,7 @@ func (s *submarine) onActorUsePinger(a context.Actor, finished bool) {
 
 func (s *submarine) finishToUsePinger() {
 	if s.isUsingPinger {
-		s.ctx.Event().EmitActorUsePingerEvent(s, true)
+		s.scene.Event().EmitActorUsePingerEvent(s, true)
 		s.isUsingPinger = false
 	}
 }

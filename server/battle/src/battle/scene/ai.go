@@ -1,4 +1,4 @@
-package context
+package scene
 
 // AI represents a battle artificial intelligence.
 type AI interface {

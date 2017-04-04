@@ -1,6 +1,6 @@
 //go:generate gen
 
-package context
+package scene
 
 import (
 	"github.com/ungerik/go3d/float64/vec2"

@@ -9,7 +9,7 @@ import (
 	battleAPI "github.com/shiwano/submarine/server/battle/lib/typhenapi/type/submarine/battle"
 	"github.com/shiwano/submarine/server/battle/src/battle/actor"
 	"github.com/shiwano/submarine/server/battle/src/battle/ai"
-	"github.com/shiwano/submarine/server/battle/src/battle/context"
+	"github.com/shiwano/submarine/server/battle/src/battle/scene"
 	"github.com/shiwano/submarine/server/battle/src/debug"
 
 	"github.com/tevino/abool"
@@ -19,7 +19,7 @@ import (
 // Battle represents a battle.
 type Battle struct {
 	Gateway       *Gateway
-	ctx           context.FullContext
+	scene         scene.FullScene
 	judge         *judge
 	isStarted     bool
 	isFighting    *abool.AtomicBool
@@ -30,11 +30,11 @@ type Battle struct {
 
 // New creates a new battle.
 func New(timeLimit time.Duration, stageMesh *navmesh.Mesh, lightMap *sight.LightMap) *Battle {
-	ctx := context.NewContext(stageMesh, lightMap)
+	scn := scene.NewScene(stageMesh, lightMap)
 	return &Battle{
 		Gateway:       newGateway(),
-		ctx:           ctx,
-		judge:         newJudge(ctx, timeLimit),
+		scene:         scn,
+		judge:         newJudge(scn, timeLimit),
 		isFighting:    abool.New(),
 		reenterUserCh: make(chan int64, 4),
 		leaveUserCh:   make(chan int64, 4),
@@ -45,7 +45,7 @@ func New(timeLimit time.Duration, stageMesh *navmesh.Mesh, lightMap *sight.Light
 // Start starts the battle that is startable.
 func (b *Battle) Start() bool {
 	// TODO: Relevant users counting.
-	if !b.isStarted && len(b.ctx.Players()) > 0 {
+	if !b.isStarted && len(b.scene.Players()) > 0 {
 		b.isStarted = true
 		go b.run()
 		return true
@@ -63,12 +63,12 @@ func (b *Battle) Close() {
 // EnterUser enters an user to the battle.
 func (b *Battle) EnterUser(userID int64) {
 	if !b.isStarted {
-		if _, ok := b.ctx.SubmarineByPlayerID(userID); !ok {
-			index := len(b.ctx.Players())
+		if _, ok := b.scene.SubmarineByPlayerID(userID); !ok {
+			index := len(b.scene.Players())
 			startPos := b.getStartPosition(index)
-			teamLayer := context.GetTeamLayer(index + 1)
-			user := context.NewPlayer(userID, true, teamLayer, startPos)
-			actor.NewSubmarine(b.ctx, user)
+			teamLayer := scene.GetTeamLayer(index + 1)
+			user := scene.NewPlayer(userID, true, teamLayer, startPos)
+			actor.NewSubmarine(b.scene, user)
 		}
 	} else if b.isFighting.IsSet() {
 		b.reenterUserCh <- userID
@@ -85,12 +85,12 @@ func (b *Battle) LeaveUser(userID int64) {
 // EnterBot enters a bot to the battle.
 func (b *Battle) EnterBot(bot *api.Bot) bool {
 	if !b.isStarted {
-		index := len(b.ctx.Players())
+		index := len(b.scene.Players())
 		startPos := b.getStartPosition(index)
-		teamLayer := context.GetTeamLayer(index + 1)
-		player := context.NewPlayer(bot.Id, false, teamLayer, startPos)
-		player.AI = ai.NewSimpleAI(b.ctx)
-		actor.NewSubmarine(b.ctx, player)
+		teamLayer := scene.GetTeamLayer(index + 1)
+		player := scene.NewPlayer(bot.Id, false, teamLayer, startPos)
+		player.AI = ai.NewSimpleAI(b.scene)
+		actor.NewSubmarine(b.scene, player)
 		return true
 	}
 	return false
@@ -99,7 +99,7 @@ func (b *Battle) EnterBot(bot *api.Bot) bool {
 // LeaveBot leaves a bot from the battle.
 func (b *Battle) LeaveBot(bot *api.Bot) bool {
 	if !b.isStarted {
-		if s, ok := b.ctx.SubmarineByPlayerID(bot.Id); ok {
+		if s, ok := b.scene.SubmarineByPlayerID(bot.Id); ok {
 			s.Destroy()
 		}
 		return true
@@ -133,23 +133,23 @@ loop:
 
 func (b *Battle) start() {
 	b.isFighting.SetTo(true)
-	b.ctx.Start(time.Now())
-	b.Gateway.outputStart(b.ctx.Players(), b.ctx.StartedAt())
-	for _, actor := range b.ctx.Actors() {
-		b.Gateway.outputActor(b.ctx.UserPlayersByTeam(), actor)
+	b.scene.Start(time.Now())
+	b.Gateway.outputStart(b.scene.Players(), b.scene.StartedAt())
+	for _, actor := range b.scene.Actors() {
+		b.Gateway.outputActor(b.scene.UserPlayersByTeam(), actor)
 	}
-	b.ctx.Event().AddActorAddEventListener(b.onActorAdd)
-	b.ctx.Event().AddActorMoveEventListener(b.onActorMove)
-	b.ctx.Event().AddActorChangeVisibilityEventListener(b.onActorChangeVisibility)
-	b.ctx.Event().AddActorRemoveEventListener(b.onActorRemove)
-	b.ctx.Event().AddActorUsePingerEventListener(b.onActorUsePinger)
-	b.ctx.Event().AddActorUpdateEquipmentEventListener(b.onActorUpdateEquipment)
+	b.scene.Event().AddActorAddEventListener(b.onActorAdd)
+	b.scene.Event().AddActorMoveEventListener(b.onActorMove)
+	b.scene.Event().AddActorChangeVisibilityEventListener(b.onActorChangeVisibility)
+	b.scene.Event().AddActorRemoveEventListener(b.onActorRemove)
+	b.scene.Event().AddActorUsePingerEventListener(b.onActorUsePinger)
+	b.scene.Event().AddActorUpdateEquipmentEventListener(b.onActorUpdateEquipment)
 }
 
 func (b *Battle) update(now time.Time) bool {
-	b.ctx.Update(now)
+	b.scene.Update(now)
 	if debug.Debug {
-		debug.Debugger.Update(b.ctx.Stage(), debug.SortedSights(b.ctx.SightsByTeam()))
+		debug.Debugger.Update(b.scene.Stage(), debug.SortedSights(b.scene.SightsByTeam()))
 	}
 	return b.judge.isBattleFinished()
 }
@@ -157,9 +157,9 @@ func (b *Battle) update(now time.Time) bool {
 func (b *Battle) finish() {
 	b.isFighting.SetTo(false)
 	if winner := b.judge.winner(); winner != nil {
-		b.Gateway.outputFinish(&winner.ID, b.ctx.Now())
+		b.Gateway.outputFinish(&winner.ID, b.scene.Now())
 	} else {
-		b.Gateway.outputFinish(nil, b.ctx.Now())
+		b.Gateway.outputFinish(nil, b.scene.Now())
 	}
 	if debug.Debug {
 		debug.Debugger.Update(nil, nil)
@@ -167,17 +167,17 @@ func (b *Battle) finish() {
 }
 
 func (b *Battle) reenterUser(userID int64) {
-	if s, ok := b.ctx.SubmarineByPlayerID(userID); ok {
-		players := context.PlayerSlice{s.Player()}
-		b.Gateway.outputStart(players, b.ctx.StartedAt())
-		for _, actor := range b.ctx.Actors() {
+	if s, ok := b.scene.SubmarineByPlayerID(userID); ok {
+		players := scene.PlayerSlice{s.Player()}
+		b.Gateway.outputStart(players, b.scene.StartedAt())
+		for _, actor := range b.scene.Actors() {
 			b.Gateway.outputActor(players.GroupByTeam(), actor)
 		}
 	}
 }
 
 func (b *Battle) leaveUser(userID int64) {
-	if s, ok := b.ctx.SubmarineByPlayerID(userID); ok {
+	if s, ok := b.scene.SubmarineByPlayerID(userID); ok {
 		s.Event().EmitUserLeaveEvent()
 	}
 }
@@ -196,7 +196,7 @@ func (b *Battle) getStartPosition(index int) *vec2.T {
 }
 
 func (b *Battle) onInputReceive(input *gatewayInput) {
-	s, ok := b.ctx.SubmarineByPlayerID(input.userID)
+	s, ok := b.scene.SubmarineByPlayerID(input.userID)
 	if !ok {
 		return
 	}
@@ -216,27 +216,27 @@ func (b *Battle) onInputReceive(input *gatewayInput) {
 	}
 }
 
-func (b *Battle) onActorAdd(actor context.Actor) {
-	b.Gateway.outputActor(b.ctx.UserPlayersByTeam(), actor)
+func (b *Battle) onActorAdd(actor scene.Actor) {
+	b.Gateway.outputActor(b.scene.UserPlayersByTeam(), actor)
 }
 
-func (b *Battle) onActorMove(actor context.Actor) {
+func (b *Battle) onActorMove(actor scene.Actor) {
 	b.Gateway.outputMovement(actor)
 }
 
-func (b *Battle) onActorChangeVisibility(actor context.Actor, teamLayer navmesh.LayerMask) {
-	b.Gateway.outputVisibility(b.ctx.UserPlayersByTeam(), actor, teamLayer)
+func (b *Battle) onActorChangeVisibility(actor scene.Actor, teamLayer navmesh.LayerMask) {
+	b.Gateway.outputVisibility(b.scene.UserPlayersByTeam(), actor, teamLayer)
 }
 
-func (b *Battle) onActorRemove(actor context.Actor) {
+func (b *Battle) onActorRemove(actor scene.Actor) {
 	b.Gateway.outputDestruction(actor)
 }
 
-func (b *Battle) onActorUsePinger(actor context.Actor, finished bool) {
+func (b *Battle) onActorUsePinger(actor scene.Actor, finished bool) {
 	b.Gateway.outputPinger(actor, finished)
 }
 
-func (b *Battle) onActorUpdateEquipment(actor context.Actor, equipment *battleAPI.Equipment) {
-	players := b.ctx.UserPlayersByTeam()[actor.Player().TeamLayer]
+func (b *Battle) onActorUpdateEquipment(actor scene.Actor, equipment *battleAPI.Equipment) {
+	players := b.scene.UserPlayersByTeam()[actor.Player().TeamLayer]
 	b.Gateway.outputEquipment(players, equipment)
 }

@@ -2,7 +2,7 @@
 // TypeWriter: slice
 // Directive: +gen on Actor
 
-package context
+package scene
 
 import "errors"
 

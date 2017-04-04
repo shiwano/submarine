@@ -1,6 +1,6 @@
 //go:generate genem -n EventEmitter -o event_emitter.go $GOFILE
 
-package context
+package scene
 
 import (
 	"github.com/shiwano/submarine/server/battle/lib/navmesh"

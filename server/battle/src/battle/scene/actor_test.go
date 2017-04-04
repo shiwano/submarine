@@ -1,4 +1,4 @@
-package context
+package scene
 
 import (
 	"github.com/ungerik/go3d/float64/vec2"
@@ -13,7 +13,7 @@ type actor struct {
 	id          int64
 	player      *Player
 	actorType   battleAPI.ActorType
-	ctx         Context
+	scene       Scene
 	event       *ActorEventEmitter
 	isDestroyed bool
 
@@ -21,7 +21,7 @@ type actor struct {
 	isCalledOnDestroy bool
 }
 
-func newSubmarine(ctx Context, isUser bool) *actor {
+func newSubmarine(scn Scene, isUser bool) *actor {
 	lastCreateActorID++
 	id := lastCreateActorID
 	player := &Player{ID: id * 100, IsUser: isUser, StartPosition: &vec2.Zero}
@@ -29,10 +29,10 @@ func newSubmarine(ctx Context, isUser bool) *actor {
 		id:        id,
 		player:    player,
 		actorType: battleAPI.ActorType_Submarine,
-		ctx:       ctx,
+		scene:     scn,
 		event:     NewActorEventEmitter(),
 	}
-	a.ctx.Event().EmitActorCreateEvent(a)
+	a.scene.Event().EmitActorCreateEvent(a)
 	return a
 }
 
@@ -57,5 +57,5 @@ func (a *actor) OnDestroy()    { a.isCalledOnDestroy = true }
 
 func (a *actor) Destroy() {
 	a.isDestroyed = true
-	a.ctx.Event().EmitActorDestroyEvent(a)
+	a.scene.Event().EmitActorDestroyEvent(a)
 }

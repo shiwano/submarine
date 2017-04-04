@@ -18,7 +18,7 @@ func TestBattle(t *testing.T) {
 		Convey("#EnterUser", func() {
 			Convey("should create the submarine", func() {
 				b.EnterUser(1)
-				s, ok := b.ctx.SubmarineByPlayerID(1)
+				s, ok := b.scene.SubmarineByPlayerID(1)
 				So(ok, ShouldBeTrue)
 				So(s, ShouldNotBeNil)
 			})
@@ -27,9 +27,9 @@ func TestBattle(t *testing.T) {
 				b.EnterUser(1)
 
 				Convey("should not replace the existing with new submarine instance", func() {
-					s, _ := b.ctx.SubmarineByPlayerID(1)
+					s, _ := b.scene.SubmarineByPlayerID(1)
 					b.EnterUser(1)
-					s2, ok := b.ctx.SubmarineByPlayerID(1)
+					s2, ok := b.scene.SubmarineByPlayerID(1)
 					So(ok, ShouldBeTrue)
 					So(s, ShouldEqual, s2)
 				})

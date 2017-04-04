@@ -1,4 +1,4 @@
-package context
+package scene
 
 import (
 	"testing"
@@ -10,43 +10,43 @@ import (
 	"github.com/shiwano/submarine/server/battle/src/resource"
 )
 
-func TestContextTest(t *testing.T) {
-	Convey("context", t, func() {
+func TestSceneTest(t *testing.T) {
+	Convey("scene", t, func() {
 		stageMesh, _ := resource.Loader.LoadMesh(1)
 		lightMap, _ := resource.Loader.LoadLightMap(1)
-		c := NewContext(stageMesh, lightMap)
+		scn := NewScene(stageMesh, lightMap)
 
 		Convey("when an actor is created", func() {
 			Convey("should add the actor", func() {
-				actor := newSubmarine(c, true)
-				So(c.HasActor(actor.ID()), ShouldBeTrue)
+				actor := newSubmarine(scn, true)
+				So(scn.HasActor(actor.ID()), ShouldBeTrue)
 			})
 
 			Convey("should call the actor's Start method", func() {
-				actor := newSubmarine(c, true)
+				actor := newSubmarine(scn, true)
 				So(actor.isCalledStart, ShouldBeTrue)
 			})
 
 			Convey("should emit the ActorAdded event", func() {
 				isCalled := false
-				c.Event().AddActorAddEventListener(func(a Actor) { isCalled = true })
-				newSubmarine(c, true)
+				scn.Event().AddActorAddEventListener(func(a Actor) { isCalled = true })
+				newSubmarine(scn, true)
 				So(isCalled, ShouldBeTrue)
 			})
 		})
 
 		Convey("when an actor is destroyed", func() {
-			actor := newSubmarine(c, true)
-			newSubmarine(c, false)
-			newSubmarine(c, true)
+			actor := newSubmarine(scn, true)
+			newSubmarine(scn, false)
+			newSubmarine(scn, true)
 
 			Convey("should remove the actor", func() {
 				actor.Destroy()
-				So(c.HasActor(actor.ID()), ShouldBeFalse)
-				So(c.Actors(), ShouldHaveLength, 2)
-				So(c.Players(), ShouldHaveLength, 2)
-				So(c.UserPlayersByTeam(), ShouldHaveLength, 1)
-				So(c.UserPlayersByTeam(), ShouldHaveLength, 1)
+				So(scn.HasActor(actor.ID()), ShouldBeFalse)
+				So(scn.Actors(), ShouldHaveLength, 2)
+				So(scn.Players(), ShouldHaveLength, 2)
+				So(scn.UserPlayersByTeam(), ShouldHaveLength, 1)
+				So(scn.UserPlayersByTeam(), ShouldHaveLength, 1)
 			})
 
 			Convey("should call the actor's OnDestroy method", func() {
@@ -56,7 +56,7 @@ func TestContextTest(t *testing.T) {
 
 			Convey("should emit the ActorRemoved event", func() {
 				isCalled := false
-				c.Event().AddActorRemoveEventListener(func(a Actor) { isCalled = true })
+				scn.Event().AddActorRemoveEventListener(func(a Actor) { isCalled = true })
 				actor.Destroy()
 				So(isCalled, ShouldBeTrue)
 			})
@@ -64,21 +64,21 @@ func TestContextTest(t *testing.T) {
 
 		Convey("#ElapsedTime", func() {
 			now, _ := time.Parse(time.RFC3339, "2016-01-01T12:00:00+00:00")
-			c.Start(now)
+			scn.Start(now)
 			now, _ = time.Parse(time.RFC3339, "2016-01-01T12:00:40+00:00")
-			c.Update(now)
+			scn.Update(now)
 
 			Convey("should return the elapsed time since start of battle", func() {
-				So(c.ElapsedTime(), ShouldEqual, time.Second*40)
+				So(scn.ElapsedTime(), ShouldEqual, time.Second*40)
 			})
 		})
 
 		Convey("#Actor", func() {
-			actorID := newSubmarine(c, true).ID()
+			actorID := newSubmarine(scn, true).ID()
 
 			Convey("with valid actor id", func() {
 				Convey("should return the actor", func() {
-					a, ok := c.Actor(actorID)
+					a, ok := scn.Actor(actorID)
 					So(ok, ShouldBeTrue)
 					So(a.ID(), ShouldEqual, actorID)
 				})
@@ -86,7 +86,7 @@ func TestContextTest(t *testing.T) {
 
 			Convey("with invalid user id", func() {
 				Convey("should return nil", func() {
-					a, ok := c.Actor(actorID + 1)
+					a, ok := scn.Actor(actorID + 1)
 					So(ok, ShouldBeFalse)
 					So(a, ShouldBeNil)
 				})
@@ -94,11 +94,11 @@ func TestContextTest(t *testing.T) {
 		})
 
 		Convey("#SubmarineByUserID", func() {
-			userID := newSubmarine(c, true).Player().ID
+			userID := newSubmarine(scn, true).Player().ID
 
 			Convey("with valid user id", func() {
 				Convey("should return the user's submarine", func() {
-					s, ok := c.SubmarineByPlayerID(userID)
+					s, ok := scn.SubmarineByPlayerID(userID)
 					So(ok, ShouldBeTrue)
 					So(s.Player().ID, ShouldEqual, userID)
 					So(s.Type(), ShouldEqual, battleAPI.ActorType_Submarine)
@@ -107,7 +107,7 @@ func TestContextTest(t *testing.T) {
 
 			Convey("with invalid user id", func() {
 				Convey("should return nil", func() {
-					s, ok := c.SubmarineByPlayerID(userID + 1)
+					s, ok := scn.SubmarineByPlayerID(userID + 1)
 					So(ok, ShouldBeFalse)
 					So(s, ShouldBeNil)
 				})

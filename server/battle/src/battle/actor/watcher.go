@@ -3,7 +3,7 @@ package actor
 import (
 	"github.com/shiwano/submarine/server/battle/lib/navmesh"
 	"github.com/shiwano/submarine/server/battle/src/battle/actor/component"
-	"github.com/shiwano/submarine/server/battle/src/battle/context"
+	"github.com/shiwano/submarine/server/battle/src/battle/scene"
 
 	"github.com/ungerik/go3d/float64/vec2"
 )
@@ -13,20 +13,20 @@ type watcher struct {
 	timer *component.Timer
 }
 
-func newWatcher(ctx context.Context, user *context.Player, position *vec2.T, direction float64) context.Actor {
+func newWatcher(scn scene.Scene, user *scene.Player, position *vec2.T, direction float64) scene.Actor {
 	w := &watcher{
-		actor: newActor(ctx, user, user.WatcherParams, position, direction),
+		actor: newActor(scn, user, user.WatcherParams, position, direction),
 	}
 	w.ignoredLayer = navmesh.LayerAll
-	w.timer = component.NewTimer(ctx.Now())
+	w.timer = component.NewTimer(scn.Now())
 	w.timer.Register(user.WatcherParams.UptimeSeconds, w.onElapsedUptime)
 
-	w.ctx.Event().EmitActorCreateEvent(w)
+	w.scene.Event().EmitActorCreateEvent(w)
 	return w
 }
 
 func (w *watcher) Update() {
-	w.timer.Update(w.ctx.Now())
+	w.timer.Update(w.scene.Now())
 }
 
 func (w *watcher) onElapsedUptime() {

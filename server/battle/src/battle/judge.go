@@ -3,27 +3,27 @@ package battle
 import (
 	"time"
 
-	"github.com/shiwano/submarine/server/battle/src/battle/context"
+	"github.com/shiwano/submarine/server/battle/src/battle/scene"
 )
 
 type judge struct {
-	context   context.FullContext
+	scene     scene.FullScene
 	timeLimit time.Duration
 }
 
-func newJudge(context context.FullContext, timeLimit time.Duration) *judge {
+func newJudge(scene scene.FullScene, timeLimit time.Duration) *judge {
 	return &judge{
-		context:   context,
+		scene:     scene,
 		timeLimit: timeLimit,
 	}
 }
 
 func (j judge) isBattleFinished() bool {
-	return j.context.ElapsedTime() >= j.timeLimit || len(j.context.Players()) == 1
+	return j.scene.ElapsedTime() >= j.timeLimit || len(j.scene.Players()) == 1
 }
 
-func (j judge) winner() *context.Player {
-	users := j.context.Players()
+func (j judge) winner() *scene.Player {
+	users := j.scene.Players()
 	if len(users) != 1 {
 		return nil
 	}

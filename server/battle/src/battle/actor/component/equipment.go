@@ -5,7 +5,7 @@ import (
 
 	"github.com/shiwano/submarine/server/battle/lib/currentmillis"
 	battleAPI "github.com/shiwano/submarine/server/battle/lib/typhenapi/type/submarine/battle"
-	"github.com/shiwano/submarine/server/battle/src/battle/context"
+	"github.com/shiwano/submarine/server/battle/src/battle/scene"
 )
 
 // Equipment manages equipment items of the submarine.
@@ -17,7 +17,7 @@ type Equipment struct {
 }
 
 // NewEquipment creates a Equipment.
-func NewEquipment(actorID int64, params *context.SubmarineParams) *Equipment {
+func NewEquipment(actorID int64, params *scene.SubmarineParams) *Equipment {
 	e := new(Equipment)
 	e.actorID = actorID
 	for i := int64(0); i < params.TorpedoCount; i++ {

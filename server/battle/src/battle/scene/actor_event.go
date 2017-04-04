@@ -1,6 +1,6 @@
 //go:generate genem -n ActorEventEmitter -o actor_event_emitter.go $GOFILE
 
-package context
+package scene
 
 import (
 	"github.com/ungerik/go3d/float64/vec2"

@@ -5,7 +5,7 @@ import (
 
 	"github.com/ungerik/go3d/float64/vec2"
 
-	"github.com/shiwano/submarine/server/battle/src/battle/context"
+	"github.com/shiwano/submarine/server/battle/src/battle/scene"
 )
 
 // SimpleAI represents a simple battle AI.
@@ -15,15 +15,15 @@ type SimpleAI struct {
 }
 
 // NewSimpleAI creates a SimpleAI.
-func NewSimpleAI(ctx context.Context) *SimpleAI {
-	return &SimpleAI{ai: newAI(ctx)}
+func NewSimpleAI(scn scene.Scene) *SimpleAI {
+	return &SimpleAI{ai: newAI(scn)}
 }
 
 // Update the SimpleAI.
-func (a *SimpleAI) Update(submarine context.Actor) {
+func (a *SimpleAI) Update(submarine scene.Actor) {
 	if !a.navigator.isStarted() {
 		nextDest := a.nextDest(submarine.Player().StartPosition)
-		path := a.ctx.Stage().FindPath(submarine.Position(), nextDest)
+		path := a.scn.Stage().FindPath(submarine.Position(), nextDest)
 		a.navigator.start(path, submarine.Position())
 	}
 
