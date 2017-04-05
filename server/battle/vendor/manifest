@@ -196,7 +196,7 @@
 			"importpath": "github.com/shiwano/websocket-conn",
 			"repository": "https://github.com/shiwano/websocket-conn",
 			"vcs": "git",
-			"revision": "78ba254af183314927173a2ac0085067e0c5fe94",
+			"revision": "fd0159742ca6f89f6423f172c942cdf5da669989",
 			"branch": "master",
 			"notests": true
 		},
