@@ -10,48 +10,57 @@ import (
 	"strings"
 
 	"github.com/gin-gonic/gin"
-	"github.com/shiwano/websocket-conn"
 
 	"github.com/shiwano/submarine/server/battle/lib/typhenapi"
 	webapi "github.com/shiwano/submarine/server/battle/lib/typhenapi/web/submarine"
 	websocketapi "github.com/shiwano/submarine/server/battle/lib/typhenapi/websocket/submarine"
 	"github.com/shiwano/submarine/server/battle/src/logger"
+	conn "github.com/shiwano/websocket-conn"
 )
 
 type clientSession struct {
-	conn         *conn.Conn
 	api          *websocketapi.WebSocketAPI
 	disconnected chan struct{}
+	conn         *conn.Conn
 	cancel       context.CancelFunc
 }
 
 func newClientSession() *clientSession {
-	ctx, cancel := context.WithCancel(context.Background())
 	serializer := new(typhenapi.MessagePackSerializer)
 	session := &clientSession{
-		conn:   conn.New(ctx),
-		cancel: cancel,
+		disconnected: make(chan struct{}, 1),
 	}
 	session.api = websocketapi.New(session, serializer, nil)
-	session.conn.DisconnectHandler = func() {
-		session.disconnected <- struct{}{}
-	}
-	session.conn.BinaryMessageHandler = func(data []byte) {
-		if err := session.api.DispatchMessageEvent(data); err != nil {
-			logger.Log.Error(err)
-		}
-	}
 	return session
 }
 
 func (s *clientSession) Send(data []byte) error {
-	return s.conn.WriteBinaryMessage(data)
+	return s.conn.SendBinaryMessage(data)
 }
 
 func (s *clientSession) connect(url string) error {
-	s.disconnected = make(chan struct{}, 1)
-	_, err := s.conn.Connect(strings.Replace(url, "http", "ws", 1), nil)
-	return err
+	ctx, cancel := context.WithCancel(context.Background())
+	s.cancel = cancel
+	c, _, err := conn.Connect(ctx, conn.DefaultSettings(), strings.Replace(url, "http", "ws", 1), nil)
+	if err != nil {
+		return err
+	}
+	s.conn = c
+	go func() {
+		for d := range s.conn.Stream() {
+			if d.EOS {
+				break
+			}
+			switch d.Message.MessageType {
+			case conn.BinaryMessageType:
+				if err := s.api.DispatchMessageEvent(d.Message.Data); err != nil {
+					logger.Log.Error(err)
+				}
+			}
+		}
+		s.disconnected <- struct{}{}
+	}()
+	return nil
 }
 
 func (s *clientSession) close() {

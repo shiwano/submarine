@@ -6,7 +6,6 @@ import (
 	"net/http"
 
 	"github.com/gorilla/websocket"
-	"github.com/shiwano/websocket-conn"
 
 	"github.com/shiwano/submarine/server/battle/lib/currentmillis"
 	"github.com/shiwano/submarine/server/battle/lib/typhenapi"
@@ -14,32 +13,27 @@ import (
 	battleAPI "github.com/shiwano/submarine/server/battle/lib/typhenapi/type/submarine/battle"
 	rtmAPI "github.com/shiwano/submarine/server/battle/lib/typhenapi/websocket/submarine"
 	"github.com/shiwano/submarine/server/battle/src/logger"
+	"github.com/shiwano/websocket-conn"
 )
 
 type session struct {
 	id                int64
 	roomID            int64
 	info              *battleAPI.RoomMember
-	conn              *conn.Conn
 	api               *rtmAPI.WebSocketAPI
 	room              *room
+	conn              *conn.Conn
 	cancel            context.CancelFunc
 	disconnectHandler func(*session)
 }
 
 func newSession(info *battleAPI.RoomMember, roomID int64) *session {
-	ctx, cancel := context.WithCancel(context.Background())
 	serializer := new(typhenapi.MessagePackSerializer)
 	s := &session{
 		id:     info.Id,
 		info:   info,
 		roomID: roomID,
-		conn:   conn.New(ctx),
-		cancel: cancel,
 	}
-	s.conn.BinaryMessageHandler = s.onBinaryMessageReceive
-	s.conn.DisconnectHandler = s.onDisconnect
-	s.conn.ErrorHandler = s.onError
 
 	s.api = rtmAPI.New(s, serializer, s.onError)
 	s.api.Battle.PingHandler = s.onPingReceive
@@ -60,11 +54,33 @@ func (s *session) String() string {
 }
 
 func (s *session) Connect(responseWriter http.ResponseWriter, request *http.Request) error {
-	return s.conn.UpgradeFromHTTP(responseWriter, request)
+	ctx, cancel := context.WithCancel(context.Background())
+	c, err := conn.UpgradeFromHTTP(ctx, conn.DefaultSettings(), responseWriter, request)
+	if err != nil {
+		cancel()
+		return err
+	}
+	s.conn = c
+	s.cancel = cancel
+	go func() {
+		for d := range s.conn.Stream() {
+			if d.EOS {
+				s.onError(s.conn.Err())
+				s.onDisconnect()
+				fmt.Println("asdasdasd")
+				break
+			}
+			switch d.Message.MessageType {
+			case conn.BinaryMessageType:
+				s.onBinaryMessageReceive(d.Message.Data)
+			}
+		}
+	}()
+	return nil
 }
 
 func (s *session) Send(data []byte) error {
-	return s.conn.WriteBinaryMessage(data)
+	return s.conn.SendBinaryMessage(data)
 }
 
 func (s *session) close() {
