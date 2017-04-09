@@ -1,11 +1,7 @@
 package server
 
 import (
-	"bytes"
 	"context"
-	"errors"
-	"io/ioutil"
-	"net/http"
 	"net/http/httptest"
 	"strings"
 
@@ -15,6 +11,7 @@ import (
 	webapi "github.com/shiwano/submarine/server/battle/lib/typhenapi/web/submarine"
 	websocketapi "github.com/shiwano/submarine/server/battle/lib/typhenapi/websocket/submarine"
 	"github.com/shiwano/submarine/server/battle/src/logger"
+	"github.com/shiwano/submarine/server/battle/test"
 	conn "github.com/shiwano/websocket-conn"
 )
 
@@ -73,36 +70,13 @@ func (s *clientSession) waitForDisconnected() {
 	}
 }
 
-type webAPITransporter struct {
-	serializer typhenapi.Serializer
-}
-
-func (m *webAPITransporter) RoundTrip(request *http.Request) (*http.Response, error) {
-	response := &http.Response{Header: make(http.Header), Request: request}
-	response.Header.Set("Content-Type", "github.com/shiwano/submarine/server/battle/application/json")
-	data, _ := ioutil.ReadAll(request.Body)
-	typhenType, statusCode := m.Routes(request.URL.Path, data)
-	err := typhenType.Coerce()
-	if err != nil {
-		return response, err
-	}
-
-	response.StatusCode = statusCode
-	body, _ := typhenType.Bytes(m.serializer)
-	response.Body = ioutil.NopCloser(bytes.NewReader(body))
-	if response.StatusCode >= 400 {
-		return nil, errors.New("Server Error")
-	}
-	return response, nil
-}
-
 func newWebAPIMock(url string) *webapi.WebAPI {
-	WebAPIRoundTripper = &webAPITransporter{new(typhenapi.MessagePackSerializer)}
+	WebAPIRoundTripper = test.NewWebAPITransporter()
 	return newWebAPI(url)
 }
 
 func newTestServer() *httptest.Server {
-	WebAPIRoundTripper = &webAPITransporter{new(typhenapi.MessagePackSerializer)}
+	WebAPIRoundTripper = test.NewWebAPITransporter()
 	gin.SetMode(gin.TestMode)
 	s := httptest.NewServer(New())
 	return s
