@@ -85,14 +85,14 @@ func (r *Room) Join(roomMember *battleAPI.RoomMember, w http.ResponseWriter, hr 
 		return err
 	}
 	go func() {
-	loop:
+	creationloop:
 		for {
 			select {
 			case <-r.ctx.Done():
 			case <-s.Closed():
 				return
 			case r.sessionCreated <- s:
-				break loop
+				break creationloop
 			}
 		}
 	loop:
