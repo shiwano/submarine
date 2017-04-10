@@ -1,6 +1,7 @@
 package server
 
 import (
+	"context"
 	"io"
 	"net/http"
 	"strconv"
@@ -10,23 +11,26 @@ import (
 	webapi "github.com/shiwano/submarine/server/battle/lib/typhenapi/web/submarine"
 	"github.com/shiwano/submarine/server/battle/src/config"
 	"github.com/shiwano/submarine/server/battle/src/logger"
+	"github.com/shiwano/submarine/server/battle/src/room"
 )
 
 // Server represents a battle server.
 type Server struct {
 	*gin.Engine
 	logWriter   *io.PipeWriter
-	roomManager *roomManager
+	roomManager *room.Manager
 	webAPI      *webapi.WebAPI
 }
 
 // New creates a Server.
 func New() *Server {
+	ctx := context.Background()
+	webAPI := newWebAPI(config.Config.ApiServerBaseUri)
 	server := &Server{
 		Engine:      gin.New(),
 		logWriter:   logger.Log.Writer(),
-		roomManager: newRoomManager(),
-		webAPI:      newWebAPI(config.Config.ApiServerBaseUri),
+		roomManager: room.NewManager(ctx, webAPI),
+		webAPI:      webAPI,
 	}
 	server.Use(gin.Recovery(), gin.LoggerWithWriter(server.logWriter))
 
@@ -43,13 +47,6 @@ func (s *Server) roomsGET(c *gin.Context) {
 		return
 	}
 
-	room, err := s.roomManager.fetchRoom(roomID)
-	if err != nil {
-		logger.Log.Error(err)
-		c.String(http.StatusForbidden, "Failed to get the room")
-		return
-	}
-
 	res, err := s.webAPI.Battle.FindRoomMember(c.Query("room_key"))
 	if err != nil {
 		logger.Log.Error(err)
@@ -61,21 +58,20 @@ func (s *Server) roomsGET(c *gin.Context) {
 		return
 	}
 
-	session := newSession(res.RoomMember, roomID)
-	if err := session.Connect(c.Writer, c.Request); err != nil {
+	room, err := s.roomManager.FetchRoom(roomID)
+	if err != nil {
+		logger.Log.Error(err)
+		c.String(http.StatusForbidden, "Failed to fetch the room")
+		return
+	}
+
+	if err := room.Join(res.RoomMember, c.Writer, c.Request); err != nil {
 		logger.Log.Error(err)
 		c.String(http.StatusForbidden, "Failed to upgrade the connection to Web Socket Protocol")
 		return
 	}
 
-	if room.isClosed.IsSet() {
-		logger.Log.Infof("%v already closed", room)
-		session.close()
-		return
-	}
-
-	room.joinCh <- session
-	logger.Log.Infof("%v was created", session)
+	logger.Log.Infof("Session(%v) was created", res.RoomMember.Id)
 }
 
 func init() {

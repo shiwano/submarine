@@ -16,8 +16,6 @@ import (
 	"github.com/shiwano/submarine/server/battle/src/session"
 )
 
-const maxRoomMember = 4
-
 type messageWithSession struct {
 	message typhenapi.Type
 	session *session.Session
@@ -68,7 +66,7 @@ func newRoom(ctx context.Context, webAPI *webAPI.WebAPI, id int64) (*Room, error
 		sessions:            make(map[int64]*session.Session),
 		bots:                make(map[int64]*api.Bot),
 		battle:              battle.New(time.Second*300, stageMesh, lightMap),
-		sessionCreated:      make(chan *session.Session, maxRoomMember),
+		sessionCreated:      make(chan *session.Session),
 		sessionClosed:       make(chan *session.Session),
 		roomMessageReceived: make(chan messageWithSession),
 		closed:              make(chan struct{}),
@@ -86,7 +84,6 @@ func (r *Room) Join(roomMember *battleAPI.RoomMember, w http.ResponseWriter, hr 
 	if err != nil {
 		return err
 	}
-
 	go func() {
 	loop:
 		for {
@@ -98,17 +95,22 @@ func (r *Room) Join(roomMember *battleAPI.RoomMember, w http.ResponseWriter, hr 
 				break loop
 			}
 		}
+	loop:
 		for {
 			select {
-			case <-r.ctx.Done():
-				return
 			case <-s.Closed():
-				r.sessionClosed <- s
-				return
+				break loop
 			case m := <-s.RoomMessageReceived():
 				r.roomMessageReceived <- messageWithSession{m, s}
 			case m := <-s.BattleMessageReceived():
 				r.battle.Gateway.InputMessage(s.ID(), m)
+			}
+		}
+		for {
+			select {
+			case <-r.ctx.Done():
+			case r.sessionClosed <- s:
+				return
 			}
 		}
 	}()
