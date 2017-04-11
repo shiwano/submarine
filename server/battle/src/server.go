@@ -2,11 +2,10 @@ package server
 
 import (
 	"context"
-	"io"
 	"net/http"
 	"strconv"
 
-	"github.com/gin-gonic/gin"
+	"github.com/gorilla/mux"
 
 	webapi "github.com/shiwano/submarine/server/battle/lib/typhenapi/web/submarine"
 	"github.com/shiwano/submarine/server/battle/src/config"
@@ -16,66 +15,69 @@ import (
 
 // Server represents a battle server.
 type Server struct {
-	*gin.Engine
-	logWriter   *io.PipeWriter
+	*http.Server
+	router      *mux.Router
 	roomManager *room.Manager
 	webAPI      *webapi.WebAPI
 }
 
 // New creates a Server.
-func New() *Server {
+func New(addr string) *Server {
 	ctx := context.Background()
+	router := mux.NewRouter()
 	webAPI := newWebAPI(config.Config.ApiServerBaseUri)
-	server := &Server{
-		Engine:      gin.New(),
-		logWriter:   logger.Log.Writer(),
-		roomManager: room.NewManager(ctx, webAPI),
+	roomManager := room.NewManager(ctx, webAPI)
+
+	s := &Server{
+		Server: &http.Server{
+			Addr:    addr,
+			Handler: router,
+		},
+		router:      router,
+		roomManager: roomManager,
 		webAPI:      webAPI,
 	}
-	server.Use(gin.Recovery(), gin.LoggerWithWriter(server.logWriter))
-
-	server.GET("/rooms/:id", server.roomsGET)
-
-	return server
+	s.router.HandleFunc("/rooms/{id}", s.roomsGET)
+	return s
 }
 
-func (s *Server) roomsGET(c *gin.Context) {
-	roomID, err := strconv.ParseInt(c.Param("id"), 10, 64)
+func (s *Server) roomsGET(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	roomID, err := strconv.ParseInt(vars["id"], 10, 64)
 	if err != nil || roomID <= 0 {
-		logger.Log.Error(err)
-		c.String(http.StatusForbidden, "Invalid room id")
+		s.writeString(w, http.StatusForbidden, "Invalid room id")
 		return
 	}
 
-	res, err := s.webAPI.Battle.FindRoomMember(c.Query("room_key"))
+	q := r.URL.Query()
+	res, err := s.webAPI.Battle.FindRoomMember(q.Get("room_key"))
 	if err != nil {
 		logger.Log.Error(err)
-		c.String(http.StatusInternalServerError, "Failed to authenticate the room key")
+		s.writeString(w, http.StatusInternalServerError, "Failed to authenticate the room key")
 		return
 	}
 	if res.RoomMember == nil {
-		c.String(http.StatusForbidden, "Invalid room key")
+		s.writeString(w, http.StatusForbidden, "Invalid room key")
 		return
 	}
 
 	room, err := s.roomManager.FetchRoom(roomID)
 	if err != nil {
 		logger.Log.Error(err)
-		c.String(http.StatusForbidden, "Failed to fetch the room")
+		s.writeString(w, http.StatusForbidden, "Failed to fetch the room")
 		return
 	}
 
-	if ok := room.Join(res.RoomMember, c.Writer, c.Request); !ok {
-		c.String(http.StatusForbidden, "Failed to join into the room")
+	if ok := room.Join(res.RoomMember, w, r); !ok {
+		s.writeString(w, http.StatusForbidden, "Failed to join into the room")
 		return
 	}
 }
 
-func init() {
-	switch config.Env {
-	case "test":
-		gin.SetMode(gin.TestMode)
-	case "development":
-		gin.SetMode(gin.DebugMode)
+func (s *Server) writeString(w http.ResponseWriter, statusCode int, text string) {
+	w.WriteHeader(statusCode)
+	_, err := w.Write([]byte(text))
+	if err != nil {
+		logger.Log.Error(err)
 	}
 }

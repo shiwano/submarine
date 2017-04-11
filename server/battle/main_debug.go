@@ -13,8 +13,8 @@ import (
 func main() {
 	debugger.Main(func(d *debugger.Debugger) {
 		debug.Debugger = d
-		s := server.New()
-		s.Run(":5000")
+		s := server.New(":5000")
+		s.ListenAndServe()
 	})
 }
 

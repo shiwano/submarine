@@ -5,8 +5,6 @@ import (
 	"net/http/httptest"
 	"strings"
 
-	"github.com/gin-gonic/gin"
-
 	"github.com/shiwano/submarine/server/battle/lib/typhenapi"
 	webapi "github.com/shiwano/submarine/server/battle/lib/typhenapi/web/submarine"
 	websocketapi "github.com/shiwano/submarine/server/battle/lib/typhenapi/websocket/submarine"
@@ -73,7 +71,7 @@ func newWebAPIMock(url string) *webapi.WebAPI {
 
 func newTestServer() *httptest.Server {
 	WebAPIRoundTripper = test.NewWebAPITransporter()
-	gin.SetMode(gin.TestMode)
-	s := httptest.NewServer(New())
-	return s
+	s := New()
+	ts := httptest.NewServer(s.router)
+	return ts
 }
