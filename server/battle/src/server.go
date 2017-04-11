@@ -65,9 +65,8 @@ func (s *Server) roomsGET(c *gin.Context) {
 		return
 	}
 
-	if err := room.Join(res.RoomMember, c.Writer, c.Request); err != nil {
-		logger.Log.Error(err)
-		c.String(http.StatusForbidden, "Failed to upgrade the connection to Web Socket Protocol")
+	if ok := room.Join(res.RoomMember, c.Writer, c.Request); !ok {
+		c.String(http.StatusForbidden, "Failed to join into the room")
 		return
 	}
 }

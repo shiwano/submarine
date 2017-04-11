@@ -16,6 +16,13 @@ import (
 	"github.com/shiwano/submarine/server/battle/src/session"
 )
 
+type createSessionRequest struct {
+	roomMember *battleAPI.RoomMember
+	w          http.ResponseWriter
+	r          *http.Request
+	done       chan struct{}
+}
+
 type messageWithSession struct {
 	message typhenapi.Type
 	session *session.Session
@@ -23,7 +30,6 @@ type messageWithSession struct {
 
 // Room represents a room of the battle server.
 type Room struct {
-	ctx                 context.Context
 	id                  int64
 	webAPI              *webAPI.WebAPI
 	info                *battleAPI.PlayableRoom
@@ -31,8 +37,8 @@ type Room struct {
 	bots                map[int64]*api.Bot
 	battle              *battle.Battle
 	lastCreatedBotID    int64
-	sessionCreated      chan *session.Session
-	sessionClosed       chan *session.Session
+	joinRequested       chan createSessionRequest
+	leaveRequested      chan *session.Session
 	roomMessageReceived chan messageWithSession
 	closed              chan struct{}
 }
@@ -57,76 +63,56 @@ func newRoom(ctx context.Context, webAPI *webAPI.WebAPI, id int64) (*Room, error
 		return nil, err
 	}
 
-	ctx, cancel := context.WithCancel(ctx)
 	r := &Room{
-		ctx:                 ctx,
 		id:                  id,
 		webAPI:              webAPI,
 		info:                res.Room,
 		sessions:            make(map[int64]*session.Session),
 		bots:                make(map[int64]*api.Bot),
 		battle:              battle.New(ctx, time.Second*300, stageMesh, lightMap),
-		sessionCreated:      make(chan *session.Session),
-		sessionClosed:       make(chan *session.Session),
+		joinRequested:       make(chan createSessionRequest),
+		leaveRequested:      make(chan *session.Session),
 		roomMessageReceived: make(chan messageWithSession),
 		closed:              make(chan struct{}),
 	}
-
-	go r.run(cancel)
+	go r.run(ctx)
 	return r, nil
 }
 
-func (r *Room) String() string { return fmt.Sprintf("Room(%v)", r.id) }
-
-// Join creates a new session and join to the room.
-func (r *Room) Join(roomMember *battleAPI.RoomMember, w http.ResponseWriter, hr *http.Request) error {
-	s, err := session.Open(r.ctx, roomMember, w, hr)
-	if err != nil {
-		return err
-	}
-	go func() {
-		select {
-		case <-r.ctx.Done():
-		case <-s.Closed():
-			return
-		case r.sessionCreated <- s:
-			break
-		}
-	loop:
-		for {
-			select {
-			case <-s.Closed():
-				break loop
-			case m := <-s.RoomMessageReceived():
-				r.roomMessageReceived <- messageWithSession{m, s}
-			case m := <-s.BattleMessageReceived():
-				r.battle.Gateway.InputMessage(s.ID(), m)
-			}
-		}
-		select {
-		case <-r.ctx.Done():
-		case r.sessionClosed <- s:
-			return
-		}
-	}()
-	return nil
+func (r *Room) String() string {
+	return fmt.Sprintf("Room(%v)", r.id)
 }
 
-func (r *Room) run(cancel context.CancelFunc) {
+// Join creates a new session and join to the room.
+func (r *Room) Join(roomMember *battleAPI.RoomMember, w http.ResponseWriter, hr *http.Request) bool {
+	req := createSessionRequest{roomMember, w, hr, make(chan struct{})}
+	select {
+	case <-r.closed:
+		return false
+	case r.joinRequested <- req:
+		<-req.done
+		return true
+	}
+}
+
+func (r *Room) run(ctx context.Context) {
+	ctx, cancel := context.WithCancel(ctx)
 	defer cancel()
+	defer close(r.closed)
+
 	logger.Log.Infof("%v opened", r)
 
 loop:
 	for {
 		select {
-		case <-r.ctx.Done():
+		case <-ctx.Done():
 			break loop
 		case <-r.battle.Finished():
 			r.closeBattle()
 			break loop
-		case session := <-r.sessionCreated:
-			r.join(session)
-		case session := <-r.sessionClosed:
+		case req := <-r.joinRequested:
+			r.join(ctx, req)
+		case session := <-r.leaveRequested:
 			r.leave(session)
 		case m := <-r.roomMessageReceived:
 			switch t := m.message.(type) {
@@ -141,11 +127,11 @@ loop:
 			r.sendBattleMessageToSessions(output)
 		}
 	}
+
 	cancel()
 	for _, s := range r.sessions {
 		<-s.Closed()
 	}
-	close(r.closed)
 	logger.Log.Infof("%v closed", r)
 }
 
@@ -199,12 +185,38 @@ func (r *Room) removeBot(botID int64) {
 	}
 }
 
-func (r *Room) join(s *session.Session) {
+func (r *Room) join(ctx context.Context, req createSessionRequest) {
+	defer close(req.done)
+
+	s, err := session.Open(ctx, req.roomMember, req.w, req.r)
+	if err != nil {
+		logger.Log.Errorf("Failed to create a session: %v", err)
+		return
+	}
 	r.sessions[s.ID()] = s
 	r.battle.EnterUser(s.ID())
 	s.SynchronizeTime()
 	r.broadcastRoom()
 	logger.Log.Infof("%v joined into %v", s, r)
+
+	go func() {
+	loop:
+		for {
+			select {
+			case <-s.Closed():
+				break loop
+			case m := <-s.RoomMessageReceived():
+				r.roomMessageReceived <- messageWithSession{m, s}
+			case m := <-s.BattleMessageReceived():
+				r.battle.Gateway.InputMessage(s.ID(), m)
+			}
+		}
+		select {
+		case <-r.closed:
+		case r.leaveRequested <- s:
+			return
+		}
+	}()
 }
 
 func (r *Room) leave(s *session.Session) {
