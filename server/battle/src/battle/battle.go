@@ -19,7 +19,6 @@ import (
 // Battle represents a battle.
 type Battle struct {
 	Gateway *Gateway
-	ctx     context.Context
 	scene   scene.FullScene
 	judge   *judge
 
@@ -30,6 +29,7 @@ type Battle struct {
 	startRequested chan struct{}
 	started        chan struct{}
 	finished       chan struct{}
+	closed         chan struct{}
 }
 
 // New creates a new battle.
@@ -37,7 +37,6 @@ func New(ctx context.Context, timeLimit time.Duration, stageMesh *navmesh.Mesh, 
 	scn := scene.NewScene(stageMesh, lightMap)
 	b := &Battle{
 		Gateway: newGateway(),
-		ctx:     ctx,
 		scene:   scn,
 		judge:   newJudge(scn, timeLimit),
 
@@ -48,8 +47,9 @@ func New(ctx context.Context, timeLimit time.Duration, stageMesh *navmesh.Mesh, 
 		startRequested: make(chan struct{}),
 		started:        make(chan struct{}),
 		finished:       make(chan struct{}),
+		closed:         make(chan struct{}),
 	}
-	go b.run()
+	go b.run(ctx)
 	return b
 }
 
@@ -61,8 +61,8 @@ func (b *Battle) Finished() <-chan struct{} {
 // Start starts the battle.
 func (b *Battle) Start() bool {
 	select {
-	case <-b.ctx.Done():
 	case <-b.started:
+	case <-b.closed:
 		return false
 	case b.startRequested <- struct{}{}:
 	}
@@ -72,7 +72,7 @@ func (b *Battle) Start() bool {
 // EnterUser enters an user to the battle.
 func (b *Battle) EnterUser(userID int64) {
 	select {
-	case <-b.ctx.Done():
+	case <-b.closed:
 	case b.userEntered <- userID:
 	}
 }
@@ -80,7 +80,7 @@ func (b *Battle) EnterUser(userID int64) {
 // LeaveUser leaves an user from the battle.
 func (b *Battle) LeaveUser(userID int64) {
 	select {
-	case <-b.ctx.Done():
+	case <-b.closed:
 	case b.userLeft <- userID:
 	}
 }
@@ -88,8 +88,8 @@ func (b *Battle) LeaveUser(userID int64) {
 // EnterBot enters a bot to the battle.
 func (b *Battle) EnterBot(bot *api.Bot) bool {
 	select {
-	case <-b.ctx.Done():
 	case <-b.started:
+	case <-b.closed:
 		return false
 	case b.botEntered <- bot:
 	}
@@ -99,19 +99,21 @@ func (b *Battle) EnterBot(bot *api.Bot) bool {
 // LeaveBot leaves a bot from the battle.
 func (b *Battle) LeaveBot(bot *api.Bot) bool {
 	select {
-	case <-b.ctx.Done():
 	case <-b.started:
+	case <-b.closed:
 		return false
 	case b.botLeft <- bot:
 	}
 	return true
 }
 
-func (b *Battle) run() {
+func (b *Battle) run(ctx context.Context) {
+	defer close(b.closed)
+
 preLoop:
 	for {
 		select {
-		case <-b.ctx.Done():
+		case <-ctx.Done():
 			return
 		case <-b.startRequested:
 			// TODO: Relevant users counting.
@@ -137,7 +139,7 @@ preLoop:
 loop:
 	for {
 		select {
-		case <-b.ctx.Done():
+		case <-ctx.Done():
 			return
 		case now := <-ticker.C:
 			if b.update(now) {
