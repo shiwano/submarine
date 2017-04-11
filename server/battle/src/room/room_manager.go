@@ -10,7 +10,6 @@ import (
 
 // Manager manages rooms with goroutine safe.
 type Manager struct {
-	ctx                context.Context
 	webAPI             *webAPI.WebAPI
 	rooms              map[int64]*Room
 	fetchRoomRequested chan *respondable.T
@@ -21,14 +20,13 @@ type Manager struct {
 // NewManager creates a Manager.
 func NewManager(ctx context.Context, webAPI *webAPI.WebAPI) *Manager {
 	rm := &Manager{
-		ctx:                ctx,
 		webAPI:             webAPI,
 		rooms:              make(map[int64]*Room),
 		fetchRoomRequested: make(chan *respondable.T),
 		roomClosed:         make(chan int64),
 		closed:             make(chan struct{}),
 	}
-	go rm.run()
+	go rm.run(ctx)
 	return rm
 }
 
@@ -45,33 +43,33 @@ func (rm *Manager) FetchRoom(roomID int64) (*Room, error) {
 	return v.(*Room), err
 }
 
-func (rm *Manager) run() {
+func (rm *Manager) run(ctx context.Context) {
+	defer close(rm.closed)
 	logger.Log.Info("RoomManager opened")
 
 loop:
 	for {
 		select {
-		case <-rm.ctx.Done():
+		case <-ctx.Done():
 			break loop
 		case roomID := <-rm.roomClosed:
 			rm.deleteRoom(roomID)
 		case res := <-rm.fetchRoomRequested:
-			r, err := rm.getOrCreateRoom(res.Value.(int64))
+			r, err := rm.getOrCreateRoom(ctx, res.Value.(int64))
 			res.Respond(r, err)
 		}
 	}
 	for _, r := range rm.rooms {
 		<-r.closed
 	}
-	close(rm.closed)
 	logger.Log.Info("RoomManager closed")
 }
 
-func (rm *Manager) getOrCreateRoom(roomID int64) (*Room, error) {
+func (rm *Manager) getOrCreateRoom(ctx context.Context, roomID int64) (*Room, error) {
 	if r, ok := rm.rooms[roomID]; ok {
 		return r, nil
 	}
-	r, err := newRoom(rm.ctx, rm.webAPI, roomID)
+	r, err := openRoom(ctx, rm.webAPI, roomID)
 	if err != nil {
 		return nil, err
 	}
@@ -80,7 +78,7 @@ func (rm *Manager) getOrCreateRoom(roomID int64) (*Room, error) {
 		<-r.closed
 
 		select {
-		case <-rm.ctx.Done():
+		case <-ctx.Done():
 		case rm.roomClosed <- roomID:
 		}
 	}()

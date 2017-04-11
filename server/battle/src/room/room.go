@@ -43,7 +43,7 @@ type Room struct {
 	closed              chan struct{}
 }
 
-func newRoom(ctx context.Context, webAPI *webAPI.WebAPI, id int64) (*Room, error) {
+func openRoom(ctx context.Context, webAPI *webAPI.WebAPI, id int64) (*Room, error) {
 	// TODO: Validate whether the battle server can create the room.
 	res, err := webAPI.Battle.FindRoom(id)
 	if err != nil {
