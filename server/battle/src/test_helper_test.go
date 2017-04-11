@@ -44,13 +44,9 @@ func (s *clientSession) connect(url string) error {
 	}
 	s.conn = c
 	go func() {
-		for d := range s.conn.Stream() {
-			if d.EOS {
-				break
-			}
-			switch d.Message.MessageType {
-			case conn.BinaryMessageType:
-				if err := s.api.DispatchMessageEvent(d.Message.Data); err != nil {
+		for m := range s.conn.Stream() {
+			if m.MessageType == conn.BinaryMessageType {
+				if err := s.api.DispatchMessageEvent(m.Data); err != nil {
 					logger.Log.Error(err)
 				}
 			}

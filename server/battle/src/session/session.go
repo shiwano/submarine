@@ -113,16 +113,12 @@ func (s *Session) Closed() <-chan struct{} {
 }
 
 func (s *Session) run() {
-	for d := range s.conn.Stream() {
-		if d.EOS {
-			s.onError(s.conn.Err())
-			break
-		}
-		switch d.Message.MessageType {
-		case conn.BinaryMessageType:
-			s.onBinaryMessageReceive(d.Message.Data)
+	for m := range s.conn.Stream() {
+		if m.MessageType == conn.BinaryMessageType {
+			s.onBinaryMessageReceive(m.Data)
 		}
 	}
+	s.onError(s.conn.Err())
 	close(s.battleMessageReceived)
 	close(s.roomMessageReceived)
 	close(s.closed)
