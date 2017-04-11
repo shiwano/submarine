@@ -226,14 +226,6 @@
 			"notests": true
 		},
 		{
-			"importpath": "github.com/tevino/abool",
-			"repository": "https://github.com/tevino/abool",
-			"vcs": "git",
-			"revision": "3c25f2fe7cd0ef3eabefce1d90efd69a65d35b12",
-			"branch": "master",
-			"notests": true
-		},
-		{
 			"importpath": "github.com/ugorji/go/codec",
 			"repository": "https://github.com/ugorji/go",
 			"vcs": "git",
