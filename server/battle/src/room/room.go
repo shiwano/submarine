@@ -65,7 +65,7 @@ func newRoom(ctx context.Context, webAPI *webAPI.WebAPI, id int64) (*Room, error
 		info:                res.Room,
 		sessions:            make(map[int64]*session.Session),
 		bots:                make(map[int64]*api.Bot),
-		battle:              battle.New(time.Second*300, stageMesh, lightMap),
+		battle:              battle.New(ctx, time.Second*300, stageMesh, lightMap),
 		sessionCreated:      make(chan *session.Session),
 		sessionClosed:       make(chan *session.Session),
 		roomMessageReceived: make(chan messageWithSession),
@@ -120,6 +120,8 @@ loop:
 	for {
 		select {
 		case <-r.ctx.Done():
+			break loop
+		case <-r.battle.Finished():
 			r.closeBattle()
 			break loop
 		case session := <-r.sessionCreated:
@@ -137,10 +139,6 @@ loop:
 			}
 		case output := <-r.battle.Gateway.Output:
 			r.sendBattleMessageToSessions(output)
-			if output.IsFinishMessage {
-				r.closeBattle()
-				break loop
-			}
 		}
 	}
 	close(r.closed)
@@ -221,7 +219,6 @@ func (r *Room) closeBattle() {
 		}
 		break
 	}
-	r.battle.Close()
 }
 
 func (r *Room) sendBattleMessageToSessions(output *battle.GatewayOutput) {

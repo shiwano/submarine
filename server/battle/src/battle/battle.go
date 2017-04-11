@@ -1,6 +1,7 @@
 package battle
 
 import (
+	"context"
 	"time"
 
 	"github.com/shiwano/submarine/server/battle/lib/navmesh"
@@ -12,127 +13,149 @@ import (
 	"github.com/shiwano/submarine/server/battle/src/battle/scene"
 	"github.com/shiwano/submarine/server/battle/src/debug"
 
-	"github.com/tevino/abool"
 	"github.com/ungerik/go3d/float64/vec2"
 )
 
 // Battle represents a battle.
 type Battle struct {
-	Gateway       *Gateway
-	scene         scene.FullScene
-	judge         *judge
-	isStarted     bool
-	isFighting    *abool.AtomicBool
-	reenterUserCh chan int64
-	leaveUserCh   chan int64
-	closeCh       chan struct{}
+	Gateway *Gateway
+	ctx     context.Context
+	scene   scene.FullScene
+	judge   *judge
+
+	userEntered    chan int64
+	userLeft       chan int64
+	botEntered     chan *api.Bot
+	botLeft        chan *api.Bot
+	startRequested chan struct{}
+	started        chan struct{}
+	finished       chan struct{}
 }
 
 // New creates a new battle.
-func New(timeLimit time.Duration, stageMesh *navmesh.Mesh, lightMap *sight.LightMap) *Battle {
+func New(ctx context.Context, timeLimit time.Duration, stageMesh *navmesh.Mesh, lightMap *sight.LightMap) *Battle {
 	scn := scene.NewScene(stageMesh, lightMap)
-	return &Battle{
-		Gateway:       newGateway(),
-		scene:         scn,
-		judge:         newJudge(scn, timeLimit),
-		isFighting:    abool.New(),
-		reenterUserCh: make(chan int64, 4),
-		leaveUserCh:   make(chan int64, 4),
-		closeCh:       make(chan struct{}, 1),
+	b := &Battle{
+		Gateway: newGateway(),
+		ctx:     ctx,
+		scene:   scn,
+		judge:   newJudge(scn, timeLimit),
+
+		userEntered:    make(chan int64),
+		userLeft:       make(chan int64),
+		botEntered:     make(chan *api.Bot),
+		botLeft:        make(chan *api.Bot),
+		startRequested: make(chan struct{}),
+		started:        make(chan struct{}),
+		finished:       make(chan struct{}),
 	}
+	go b.run()
+	return b
 }
 
-// Start starts the battle that is startable.
+// Finished returns a channel that receives a value when the battle finished.
+func (b *Battle) Finished() <-chan struct{} {
+	return b.finished
+}
+
+// Start starts the battle.
 func (b *Battle) Start() bool {
-	// TODO: Relevant users counting.
-	if !b.isStarted && len(b.scene.Players()) > 0 {
-		b.isStarted = true
-		go b.run()
-		return true
+	select {
+	case <-b.ctx.Done():
+	case <-b.started:
+		return false
+	case b.startRequested <- struct{}{}:
 	}
-	return false
-}
-
-// Close closes the battle that is running.
-func (b *Battle) Close() {
-	if b.isStarted && b.isFighting.IsSet() {
-		b.closeCh <- struct{}{}
-	}
+	return true
 }
 
 // EnterUser enters an user to the battle.
 func (b *Battle) EnterUser(userID int64) {
-	if !b.isStarted {
-		if _, ok := b.scene.SubmarineByPlayerID(userID); !ok {
-			index := len(b.scene.Players())
-			startPos := b.getStartPosition(index)
-			teamLayer := scene.GetTeamLayer(index + 1)
-			user := scene.NewPlayer(userID, true, teamLayer, startPos)
-			actor.NewSubmarine(b.scene, user)
-		}
-	} else if b.isFighting.IsSet() {
-		b.reenterUserCh <- userID
+	select {
+	case <-b.ctx.Done():
+	case b.userEntered <- userID:
 	}
 }
 
 // LeaveUser leaves an user from the battle.
 func (b *Battle) LeaveUser(userID int64) {
-	if b.isFighting.IsSet() {
-		b.leaveUserCh <- userID
+	select {
+	case <-b.ctx.Done():
+	case b.userLeft <- userID:
 	}
 }
 
 // EnterBot enters a bot to the battle.
 func (b *Battle) EnterBot(bot *api.Bot) bool {
-	if !b.isStarted {
-		index := len(b.scene.Players())
-		startPos := b.getStartPosition(index)
-		teamLayer := scene.GetTeamLayer(index + 1)
-		player := scene.NewPlayer(bot.Id, false, teamLayer, startPos)
-		player.AI = ai.NewSimpleAI(b.scene)
-		actor.NewSubmarine(b.scene, player)
-		return true
+	select {
+	case <-b.ctx.Done():
+	case <-b.started:
+		return false
+	case b.botEntered <- bot:
 	}
-	return false
+	return true
 }
 
 // LeaveBot leaves a bot from the battle.
 func (b *Battle) LeaveBot(bot *api.Bot) bool {
-	if !b.isStarted {
-		if s, ok := b.scene.SubmarineByPlayerID(bot.Id); ok {
-			s.Destroy()
-		}
-		return true
+	select {
+	case <-b.ctx.Done():
+	case <-b.started:
+		return false
+	case b.botLeft <- bot:
 	}
-	return false
+	return true
 }
 
 func (b *Battle) run() {
+preLoop:
+	for {
+		select {
+		case <-b.ctx.Done():
+			return
+		case <-b.startRequested:
+			// TODO: Relevant users counting.
+			if len(b.scene.Players()) > 0 {
+				break preLoop
+			}
+		case userID := <-b.userEntered:
+			b.enterUser(userID)
+		case <-b.userLeft:
+			break
+		case bot := <-b.botEntered:
+			b.enterBot(bot)
+		case bot := <-b.botLeft:
+			b.leaveBot(bot)
+		}
+	}
 	b.start()
+	close(b.started)
+
 	ticker := time.NewTicker(time.Second / 30)
 	defer ticker.Stop()
+
 loop:
 	for {
 		select {
+		case <-b.ctx.Done():
+			return
 		case now := <-ticker.C:
 			if b.update(now) {
 				break loop
 			}
 		case input := <-b.Gateway.input:
 			b.onInputReceive(input)
-		case userID := <-b.reenterUserCh:
+		case userID := <-b.userEntered:
 			b.reenterUser(userID)
-		case userID := <-b.leaveUserCh:
+		case userID := <-b.userLeft:
 			b.leaveUser(userID)
-		case <-b.closeCh:
-			break loop
 		}
 	}
 	b.finish()
+	close(b.finished)
 }
 
 func (b *Battle) start() {
-	b.isFighting.SetTo(true)
 	b.scene.Start(time.Now())
 	b.Gateway.outputStart(b.scene.Players(), b.scene.StartedAt())
 	for _, actor := range b.scene.Actors() {
@@ -155,7 +178,6 @@ func (b *Battle) update(now time.Time) bool {
 }
 
 func (b *Battle) finish() {
-	b.isFighting.SetTo(false)
 	if winner := b.judge.winner(); winner != nil {
 		b.Gateway.outputFinish(&winner.ID, b.scene.Now())
 	} else {
@@ -163,6 +185,16 @@ func (b *Battle) finish() {
 	}
 	if debug.Debug {
 		debug.Debugger.Update(nil, nil)
+	}
+}
+
+func (b *Battle) enterUser(userID int64) {
+	if _, ok := b.scene.SubmarineByPlayerID(userID); !ok {
+		index := len(b.scene.Players())
+		startPos := b.getStartPosition(index)
+		teamLayer := scene.GetTeamLayer(index + 1)
+		user := scene.NewPlayer(userID, true, teamLayer, startPos)
+		actor.NewSubmarine(b.scene, user)
 	}
 }
 
@@ -179,6 +211,21 @@ func (b *Battle) reenterUser(userID int64) {
 func (b *Battle) leaveUser(userID int64) {
 	if s, ok := b.scene.SubmarineByPlayerID(userID); ok {
 		s.Event().EmitUserLeaveEvent()
+	}
+}
+
+func (b *Battle) enterBot(bot *api.Bot) {
+	index := len(b.scene.Players())
+	startPos := b.getStartPosition(index)
+	teamLayer := scene.GetTeamLayer(index + 1)
+	player := scene.NewPlayer(bot.Id, false, teamLayer, startPos)
+	player.AI = ai.NewSimpleAI(b.scene)
+	actor.NewSubmarine(b.scene, player)
+}
+
+func (b *Battle) leaveBot(bot *api.Bot) {
+	if s, ok := b.scene.SubmarineByPlayerID(bot.Id); ok {
+		s.Destroy()
 	}
 }
 

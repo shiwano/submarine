@@ -46,7 +46,6 @@ func (g *Gateway) outputFinish(winnerUserID *int64, finishedAt time.Time) {
 			WinnerUserId: winnerUserID,
 			FinishedAt:   currentmillis.Millis(finishedAt),
 		},
-		IsFinishMessage: true,
 	}
 }
 
@@ -114,7 +113,6 @@ type gatewayInput struct {
 
 // GatewayOutput represents a battle output.
 type GatewayOutput struct {
-	UserIDs         []int64
-	Message         typhenapi.Type
-	IsFinishMessage bool
+	UserIDs []int64
+	Message typhenapi.Type
 }
