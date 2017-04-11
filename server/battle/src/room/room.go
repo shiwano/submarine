@@ -80,7 +80,7 @@ func (r *Room) String() string { return fmt.Sprintf("Room(%v)", r.id) }
 
 // Join creates a new session and join to the room.
 func (r *Room) Join(roomMember *battleAPI.RoomMember, w http.ResponseWriter, hr *http.Request) error {
-	s, err := session.New(r.ctx, roomMember, w, hr)
+	s, err := session.Open(r.ctx, roomMember, w, hr)
 	if err != nil {
 		return err
 	}

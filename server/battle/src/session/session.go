@@ -28,8 +28,8 @@ type Session struct {
 	closed                chan struct{}
 }
 
-// New creates a Session.
-func New(ctx context.Context, roomMember *battleAPI.RoomMember, responseWriter http.ResponseWriter, request *http.Request) (*Session, error) {
+// Open creates a Session.
+func Open(ctx context.Context, roomMember *battleAPI.RoomMember, responseWriter http.ResponseWriter, request *http.Request) (*Session, error) {
 	c, err := conn.UpgradeFromHTTP(ctx, connectionSettings, responseWriter, request)
 	if err != nil {
 		return nil, err
