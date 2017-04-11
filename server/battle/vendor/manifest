@@ -34,14 +34,6 @@
 			"notests": true
 		},
 		{
-			"importpath": "github.com/gin-gonic/gin",
-			"repository": "https://github.com/gin-gonic/gin",
-			"vcs": "git",
-			"revision": "3900df04d2a88e22beaf6a2970c63648b9e1b0e1",
-			"branch": "master",
-			"notests": true
-		},
-		{
 			"importpath": "github.com/go-gl/gl/v2.1/gl",
 			"repository": "https://github.com/go-gl/gl",
 			"vcs": "git",
