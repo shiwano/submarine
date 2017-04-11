@@ -70,8 +70,6 @@ func (s *Server) roomsGET(c *gin.Context) {
 		c.String(http.StatusForbidden, "Failed to upgrade the connection to Web Socket Protocol")
 		return
 	}
-
-	logger.Log.Infof("Session(%v) was created", res.RoomMember.Id)
 }
 
 func init() {

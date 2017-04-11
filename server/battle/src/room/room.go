@@ -141,6 +141,10 @@ loop:
 			r.sendBattleMessageToSessions(output)
 		}
 	}
+	cancel()
+	for _, s := range r.sessions {
+		<-s.Closed()
+	}
 	close(r.closed)
 	logger.Log.Infof("%v closed", r)
 }

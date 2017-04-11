@@ -113,6 +113,7 @@ func (s *Session) Closed() <-chan struct{} {
 }
 
 func (s *Session) run() {
+	logger.Log.Infof("%v opened", s)
 	for m := range s.conn.Stream() {
 		if m.MessageType == conn.BinaryMessageType {
 			s.onBinaryMessageReceive(m.Data)
@@ -122,6 +123,7 @@ func (s *Session) run() {
 	close(s.battleMessageReceived)
 	close(s.roomMessageReceived)
 	close(s.closed)
+	logger.Log.Infof("%v closed", s)
 }
 
 func (s *Session) onBinaryMessageReceive(data []byte) {
